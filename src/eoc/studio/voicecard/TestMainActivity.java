@@ -1,0 +1,26 @@
+package eoc.studio.voicecard;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import eoc.studio.voicecard.animation.TestAnimationActivity;
+
+public class TestMainActivity extends BaseActivity
+{
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		setContentView(R.layout.activity_test_main);
+		findViewById(R.id.test_animation).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Intent intent = new Intent(TestMainActivity.this, TestAnimationActivity.class);
+				startActivity(intent);
+			}
+		});
+		super.onCreate(savedInstanceState);
+	}
+}

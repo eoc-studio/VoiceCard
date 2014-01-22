@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".TestMainActivity" >
+
+    <TextView
+        android:id="@+id/tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Everything is under development, click buttons for test."
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/test_animation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tip"
+        android:text="Animation Test" />
+
+    <Button
+        android:id="@+id/test_signature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/test_animation"
+        android:text="Signature Test" />
+
+    <Button
+        android:id="@+id/test_facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/test_signature"
+        android:text="Facebook Test" />
+
+    <Button
+        android:id="@+id/test_web_api"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/test_facebook"
+        android:text="WebAPI Test" />
+
+    <Button
+        android:id="@+id/test_contacts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/test_web_api"
+        android:text="Contacts Test" />
+
+</RelativeLayout>
