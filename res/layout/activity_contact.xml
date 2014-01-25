@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ListView
+        android:id="@+id/contactsListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CCCCCC"
+        android:divider="#AAAAAA"
+        android:dividerHeight="2dip"
+        android:fadeScrollbars="false" >
+    </ListView>
+
+    <Button
+        android:id="@+id/back_btn"
+        android:layout_width="100dip"
+        android:layout_height="50dip"
+        android:background="#00c080cf"
+        android:textColor="#000000" />
+
+</LinearLayout>
