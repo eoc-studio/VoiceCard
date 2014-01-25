@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import eoc.studio.voicecard.animation.TestAnimationActivity;
+import eoc.studio.voicecard.contact.ContactActivity;
 import eoc.studio.voicecard.facebook.TestFacebookActivity;
 
 public class TestMainActivity extends BaseActivity
@@ -22,13 +23,21 @@ public class TestMainActivity extends BaseActivity
 				startActivity(intent);
 			}
 		});
-		
 		findViewById(R.id.test_facebook).setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
 				Intent intent = new Intent(TestMainActivity.this, TestFacebookActivity.class);
+				startActivity(intent);
+			}
+		});
+		findViewById(R.id.test_contacts).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Intent intent = new Intent(TestMainActivity.this, ContactActivity.class);
 				startActivity(intent);
 			}
 		});

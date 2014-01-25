@@ -17,9 +17,8 @@ public class TestAnimationActivity extends BaseActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		setContentView(R.layout.activity_test_animation);
-		
 		FrameLayout frame = (FrameLayout) findViewById(R.id.card);
-		card = new FlipView(this, 380, 250, -45f, 0f, 250/2);
+		card = new FlipView(this, 380, 250, -45f, 0f, 250 / 2);
 		frame.addView(card);
 		TextView front = generateTextView("front 1", Color.BLUE, 20, Color.CYAN);
 		TextView back = generateTextView("back 2", Color.RED, 20, Color.MAGENTA);

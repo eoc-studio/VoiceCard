@@ -231,12 +231,14 @@ public class FacebookManager
 			Log.d(TAG, "URISyntaxException is error");
 		}
 	}
-	
-	public ImageRequest getLastRequest() {
+
+	public ImageRequest getLastRequest()
+	{
 		return lastRequest;
 	}
-	
-	public void setLastRequest(ImageRequest request) {
+
+	public void setLastRequest(ImageRequest request)
+	{
 		lastRequest = request;
 	}
 }

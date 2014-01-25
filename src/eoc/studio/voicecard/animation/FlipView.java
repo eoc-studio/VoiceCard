@@ -49,14 +49,14 @@ public class FlipView extends RelativeLayout
 			return false;
 		}
 	};
-	
-	public FlipView(Context context, int width, int height, float rotationBegin, float rotationEnd, float pivotY)
+
+	public FlipView(Context context, int width, int height, float rotationBegin, float rotationEnd,
+			float pivotY)
 	{
 		super(context);
 		this.rotationBegin = rotationBegin;
 		this.rotationEnd = rotationEnd;
 		this.pivotY = pivotY;
-		
 		LayoutParams params = new LayoutParams(width, height);
 		setLayoutParams(params);
 		frontPage = new FrameLayout(context);
@@ -76,15 +76,12 @@ public class FlipView extends RelativeLayout
 		evenParams.addRule(ALIGN_PARENT_LEFT);
 		backPage.setLayoutParams(evenParams);
 		backPage.setVisibility(INVISIBLE);
-
 		frontPage.setOnTouchListener(flipListener);
 		backPage.setOnTouchListener(flipListener);
-		
 		frontPage.setPivotY(pivotY);
 		frontPage.setRotationY(rotationBegin);
 		backPage.setPivotY(pivotY);
 		backPage.setRotationY(rotationBegin);
-		
 		addView(innerPage);
 		addView(backPage);
 		addView(frontPage);

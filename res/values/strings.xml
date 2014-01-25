@@ -8,5 +8,9 @@
     <string name="get_user_profile">User Profile</string>
     <string name="get_friend_list">Friends</string>
     <string name="get_picture">Get Picture</string>
+    
+    <!-- About Contact -->
+    <string name="file_process_loading">Loading</string>
+    <string name="noData">NoData</string>
 
 </resources>
