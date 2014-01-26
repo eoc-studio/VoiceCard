@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity android:name="eoc.studio.voicecard.facebook.TestFacebookActivity" />
-        <activity android:name="eoc.studio.voicecard.contact.TestAnimationActivity" />
+        <activity android:name="eoc.studio.voicecard.animation.TestAnimationActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
