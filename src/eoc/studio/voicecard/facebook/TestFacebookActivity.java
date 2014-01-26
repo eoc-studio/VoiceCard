@@ -191,7 +191,7 @@ public class TestFacebookActivity extends BaseActivity
 				.getString(R.string.file_process_loading));
 	}
 
-	private void dismissProgressDialog()
+	public void dismissProgressDialog()
 	{
 		if (progressDialog != null)
 		{

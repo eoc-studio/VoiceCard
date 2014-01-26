@@ -134,6 +134,7 @@ public class FacebookManager
 		else
 		{
 			Log.d(TAG, "session is closed");
+			((TestFacebookActivity) context).dismissProgressDialog();
 		}
 	}
 
@@ -151,6 +152,7 @@ public class FacebookManager
 		else
 		{
 			Log.d(TAG, "session is closed");
+			((TestFacebookActivity) context).dismissProgressDialog();
 		}
 	}
 
