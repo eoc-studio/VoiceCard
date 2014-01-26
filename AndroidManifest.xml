@@ -42,6 +42,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity android:name="eoc.studio.voicecard.contact.ContactActivity" />
+	<activity android:name="eoc.studio.voicecard.manufacture.CeateSignatureActivity" />
     </application>
 
 </manifest>

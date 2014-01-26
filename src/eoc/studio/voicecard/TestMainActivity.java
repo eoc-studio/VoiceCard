@@ -7,6 +7,7 @@ import android.view.View.OnClickListener;
 import eoc.studio.voicecard.animation.TestAnimationActivity;
 import eoc.studio.voicecard.contact.ContactActivity;
 import eoc.studio.voicecard.facebook.TestFacebookActivity;
+import eoc.studio.voicecard.manufacture.CeateSignatureActivity;
 
 public class TestMainActivity extends BaseActivity
 {
@@ -23,6 +24,17 @@ public class TestMainActivity extends BaseActivity
 				startActivity(intent);
 			}
 		});
+		
+		findViewById(R.id.test_signature).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View test_signature)
+			{
+				Intent intent = new Intent(TestMainActivity.this, CeateSignatureActivity.class);
+				startActivity(intent);
+			}
+		});
+
 		findViewById(R.id.test_facebook).setOnClickListener(new OnClickListener()
 		{
 			@Override
