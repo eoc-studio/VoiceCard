@@ -33,11 +33,26 @@ import eoc.studio.voicecard.R;
 public class FacebookManager
 {
 	private static final String TAG = "FacebookManager";
-	private static final String[] PERMISSION = { "user_photos,publish_checkins,publish_actions,publish_stream" };
+	private static final String[] PERMISSION = { "user_photos, publish_checkins, publish_actions, publish_stream" };
 	private Context context;
 	private ImageRequest lastRequest;
 	private int queryHeight = 100;
 	private int queryWidth = 100;
+
+	static class ShowField
+	{
+		static final String USER_ID = "id: ";
+		static final String USER_NAME = "name: ";
+		static final String USER_BIRTHDAY = "birthday: ";
+		static final String USER_ICON = "icon: ";
+	}
+
+	static class JSONTag
+	{
+		static final String PICTURE = "picture";	// For get user icon
+		static final String DATA = "data";
+		static final String URL = "url";
+	}
 
 	public FacebookManager(Context context, Session.StatusCallback statusCallback,
 			Bundle savedInstanceState)
@@ -91,7 +106,7 @@ public class FacebookManager
 			{
 				MessageDigest md = MessageDigest.getInstance("SHA");
 				md.update(signature.toByteArray());
-				Log.d("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+				Log.d(TAG, Base64.encodeToString(md.digest(), Base64.DEFAULT));
 			}
 		}
 		catch (NameNotFoundException e)

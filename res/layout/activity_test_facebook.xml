@@ -19,6 +19,14 @@
         android:text="@string/get_friend_list"
         />
     
+    <ListView
+        android:id="@+id/showFriends"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/show_friends_height"
+        >
+        
+    </ListView>
+    
     <Button
         android:id="@+id/getPicture"
         android:layout_width="wrap_content"

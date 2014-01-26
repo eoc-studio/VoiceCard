@@ -4,10 +4,13 @@
     <string name="app_name">VoiceCard</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    
+    <!-- About Test Facebook -->
     <string name="app_id">584057725018260</string>
-    <string name="get_user_profile">User Profile</string>
-    <string name="get_friend_list">Friends</string>
+    <string name="get_user_profile">Get User Profile</string>
+    <string name="get_friend_list">Get Friends</string>
     <string name="get_picture">Get Picture</string>
+    <string name="user_info">User Info</string>
     
     <!-- About Contact -->
     <string name="file_process_loading">Loading</string>
