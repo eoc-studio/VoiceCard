@@ -4,5 +4,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="show_friends_height">300dp</dimen>
-
+ 	<dimen name="com_facebook_picker_place_image_size">64dp</dimen>
 </resources>
