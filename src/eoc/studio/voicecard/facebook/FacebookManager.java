@@ -64,6 +64,7 @@ public class FacebookManager
 	private void initSession(Session.StatusCallback statusCallback, Bundle savedInstanceState)
 	{
 		Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
+//		Settings.getLoggingBehaviors()
 		Session session = Session.getActiveSession();
 		Log.d(TAG, "session is " + session);
 		if (session == null)
