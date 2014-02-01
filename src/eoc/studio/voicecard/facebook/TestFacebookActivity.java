@@ -81,6 +81,7 @@ public class TestFacebookActivity extends BaseActivity
 		Button getUserProfile = (Button) findViewById(R.id.getUserProfile);
 		Button getFriendList = (Button) findViewById(R.id.getFriendList);
 		Button getUserPicture = (Button) findViewById(R.id.getPicture);
+		Button inviteFriend = (Button) findViewById(R.id.inviteFriend);
 		showPicture = (ImageView) findViewById(R.id.showPicture);
 		showFriends = (ListView) findViewById(R.id.showFriends);
 		getUserProfile.setOnClickListener(new View.OnClickListener()
@@ -90,7 +91,7 @@ public class TestFacebookActivity extends BaseActivity
 			{
 				if (facebookManager != null)
 				{
-					showProgressDialog(getResources().getString(R.string.get_user_profile));
+					// showProgressDialog(getResources().getString(R.string.get_user_profile));
 					facebookManager.getUserProfile(new RequestGraphUserCallback());
 				}
 			}
@@ -116,7 +117,22 @@ public class TestFacebookActivity extends BaseActivity
 				{
 					showProgressDialog(getResources().getString(R.string.get_picture));
 					facebookManager.getUserImg(true, new RequestUserPicture(), userId);
-					// facebookManager.shareImage();
+					//facebookManager.shareImage();
+				}
+			}
+		});
+		
+		inviteFriend.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				if (facebookManager != null)
+				{
+					if (userId.equals("1442881101")) {
+						userId = "000001";
+					}
+					facebookManager.inviteFriend(userId, null);
 				}
 			}
 		});

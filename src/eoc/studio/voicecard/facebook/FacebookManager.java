@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import android.app.Activity;
@@ -15,25 +16,31 @@ import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 
-import com.facebook.HttpMethod;
+import com.facebook.FacebookException;
 import com.facebook.LoggingBehavior;
 import com.facebook.Request;
-import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.Settings;
 import com.facebook.internal.ImageDownloader;
 import com.facebook.internal.ImageRequest;
+import com.facebook.widget.WebDialog;
+import com.facebook.widget.WebDialog.OnCompleteListener;
 
 import eoc.studio.voicecard.R;
 
 public class FacebookManager
 {
 	private static final String TAG = "FacebookManager";
-	private static final String[] PERMISSION = { "user_photos, publish_checkins, publish_actions, publish_stream" };
+	private static final String[] PERMISSION = {
+			"user_photos, publish_checkins, publish_actions, publish_stream, user_mobile_phone, user_address, user_about_me",
+			"email" };
 	private Context context;
 	private ImageRequest lastRequest;
 	private int queryHeight = 100;
@@ -58,13 +65,14 @@ public class FacebookManager
 			Bundle savedInstanceState)
 	{
 		this.context = context;
+		printHashKey("eoc.studio.voicecard");
 		initSession(statusCallback, savedInstanceState);
 	}
 
 	private void initSession(Session.StatusCallback statusCallback, Bundle savedInstanceState)
 	{
 		Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
-//		Settings.getLoggingBehaviors()
+		// Settings.getLoggingBehaviors()
 		Session session = Session.getActiveSession();
 		Log.d(TAG, "session is " + session);
 		if (session == null)
@@ -91,7 +99,7 @@ public class FacebookManager
 				// Session.NewPermissionsRequest(
 				// (Activity) mContext, PERMISSION));
 			}
-			Log.d(TAG, "session state is " + session.getPermissions());
+			Log.d(TAG, "session permission is " + session.getPermissions());
 		}
 		else
 		{}
@@ -126,9 +134,11 @@ public class FacebookManager
 		Log.d(TAG, "access token is " + session.getAccessToken());
 		if (session.isOpened())
 		{
+			session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
+					(Activity) context, PERMISSION));
 			Request meRequest = Request.newMeRequest(session, callback);
-			Bundle requestParams = meRequest.getParameters();
-			requestParams.putString("fields", "name, birthday, picture");
+			Bundle requestParams = meRequest.getParameters();			// if not set field, will get all info(no phone number)
+			requestParams.putString("fields", "name, birthday, picture, email");
 			meRequest.setParameters(requestParams);
 			meRequest.executeAsync();
 		}
@@ -162,56 +172,58 @@ public class FacebookManager
 		Session session = Session.getActiveSession();
 		if (session.isOpened())
 		{
-			// session.requestNewPublishPermissions(new
-			// Session.NewPermissionsRequest(
-			// (Activity) context, PERMISSION));
+			session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
+					(Activity) context, PERMISSION));
 			Bundle params = new Bundle();
 			params.putString("name", "Test Again~~~~~");
-			// params.putString("caption", "");
-			// params.putString("description", "Test");
-			params.putString("link", "http://test.test");
-			// params.putByteArray("source", getByteArray(null));
-			// params.putByteArray("picture", getByteArray(null));
-			// params.putByteArray("image", getByteArray(null));
-			params.putString("picture", "file://mnt/sdcard/dog.png");
-			// Request shareRequest = Request.newPostRequest(session, "me/feed",
-			// null, new Request.Callback() {
-			// @Override
-			// public void onCompleted(Response response) {
-			// Log.d(TAG, "" response);
-			// }
-			// });
-			// Request shareRequest =
-			// Request.newUploadPhotoRequest(Session.getActiveSession(),
-			// BitmapFactory.decodeResource(context.getResources(),
-			// R.drawable.dog), new Request.Callback()
-			// {
-			// @Override
-			// public void onCompleted(Response response)
-			// {
-			// Log.d(TAG, response.toString());
-			// }
-			// });
-			// Request shareRequest =
-			// Request.newRestRequest(Session.getActiveSession(),
-			// "1845302303" "/feed", params, HttpMethod.POST);
-			// shareRequest.setCallback(new Request.Callback(){
-			// @Override
-			// public void onCompleted(Response response){
-			// Log.d(TAG, response.toString());
-			// }
-			// });
-			Request shareRequest = new Request(session, "me/feed", params, HttpMethod.POST,
-					new Request.Callback()
-					{
-						@Override
-						public void onCompleted(Response response)
+//			params.putString("caption", "");
+//			params.putString("description", "Test");
+//			params.putString("link", "http://test.test");
+			params.putByteArray("source", getByteArray(null));
+			params.putString("picture", "http://www.some-link.com/pic.png");
+			params.putByteArray("image", getByteArray(null));
+			params.putString("to", "100000133232978");
+//			Request shareRequest = Request.newPostRequest(session, "me/feed", null,
+//					new Request.Callback()
+//					{
+//						@Override
+//						public void onCompleted(Response response)
+//						{
+//							Log.d(TAG, "" + response);
+//						}
+//					});
+//			Request shareRequest = Request.newUploadPhotoRequest(
+//					Session.getActiveSession(), // No need params, only post to me
+//					BitmapFactory.decodeResource(context.getResources(), R.drawable.dog),
+//					new Request.Callback()
+//					{
+//						@Override
+//						public void onCompleted(Response response)
+//						{
+//							Log.d(TAG, response.toString());
+//						}
+//					});
+//			shareRequest.setParameters(params);
+//			Request.executeBatchAsync(shareRequest);
+			try
+			{
+				WebDialog feedDialog = (new WebDialog.FeedDialogBuilder(context,
+						Session.getActiveSession(), params)).setOnCompleteListener(
+						new OnCompleteListener()
 						{
-							Log.d(TAG, "response === " + response);
-						}
-					});
-			shareRequest.setParameters(params);
-			Request.executeBatchAsync(shareRequest);
+							@Override
+							public void onComplete(Bundle values, FacebookException error)
+							{
+								Log.d(TAG, "values are " + values);
+								Log.d(TAG, "error is " + error);
+							}
+						}).build();
+				feedDialog.show();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 		else
 		{}
@@ -258,5 +270,37 @@ public class FacebookManager
 	public void setLastRequest(ImageRequest request)
 	{
 		lastRequest = request;
+	}
+	
+	public void inviteFriend(String to, String message)
+	{
+		//100000133232978, 1118054263
+		Bundle params = new Bundle();
+		// params.putString("link","https://play.google.com/store/apps/details?id=com.facebook.android.friendsmash");
+		if (message != null) {
+			params.putString("message", message);
+		} else {
+			params.putString("message", "I want invite you! ");
+		}
+		params.putString("to", to);
+		openInviteDialog(context, params);
+	}
+	
+	private void openInviteDialog(Context context, Bundle params)
+	{
+		final WebDialog requestsDialog = new WebDialog.RequestsDialogBuilder(context,
+				Session.getActiveSession(), params).setOnCompleteListener(
+				new WebDialog.OnCompleteListener()
+				{
+					@Override
+					public void onComplete(Bundle values, FacebookException error)
+					{
+						Log.d(TAG, "values is " + values);
+					}
+				}).build();
+		Window dialogWindow = requestsDialog.getWindow();
+		dialogWindow.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		requestsDialog.show();
 	}
 }
