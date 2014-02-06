@@ -12,6 +12,7 @@
     <string name="get_picture">Get Picture</string>
     <string name="user_info">User Info</string>
     <string name="invite_friend">Invite Friend</string>
+    <string name="invite_message">I want invite you!</string>
     
     <!-- About Contact -->
     <string name="file_process_loading">Loading</string>

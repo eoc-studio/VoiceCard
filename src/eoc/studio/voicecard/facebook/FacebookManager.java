@@ -38,9 +38,9 @@ import eoc.studio.voicecard.R;
 public class FacebookManager
 {
 	private static final String TAG = "FacebookManager";
-	private static final String[] PERMISSION = {
-			"user_photos, publish_checkins, publish_actions, publish_stream, user_mobile_phone, user_address, user_about_me",
-			"email" };
+//	private static final String[] PERMISSION = {
+//			"user_photos, publish_checkins, publish_actions, publish_stream, user_mobile_phone, user_address, user_about_me",
+//			"email" };
 	private Context context;
 	private ImageRequest lastRequest;
 	private int queryHeight = 100;
@@ -56,9 +56,126 @@ public class FacebookManager
 
 	static class JSONTag
 	{
+	    static final String DATA = "data";
 		static final String PICTURE = "picture";	// For get user icon
-		static final String DATA = "data";
 		static final String URL = "url";
+	}
+	
+	static class BundleTag
+	{
+	    static final String CAPTION = "caption";
+	    static final String DESCRIPTION = "description";
+	    static final String FIELDS = "fields";
+	    static final String IMAGE = "image";
+	    static final String LINK = "link";
+	    static final String MESSAGE = "message";
+	    static final String NAME = "name";
+	    static final String PICTURE = "picture";
+	    static final String SOURCE = "source";  
+	    static final String TO = "to";  
+	}
+	
+	static class BundleParams
+	{
+	    static final String BIRTHDAY = "birthday";
+	    static final String EMAIL = "email";
+	    static final String NAME = "name";
+	    static final String PICTURE = "picture";
+	}
+	
+	static class Permissions
+	{        
+        static final String BASIC_INFO = "basic_info";
+        
+        static final String USER_ABOUT_ME = "user_about_me";
+        static final String FRIENDS_ABOUT_ME = "friends_about_me";
+
+        static final String USER_ACTIVITIES = "user_activities";
+        static final String FRIENDS_ACTIVITIES = "friends_activities";
+
+        static final String USER_BIRTHDAY = "user_birthday";
+        static final String FRIENDS_BIRTHDAY = "friends_birthday";
+
+        static final String USER_CHECKINS = "user_checkins";
+        static final String FRIENDS_CHECKINS = "friends_checkins";
+
+        static final String USER_EDUCATION_HISTORY = "user_education_history";
+        static final String FRIENDS_EDUCATION_HISTORY = "friends_education_history";
+
+        static final String USER_EVENTS = "user_events";
+        static final String FRIENDS_EVENTS = "friends_events";
+
+        static final String USER_GROUPS = "user_groups";
+        static final String FRIENDS_GROUPS = "friends_groups";
+
+        static final String USER_HOMETOWN = "user_hometown";
+        static final String FRIENDS_HOMETOWN = "friends_hometown";
+
+        static final String USER_INTERESTS = "user_interests";
+        static final String FRIENDS_INTERESTS = "friends_interests";
+        
+        static final String USER_PHOTOS = "user_photos";
+        static final String FRIENDS_PHOTOS = "friends_photos";
+
+        static final String USER_LIKES = "user_likes";
+        static final String FRIENDS_LIKES = "friends_likes";
+
+        static final String USER_NOTES = "user_notes";
+        static final String FRIENDS_NOTES = "friends_notes";
+
+        static final String USER_ONLINE_PRESENCE = "user_online_presence";
+        static final String FRIENDS_ONLINE_PRESENCE = "friends_online_presence";
+
+        static final String USER_RELIGION_POLITICS = "user_religion_politics";
+        static final String FRIENDS_RELIGION_POLITICS = "friends_religion_politics";
+
+        static final String USER_RELATIONSHIPS = "user_relationships";
+        static final String FRIENDS_RELATIONSHIPS = "friends_relationships";
+        
+        static final String USER_RELATIONSHIP_DETAILS = "user_relationship_details";
+        static final String FRIENDS_RELATIONSHIP_DETAILS = "friends_relationship_details";
+        
+        static final String USER_STATUS = "user_status";
+        static final String FRIENDS_STATUS = "friends_status";
+
+        static final String USER_SUBSCRIPTIONS = "user_subscriptions";
+        static final String FRIENDS_SUBSCRIPTIONS = "friends_subscriptions";
+
+        static final String USER_VIDEOS = "user_videos";
+        static final String FRIENDS_VIDEOS = "friends_videos";
+
+        static final String USER_WEBSITE = "user_website";
+        static final String FRIENDS_WEBSITE = "friends_website";
+
+        static final String USER_WORK_HISTORY = "user_work_history";
+        static final String FRIENDS_WORK_HISTORY = "friends_work_history";
+
+        static final String USER_LOCATION = "user_location";
+        static final String FRIENDS_LOCATION = "friends_location";
+        
+        static final String USER_PHOTO_VIDEO_TAGS = "user_photo_video_tags";
+        static final String FRIENDS_PHOTO_VIDEO_TAGS = "friends_photo_video_tags";
+        
+        static final String READ_FRIENDLISTS = "read_friendlists";
+        static final String READ_MAILBOX = "read_mailbox";
+        static final String READ_REQUESTS = "read_requests";
+        static final String READ_STREAM = "read_stream";
+        static final String READ_INSIGHTS = "read_insights";
+        static final String XMPP_LOGIN = "xmpp_login";
+        static final String EMAIL = "email";
+
+        static final String PUBLISH_ACTION = "publish_actions";
+        static final String PUBLISH_STREAM = "publish_stream";
+        static final String PUBLISH_CHECKINS = "publish_checkins";
+        static final String ADS_MANAGMENT = "ads_management";
+        static final String CREATE_EVENT = "create_event";
+        static final String RSVP_EVENT = "rsvp_event";
+        static final String MANAGE_FRIENDLIST = "manage_friendlists";
+        static final String MANAGE_NOTIFICATIONS = "manage_notifications";
+        static final String MANAGE_PAGES = "manage_pages";
+        
+        static final String[] ALL_PERMISSION = { USER_PHOTOS, PUBLISH_CHECKINS, PUBLISH_ACTION, PUBLISH_STREAM,
+                USER_ABOUT_ME, EMAIL };
 	}
 
 	public FacebookManager(Context context, Session.StatusCallback statusCallback,
@@ -92,12 +209,8 @@ public class FacebookManager
 			{
 				session.openForRead(new Session.OpenRequest((Activity) context).setCallback(
 						statusCallback).setPermissions(
-						Arrays.asList("friends_birthday", "user_location", "user_birthday",
-								"user_likes", "friends_photos")));
-				// "publish_actions")));
-				// session.requestNewPublishPermissions(new
-				// Session.NewPermissionsRequest(
-				// (Activity) mContext, PERMISSION));
+                                Arrays.asList(Permissions.FRIENDS_BIRTHDAY, Permissions.USER_LOCATION,
+                                        Permissions.USER_BIRTHDAY, Permissions.USER_LIKES, Permissions.FRIENDS_PHOTOS)));
 			}
 			Log.d(TAG, "session permission is " + session.getPermissions());
 		}
@@ -132,13 +245,20 @@ public class FacebookManager
 	{
 		Session session = Session.getActiveSession();
 		Log.d(TAG, "access token is " + session.getAccessToken());
+		Log.d(TAG, "session permission is " + session.getPermissions());
 		if (session.isOpened())
 		{
-			session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
-					(Activity) context, PERMISSION));
+		    if(!session.getPermissions().contains(Permissions.EMAIL)) {
+    			session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
+    					(Activity) context, Permissions.ALL_PERMISSION));
+    			
+		    }
 			Request meRequest = Request.newMeRequest(session, callback);
 			Bundle requestParams = meRequest.getParameters();			// if not set field, will get all info(no phone number)
-			requestParams.putString("fields", "name, birthday, picture, email");
+            StringBuilder queryString = new StringBuilder().append(BundleParams.NAME).append(", ")
+                    .append(BundleParams.BIRTHDAY).append(", ").append(BundleParams.PICTURE).append(", ")
+                    .append(BundleParams.EMAIL);
+            requestParams.putString(BundleTag.FIELDS, queryString.toString());
 			meRequest.setParameters(requestParams);
 			meRequest.executeAsync();
 		}
@@ -156,7 +276,9 @@ public class FacebookManager
 		{
 			Request myFriendsRequest = Request.newMyFriendsRequest(session, callback);
 			Bundle requestParams = myFriendsRequest.getParameters();
-			requestParams.putString("fields", "name, birthday, picture");
+            StringBuilder queryString = new StringBuilder().append(BundleParams.NAME).append(", ")
+                    .append(BundleParams.BIRTHDAY).append(", ").append(BundleParams.PICTURE);
+			requestParams.putString(BundleTag.FIELDS, queryString.toString());
 			myFriendsRequest.setParameters(requestParams);
 			myFriendsRequest.executeAsync();
 		}
@@ -173,16 +295,16 @@ public class FacebookManager
 		if (session.isOpened())
 		{
 			session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
-					(Activity) context, PERMISSION));
+					(Activity) context, Permissions.ALL_PERMISSION));
 			Bundle params = new Bundle();
-			params.putString("name", "Test Again~~~~~");
-//			params.putString("caption", "");
-//			params.putString("description", "Test");
-//			params.putString("link", "http://test.test");
-			params.putByteArray("source", getByteArray(null));
-			params.putString("picture", "http://www.some-link.com/pic.png");
-			params.putByteArray("image", getByteArray(null));
-			params.putString("to", "100000133232978");
+			params.putString(BundleTag.NAME, "Test Again~~~~~");
+//			params.putString(BundleTag.CAPTION, "");
+//			params.putString(BundleTag.DESCRIPTION, "Test");
+//			params.putString(BundleTag.LINK, "http://test.test");
+			params.putByteArray(BundleTag.SOURCE, getByteArray(null));
+			params.putString(BundleTag.PICTURE, "http://www.some-link.com/pic.png");
+			params.putByteArray(BundleTag.IMAGE, getByteArray(null));
+			params.putString(BundleTag.TO, "100007720118618");
 //			Request shareRequest = Request.newPostRequest(session, "me/feed", null,
 //					new Request.Callback()
 //					{
@@ -242,6 +364,7 @@ public class FacebookManager
 	public void getUserImg(boolean allowCachedResponse, ImageRequest.Callback callback,
 			String profileId)
 	{
+	    Log.d(TAG, "profileId is " + profileId);
 		try
 		{
 			ImageRequest.Builder requestBuilder = new ImageRequest.Builder(context,
@@ -276,13 +399,13 @@ public class FacebookManager
 	{
 		//100000133232978, 1118054263
 		Bundle params = new Bundle();
-		// params.putString("link","https://play.google.com/store/apps/details?id=com.facebook.android.friendsmash");
+		// params.putString(BundleTag.LINK,"https://play.google.com/store/apps/details?id=com.facebook.android.friendsmash");
 		if (message != null) {
-			params.putString("message", message);
+			params.putString(BundleTag.MESSAGE, message);
 		} else {
-			params.putString("message", "I want invite you! ");
+			params.putString(BundleTag.MESSAGE, context.getResources().getString(R.string.invite_message));
 		}
-		params.putString("to", to);
+		params.putString(BundleTag.TO, to);
 		openInviteDialog(context, params);
 	}
 	

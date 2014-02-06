@@ -30,7 +30,7 @@ import eoc.studio.voicecard.R;
 
 public class TestFacebookActivity extends BaseActivity
 {
-	private static final String TAG = "MainActivity";
+	private static final String TAG = "TestFacebookActivity";
 	private Session.StatusCallback statusCallback = new SessionStatusCallback();
 	private FacebookManager facebookManager;
 	private FriendsAdapter friendsAdapter;
@@ -91,7 +91,7 @@ public class TestFacebookActivity extends BaseActivity
 			{
 				if (facebookManager != null)
 				{
-					// showProgressDialog(getResources().getString(R.string.get_user_profile));
+					showProgressDialog(getResources().getString(R.string.get_user_profile));
 					facebookManager.getUserProfile(new RequestGraphUserCallback());
 				}
 			}
@@ -130,7 +130,7 @@ public class TestFacebookActivity extends BaseActivity
 				if (facebookManager != null)
 				{
 					if (userId.equals("1442881101")) {
-						userId = "000001";
+						userId = "100007720118618";
 					}
 					facebookManager.inviteFriend(userId, null);
 				}
@@ -220,8 +220,9 @@ public class TestFacebookActivity extends BaseActivity
 		@Override
 		public void call(Session session, SessionState state, Exception exception)
 		{
-			if (session.isOpened())
-			{}
+		    Log.d(TAG, "session is " + session);
+		    Log.d(TAG, "state is " + state);
+		    Log.d(TAG, "exception is " + exception);
 		}
 	}
 
