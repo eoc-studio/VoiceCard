@@ -8,6 +8,7 @@ import eoc.studio.voicecard.animation.TestAnimationActivity;
 import eoc.studio.voicecard.contact.ContactActivity;
 import eoc.studio.voicecard.facebook.TestFacebookActivity;
 import eoc.studio.voicecard.manufacture.CeateSignatureActivity;
+import eoc.studio.voicecard.manufacture.EditSignatureActivity;
 
 public class TestMainActivity extends BaseActivity
 {
@@ -30,7 +31,7 @@ public class TestMainActivity extends BaseActivity
 			@Override
 			public void onClick(View test_signature)
 			{
-				Intent intent = new Intent(TestMainActivity.this, CeateSignatureActivity.class);
+				Intent intent = new Intent(TestMainActivity.this, EditSignatureActivity.class);
 				startActivity(intent);
 			}
 		});

@@ -63,7 +63,7 @@ public class PaintUtility
 	
 	public static final int LOAD_ACTIVITY = 1;
 
-	public static final int COLOR1 = Color.argb(255, 0, 0, 0);
+	public static final int COLOR1 = Color.argb(255, 0, 0, 0);   //black
 	public static final int COLOR2 = Color.argb(255, 255, 255, 0);
 	public static final int COLOR3 = Color.argb(255, 0, 0, 225);
 	public static final int COLOR4 = Color.argb(255, 0, 255, 0);
@@ -76,4 +76,12 @@ public class PaintUtility
 	public static final int COLOR11= Color.argb(255, 255, 125, 64);
 	public static final int COLOR12= Color.argb(255, 124, 252, 0);
 	public static final int COLOR13= Color.argb(255, 210, 105, 30);
+	
+	public enum PEN_SIZE_ENUM
+	{
+
+		SIZE_ONE, SIZE_TWO, SIZE_THREE
+
+	}
+
 }

@@ -15,13 +15,17 @@ import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Paint.Style;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 public class HandWritingView extends View
 {
-
+	private static String TAG ="HandWritingView";
+	
 	private Paint paint = null;
 
 	private Canvas canvas = null;
@@ -42,10 +46,13 @@ public class HandWritingView extends View
 
 	private boolean isClear = false;
 
-	private int color = Color.BLACK; // 設置畫筆的顏色
+	private static int color = Color.BLACK; // 設置畫筆的顏色
 
-	private float strokeWidth = 5.0f;
+	private static float strokeWidth = (float)PaintUtility.PEN_SIZE.SIZE_1;
 
+	private static boolean isClearMode = false;
+	
+	
 	private Path path;
 
 	public HandWritingView(Context context)
@@ -85,13 +92,19 @@ public class HandWritingView extends View
 		// tempBitmap.eraseColor(android.graphics.Color.WHITE);
 
 		// using backgroupd color
-		tempBitmap.eraseColor(R.color.sketchpad_color);
+		tempBitmap.eraseColor(Color.TRANSPARENT);
 
+		tempBitmap.setHasAlpha(true);
+		
 		// tempBitmap = BitmapFactory.decodeResource(getResources(),
 
 		originalBitmap = tempBitmap.copy(Bitmap.Config.ARGB_8888, true);
+		
+		originalBitmap.setHasAlpha(true);
 
 		new1Bitmap = Bitmap.createBitmap(originalBitmap);
+		
+		new1Bitmap.setHasAlpha(true);
 	}
 
 	public void clear()
@@ -100,6 +113,7 @@ public class HandWritingView extends View
 		isClear = true;
 		// recyclingResources.recycleBitmap(new1Bitmap);
 		new2Bitmap = Bitmap.createBitmap(originalBitmap);
+		new2Bitmap.setHasAlpha(true);
 		invalidate();
 	}
 
@@ -119,9 +133,24 @@ public class HandWritingView extends View
 	public void setstyle(float strokeWidth)
 	{
 
+		Log.e(TAG, "setstyle() strokeWidth is "+strokeWidth);
 		this.strokeWidth = strokeWidth;
 	}
 
+	public void setPenColor(int color){
+		this.color = color;
+	}
+	
+	public void enableEraser(){
+	
+		isClearMode = true;
+	}
+	
+	public void disableEraser(){
+		
+		isClearMode = false;
+	}
+	
 	/**
 	 * 功能：完成畫板的相關操作
 	 */
@@ -158,11 +187,26 @@ public class HandWritingView extends View
 			canvas = new Canvas(originalBitmap);
 		}
 		paint = new Paint();
-		paint.setColor(PaintUtility.COLOR1); 	// 設置畫筆的顏色
+
+		if(isClearMode){
+			paint.setColor(Color.TRANSPARENT); 
+			paint.setXfermode(new PorterDuffXfermode(
+	                Mode.CLEAR));
+			Log.e(TAG, "HandWriting() paint.setXfermode(CLEAR)");
+		}else{
+			paint.setColor(this.color); 	// 設置畫筆的顏色
+//			Log.e(TAG, "HandWriting() this.color is"+this.color);
+//			
+//			Log.e(TAG, "HandWriting() paint.getXfermode(); is"+paint.getXfermode());
+			
+			paint.setXfermode(null);
+		}
+
 		paint.setStyle(Style.STROKE);
-		// paint.setStrokeWidth(strokeWidth);	//設置畫筆的粗細
-		paint.setStrokeWidth(PaintUtility.PEN_SIZE.SIZE_1);		// 設置畫筆的粗細
-		getMaskFilter(PaintUtility.PEN_TYPE.EMBOSS);
+//		Log.e(TAG, "HandWriting() strokeWidth is"+strokeWidth);
+		paint.setStrokeWidth(this.strokeWidth);	//設置畫筆的粗細
+//		paint.setStrokeWidth(penSize);		// 設置畫筆的粗細
+		getMaskFilter(PaintUtility.PEN_TYPE.PLAIN_PEN); 
 		paint.setAntiAlias(true);	// 抗鋸齒
 		paint.setDither(true);
 		paint.setFilterBitmap(true);
@@ -182,6 +226,7 @@ public class HandWritingView extends View
 
 		startX = event.getX();
 		startY = event.getY();
+		Log.e(TAG, "onTouchEvent() startX "+startX+",startY "+startY);
 		switch (event.getAction())
 		{
 		case MotionEvent.ACTION_DOWN:

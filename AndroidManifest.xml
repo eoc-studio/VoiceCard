@@ -43,6 +43,9 @@
         </activity>
         <activity android:name="eoc.studio.voicecard.contact.ContactActivity" />
 	<activity android:name="eoc.studio.voicecard.manufacture.CeateSignatureActivity" />
+	<activity android:name="eoc.studio.voicecard.manufacture.EditSignatureActivity" 
+			 android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
+	
     </application>
 
 </manifest>

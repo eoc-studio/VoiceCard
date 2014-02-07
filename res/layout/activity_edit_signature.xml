@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/act_edit_signature_rlyt_main"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:clipChildren="false"
+		android:clipToPadding="false">
+		<LinearLayout
+				android:id="@+id/act_edit_signature_llyt_main"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:background="@layout/view_main_backgroud_repeat"
+				android:orientation="vertical"
+				android:clipToPadding="false">
+				<LinearLayout
+						android:id="@+id/act_edit_signature_llyt_header"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center"
+						android:background="@drawable/header_bg2"
+						android:gravity="center"
+						android:orientation="vertical"
+						android:clipToPadding="false">
+						<ImageView
+								android:id="@+id/act_edit_signature_iv_title"
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:src="@drawable/title_signature" />
+				</LinearLayout>
+				<RelativeLayout
+						android:id="@+id/act_edit_signature_rlyt_middle"
+						android:layout_width="match_parent"
+						android:layout_height="435dp"
+						android:layout_marginTop="6dp"
+						android:clipChildren="false"
+						android:clipToPadding="false">
+						<LinearLayout
+								android:id="@+id/act_edit_signature_llyt_sketchpad"
+								android:layout_width="match_parent"
+								android:layout_height="270dp"
+								android:orientation="horizontal"
+								android:clipToPadding="false">
+								<LinearLayout
+										android:id="@+id/act_edit_signature_llyt_sketchpad_painting_area"
+										android:layout_width="318dp"
+										android:layout_height="match_parent"
+										android:orientation="vertical"
+										android:clipToPadding="false">
+										<RelativeLayout
+												android:id="@+id/act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud"
+												android:layout_width="297dp"
+												android:layout_height="234dp"
+												android:layout_margin="10dp"
+												
+												android:background="@color/sketchpad_color">
+												<!--  add this view by programming
+												<eoc.studio.voicecard.handwriting.HandWritingView
+														android:id="@+id/act_edit_signature_handWritingView"
+														android:layout_width="wrap_content"
+														android:layout_height="wrap_content" />
+												-->		
+										</RelativeLayout>
+								</LinearLayout>
+								<LinearLayout
+										android:id="@+id/act_edit_signature_llyt_sketchpad_painting_toolbox"
+										android:layout_width="45dp"
+										android:layout_height="match_parent"
+										android:orientation="vertical"
+										android:clipToPadding="false">
+										<ImageButton
+												android:id="@+id/act_edit_signature_ib_mode"
+												android:layout_width="34dp"
+												android:layout_height="34dp"
+												android:layout_marginTop="10dp"
+												android:background="@drawable/draw_mode" />
+
+										<RadioGroup
+												android:id="@+id/act_edit_signature_rgrp_paint_size"
+												android:layout_width="wrap_content"
+												android:layout_height="wrap_content"
+												android:layout_marginTop="10dp">
+												<RadioButton
+														android:id="@+id/act_edit_signature_rb_paint_size_one"
+														android:layout_width="34dp"
+														android:layout_height="34dp"
+														android:checked="true"
+
+														android:background="@drawable/selector_paint_size_background"
+														android:button="@drawable/icon_brush_size_one"
+														android:layout_gravity="center"
+
+														android:gravity="center"
+														android:text="SIZE_ONE"
+														android:textColor="@color/transparent_text" />
+
+												<RadioButton
+														android:id="@+id/act_edit_signature_rb_paint_size_two"
+														android:layout_width="34dp"
+														android:layout_height="34dp"
+														android:background="@drawable/selector_paint_size_background"
+														android:button="@drawable/icon_brush_size_two"
+														android:text="SIZE_TWO"
+														android:textColor="@color/transparent_text" />
+												/>
+												<RadioButton
+														android:id="@+id/act_edit_signature_rb_paint_size_three"
+														android:layout_width="34dp"
+														android:layout_height="34dp"
+														android:background="@drawable/selector_paint_size_background"
+														android:button="@drawable/icon_brush_size_three"
+														android:text="SIZE_THREE"
+														android:textColor="@color/transparent_text" />
+												/>
+										</RadioGroup>
+										<LinearLayout
+												android:id="@+id/act_edit_signature_llyt_choose_color"
+												android:layout_width="34dp"
+												android:layout_height="34dp"
+												android:layout_marginTop="10dp"
+												android:background="@drawable/icon_editor_bg1"
+												android:orientation="vertical">
+												<ImageView
+														android:id="@+id/act_edit_signature_iv_choose_color"
+														android:layout_width="fill_parent"
+														android:layout_height="fill_parent"
+														android:background="@color/black"
+														 />
+										</LinearLayout>
+										<ToggleButton
+												android:id="@+id/act_edit_signature_tb_eraser"
+												android:layout_width="34dp"
+												android:layout_height="34dp"
+												android:layout_marginTop="10dp"
+												android:text=""
+												android:background="@drawable/selector_eraser_background"
+												android:textOff=""
+												android:textOn=""
+												android:checked="false" />
+
+								</LinearLayout>
+						</LinearLayout>
+
+						<LinearLayout
+								android:id="@+id/act_edit_signature_llyt_drag_and_stamps"
+								android:layout_width="match_parent"
+								android:layout_height="165dp"
+								android:background="@color/gold"
+								android:orientation="vertical"
+								android:layout_below="@+id/act_edit_signature_llyt_sketchpad"
+								android:clipToPadding="false">
+
+								<LinearLayout
+										android:id="@+id/act_edit_signature_llyt_drag_and_stamps_up_dash_horizontal"
+										android:layout_width="match_parent"
+										android:layout_height="1dp"
+										android:background="@layout/view_dash_horizontal_repeat"
+										android:orientation="vertical"></LinearLayout>
+								<LinearLayout
+										android:id="@+id/act_edit_signature_llyt_drag_and_stamps_middle"
+										android:layout_width="match_parent"
+										android:layout_height="163dp"
+										android:orientation="horizontal">
+										<LinearLayout
+												android:id="@+id/act_edit_signature_llyt_drag_trash"
+												android:layout_width="105dp"
+												android:layout_height="match_parent"
+												android:background="@color/trash_drag_stamps_background"
+												android:clipToPadding="false"
+												android:gravity="center"
+												android:orientation="horizontal">
+												<ImageView
+														android:id="@+id/act_edit_signature_iv_trash"
+														android:layout_width="wrap_content"
+														android:layout_height="wrap_content"
+														android:background="@drawable/trash"
+														 />
+												<LinearLayout
+														android:id="@+id/act_edit_signature_llyt_dash_vertical"
+														android:layout_width="1dp"
+														android:layout_height="match_parent"
+														android:layout_marginLeft="0dp"
+														android:background="@layout/view_dash_vertical_repeat"
+														android:orientation="vertical"></LinearLayout>
+										</LinearLayout>
+										<RelativeLayout
+												android:id="@+id/act_edit_signature_rlyt_stamps_area"
+												android:layout_width="255dp"
+												android:layout_height="163dp"
+												android:background="@color/trash_drag_stamps_background"
+												android:clipChildren="false"
+												android:clipToPadding="false">
+												<LinearLayout
+														android:id="@+id/act_edit_signature_rlyt_stamps_area_left"
+														android:layout_width="30dp"
+														android:layout_height="165dp"
+														android:layout_alignParentLeft="true"
+														android:layout_centerVertical="true"
+														android:background="@color/trash_drag_stamps_background"
+														android:gravity="center"
+
+														android:orientation="horizontal">
+														<ImageView
+																android:id="@+id/act_edit_signature_iv_arrow_left"
+																android:layout_width="wrap_content"
+																android:layout_height="wrap_content"
+																android:src="@drawable/icon_ar2_left" />
+
+												</LinearLayout>
+												<LinearLayout
+														android:id="@+id/act_edit_signature_rlyt_stamps_area_center"
+														android:layout_width="195dp"
+														android:layout_height="165dp"
+														android:layout_centerVertical="true"
+														android:background="@color/trash_drag_stamps_background"
+														android:layout_toRightOf="@+id/act_edit_signature_rlyt_stamps_area_left"
+														android:gravity="center"
+														android:orientation="horizontal">
+														<GridView
+																android:id="@+id/act_edit_signature_gv_stamps"
+																android:layout_width="match_parent"
+																android:layout_height="match_parent"
+																android:numColumns="4"
+																android:columnWidth="50dp"
+																android:layout_marginTop="6dp"
+
+																android:horizontalSpacing="2dp"
+																android:verticalSpacing="2dp">
+
+														</GridView>
+												</LinearLayout>
+												<LinearLayout
+														android:id="@+id/act_edit_signature_rlyt_stamps_area_right"
+														android:layout_width="30dp"
+														android:layout_height="165dp"
+														android:layout_centerVertical="true"
+														android:layout_toRightOf="@+id/act_edit_signature_rlyt_stamps_area_center"
+														android:background="@color/trash_drag_stamps_background"
+														android:gravity="center"
+
+														android:orientation="vertical">
+														<ImageView
+																android:id="@+id/act_edit_signature_iv_arrow_right"
+																android:layout_width="wrap_content"
+																android:layout_height="wrap_content"
+																android:src="@drawable/icon_ar2_right" />
+												</LinearLayout>
+
+										</RelativeLayout>
+
+
+
+
+								</LinearLayout>
+								<LinearLayout
+										android:id="@+id/act_edit_signature_llyt_drag_and_stamps_bottom_dash_horizontal"
+										android:layout_width="match_parent"
+										android:layout_height="1dp"
+										android:background="@layout/view_dash_horizontal_repeat"
+										android:orientation="vertical"></LinearLayout>
+						</LinearLayout>
+						<!-- layout_marginLeft = 105+30 = 135 - 32(self) = 103 -->
+						<ImageView
+								android:id="@+id/act_edit_signature_iv_drag"
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:layout_marginTop="-16dp"
+								android:layout_marginLeft="103dp"
+								android:layout_below="@id/act_edit_signature_llyt_sketchpad"
+								android:src="@drawable/handwrite_05" />
+				</RelativeLayout>
+				<LinearLayout
+						android:id="@+id/act_edit_signature_llyt_bottom"
+						android:layout_width="match_parent"
+						android:layout_height="105dp"
+						android:gravity="center"
+						android:orientation="horizontal">
+						<ImageView
+								android:id="@+id/act_edit_signature_iv_button_return"
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:src="@drawable/btn_return" />
+						<ImageView
+								android:id="@+id/act_edit_signature_iv_button_ok"
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:src="@drawable/btn_sure" />
+
+				</LinearLayout>
+
+		</LinearLayout>
+</RelativeLayout>

@@ -58,7 +58,7 @@
 								android:id="@+id/trash_imageView"
 								android:layout_width="match_parent"
 								android:layout_height="match_parent"
-								android:src="@drawable/trash_here" />
+								android:src="@drawable/trash" />
 				</LinearLayout>
 				<LinearLayout
 						android:layout_width="200dp"
