@@ -9,7 +9,7 @@ import android.view.View.OnTouchListener;
 
 class StampCreateListener implements OnTouchListener
 {
-
+	private static final String TAG = "StampCreateListener";
 	private final StampAdapter stampAdapter;
 
 	StampCreateListener(StampAdapter stampAdapter)
@@ -23,7 +23,7 @@ class StampCreateListener implements OnTouchListener
 
 		if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
 		{
-			String dragKey = "stamp";
+			String dragKey = TAG;
 			String dragContext = "I am stamp";
 			DragUtility.dragView(view, dragKey, dragContext);
 			return true;

@@ -2,13 +2,13 @@ package eoc.studio.voicecard.manufacture;
 
 import android.widget.AbsoluteLayout;
 
-
 import java.util.ArrayList;
 
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.manufacture.MultiTouchController.MultiTouchObjectCanvas;
 import eoc.studio.voicecard.manufacture.MultiTouchController.PointInfo;
 import eoc.studio.voicecard.manufacture.MultiTouchController.PositionAndScale;
+import eoc.studio.voicecard.utils.DragUtility;
 
 import android.R.integer;
 import android.R.string;
@@ -33,9 +33,13 @@ import android.view.ViewGroup;
 import android.view.View.DragShadowBuilder;
 import android.widget.AbsoluteLayout;
 import android.widget.ImageView;
-public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCanvas<StampSortView.Img>
+
+public class StampSortView extends AbsoluteLayout implements
+		MultiTouchObjectCanvas<StampSortView.Img>
 {
 	private final static String TAG = "StampSortView";
+
+	private final static Boolean isDebug = true;
 
 	private ArrayList<Integer> mImagesList = new ArrayList<Integer>();
 
@@ -57,9 +61,12 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 
 	private Drawable transparentDrawable;
 
-	private float borderXofTrash;
-	private float borderYofTrash;
+	private float StampSortViewWidth;
+
+	private float StampSortViewHeight;
 	
+	private float currentTouchY;
+
 
 	PositionAndScale lastImgPosAndScale;
 
@@ -129,8 +136,8 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 		mLinePaintTouchPointCircle.setStyle(Style.STROKE);
 		mLinePaintTouchPointCircle.setAntiAlias(true);
 		setBackgroundColor(Color.TRANSPARENT);
-		
-		borderYofTrash = 0;
+
+		StampSortViewHeight = 0;
 
 		transparentDrawable = new ColorDrawable(Color.TRANSPARENT);
 	}
@@ -165,26 +172,38 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 			Log.e(TAG, "loadOneImgage() x:" + x + ", y:" + cy);
 			if (dragImageView == null)
 			{
-				dragImageView = new ImageView(context);
-				dragImageView.setScaleType(ImageView.ScaleType.MATRIX);
-				dragImageView.setBackgroundDrawable(transparentDrawable);
-				AbsoluteLayout.LayoutParams dragLp = new AbsoluteLayout.LayoutParams(w, h, x, y);
-				dragImageView.setLayoutParams(dragLp);
-				dragImageView.invalidate();
-				this.addView(dragImageView);
-				dragImageView.setClickable(false);
-				dragImageView.setFocusable(false);
+				createDummyDragView(context, w, h, x, y);
 			}
 			else
 			{
-				AbsoluteLayout.LayoutParams dragLp = new AbsoluteLayout.LayoutParams(w, h, x, y);
-				dragImageView.setLayoutParams(dragLp);
-				dragImageView.setBackgroundDrawable(transparentDrawable);
-				dragImageView.invalidate();
-				this.updateViewLayout(dragImageView, dragLp);
+				updateDummyDragViewPosition(w, h, x, y);
 			}
 
 		}
+	}
+
+	public void updateDummyDragViewPosition(int w, int h, int x, int y)
+	{
+
+		AbsoluteLayout.LayoutParams dragLp = new AbsoluteLayout.LayoutParams(w, h, x, y);
+		dragImageView.setLayoutParams(dragLp);
+		dragImageView.setBackgroundDrawable(transparentDrawable);
+		dragImageView.invalidate();
+		this.updateViewLayout(dragImageView, dragLp);
+	}
+
+	public void createDummyDragView(Context context, int w, int h, int x, int y)
+	{
+
+		dragImageView = new ImageView(context);
+		dragImageView.setScaleType(ImageView.ScaleType.MATRIX);
+		dragImageView.setBackgroundDrawable(transparentDrawable);
+		AbsoluteLayout.LayoutParams dragLp = new AbsoluteLayout.LayoutParams(w, h, x, y);
+		dragImageView.setLayoutParams(dragLp);
+		dragImageView.invalidate();
+		this.addView(dragImageView);
+		dragImageView.setClickable(false);
+		dragImageView.setFocusable(false);
 	}
 
 	/** Called by activity's onResume() method to load the images **/
@@ -217,25 +236,11 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 
 				if (dragImageView == null)
 				{
-					dragImageView = new ImageView(context);
-					dragImageView.setScaleType(ImageView.ScaleType.MATRIX);
-					dragImageView.setBackgroundDrawable(transparentDrawable);
-					AbsoluteLayout.LayoutParams dragLp = new AbsoluteLayout.LayoutParams(
-							imageWidth, imageHeight, x_position, y_position);
-					dragImageView.setLayoutParams(dragLp);
-					dragImageView.invalidate();
-					this.addView(dragImageView);
-					dragImageView.setClickable(false);
-					dragImageView.setFocusable(false);
+					createDummyDragView(context, imageWidth, imageHeight, x_position, y_position);
 				}
 				else
 				{
-					AbsoluteLayout.LayoutParams dragLp = new AbsoluteLayout.LayoutParams(
-							imageWidth, imageHeight, x_position, y_position);
-					dragImageView.setLayoutParams(dragLp);
-					dragImageView.setBackgroundDrawable(transparentDrawable);
-					dragImageView.invalidate();
-					this.updateViewLayout(dragImageView, dragLp);
+					updateDummyDragViewPosition(imageWidth, imageHeight, x_position, y_position);
 				}
 			}
 		}
@@ -243,31 +248,18 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 		invalidate();
 	}
 
-	//
-	// /**
-	// * Called by activity's onPause() method to free memory used for loading
-	// the
-	// * images
-	// */
-	// public void unloadImages()
-	// {
-	//
-	// int n = mImages.size();
-	// for (int i = 0; i < n; i++)
-	// mImages.get(i).unload();
-	// }
-
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
 
 		Log.i("Tag", "width: " + getWidth() + ",height: " + getHeight());
-//		Log.i("Tag", "MeasuredWidth: " + getMeasuredWidth() + ",MeasuredHeight: "
-//				+ getMeasuredHeight());
+		// Log.i("Tag", "MeasuredWidth: " + getMeasuredWidth() +
+		// ",MeasuredHeight: "
+		// + getMeasuredHeight());
 		super.onDraw(canvas);
-		this.borderXofTrash = getWidth();
-		this.borderYofTrash = getHeight();
-		
+		this.StampSortViewWidth = getWidth();
+		this.StampSortViewHeight = getHeight();
+
 		int n = mImages.size();
 		for (int i = 0; i < n; i++)
 			mImages.get(i).draw(canvas);
@@ -306,11 +298,12 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 	{
 
 		Log.e(TAG, "onTouchEvent() event.getX()" + event.getX() + ", event.getY()" + event.getY());
-		
-		
-//		if (event.getX() > borderXofTrash || event.getX() < 50 || event.getY() < 50) { return true; }
-		
-//		if (event.getY() > 860 || event.getX() >borderXofTrash || event.getX()< 0 ||  event.getY()< 0) { return true; }
+		currentTouchY = event.getY();
+		// if (event.getX() > borderXofTrash || event.getX() < 50 ||
+		// event.getY() < 50) { return true; }
+
+		// if (event.getY() > 860 || event.getX() >borderXofTrash ||
+		// event.getX()< 0 || event.getY()< 0) { return true; }
 
 		return multiTouchController.onTouchEvent(event);
 	}
@@ -373,29 +366,7 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 
 		dragImageView.setBackgroundDrawable(transparentDrawable);
 		dragImageView.invalidate();
-		// Log.e(TAG, "getPositionAndScale() mg.getCenterX()" + img.getCenterX()
-		// + ",mg.getCenterY()"
-		// + img.getCenterY());
-		// Log.e(TAG,
-		// "=================getPositionAndScale() get the last point mg.getX()"
-		// + img.getX()
-		// + ",mg.getY()" + img.getY());
-		// Log.e(TAG,
-		// "=================getPositionAndScale() get the last point mg.getCenterX()"
-		// + img.getCenterX() + ",mg.getCenterY()" + img.getCenterY());
-		// lastImgPosAndScaleBeforeTrashMode = null;
-		// lastImgPosAndScaleBeforeTrashMode = new PositionAndScale();
-		// lastImgPosAndScaleBeforeTrashMode.set(objPosAndScaleOut.getXOff(),
-		// objPosAndScaleOut.getYOff(), objPosAndScaleOut.getScale(),
-		// objPosAndScaleOut.getScaleX(), objPosAndScaleOut.getScaleY(),
-		// objPosAndScaleOut.getAngle());
-		//
-		//
-		// lastPointInfoBeforeTrashMode = null;
-		// lastPointInfoBeforeTrashMode = new PointInfo();
-		// lastPointInfoBeforeTrashMode.set(currTouchPoint);
 
-		// lastPointInfoBeforeTrashMode = touchPoint;
 		// FIXME affine-izem (and fix the fact that the anisotropic_scale part
 		// requires averaging the two scale factors)
 		objPosAndScaleOut.set(img.getCenterX(), img.getCenterY(),
@@ -410,160 +381,89 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 			PointInfo touchPoint)
 	{
 
-		img.SCREEN_MARGIN = img.getImgHeight() * img.getScaleY() - 10;
-		
-		Log.e(TAG, "@@@@@@@@@@setPositionAndScale()  newImgPosAndScale.getScale()"
-				+ newImgPosAndScale.getScale());
-		Log.e(TAG, "@@@@@@@@@@setPositionAndScale()  newImgPosAndScale.getScaleX()"
-				+ newImgPosAndScale.getScaleX());
-		float distanceOfBorder = (img.getY() + (img.getImgHeight() * img.getScaleY()) - borderYofTrash);
-		Log.e(TAG, "=================setPositionAndScale() distanceOfBorder is " + distanceOfBorder);
+		float effectHeight = img.getImgHeight() * img.getScaleY();
+		float effectWidth = img.getImgWidth() * img.getScaleX();
+		int deviation = 10;
+		img.setScreenMargin(effectHeight - deviation);
+
+		float distanceOfStapSortView = (img.getY() + effectHeight - StampSortViewHeight);
+		Log.e(TAG, "=== setPositionAndScale() distanceOfStapSortView is " + distanceOfStapSortView);
 
 		// try to save last point that can not be drag to trash mode
-		if (distanceOfBorder > 0 && distanceOfBorder < 10)
+//		if (distanceOfStapSortView  >  ((-effectHeight)*1.5) && distanceOfStapSortView < ((-effectHeight)*0.5))
+		if (distanceOfStapSortView  >  0 && distanceOfStapSortView < deviation)
 		{
-
-			// Log.e(TAG,
-			// "=================setPositionAndScale() get the last point mg.getX()"
-			// + img.getX() + ",mg.getY()" + img.getY());
-			// Log.e(TAG,
-			// "=================setPositionAndScale() get the last point mg.getCenterX()"
-			// + img.getCenterX()+ ",mg.getCenterY()" + img.getCenterY());
-			//
-
-			// Log.e(TAG,
-			// "=============setPositionAndScale() lastImgPosAndScaleBeforeTrashMode.getScaleX()"
-			// + lastImgPosAndScaleBeforeTrashMode.getScaleX());
-			lastImgPosAndScaleBeforeTrashMode = null;
-			lastImgPosAndScaleBeforeTrashMode = new PositionAndScale();
-
-			lastImgPosAndScaleBeforeTrashMode.set(newImgPosAndScale.getXOff(),
-					newImgPosAndScale.getYOff(), true, newImgPosAndScale.getScale(), true,
-					newImgPosAndScale.getScaleX(), newImgPosAndScale.getScaleY(), true,
-					newImgPosAndScale.getAngle());
-
-			Log.e(TAG,
-					"@@@@@@@@@@setPositionAndScale()  lastImgPosAndScaleBeforeTrashMode.getScale()"
-							+ lastImgPosAndScaleBeforeTrashMode.getScale());
-			Log.e(TAG,
-					"@@@@@@@@@@setPositionAndScale()  lastImgPosAndScaleBeforeTrashMode.getScaleX()"
-							+ lastImgPosAndScaleBeforeTrashMode.getScaleX());
-
-			lastPointInfoBeforeTrashMode = null;
-			lastPointInfoBeforeTrashMode = new PointInfo();
-			lastPointInfoBeforeTrashMode.set(currTouchPoint);
-			dragImageView.setBackgroundDrawable(transparentDrawable);
-			dragImageView.invalidate();
+			Log.e(TAG, "=== setPositionAndScale() save the last point");
+			updateLastPointInfos(newImgPosAndScale);
 		}
 
-		// if (touchPoint != null)
-		// {
 		currTouchPoint.set(touchPoint);
-		// }
+
 		boolean ok = img.setPos(newImgPosAndScale);
 
-		// @bruce add
-		// Log.e(TAG, "setPositionAndScale() mg.getX()" + img.getX() +
-		// ",mg.getY()" + img.getY());
+		updateDummyDragView(img, transparentDrawable);
+		updateDummyDragViewPosition(img, effectHeight, effectWidth);
 
-		Matrix viewMatrix = new Matrix();
-		viewMatrix.postScale(img.getScaleX(), img.getScaleY());
-
-		Log.e(TAG, "@@@@@@@@@@setPositionAndScale()  img.getAngle()" + img.getAngle());
-		viewMatrix.postRotate(img.getAngle() * 180.0f / (float) Math.PI);
-		dragImageView.setImageMatrix(viewMatrix);
-		dragImageView.setBackgroundDrawable(transparentDrawable);
-		dragImageView.invalidate();
-
-		AbsoluteLayout.LayoutParams lp = new AbsoluteLayout.LayoutParams(
-				(int) (img.getImgWidth() * img.getScaleX()),
-				(int) (img.getImgHeight() * img.getScaleY()), (int) img.getX(), (int) img.getY());
-		this.updateViewLayout(dragImageView, lp);
-		// @bruce add end
-
-		// Log.e(TAG, "============================borderYofTrash =" +
-		// borderYofTrash);
-		// Log.e(TAG,
-		// "============================borderYofTrash variable=" + img.getY()
-		// + (img.getImgHeight() / 2));
-
-		float distanceTrashBorder = img.getY() + (img.getImgHeight() * img.getScaleY() )
-				- borderYofTrash;
 		
-//		float distanceTrashBorder = img.getY() + (img.getImgHeight() * img.getScaleY() / 2)
-//				- borderYofTrash;
-
-		if (distanceTrashBorder > 0 && distanceTrashBorder < 10)
+		if (currentTouchY > (StampSortViewHeight +effectHeight*0.3) && distanceOfStapSortView > 0 )
 		{
-			Log.e(TAG,
-					"============================try to trash======================= distanceTrashBorder"
-							+ distanceTrashBorder);
+			Log.e(TAG, "=== try to trash===  distanceOfStapSortView" + distanceOfStapSortView);
 
-			ClipData data = ClipData.newPlainText("photoSortView", "Try to trash");
-			// DragShadowBuilder shadowBuilder = new
-			// View.DragShadowBuilder(dragImageView);
-
-			dragImageView.setBackgroundDrawable(img.getDrawable());
-			viewMatrix.postScale(img.getScaleX(), img.getScaleY());
-			viewMatrix.postRotate(img.getAngle() * 180.0f / (float) Math.PI);
-			dragImageView.setImageMatrix(viewMatrix);
-			dragImageView.setRotation(img.getAngle());
-			dragImageView.invalidate();
-
-			DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(dragImageView);
-			/*
-			 * DragShadowBuilder shadowBuilder = new
-			 * View.DragShadowBuilder(dragImageView) {
-			 * 
-			 * @Override public void onDrawShadow(Canvas canvas) {
-			 * 
-			 * 
-			 * canvas.scale(dragImageView.getScaleX(),
-			 * dragImageView.getScaleY(), dragImageView.getWidth() ,
-			 * dragImageView.getHeight() );
-			 * 
-			 * Log.e(TAG,
-			 * "============================try to trash dragImageView.getRotation()"
-			 * + dragImageView.getRotation());
-			 * 
-			 * 
-			 * canvas.translate((canvas.getWidth() - dragImageView.getWidth()) /
-			 * 2, (canvas.getHeight() - dragImageView.getHeight() ) / 2);
-			 * 
-			 * 
-			 * canvas.rotate(dragImageView.getRotation() * 180.0f / (float)
-			 * Math.PI); super.onDrawShadow(canvas); }
-			 * 
-			 * @Override public void onProvideShadowMetrics(Point shadowSize,
-			 * Point shadowTouchPoint) {
-			 * 
-			 * shadowSize.set((int) (dragImageView.getWidth() *
-			 * dragImageView.getScaleX()), (int)( dragImageView.getHeight() *
-			 * dragImageView.getScaleY())); shadowTouchPoint.set(shadowSize.x /
-			 * 2, shadowSize.y / 2); } };
-			 */
-
-			dragImageView.startDrag(data, shadowBuilder, dragImageView, 0);
+			updateDummyDragView(img, img.getDrawable());
+			DragUtility.dragView(dragImageView, TAG, DragUtility.LABLE_TO_TRASH);
 		}
 
 		if (ok) invalidate();
 		return ok;
 	}
 
-	public void removeStamp()
+	public void updateDummyDragViewPosition(Img img, float effectHeight, float effectWidth)
 	{
 
-		int size = mImages.size();
+		AbsoluteLayout.LayoutParams lp = new AbsoluteLayout.LayoutParams(
+				(int) effectWidth, (int) effectHeight, (int) img.getX(),
+				(int) img.getY());
+		this.updateViewLayout(dragImageView, lp);
+	}
 
-		if (size > 0)
+	public void updateLastPointInfos(PositionAndScale newImgPosAndScale)
+	{
+
+		lastImgPosAndScaleBeforeTrashMode = null;
+		lastImgPosAndScaleBeforeTrashMode = new PositionAndScale();
+
+		lastImgPosAndScaleBeforeTrashMode.set(newImgPosAndScale.getXOff(),
+				newImgPosAndScale.getYOff(), true, newImgPosAndScale.getScale(), true,
+				newImgPosAndScale.getScaleX(), newImgPosAndScale.getScaleY(), true,
+				newImgPosAndScale.getAngle());
+
+		lastPointInfoBeforeTrashMode = null;
+		lastPointInfoBeforeTrashMode = new PointInfo();
+		lastPointInfoBeforeTrashMode.set(currTouchPoint);
+	}
+
+	public void updateDummyDragView(Img img, Drawable backgroudDrawable)
+	{
+
+		Matrix viewMatrix = new Matrix();
+		viewMatrix.postScale(img.getScaleX(), img.getScaleY());
+		viewMatrix.postRotate(img.getAngle() * 180.0f / (float) Math.PI);
+		dragImageView.setImageMatrix(viewMatrix);
+		dragImageView.setRotation(img.getAngle());
+		dragImageView.setBackgroundDrawable(backgroudDrawable);
+		dragImageView.invalidate();
+	}
+
+	public void removeStamp()
+	{
+		if (mImages.size() > 0)
 		{
-			mImages.remove(size - 1);
-			Log.e(TAG, "=============after remove mImages.size():" + mImages.size());
+			int lastIndex = mImages.size() - 1;
+			mImages.remove(lastIndex);
 			dragImageView.setBackgroundDrawable(transparentDrawable);
 			dragImageView.invalidate();
 			this.invalidate();
 		}
-
 	}
 
 	public void cancelStamp()
@@ -571,44 +471,42 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 
 		dragImageView.setBackgroundDrawable(transparentDrawable);
 		dragImageView.invalidate();
-		int size = mImages.size();
-		Log.e(TAG, "=============after cancelSeal mImages.size():" + mImages.size());
-		if (size > 0)
+		Log.e(TAG, "=== after cancelSeal mImages.size():" + mImages.size());
+		if (mImages.size() > 0)
 		{
 			if (lastImgPosAndScaleBeforeTrashMode != null)
 			{
-				Log.e(TAG,
-						"=============after cancelSeal lastImgPosAndScaleBeforeTrashMode.getXOff()"
-								+ lastImgPosAndScaleBeforeTrashMode.getXOff());
-				Log.e(TAG,
-						"=============after cancelSeal lastImgPosAndScaleBeforeTrashMode.getYOff()"
-								+ lastImgPosAndScaleBeforeTrashMode.getYOff());
+				Log.e(TAG, "=== after cancelSeal lastImgPosAndScaleBeforeTrashMode.getXOff()"
+						+ lastImgPosAndScaleBeforeTrashMode.getXOff());
+				Log.e(TAG, "=== after cancelSeal lastImgPosAndScaleBeforeTrashMode.getYOff()"
+						+ lastImgPosAndScaleBeforeTrashMode.getYOff());
 
-				Log.e(TAG,
-						"=============after cancelSeal lastImgPosAndScaleBeforeTrashMode.getScale()"
-								+ lastImgPosAndScaleBeforeTrashMode.getScale());
-				Log.e(TAG,
-						"=============after cancelSeal lastImgPosAndScaleBeforeTrashMode.getScaleX()"
-								+ lastImgPosAndScaleBeforeTrashMode.getScaleX());
+				Log.e(TAG, "=== after cancelSeal lastImgPosAndScaleBeforeTrashMode.getScale()"
+						+ lastImgPosAndScaleBeforeTrashMode.getScale());
+				Log.e(TAG, "=== after cancelSeal lastImgPosAndScaleBeforeTrashMode.getScaleX()"
+						+ lastImgPosAndScaleBeforeTrashMode.getScaleX());
+			}
+			else{
+				Log.e(TAG, "===  lastImgPosAndScaleBeforeTrashMode is null");
 			}
 
-			Img img = mImages.get(size - 1);
+			Img img = mImages.get(mImages.size() - 1);
 
 			mImages.remove(img);
-			// img.setCenterY((float) (img.getCenterY() - (img.getImgHeight() *
-			// 1.5)));
 
 			Boolean ok = img.setPos(lastImgPosAndScaleBeforeTrashMode);
+
 			mImages.add(img);
-			if (ok)
+			if (ok && isDebug)
 			{
 				Log.e(TAG, "set new point ok");
-				Log.e(TAG, "set new point ok mg.getScaleX()" + img.getScaleX());
-				Log.e(TAG, "set new point ok mg.getX()" + img.getX() + ",mg.getY()" + img.getY());
-				Log.e(TAG, "set new point ok mg.getCenterX()" + img.getCenterX()
-						+ ",mg.getCenterY()" + img.getCenterY());
+				Log.e(TAG, "mg.getScaleX()" + img.getScaleX());
+				Log.e(TAG, "mg.getX()" + img.getX() + ",mg.getY()" + img.getY());
+				Log.e(TAG,
+						"mg.getCenterX()" + img.getCenterX() + ",mg.getCenterY()"
+								+ img.getCenterY());
 			}
-			// currTouchPoint.set(lastPointInfoBeforeTrashMode);
+
 			invalidate();
 		}
 	}
@@ -628,8 +526,7 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 		private float minX, maxX, minY, maxY;
 
 		// private static final float SCREEN_MARGIN = 0;
-		public float SCREEN_MARGIN = 50;
-
+		public float screenMargin = 50;
 		// bruce add
 		private float imageViewPositionX, imageViewPositionY;
 
@@ -665,7 +562,7 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 			// bruce add
 			this.setClickable(false);
 			this.setFocusable(false);
-//			SCREEN_MARGIN = width / 2;
+			// SCREEN_MARGIN = width / 2;
 		}
 
 		private void getMetrics(Resources res)
@@ -678,12 +575,12 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 			// this.displayWidth = metrics.widthPixels;
 			// this.displayHeight = metrics.heightPixels;
 
-			
-			Log.e(TAG, "getMetrics() metrics.widthPixels:"+metrics.widthPixels+",metrics.heightPixels:"+metrics.heightPixels);
-			this.displayWidth = (int)borderXofTrash;
-			this.displayHeight = (int)borderYofTrash; 
-//			this.displayWidth = 276 * 2;
-//			this.displayHeight = (int) ((273 * 2) - SCREEN_MARGIN);
+			Log.e(TAG, "getMetrics() metrics.widthPixels:" + metrics.widthPixels
+					+ ",metrics.heightPixels:" + metrics.heightPixels);
+			this.displayWidth = (int) StampSortViewWidth;
+			this.displayHeight = (int) StampSortViewHeight;
+			// this.displayWidth = 276 * 2;
+			// this.displayHeight = (int) ((273 * 2) - SCREEN_MARGIN);
 
 			/*
 			 * this.displayWidth = res.getConfiguration().orientation ==
@@ -706,23 +603,23 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 			this.height = drawable.getIntrinsicHeight();
 
 			// @bruce mark the original code
-//			if (this.maxX < SCREEN_MARGIN)
-//			{
-//				cx = SCREEN_MARGIN;
-//			}
-//			else if (this.minX > displayWidth - SCREEN_MARGIN)
-//			{
-//				cx = displayWidth - SCREEN_MARGIN;
-//			}
-//
-//			if (this.maxY > SCREEN_MARGIN)
-//			{
-//				cy = SCREEN_MARGIN;
-//			}
-//			else if (this.minY > displayHeight - SCREEN_MARGIN)
-//			{
-//				cy = displayHeight - SCREEN_MARGIN;
-//			}
+			// if (this.maxX < SCREEN_MARGIN)
+			// {
+			// cx = SCREEN_MARGIN;
+			// }
+			// else if (this.minX > displayWidth - SCREEN_MARGIN)
+			// {
+			// cx = displayWidth - SCREEN_MARGIN;
+			// }
+			//
+			// if (this.maxY > SCREEN_MARGIN)
+			// {
+			// cy = SCREEN_MARGIN;
+			// }
+			// else if (this.minY > displayHeight - SCREEN_MARGIN)
+			// {
+			// cy = displayHeight - SCREEN_MARGIN;
+			// }
 
 			setPos(cx, cy, sx, sy, 0.0f);
 		}
@@ -773,14 +670,14 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 				sy = this.scaleY;
 				// Make sure the image is not off the screen after a screen
 				// rotation
-				if (this.maxX < SCREEN_MARGIN)
-					cx = SCREEN_MARGIN;
-				else if (this.minX > displayWidth - SCREEN_MARGIN)
-					cx = displayWidth - SCREEN_MARGIN;
-				if (this.maxY > SCREEN_MARGIN)
-					cy = SCREEN_MARGIN;
-				else if (this.minY > displayHeight - SCREEN_MARGIN)
-					cy = displayHeight - SCREEN_MARGIN;
+				if (this.maxX < screenMargin)
+					cx = screenMargin;
+				else if (this.minX > displayWidth - screenMargin)
+					cx = displayWidth - screenMargin;
+				if (this.maxY > screenMargin)
+					cy = screenMargin;
+				else if (this.minY > displayHeight - screenMargin)
+					cy = displayHeight - screenMargin;
 			}
 			setPos(cx, cy, sx, sy, 0.0f);
 		}
@@ -806,10 +703,6 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 							: newImgPosAndScale.getScale(), newImgPosAndScale.getAngle());
 			// FIXME: anisotropic scaling jumps when axis-snapping
 			// FIXME: affine-ize
-			// return setPos(newImgPosAndScale.getXOff(),
-			// newImgPosAndScale.getYOff(),
-			// newImgPosAndScale.getScaleAnisotropicX(),
-			// newImgPosAndScale.getScaleAnisotropicY(), 0.0f);
 		}
 
 		/** Set the position and scale of an image in screen coordinates */
@@ -819,8 +712,8 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 			float ws = (width / 2) * scaleX, hs = (height / 2) * scaleY;
 			float newMinX = centerX - ws, newMinY = centerY - hs, newMaxX = centerX + ws, newMaxY = centerY
 					+ hs;
-			if (newMinX > displayWidth - SCREEN_MARGIN || newMaxX < SCREEN_MARGIN
-					|| newMinY > displayHeight - SCREEN_MARGIN || newMaxY < SCREEN_MARGIN)
+			if (newMinX > displayWidth - screenMargin || newMaxX < screenMargin
+					|| newMinY > displayHeight - screenMargin || newMaxY < screenMargin)
 			{
 				Log.e(TAG, "!!!!!setPos() Position out of Display Screen");
 
@@ -828,8 +721,6 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 			}
 
 			// bruce add
-			// setX(centerX - (ws / 2));
-			// setY(centerY - (hs / 2));
 			setX(newMinX);
 			setY(newMinY);
 			// bruce add end
@@ -945,6 +836,19 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 		{
 
 			return maxY;
+		}
+		
+
+		public float getScreenMargin()
+		{
+		
+			return screenMargin;
+		}
+
+		public void setScreenMargin(float screenMargin)
+		{
+		
+			this.screenMargin = screenMargin;
 		}
 	}
 
