@@ -323,7 +323,7 @@ public class EditSignatureActivity extends Activity
 
 	public void initChooseColorImageView()
 	{
-
+ 
 		chooseColorImageView = (ImageView) findViewById(R.id.act_edit_signature_iv_choose_color);
 		chooseColorImageView.setOnClickListener(new View.OnClickListener()
 		{

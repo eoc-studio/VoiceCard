@@ -161,11 +161,15 @@ public class HandWritingView extends View
 
 		super.onDraw(canvas);
 		canvas.clipRect(0, 0, PaintUtility.SKETTCHPAD.WIDTH, PaintUtility.SKETTCHPAD.HEIGHT);// 控制畫板的區域坐標(x,y,x+width,y+high);
-		// canvas.drawColor(Color.argb(150, 120, 120, 0));//控制畫板的背景顏色
-		// canvas.drawColor(R.color.deeppink);
+//		 canvas.drawColor(Color.argb(150, 120, 120, 0));//控制畫板的背景顏色
+//		 canvas.drawColor(R.color.deeppink);
 
 		canvas.drawBitmap(HandWriting(new1Bitmap), 0, 0, null);
 		canvas.drawPath(path, paint);
+		
+		if(isClearMode){
+			
+		}
 	}
 
 	/**
@@ -289,6 +293,7 @@ public class HandWritingView extends View
 		canvas.drawPath(path, paint);
 		// 重置繪製路線，即隱藏之前繪製的軌跡
 		path.reset();
+		invalidate();
 	}
 
 	/**
