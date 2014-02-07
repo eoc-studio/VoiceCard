@@ -291,15 +291,21 @@ public class FacebookManager
 		}
 	}
 	
-	public void publishTimeline(String id, String name, String pictureUrl) {
+	public void publishTimeline(String id, String name, String pictureUrl, String caption, String description, String link) {
         Session session = Session.getActiveSession();
         if (session.isOpened()) {
-            session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
-                    (Activity) context, Permissions.ALL_PERMISSION));
+            if(!session.getPermissions().contains(Permissions.PUBLISH_STREAM)) {
+                session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
+                        (Activity) context, Permissions.ALL_PERMISSION));
+                return;
+            }
             Bundle params = new Bundle();
             params.putString(BundleTag.NAME, name);
             params.putString(BundleTag.PICTURE, pictureUrl);
             params.putString(BundleTag.TO, id);
+            params.putString(BundleTag.CAPTION, caption);
+            params.putString(BundleTag.DESCRIPTION, description);
+            params.putString(BundleTag.LINK, link);
             
             try {
                 WebDialog feedDialog = (new WebDialog.FeedDialogBuilder(context, Session.getActiveSession(), params))

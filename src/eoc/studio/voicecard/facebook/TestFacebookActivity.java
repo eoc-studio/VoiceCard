@@ -33,6 +33,9 @@ public class TestFacebookActivity extends BaseActivity
 	private static final String TAG = "TestFacebookActivity";
 	private static final String NAME = "Test";
 	private static final String PICTURE = "http://upload.wikimedia.org/wikipedia/commons/2/26/YellowLabradorLooking_new.jpg";
+	private static final String CAPTION = "CAPTION";
+	private static final String DESCRIPTION = "DESCRIPTION";
+	private static final String LINK = "http://upload.wikimedia.org/wikipedia/commons/2/26/YellowLabradorLooking_new.jpg";
 	private Session.StatusCallback statusCallback = new SessionStatusCallback();
 	private FacebookManager facebookManager;
 	private FriendsAdapter friendsAdapter;
@@ -146,7 +149,7 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {
-                    facebookManager.publishTimeline(owerId, NAME, PICTURE);
+                    facebookManager.publishTimeline(owerId, NAME, PICTURE, CAPTION, DESCRIPTION, LINK);
                 }
             }
         });
@@ -158,7 +161,7 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {
-                    facebookManager.publishTimeline(testId, NAME, PICTURE);
+                    facebookManager.publishTimeline(testId, NAME, PICTURE, CAPTION, DESCRIPTION, LINK);
                 }
             }
         });
@@ -249,6 +252,7 @@ public class TestFacebookActivity extends BaseActivity
 		    Log.d(TAG, "session is " + session);
 		    Log.d(TAG, "state is " + state);
 		    Log.d(TAG, "exception is " + exception);
+		    dismissProgressDialog();
 		}
 	}
 
