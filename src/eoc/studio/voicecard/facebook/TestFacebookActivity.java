@@ -31,12 +31,16 @@ import eoc.studio.voicecard.R;
 public class TestFacebookActivity extends BaseActivity
 {
 	private static final String TAG = "TestFacebookActivity";
+	private static final String NAME = "Test";
+	private static final String PICTURE = "http://upload.wikimedia.org/wikipedia/commons/2/26/YellowLabradorLooking_new.jpg";
 	private Session.StatusCallback statusCallback = new SessionStatusCallback();
 	private FacebookManager facebookManager;
 	private FriendsAdapter friendsAdapter;
 	private ImageView showPicture;
 	private ListView showFriends;
 	private String userId = "1442881101";
+	private String owerId = "100007720118618";
+	private String testId = "100007720118618";
 	private ProgressDialog progressDialog;
 
 	@Override
@@ -82,6 +86,8 @@ public class TestFacebookActivity extends BaseActivity
 		Button getFriendList = (Button) findViewById(R.id.getFriendList);
 		Button getUserPicture = (Button) findViewById(R.id.getPicture);
 		Button inviteFriend = (Button) findViewById(R.id.inviteFriend);
+		Button publishMe = (Button) findViewById(R.id.publishMe);
+		Button publishFriend = (Button) findViewById(R.id.publishFriend);
 		showPicture = (ImageView) findViewById(R.id.showPicture);
 		showFriends = (ListView) findViewById(R.id.showFriends);
 		getUserProfile.setOnClickListener(new View.OnClickListener()
@@ -117,7 +123,6 @@ public class TestFacebookActivity extends BaseActivity
 				{
 					showProgressDialog(getResources().getString(R.string.get_picture));
 					facebookManager.getUserImg(true, new RequestUserPicture(), userId);
-					//facebookManager.shareImage();
 				}
 			}
 		});
@@ -129,13 +134,34 @@ public class TestFacebookActivity extends BaseActivity
 			{
 				if (facebookManager != null)
 				{
-					if (userId.equals("1442881101")) {
-						userId = "100007720118618";
-					}
-					facebookManager.inviteFriend(userId, null);
+					facebookManager.inviteFriend(testId, null);
 				}
 			}
 		});
+		
+		publishMe.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (facebookManager != null)
+                {
+                    facebookManager.publishTimeline(owerId, NAME, PICTURE);
+                }
+            }
+        });
+		
+		publishFriend.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (facebookManager != null)
+                {
+                    facebookManager.publishTimeline(testId, NAME, PICTURE);
+                }
+            }
+        });
 	}
 
 	private void processUserPictureResponse(ImageResponse response)
@@ -232,6 +258,7 @@ public class TestFacebookActivity extends BaseActivity
 		public void onCompleted(GraphUser user, Response response)
 		{
 			dismissProgressDialog();
+			owerId = user.getId();
 			showToast(user);
 		}
 	}

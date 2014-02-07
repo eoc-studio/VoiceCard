@@ -13,6 +13,8 @@
     <string name="user_info">User Info</string>
     <string name="invite_friend">Invite Friend</string>
     <string name="invite_message">I want invite you!</string>
+    <string name="publish_me">Publish to timeline</string>
+    <string name="publish_friend">Publish to friend</string>
     
     <!-- About Contact -->
     <string name="file_process_loading">Loading</string>

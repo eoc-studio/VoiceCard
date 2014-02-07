@@ -23,8 +23,10 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.facebook.FacebookException;
+import com.facebook.HttpMethod;
 import com.facebook.LoggingBehavior;
 import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.Settings;
@@ -251,7 +253,7 @@ public class FacebookManager
 		    if(!session.getPermissions().contains(Permissions.EMAIL)) {
     			session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
     					(Activity) context, Permissions.ALL_PERMISSION));
-    			
+    			return;
 		    }
 			Request meRequest = Request.newMeRequest(session, callback);
 			Bundle requestParams = meRequest.getParameters();			// if not set field, will get all info(no phone number)
@@ -288,69 +290,33 @@ public class FacebookManager
 			((TestFacebookActivity) context).dismissProgressDialog();
 		}
 	}
-
-	public void shareImage()
-	{
-		Session session = Session.getActiveSession();
-		if (session.isOpened())
-		{
-			session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
-					(Activity) context, Permissions.ALL_PERMISSION));
-			Bundle params = new Bundle();
-			params.putString(BundleTag.NAME, "Test Again~~~~~");
-//			params.putString(BundleTag.CAPTION, "");
-//			params.putString(BundleTag.DESCRIPTION, "Test");
-//			params.putString(BundleTag.LINK, "http://test.test");
-			params.putByteArray(BundleTag.SOURCE, getByteArray(null));
-			params.putString(BundleTag.PICTURE, "http://www.some-link.com/pic.png");
-			params.putByteArray(BundleTag.IMAGE, getByteArray(null));
-			params.putString(BundleTag.TO, "100007720118618");
-//			Request shareRequest = Request.newPostRequest(session, "me/feed", null,
-//					new Request.Callback()
-//					{
-//						@Override
-//						public void onCompleted(Response response)
-//						{
-//							Log.d(TAG, "" + response);
-//						}
-//					});
-//			Request shareRequest = Request.newUploadPhotoRequest(
-//					Session.getActiveSession(), // No need params, only post to me
-//					BitmapFactory.decodeResource(context.getResources(), R.drawable.dog),
-//					new Request.Callback()
-//					{
-//						@Override
-//						public void onCompleted(Response response)
-//						{
-//							Log.d(TAG, response.toString());
-//						}
-//					});
-//			shareRequest.setParameters(params);
-//			Request.executeBatchAsync(shareRequest);
-			try
-			{
-				WebDialog feedDialog = (new WebDialog.FeedDialogBuilder(context,
-						Session.getActiveSession(), params)).setOnCompleteListener(
-						new OnCompleteListener()
-						{
-							@Override
-							public void onComplete(Bundle values, FacebookException error)
-							{
-								Log.d(TAG, "values are " + values);
-								Log.d(TAG, "error is " + error);
-							}
-						}).build();
-				feedDialog.show();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		else
-		{}
+	
+	public void publishTimeline(String id, String name, String pictureUrl) {
+        Session session = Session.getActiveSession();
+        if (session.isOpened()) {
+            session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
+                    (Activity) context, Permissions.ALL_PERMISSION));
+            Bundle params = new Bundle();
+            params.putString(BundleTag.NAME, name);
+            params.putString(BundleTag.PICTURE, pictureUrl);
+            params.putString(BundleTag.TO, id);
+            
+            try {
+                WebDialog feedDialog = (new WebDialog.FeedDialogBuilder(context, Session.getActiveSession(), params))
+                        .setOnCompleteListener(new OnCompleteListener() {
+                            @Override
+                            public void onComplete(Bundle values, FacebookException error) {
+                                Log.d(TAG, "values are " + values);
+                                Log.d(TAG, "error is " + error);
+                            }
+                        }).build();
+                feedDialog.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 	}
-
+	
 	private byte[] getByteArray(Bitmap sharePhoto)
 	{
 		byte[] data = null;
