@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
@@ -33,6 +34,8 @@ import android.widget.ToggleButton;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.colorpickerview.dialog.ColorPickerDialog;
 import eoc.studio.voicecard.handwriting.HandWritingView;
+import eoc.studio.voicecard.utils.DragUtility;
+import eoc.studio.voicecard.utils.FileUtility;
 import eoc.studio.voicecard.utils.PaintUtility;
 import eoc.studio.voicecard.utils.PaintUtility.PEN_SIZE_ENUM;
 
@@ -72,6 +75,10 @@ public class EditSignatureActivity extends Activity
 
 	private int uiMode = MODE_WRITING;
 
+	private static final float TARGET_WIDTH_DP = 45;
+
+	private static final float TARGET_HEIGHT_DP = 45;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -80,32 +87,51 @@ public class EditSignatureActivity extends Activity
 		setContentView(R.layout.activity_edit_signature);
 		context = getApplicationContext();
 
-		trashImageView = (ImageView) findViewById(R.id.act_edit_signature_iv_trash);
-		trashImageView.setOnDragListener(new TrashDragListener());
+		initializeAllView();
+
+	}
+
+	public void initializeAllView()
+	{
+
+		initSketchLayout();
+		initTrashImageView();
+		initChangeModeButton();
+		initGridStampView();
+		initPaintSizeButton();
+		initEraserToggleButton();
+		initChooseColorImageView();
+	}
+
+	public void initSketchLayout()
+	{
 
 		handWritingView = new HandWritingView(this);
 		stampSorterView = new StampSortView(this);
 
 		sketchpadLayout = (RelativeLayout) findViewById(R.id.act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud);
+		sketchpadLayout.setOnDragListener(new SketchpadDragListener());
+
 		sketchpadLayout.addView(stampSorterView, new LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.FILL_PARENT));
 		sketchpadLayout.addView(handWritingView);
-		Log.e(TAG, "onCreate() stampSorterView getWidth():" + stampSorterView.getWidth()
-				+ ",getHeight():" + stampSorterView.getHeight());
 
-		sketchpadLayout.setOnDragListener(new SketchpadDragListener());
+		// stampSorterView.setBackgroundColor(R.color.sketchpad_color);
+	}
 
-//		stampSorterView.setBackgroundColor(R.color.sketchpad_color);
+	public void initTrashImageView()
+	{
+
+		trashImageView = (ImageView) findViewById(R.id.act_edit_signature_iv_trash);
+		trashImageView.setOnDragListener(new TrashDragListener());
+	}
+
+	public void initChangeModeButton()
+	{
 
 		changeModeButton = (ImageButton) findViewById(R.id.act_edit_signature_ib_mode);
 		changeModeButton.setOnClickListener(new ChangeModeClickListenr());
 		changeModeButton.setBackgroundResource(R.drawable.draw_mode);
-
-		initGridStampView();
-		initPaintSizeButton();
-		initEraserToggleButton();
-		initChooseColorImageView();
-
 	}
 
 	public void initGridStampView()
@@ -142,32 +168,26 @@ public class EditSignatureActivity extends Activity
 			switch (event.getAction())
 			{
 			case DragEvent.ACTION_DRAG_STARTED:
-				Log.e(TAG,
-						"ACTION_DRAG_STARTED ==============================>Try to trash(STARTED)");
+				Log.e(TAG, "ACTION_DRAG_STARTED");
 				break;
 			case DragEvent.ACTION_DRAG_ENTERED:
-				Log.e(TAG,
-						"ACTION_DRAG_ENTERED ==============================>Try to trash(ENTERED)");
+				Log.e(TAG, "ACTION_DRAG_ENTERED");
 				trashImageView.setBackgroundResource(R.drawable.trash_here_effect);
 				break;
 			case DragEvent.ACTION_DRAG_EXITED:
-
-				Log.e(TAG, "ACTION_DRAG_EXITED =======(ACTION_DRAG_EXITED) ");
 				trashImageView.setBackgroundResource(R.drawable.trash);
-				Log.e(TAG,
-						"ACTION_DRAG_EXITED ==============================>Try to trash(ACTION_DRAG_EXITED)");
-				stampSorterView.cancelSeal();
+				Log.e(TAG, "ACTION_DRAG_EXITED");
+				stampSorterView.cancelStamp();
 				break;
 			case DragEvent.ACTION_DROP:
 				trashImageView.setBackgroundResource(R.drawable.trash);
 				ClipData dropClipDate = event.getClipData();
-				if (dropClipDate.getItemAt(0).getText().equals("Try to trash"))
+				if (dropClipDate.getItemAt(0).getText().equals(DragUtility.LABLE_TO_TRASH))
 				{
-					Log.e(TAG, "ACTION_DROP     ==============================>Try to trash");
-					Log.e(TAG, "ACTION_DROP v.getRelativeLeft()" + getRelativeLeft(v));
+					Log.e(TAG, "ACTION_DROP ===>Try to trash");
 					Log.e(TAG, "ACTION_DROP event.getX()" + event.getX());
 					Log.e(TAG, "ACTION_DROP event.getY()" + event.getY());
-					stampSorterView.removeSeal();
+					stampSorterView.removeStamp();
 				}
 				break;
 
@@ -199,33 +219,20 @@ public class EditSignatureActivity extends Activity
 			case DragEvent.ACTION_DROP:
 
 				ClipData clipDate = event.getClipData();
-				if (clipDate.getItemAt(0).getText().equals("I am stamp"))
+				boolean isFromStamp = clipDate.getItemAt(0).getText().equals(DragUtility.LABLE_STAMP);
+				
+				if (isFromStamp)
 				{
-
 					Log.e(TAG, "ACTION_DROP event.getX()" + event.getX());
 					Log.e(TAG, "ACTION_DROP event.getY()" + event.getY());
-
 					Log.e(TAG, "ACTION_DROP v.getId() " + v.getId());
 
 					View view = (View) event.getLocalState();
-					Log.e(TAG, "ACTION_DROP v.getTag() " + view.getTag());
-
 					int drawbleId = (Integer) view.getTag();
 
 					Drawable drawable = context.getResources().getDrawable(drawbleId);
-					float width = drawable.getIntrinsicWidth();
-					float height = drawable.getIntrinsicHeight();
-					float targetWidthDP = 45;
-					float targetHeightDP = 45;
-
-					float targetWidthPX = targetWidthDP * 2;
-					float targetHeightPX = targetHeightDP * 2;
-
-					float scaleX = targetWidthPX / width;
-					float scaleY = targetWidthPX / height;
-
 					stampSorterView.loadOneImgage(context, (Integer) view.getTag(), event.getX(),
-							event.getY(), scaleX, scaleY);
+							event.getY(), calculateScaleX(drawable), calculateScaleY(drawable));
 					stampSorterView.invalidate();
 				}
 
@@ -236,6 +243,21 @@ public class EditSignatureActivity extends Activity
 			}
 			return true;
 		}
+		public float calculateScaleY(Drawable drawable)
+		{
+
+			float scaleY = DragUtility.convertDpToPixel(TARGET_HEIGHT_DP, context)
+					/ (float) drawable.getIntrinsicHeight();
+			return scaleY;
+		}
+
+		public float calculateScaleX(Drawable drawable)
+		{
+
+			float scaleX = DragUtility.convertDpToPixel(TARGET_WIDTH_DP, context)
+					/ (float) drawable.getIntrinsicWidth();
+			return scaleX;
+		}
 	}
 
 	class ChangeModeClickListenr implements OnClickListener
@@ -245,11 +267,13 @@ public class EditSignatureActivity extends Activity
 		public void onClick(View v)
 		{
 
+			sketchpadLayout.removeAllViews();
+
 			if ((uiMode & MODE_WRITING) == 1)
 			{
 				Log.e(TAG, "MODE_WRITING");
 
-				// turn on hand writing function
+				// turn off hand writing function
 				handWritingView.setOnTouchListener(new OnTouchListener()
 				{
 					@Override
@@ -260,9 +284,7 @@ public class EditSignatureActivity extends Activity
 					}
 				});
 
-				sketchpadLayout.removeAllViews();
-				sketchpadLayout.addView(handWritingView);
-				sketchpadLayout.addView(stampSorterView);
+				addViewByOrder(handWritingView, stampSorterView);
 
 				uiMode = MODE_DRAG;
 				changeModeButton.setBackgroundResource(R.drawable.drag_mode);
@@ -272,7 +294,7 @@ public class EditSignatureActivity extends Activity
 			{
 				Log.e(TAG, "MODE_DRAG");
 
-				// turn off hand writing function
+				// turn on hand writing function
 				handWritingView.setOnTouchListener(new OnTouchListener()
 				{
 					@Override
@@ -282,15 +304,19 @@ public class EditSignatureActivity extends Activity
 						return false;
 					}
 				});
-
-				sketchpadLayout.removeAllViews();
-				sketchpadLayout.addView(stampSorterView);
-				sketchpadLayout.addView(handWritingView);
+				addViewByOrder(stampSorterView,handWritingView);
 				uiMode = MODE_WRITING;
 				changeModeButton.setBackgroundResource(R.drawable.draw_mode);
 				Log.e(TAG, "change to MODE_WRITING");
 			}
 
+		}
+
+		private void addViewByOrder(View view1, View view2)
+		{
+
+			sketchpadLayout.addView(view1);
+			sketchpadLayout.addView(view2);
 		}
 
 	}
@@ -441,7 +467,7 @@ public class EditSignatureActivity extends Activity
 		rbSizeThree.setOnClickListener(listener);
 	}
 
-	private int getRelativeLeft(View myView)
+/*	private int getRelativeLeft(View myView)
 	{
 
 		if (myView.getParent() == myView.getRootView())
@@ -455,5 +481,5 @@ public class EditSignatureActivity extends Activity
 		if (myView.getParent() == myView.getRootView())
 			return myView.getTop();
 		else return myView.getTop() + getRelativeTop((View) myView.getParent());
-	}
+	}*/
 }

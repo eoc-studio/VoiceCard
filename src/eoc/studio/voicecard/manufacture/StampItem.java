@@ -8,8 +8,6 @@ public class StampItem
 
 	String name;
 
-
-
 	public StampItem(Integer drawableID, String name)
 	{
 
@@ -24,7 +22,7 @@ public class StampItem
 		super();
 		this.drawableID = drawableID;
 	}
-	
+
 	public String getName()
 	{
 

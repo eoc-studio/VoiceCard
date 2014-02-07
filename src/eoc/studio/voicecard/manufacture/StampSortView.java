@@ -550,7 +550,7 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 		return ok;
 	}
 
-	public void removeSeal()
+	public void removeStamp()
 	{
 
 		int size = mImages.size();
@@ -566,7 +566,7 @@ public class StampSortView extends AbsoluteLayout implements MultiTouchObjectCan
 
 	}
 
-	public void cancelSeal()
+	public void cancelStamp()
 	{
 
 		dragImageView.setBackgroundDrawable(transparentDrawable);
