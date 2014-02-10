@@ -27,6 +27,8 @@ public class FlipView extends RelativeLayout
 	private final Interpolator ACCELERATOR = new AccelerateInterpolator();
 	private final Interpolator DECELERATOR = new DecelerateInterpolator();
 	private boolean isFlipping = false;
+	private boolean isOpened = false;
+	private boolean isLockAfterOpened = false;
 	private FrameLayout frontPage;
 	private FrameLayout backPage;
 	private FrameLayout innerPage;
@@ -40,15 +42,26 @@ public class FlipView extends RelativeLayout
 	private final float[] ROTATE_FRONT_DEGREE2 = { 90f, rotationEnd };
 	private final float[] ROTATE_BACK_DEGREE1 = { rotationEnd, 90f };
 	private final float[] ROTATE_BACK_DEGREE2 = { -90f, rotationBegin };
-	private final OnTouchListener flipListener = new OnTouchListener()
+	private final OnTouchListener touchListener = new OnTouchListener()
 	{
 		@Override
 		public boolean onTouch(View v, MotionEvent event)
 		{
-			flip(frontPage, backPage);
+			if (!(isLockAfterOpened && isOpened))
+			{
+				flip(frontPage, backPage);
+			}
 			return false;
 		}
 	};
+	private FlipListener mFlipListener = null;
+
+	public interface FlipListener
+	{
+		public void onOpened();
+
+		public void onClosed();
+	}
 
 	public FlipView(Context context, int width, int height, float rotationBegin, float rotationEnd,
 			float pivotY)
@@ -76,8 +89,8 @@ public class FlipView extends RelativeLayout
 		evenParams.addRule(ALIGN_PARENT_LEFT);
 		backPage.setLayoutParams(evenParams);
 		backPage.setVisibility(INVISIBLE);
-		frontPage.setOnTouchListener(flipListener);
-		backPage.setOnTouchListener(flipListener);
+		frontPage.setOnTouchListener(touchListener);
+		backPage.setOnTouchListener(touchListener);
 		frontPage.setPivotY(pivotY);
 		frontPage.setRotationY(rotationBegin);
 		backPage.setPivotY(pivotY);
@@ -130,14 +143,36 @@ public class FlipView extends RelativeLayout
 		return flipDuration;
 	}
 
+	public boolean isOpened()
+	{
+		return isOpened;
+	}
+
+	public boolean isFlipping()
+	{
+		return isFlipping;
+	}
+
+	public void setLockAfterOpened(boolean lock)
+	{
+		isLockAfterOpened = lock;
+	}
+
+	public void setFlipListener(FlipListener listener)
+	{
+		mFlipListener = listener;
+	}
+
 	private void flip(final View front, final View back)
 	{
 		if (isFlipping) { return; }
 		isFlipping = true;
 		final View visiblePage, invisiblePage;
 		float[] animation1Degree, animation2Degree;
+		final boolean isOpening; // true: opening, false: closing
 		if (front.getVisibility() == VISIBLE)
 		{
+			isOpening = true;
 			animation1Degree = ROTATE_FRONT_DEGREE1;
 			animation2Degree = ROTATE_FRONT_DEGREE2;
 			visiblePage = front;
@@ -147,6 +182,7 @@ public class FlipView extends RelativeLayout
 		}
 		else
 		{
+			isOpening = false;
 			animation1Degree = ROTATE_BACK_DEGREE1;
 			animation2Degree = ROTATE_BACK_DEGREE2;
 			visiblePage = back;
@@ -180,6 +216,18 @@ public class FlipView extends RelativeLayout
 			public void onAnimationEnd(Animator anim)
 			{
 				isFlipping = false;
+				isOpened = isOpening;
+				if (mFlipListener != null)
+				{
+					if (isOpened)
+					{
+						mFlipListener.onOpened();
+					}
+					else
+					{
+						mFlipListener.onClosed();
+					}
+				}
 			}
 		});
 		animation1.start();
