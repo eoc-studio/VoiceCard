@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import eoc.studio.voicecard.animation.TestAnimationActivity;
+import eoc.studio.voicecard.calendarview.CalendarViewTest;
 import eoc.studio.voicecard.contact.ContactActivity;
 import eoc.studio.voicecard.facebook.TestFacebookActivity;
 import eoc.studio.voicecard.manufacture.CeateSignatureActivity;
@@ -51,6 +52,15 @@ public class TestMainActivity extends BaseActivity
 			public void onClick(View v)
 			{
 				Intent intent = new Intent(TestMainActivity.this, ContactActivity.class);
+				startActivity(intent);
+			}
+		});
+		findViewById(R.id.test_memorial_day).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Intent intent = new Intent(TestMainActivity.this, CalendarViewTest.class);
 				startActivity(intent);
 			}
 		});

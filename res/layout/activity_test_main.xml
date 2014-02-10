@@ -50,4 +50,11 @@
         android:layout_below="@id/test_web_api"
         android:text="Contacts Test" />
 
+    <Button
+        android:id="@+id/test_memorial_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/test_contacts"
+        android:text="Memorial Day Test" />
+
 </RelativeLayout>
