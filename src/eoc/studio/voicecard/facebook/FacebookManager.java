@@ -7,6 +7,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -32,6 +35,7 @@ import com.facebook.SessionState;
 import com.facebook.Settings;
 import com.facebook.internal.ImageDownloader;
 import com.facebook.internal.ImageRequest;
+import com.facebook.model.GraphUser;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 
@@ -40,13 +44,14 @@ import eoc.studio.voicecard.R;
 public class FacebookManager
 {
 	private static final String TAG = "FacebookManager";
-//	private static final String[] PERMISSION = {
-//			"user_photos, publish_checkins, publish_actions, publish_stream, user_mobile_phone, user_address, user_about_me",
-//			"email" };
+	private static final String USER_CANCELED_LOGIN = "User canceled login";
 	private Context context;
 	private ImageRequest lastRequest;
 	private int queryHeight = 100;
 	private int queryWidth = 100;
+	private Session.StatusCallback statusCallback = null;
+	private boolean isCanceledLogin = false;
+	
 
 	static class ShowField
 	{
@@ -79,10 +84,22 @@ public class FacebookManager
 	
 	static class BundleParams
 	{
+	    static final String ID = "id";
 	    static final String BIRTHDAY = "birthday";
 	    static final String EMAIL = "email";
 	    static final String NAME = "name";
 	    static final String PICTURE = "picture";
+	    static final String EDUCATION = "education";
+	    static final String WORK = "work";
+	    static final String GENDER = "gender";
+	    static final String LINK = "link";
+	    static final String HOMETOWN = "hometown";
+	    static final String TIMEZONE = "timezone";
+	    static final String LOCALE = "locale";
+	    
+	    // cannot get
+	    static final String MOBILE = "mobile";
+	    static final String TITLE = "title";
 	}
 	
 	static class Permissions
@@ -176,24 +193,96 @@ public class FacebookManager
         static final String MANAGE_NOTIFICATIONS = "manage_notifications";
         static final String MANAGE_PAGES = "manage_pages";
         
-        static final String[] ALL_PERMISSION = { USER_PHOTOS, PUBLISH_CHECKINS, PUBLISH_ACTION, PUBLISH_STREAM,
-                USER_ABOUT_ME, EMAIL };
+        static final String[] PUBLISH_PERMISSION = { PUBLISH_CHECKINS, PUBLISH_ACTION, PUBLISH_STREAM };
+        static final String[] READ_PERMISSION = { FRIENDS_BIRTHDAY, USER_BIRTHDAY, USER_ABOUT_ME, EMAIL, USER_LOCATION,
+                USER_WORK_HISTORY, USER_EDUCATION_HISTORY };
 	}
+	
+    private class SessionStatusCallback implements Session.StatusCallback {
+        private Context context;
+        SessionStatusCallback(Context context) {
+            this.context = context;
+        }
+        
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            Log.d(TAG, "session is " + session);
+            Log.d(TAG, "state is " + state);
+            if (exception != null) {
+                Log.d(TAG, "exception is " + exception.getMessage());
+                if (exception.getMessage().equals(USER_CANCELED_LOGIN)) {
+                    isCanceledLogin = true;
+                }
+            } else {
+                Log.d(TAG, "exception is null");
+                getUserProfile(new RequestGraphUserCallback());
+            }
+            ((TestFacebookActivity) context).dismissProgressDialog();
+        }
+    }
+    
+    private class RequestGraphUserCallback implements Request.GraphUserCallback
+    {
+        @Override
+        public void onCompleted(GraphUser user, Response response)
+        {
+            if (user != null) {
+                JSONObject userJSON = user.getInnerJSONObject();
+                if(userJSON != null) {
+                    try {
+                        Log.d(TAG, "id is " + userJSON.getString(BundleParams.ID));
+                        Log.d(TAG, "email is " + userJSON.getString(BundleParams.EMAIL));
+                        Log.d(TAG, "name is " + userJSON.getString(BundleParams.NAME));
+                        Log.d(TAG, "gender is " + userJSON.getString(BundleParams.GENDER));
+                        Log.d(TAG, "birthday is " + userJSON.getString(BundleParams.BIRTHDAY));
+                        Log.d(TAG, "link is " + userJSON.getString(BundleParams.LINK));
+                        Log.d(TAG, "timezone is " + userJSON.getInt(BundleParams.TIMEZONE));
+                        Log.d(TAG, "locale is " + userJSON.getString(BundleParams.LOCALE));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    
+                    try {
+                        Log.d(TAG, "img is "
+                                + userJSON.getJSONObject(BundleParams.PICTURE).getJSONObject("data").getString("url"));
+                        
+                        Log.d(TAG, "hometown is "
+                                + userJSON.getJSONObject(BundleParams.HOMETOWN).getString(BundleParams.NAME));
 
-	public FacebookManager(Context context, Session.StatusCallback statusCallback,
-			Bundle savedInstanceState)
+                        Log.d(TAG, "work is "
+                                + userJSON.getJSONArray(BundleParams.WORK).getJSONObject(0).getJSONObject("employer")
+                                        .getString(BundleParams.NAME));
+                        
+                        Log.d(TAG, "education is "
+                                + userJSON.getJSONArray(BundleParams.EDUCATION).getJSONObject(0).getJSONObject("school")
+                                        .getString(BundleParams.NAME));
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+	public FacebookManager(Context context, Bundle savedInstanceState)
 	{
 		this.context = context;
+		statusCallback = new SessionStatusCallback(context);
 		printHashKey("eoc.studio.voicecard");
-		initSession(statusCallback, savedInstanceState);
+		initSession(savedInstanceState);
 	}
+	    
+    public Session.StatusCallback getSessionStatusCallBack() {
+        return statusCallback;
+    }
 
-	private void initSession(Session.StatusCallback statusCallback, Bundle savedInstanceState)
+	private void initSession(Bundle savedInstanceState)
 	{
 		Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
-		// Settings.getLoggingBehaviors()
+
 		Session session = Session.getActiveSession();
 		Log.d(TAG, "session is " + session);
+		Log.d(TAG, "savedInstanceState is " + savedInstanceState);
 		if (session == null)
 		{
 			if (savedInstanceState != null)
@@ -203,21 +292,34 @@ public class FacebookManager
 			else
 			{
 				session = new Session(context);
+				
+				Log.d(TAG, "session state is XXXXXXXXXXXXXXXXXXXXXXXX " + session.getState());
 			}
-			Session.setActiveSession(session);
-			Log.d(TAG, "session state is " + session.getState());
-			if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)
-					|| session.getState().equals(SessionState.CREATED))
-			{
-				session.openForRead(new Session.OpenRequest((Activity) context).setCallback(
-						statusCallback).setPermissions(
-                                Arrays.asList(Permissions.FRIENDS_BIRTHDAY, Permissions.USER_LOCATION,
-                                        Permissions.USER_BIRTHDAY, Permissions.USER_LIKES, Permissions.FRIENDS_PHOTOS)));
-			}
-			Log.d(TAG, "session permission is " + session.getPermissions());
+			openSession(session);
 		}
 		else
-		{}
+		{
+            SessionState sessionState = session.getState();
+            Log.d(TAG, "The session is not null, but session state is " + sessionState);
+            Log.d(TAG, "isCanceledLogin is " + isCanceledLogin);
+            if (session.getState().equals(SessionState.CLOSED_LOGIN_FAILED)
+                    || session.getState().equals(SessionState.CLOSED)) {
+                if (isCanceledLogin) {
+                    session.closeAndClearTokenInformation();
+                    isCanceledLogin = false;
+                }
+                session = new Session(context);
+                openSession(session);
+            }
+		}
+		Log.d(TAG, "session permission is " + session.getPermissions());
+	}
+	
+	private void openSession(Session session) {
+        session.openForRead(new Session.OpenRequest((Activity) context).setCallback(statusCallback)
+                .setPermissions(
+                        Arrays.asList(Permissions.READ_PERMISSION)));
+        Session.setActiveSession(session);
 	}
 
 	public void printHashKey(String appPackage)
@@ -250,16 +352,14 @@ public class FacebookManager
 		Log.d(TAG, "session permission is " + session.getPermissions());
 		if (session.isOpened())
 		{
-		    if(!session.getPermissions().contains(Permissions.EMAIL)) {
-    			session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
-    					(Activity) context, Permissions.ALL_PERMISSION));
-    			return;
-		    }
 			Request meRequest = Request.newMeRequest(session, callback);
 			Bundle requestParams = meRequest.getParameters();			// if not set field, will get all info(no phone number)
             StringBuilder queryString = new StringBuilder().append(BundleParams.NAME).append(", ")
                     .append(BundleParams.BIRTHDAY).append(", ").append(BundleParams.PICTURE).append(", ")
-                    .append(BundleParams.EMAIL);
+                    .append(BundleParams.EMAIL).append(", ").append(BundleParams.EDUCATION).append(", ")
+                    .append(BundleParams.WORK).append(", ").append(BundleParams.GENDER).append(", ")
+                    .append(BundleParams.LINK).append(", ").append(BundleParams.HOMETOWN).append(", ")
+                    .append(BundleParams.TIMEZONE).append(", ").append(BundleParams.LOCALE);
             requestParams.putString(BundleTag.FIELDS, queryString.toString());
 			meRequest.setParameters(requestParams);
 			meRequest.executeAsync();
@@ -296,7 +396,7 @@ public class FacebookManager
         if (session.isOpened()) {
             if(!session.getPermissions().contains(Permissions.PUBLISH_STREAM)) {
                 session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
-                        (Activity) context, Permissions.ALL_PERMISSION));
+                        (Activity) context, Permissions.PUBLISH_PERMISSION));
                 return;
             }
             Bundle params = new Bundle();

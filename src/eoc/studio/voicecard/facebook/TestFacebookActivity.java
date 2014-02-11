@@ -36,7 +36,6 @@ public class TestFacebookActivity extends BaseActivity
 	private static final String CAPTION = "CAPTION";
 	private static final String DESCRIPTION = "DESCRIPTION";
 	private static final String LINK = "http://upload.wikimedia.org/wikipedia/commons/2/26/YellowLabradorLooking_new.jpg";
-	private Session.StatusCallback statusCallback = new SessionStatusCallback();
 	private FacebookManager facebookManager;
 	private FriendsAdapter friendsAdapter;
 	private ImageView showPicture;
@@ -51,7 +50,7 @@ public class TestFacebookActivity extends BaseActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_test_facebook);
-		facebookManager = new FacebookManager(this, statusCallback, savedInstanceState);
+		facebookManager = new FacebookManager(this, savedInstanceState);
 		findViews();
 	}
 
@@ -59,14 +58,14 @@ public class TestFacebookActivity extends BaseActivity
 	public void onStart()
 	{
 		super.onStart();
-		Session.getActiveSession().addCallback(statusCallback);
+		Session.getActiveSession().addCallback(facebookManager.getSessionStatusCallBack());
 	}
 
 	@Override
 	public void onStop()
 	{
 		super.onStop();
-		Session.getActiveSession().removeCallback(statusCallback);
+		Session.getActiveSession().removeCallback(facebookManager.getSessionStatusCallBack());
 	}
 
 	@Override
@@ -80,12 +79,14 @@ public class TestFacebookActivity extends BaseActivity
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		super.onActivityResult(requestCode, resultCode, data);
+		Log.d(TAG, "requestCode is " + requestCode);
+		Log.d(TAG, "resultCode is " + resultCode);
+		Log.d(TAG, "data is " + data);
 		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 	}
 
 	private void findViews()
 	{
-		Button getUserProfile = (Button) findViewById(R.id.getUserProfile);
 		Button getFriendList = (Button) findViewById(R.id.getFriendList);
 		Button getUserPicture = (Button) findViewById(R.id.getPicture);
 		Button inviteFriend = (Button) findViewById(R.id.inviteFriend);
@@ -93,18 +94,7 @@ public class TestFacebookActivity extends BaseActivity
 		Button publishFriend = (Button) findViewById(R.id.publishFriend);
 		showPicture = (ImageView) findViewById(R.id.showPicture);
 		showFriends = (ListView) findViewById(R.id.showFriends);
-		getUserProfile.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				if (facebookManager != null)
-				{
-					showProgressDialog(getResources().getString(R.string.get_user_profile));
-					facebookManager.getUserProfile(new RequestGraphUserCallback());
-				}
-			}
-		});
+
 		getFriendList.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -241,29 +231,6 @@ public class TestFacebookActivity extends BaseActivity
 		if (progressDialog != null)
 		{
 			progressDialog.dismiss();
-		}
-	}
-
-	private class SessionStatusCallback implements Session.StatusCallback
-	{
-		@Override
-		public void call(Session session, SessionState state, Exception exception)
-		{
-		    Log.d(TAG, "session is " + session);
-		    Log.d(TAG, "state is " + state);
-		    Log.d(TAG, "exception is " + exception);
-		    dismissProgressDialog();
-		}
-	}
-
-	private class RequestGraphUserCallback implements Request.GraphUserCallback
-	{
-		@Override
-		public void onCompleted(GraphUser user, Response response)
-		{
-			dismissProgressDialog();
-			owerId = user.getId();
-			showToast(user);
 		}
 	}
 

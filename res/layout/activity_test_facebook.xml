@@ -3,71 +3,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity" 
-    >
-    <ScrollView
+    tools:context=".MainActivity" >
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
-    	<LinearLayout
-        	android:layout_width="match_parent"
-        	android:layout_height="match_parent"
-        	android:orientation="vertical"
-        	>
-    	<Button
-        	android:id="@+id/getUserProfile"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/get_user_profile"
-        	/>
-    
-    	<Button
-        	android:id="@+id/getFriendList"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/get_friend_list"
-        	/>
-    
-    	<ListView
-        	android:id="@+id/showFriends"
-        	android:layout_width="fill_parent"
-        	android:layout_height="@dimen/show_friends_height"
-        	>
-        
-    	</ListView>
-    
-    	<Button
-        	android:id="@+id/getPicture"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/get_picture"
-        	/>
-    
-    	<ImageView
-        	android:id="@+id/showPicture"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	/>
-    
-    	<Button
-        	android:id="@+id/inviteFriend"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/invite_friend"
-        	/>
-    	<Button
-        	android:id="@+id/publishMe"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/publish_me"
-        	/>
-    	<Button
-        	android:id="@+id/publishFriend"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/publish_friend"
-        	/>
-		</LinearLayout>
-	</ScrollView>
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/getFriendList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/get_friend_list" />
+
+        <ListView
+            android:id="@+id/showFriends"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/show_friends_height" >
+        </ListView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/getPicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/get_picture" />
+
+            <ImageView
+                android:id="@+id/showPicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/inviteFriend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/invite_friend" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/publishMe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/publish_me" />
+
+            <Button
+                android:id="@+id/publishFriend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/publish_friend" />
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>

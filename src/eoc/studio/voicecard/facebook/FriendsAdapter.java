@@ -3,6 +3,7 @@ package eoc.studio.voicecard.facebook;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +26,12 @@ public class FriendsAdapter extends BaseAdapter
 		this.context = context;
 		this.users = users;
 		layoutInflater = LayoutInflater.from(context);
-		// for (int i = 0; i < users.size(); i++)
-		// {
-		// Log.d(TAG, "user is " + users.get(i).getInnerJSONObject());
-		// }
+		
+		for (int i = 0; i < users.size(); i++) {
+		    Log.d(TAG, "id is " + users.get(i).getId());
+		    Log.d(TAG, "name is " + users.get(i).getName());
+		    Log.d(TAG, "name is " + users.get(i).getBirthday());
+		}
 	}
 
 	@Override
