@@ -1,12 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    >
+    android:layout_height="match_parent" >
+
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/user_info_not_install"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
-        />
-</LinearLayout>
+        android:layout_centerVertical="true"
+        android:drawableTop="@drawable/icon_warining"
+        android:text="@string/not_install"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/user_info_header"
+        android:layout_width="@dimen/user_info_header_edge"
+        android:layout_height="@dimen/user_info_header_edge"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/user_info_not_install"
+        android:src="@drawable/dummy" />
+
+    <TextView
+        android:id="@+id/user_info_name"
+        android:layout_width="@dimen/user_info_name_width"
+        android:layout_height="@dimen/user_info_name_height"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/user_info_name_margin_left"
+        android:layout_toRightOf="@+id/user_info_header"
+        android:gravity="center_vertical" />
+
+    <ImageView
+        android:id="@+id/user_info_check_icon"
+        android:layout_width="@dimen/user_info_check_icon_edge"
+        android:layout_height="@dimen/user_info_check_icon_edge"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/user_info_check_margin_right"
+        android:src="@drawable/icon_checkbox" />
+
+</RelativeLayout>

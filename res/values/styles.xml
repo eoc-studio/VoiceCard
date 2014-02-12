@@ -18,4 +18,13 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="inputTextStyle">
+        <item name="android:layout_width">@dimen/common_txt_width</item>
+        <item name="android:layout_height">@dimen/common_txt_height</item>
+        <item name="android:textSize">@dimen/common_font_small_size</item>
+        <item name="android:paddingLeft">@dimen/common_input_padding</item>
+        <item name="android:paddingRight">@dimen/common_input_padding</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
 </resources>

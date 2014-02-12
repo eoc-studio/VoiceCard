@@ -31,6 +31,9 @@
             </intent-filter>
         </activity>
         <activity android:name="eoc.studio.voicecard.facebook.TestFacebookActivity" />
+        <activity android:name="eoc.studio.voicecard.facebook.SelectFriendActivity" 
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            />
         <activity android:name="eoc.studio.voicecard.animation.TestAnimationActivity" />
 
         <meta-data

@@ -43,7 +43,7 @@ public class TestFacebookActivity extends BaseActivity
 	private String userId = "1442881101";
 	private String owerId = "100007720118618";
 	private String testId = "100007720118618";
-	private ProgressDialog progressDialog;
+//	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -58,14 +58,14 @@ public class TestFacebookActivity extends BaseActivity
 	public void onStart()
 	{
 		super.onStart();
-		Session.getActiveSession().addCallback(facebookManager.getSessionStatusCallBack());
+//		Session.getActiveSession().addCallback(facebookManager.getSessionStatusCallBack());
 	}
 
 	@Override
 	public void onStop()
 	{
 		super.onStop();
-		Session.getActiveSession().removeCallback(facebookManager.getSessionStatusCallBack());
+//		Session.getActiveSession().removeCallback(facebookManager.getSessionStatusCallBack());
 	}
 
 	@Override
@@ -100,11 +100,10 @@ public class TestFacebookActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
-				if (facebookManager != null)
-				{
-					showProgressDialog(getResources().getString(R.string.get_friend_list));
-					facebookManager.getFriendList(new RequestGraphUserListCallback());
-				}
+//				if (facebookManager != null)
+//				{
+//					facebookManager.getFriendList(new RequestGraphUserListCallback());
+//				}
 			}
 		});
 		getUserPicture.setOnClickListener(new View.OnClickListener()
@@ -114,7 +113,8 @@ public class TestFacebookActivity extends BaseActivity
 			{
 				if (facebookManager != null)
 				{
-					showProgressDialog(getResources().getString(R.string.get_picture));
+//					showProgressDialog(getResources().getString(R.string.get_picture));
+					facebookManager.dialogHandler.sendEmptyMessage(FacebookManager.SHOW_WAITING_DIALOG);
 					facebookManager.getUserImg(true, new RequestUserPicture(), userId);
 				}
 			}
@@ -179,87 +179,87 @@ public class TestFacebookActivity extends BaseActivity
 		}
 	}
 
-	private void processUserListReponse(List<GraphUser> users)
-	{
-		if (users != null)
-		{
-			Log.d(TAG, "user list size is " + users.size());
-			friendsAdapter = new FriendsAdapter(TestFacebookActivity.this, users);
-			showFriends.setAdapter(friendsAdapter);
-			showFriends.setOnItemClickListener(new UserListClickListener());
-		}
-	}
+//	private void processUserListReponse(List<GraphUser> users)
+//	{
+//		if (users != null)
+//		{
+//			Log.d(TAG, "user list size is " + users.size());
+//			friendsAdapter = new FriendsAdapter(TestFacebookActivity.this, users);
+//			showFriends.setAdapter(friendsAdapter);
+//			showFriends.setOnItemClickListener(new UserListClickListener());
+//		}
+//	}
 
-	private void showToast(GraphUser user)
-	{
-		if (user != null)
-		{
-			try
-			{
-				userId = user.getId();
-				JSONObject userJSON = user.getInnerJSONObject();
-				Log.d(TAG, "user is " + userJSON);
-				Toast.makeText(
-						TestFacebookActivity.this,
-						FacebookManager.ShowField.USER_ID
-								+ userId
-								+ FacebookManager.ShowField.USER_NAME
-								+ user.getName()
-								+ FacebookManager.ShowField.USER_BIRTHDAY
-								+ user.getBirthday()
-								+ FacebookManager.ShowField.USER_ICON
-								+ userJSON.getJSONObject(FacebookManager.JSONTag.PICTURE)
-										.getJSONObject(FacebookManager.JSONTag.DATA)
-										.getString(FacebookManager.JSONTag.URL), Toast.LENGTH_SHORT)
-						.show();
-			}
-			catch (JSONException e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
+//	private void showToast(GraphUser user)
+//	{
+//		if (user != null)
+//		{
+//			try
+//			{
+//				userId = user.getId();
+//				JSONObject userJSON = user.getInnerJSONObject();
+//				Log.d(TAG, "user is " + userJSON);
+//				Toast.makeText(
+//						TestFacebookActivity.this,
+//						FacebookManager.ShowField.USER_ID
+//								+ userId
+//								+ FacebookManager.ShowField.USER_NAME
+//								+ user.getName()
+//								+ FacebookManager.ShowField.USER_BIRTHDAY
+//								+ user.getBirthday()
+//								+ FacebookManager.ShowField.USER_ICON
+//								+ userJSON.getJSONObject(FacebookManager.JSONTag.PICTURE)
+//										.getJSONObject(FacebookManager.JSONTag.DATA)
+//										.getString(FacebookManager.JSONTag.URL), Toast.LENGTH_SHORT)
+//						.show();
+//			}
+//			catch (JSONException e)
+//			{
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 
-	private void showProgressDialog(String title)
-	{
-		progressDialog = ProgressDialog.show(TestFacebookActivity.this, title, getResources()
-				.getString(R.string.file_process_loading));
-	}
+//	private void showProgressDialog(String title)
+//	{
+//		progressDialog = ProgressDialog.show(TestFacebookActivity.this, title, getResources()
+//				.getString(R.string.file_process_loading));
+//	}
+//
+//	public void dismissProgressDialog()
+//	{
+//		if (progressDialog != null)
+//		{
+//			progressDialog.dismiss();
+//		}
+//	}
 
-	public void dismissProgressDialog()
-	{
-		if (progressDialog != null)
-		{
-			progressDialog.dismiss();
-		}
-	}
-
-	private class RequestGraphUserListCallback implements Request.GraphUserListCallback
-	{
-		@Override
-		public void onCompleted(List<GraphUser> users, Response response)
-		{
-			dismissProgressDialog();
-			processUserListReponse(users);
-		}
-	}
+//	private class RequestGraphUserListCallback implements Request.GraphUserListCallback
+//	{
+//		@Override
+//		public void onCompleted(List<GraphUser> users, Response response)
+//		{
+//		    facebookManager.dialogHandler.sendEmptyMessage(FacebookManager.DISMISS_WAITING_DIALOG);
+//			processUserListReponse(users);
+//		}
+//	}
 
 	private class RequestUserPicture implements ImageRequest.Callback
 	{
 		@Override
 		public void onCompleted(ImageResponse response)
 		{
-			dismissProgressDialog();
+		    facebookManager.dialogHandler.sendEmptyMessage(FacebookManager.DISMISS_WAITING_DIALOG);
 			processUserPictureResponse(response);
 		}
 	}
 
-	private class UserListClickListener implements AdapterView.OnItemClickListener
-	{
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-		{
-			showToast((GraphUser) friendsAdapter.getItem(position));
-		}
-	}
+//	private class UserListClickListener implements AdapterView.OnItemClickListener
+//	{
+//		@Override
+//		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+//		{
+//			showToast((GraphUser) friendsAdapter.getItem(position));
+//		}
+//	}
 }

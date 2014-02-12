@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/act_select_friend_llyt_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@layout/view_main_backgroud_repeat"
+    android:clipToPadding="false"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/act_select_friend_llyt_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/header_bg2"
+        android:clipToPadding="false"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/act_select_friend_iv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/title_address" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/act_select_friend_search_bar"
+        style="@style/inputTextStyle"
+        android:layout_marginTop="@dimen/act_select_friend_margin_top"
+        android:background="@drawable/search"
+        android:hint="@string/search_friend"
+        android:inputType="text"
+        android:textCursorDrawable="@null" />
+
+    <LinearLayout
+        android:id="@+id/act_select_friend_llyt_drag_and_stamps_up_dash_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/act_select_friend_dash_horizontal_height"
+        android:layout_marginTop="@dimen/act_select_friend_margin_top"
+        android:background="@layout/view_dash_horizontal_repeat"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/act_select_friend_display_message"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/common_txt_height_long"
+        android:background="@color/whitesmoke"
+        android:textColor="@color/select_friend_tip_color"
+        android:gravity="center"
+        android:text="@string/user_not_install_message"
+        android:textSize="@dimen/common_font_small_size" />
+
+    <ListView
+        android:id="@+id/act_select_friend_list"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/act_select_friend_list_height"
+        android:background="@color/whitesmoke"
+        android:cacheColorHint="@color/black"
+        android:choiceMode="multipleChoice"
+        android:dividerHeight="@dimen/act_select_friend_divider_height" >
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/act_select_friend_llyt_drag_and_stamps_up_dash_horizontal_down"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/act_select_friend_dash_horizontal_height"
+        android:background="@layout/view_dash_horizontal_repeat"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/act_select_friend_llyt_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/act_select_friend_iv_button_return"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_return" />
+
+        <ImageView
+            android:id="@+id/act_select_friend_iv_button_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_sure" />
+    </LinearLayout>
+
+</LinearLayout>

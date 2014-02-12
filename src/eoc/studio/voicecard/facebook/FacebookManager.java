@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -19,6 +20,8 @@ import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -40,17 +43,21 @@ import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.facebook.SimpleFacebook.OnLogoutListener;
 
 public class FacebookManager
 {
 	private static final String TAG = "FacebookManager";
 	private static final String USER_CANCELED_LOGIN = "User canceled login";
+    public static final int SHOW_WAITING_DIALOG = 0;
+    public static final int DISMISS_WAITING_DIALOG = 1;
 	private Context context;
 	private ImageRequest lastRequest;
 	private int queryHeight = 100;
 	private int queryWidth = 100;
 	private Session.StatusCallback statusCallback = null;
 	private boolean isCanceledLogin = false;
+	private ProgressDialog progressDialog;
 	
 
 	static class ShowField
@@ -217,7 +224,8 @@ public class FacebookManager
                 Log.d(TAG, "exception is null");
                 getUserProfile(new RequestGraphUserCallback());
             }
-            ((TestFacebookActivity) context).dismissProgressDialog();
+//            ((TestFacebookActivity) context).dismissProgressDialog();
+//            dialogHandler.sendEmptyMessage(DISMISS_WAITING_DIALOG);
         }
     }
     
@@ -263,6 +271,24 @@ public class FacebookManager
             }
         }
     }
+    
+    public Handler dialogHandler = new Handler() {
+        @Override  
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+            case SHOW_WAITING_DIALOG:
+                Log.d(TAG, "show waiting dialog ");
+                progressDialog = ProgressDialog.show(context, "", context.getResources()
+                        .getString(R.string.file_process_loading));
+                break;
+            case DISMISS_WAITING_DIALOG:
+                Log.d(TAG, "dismiss dialog ");
+                if (progressDialog != null)
+                    progressDialog.dismiss();
+                break;
+            }
+        }
+    };
 
 	public FacebookManager(Context context, Bundle savedInstanceState)
 	{
@@ -313,6 +339,7 @@ public class FacebookManager
             }
 		}
 		Log.d(TAG, "session permission is " + session.getPermissions());
+		session.addCallback(statusCallback);
 	}
 	
 	private void openSession(Session session) {
@@ -367,12 +394,15 @@ public class FacebookManager
 		else
 		{
 			Log.d(TAG, "session is closed");
-			((TestFacebookActivity) context).dismissProgressDialog();
+//			((TestFacebookActivity) context).dismissProgressDialog();
+//			dialogHandler.sendEmptyMessage(DISMISS_WAITING_DIALOG);
 		}
 	}
 
 	public void getFriendList(Request.GraphUserListCallback callback)
 	{
+	    Log.d(TAG, "getFriendList");
+	    dialogHandler.sendEmptyMessage(SHOW_WAITING_DIALOG);
 		Session session = Session.getActiveSession();
 		if (session.isOpened())
 		{
@@ -387,7 +417,8 @@ public class FacebookManager
 		else
 		{
 			Log.d(TAG, "session is closed");
-			((TestFacebookActivity) context).dismissProgressDialog();
+//			((TestFacebookActivity) context).dismissProgressDialog();
+			dialogHandler.sendEmptyMessage(DISMISS_WAITING_DIALOG);
 		}
 	}
 	
@@ -498,4 +529,25 @@ public class FacebookManager
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		requestsDialog.show();
 	}
+	
+	public void logout()
+    {
+//        if (isLogin())
+//        {
+        Session session = Session.getActiveSession();
+        if (session != null && !session.isClosed()) {
+            session.closeAndClearTokenInformation();
+            session.removeCallback(statusCallback);
+        }
+//        }
+//        else
+//        {
+//            // log
+//            logInfo("You were already logged out before calling 'logout()' method");
+//            if (onLogoutListener != null)
+//            {
+//                onLogoutListener.onLogout();
+//            }
+//        }
+    }
 }

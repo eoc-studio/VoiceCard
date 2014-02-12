@@ -30,5 +30,12 @@
 
     <!-- MemorialDayNotificationView -->
     <string name="a_normal_day">Nothing special</string>
+    
+    <!-- About Select Friend -->
+    <string name="search_friend">Search Friend</string>
+    <string name="user_not_install_message">If user not install this app then send message to him/her.</string>
+    
+    <!-- About Friend Info -->
+    <string name="not_install">not install</string>
 
 </resources>

@@ -27,11 +27,11 @@ public class FriendsAdapter extends BaseAdapter
 		this.users = users;
 		layoutInflater = LayoutInflater.from(context);
 		
-		for (int i = 0; i < users.size(); i++) {
-		    Log.d(TAG, "id is " + users.get(i).getId());
-		    Log.d(TAG, "name is " + users.get(i).getName());
-		    Log.d(TAG, "name is " + users.get(i).getBirthday());
-		}
+//		for (int i = 0; i < users.size(); i++) {
+//		    Log.d(TAG, "id is " + users.get(i).getId());
+//		    Log.d(TAG, "name is " + users.get(i).getName());
+//		    Log.d(TAG, "birthday is " + users.get(i).getBirthday());
+//		}
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class FriendsAdapter extends BaseAdapter
 		if (convertView == null)
 		{
 			convertView = layoutInflater.inflate(R.layout.user_info, null);
-			viewTag = new ViewTag((TextView) convertView.findViewById(R.id.user_name));
+			viewTag = new ViewTag((TextView) convertView.findViewById(R.id.user_info_name));
 			convertView.setTag(viewTag);
 		}
 		else
