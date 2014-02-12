@@ -41,7 +41,6 @@ public class DataProcess
 		data = null;
 		if (context != null)
 		{
-			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 			String where = null, selection[] = null, id = "", name = "", birthday = "", sort_key_alt = "", lookupKey = "";
 			data = new ArrayList<Map<String, String>>();
 			ContentResolver cr = context.getContentResolver();
@@ -86,11 +85,11 @@ public class DataProcess
 			}
 			catch (SQLException e)
 			{
-				System.out.println("[addressBookActivity][loadDatabaseFunction]SQLException:" + e);
+				System.out.println("[DataProcess][getContact]SQLException:" + e);
 			}
 			catch (Exception ex)
 			{
-				System.out.println("[addressBookActivity][loadDatabaseFunction]Exception:" + ex);
+				System.out.println("[DataProcess][getContact]Exception:" + ex);
 			}
 			finally
 			{
@@ -127,7 +126,6 @@ public class DataProcess
 			birthdayCur = cr.query(ContactsContract.Data.CONTENT_URI, columns, where, null, null);
 			if (birthdayCur != null && birthdayCur.getCount() > 0)
 			{
-				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 				while (birthdayCur.moveToNext())
 				{
 					birthday = birthdayCur.getString(birthdayCur
@@ -141,11 +139,11 @@ public class DataProcess
 		}
 		catch (SQLException e)
 		{
-			System.out.println("[addressBookActivity][updataListData]SQLException:" + e);
+			System.out.println("[DataProcess][getContactBirthday]SQLException:" + e);
 		}
 		catch (Exception ex)
 		{
-			System.out.println("[addressBookActivity][updataListData]Exception:" + ex);
+			System.out.println("[DataProcess][getContactBirthday]Exception:" + ex);
 		}
 		finally
 		{

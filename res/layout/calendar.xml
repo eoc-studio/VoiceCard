@@ -22,7 +22,7 @@
             android:gravity="center"
             android:text="@string/previous_month_placeholder"
             android:textColor="#FFFFFF"
-            android:textSize="26sp" />
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/next_month"
@@ -34,7 +34,7 @@
             android:gravity="center"
             android:text="@string/next_month_placeholder"
             android:textColor="#FFFFFF"
-            android:textSize="26sp" />
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/current_month"
@@ -46,7 +46,7 @@
             android:gravity="center"
             android:text="@string/current_month_placeholder"
             android:textColor="#FFFFFF"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
