@@ -47,6 +47,8 @@
 		<color name="ghostwhite">#F8F8FF</color><!--幽灵白 -->
 		<color name="mintcream">#F5FFFA</color><!--薄荷色 -->
 		<color name="whitesmoke">#F5F5F5</color><!--烟白色 --> 
+		
+		<color name="dark_wooden">#462300</color>
 </resources>
 
 

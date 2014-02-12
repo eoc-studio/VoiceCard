@@ -48,6 +48,7 @@
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
         <activity android:name="eoc.studio.voicecard.contact.ContactActivity" />
         <activity android:name="eoc.studio.voicecard.calendarview.CalendarViewTest" />
+        <activity android:name="eoc.studio.voicecard.mainmenu.MainMenuActivity" />
     </application>
 
 </manifest>

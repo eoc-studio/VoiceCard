@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/index_left" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/index_right" />
+
+    <ImageView
+        android:id="@+id/act_mainmenu_iv_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/logo" />
+
+    <eoc.studio.voicecard.mainmenu.MailboxIconView
+        android:id="@+id/act_mainmenu_mbiv_mailbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/act_mainmenu_iv_logo"
+        android:layout_alignRight="@id/act_mainmenu_iv_logo"
+        android:layout_marginBottom="-25dip"
+        android:layout_marginRight="5dip" />
+
+    <ImageView
+        android:id="@+id/act_mainmenu_iv_fb_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/act_mainmenu_iv_logo"
+        android:layout_marginBottom="-30dip"
+        android:layout_marginRight="-17dip"
+        android:layout_toLeftOf="@id/act_mainmenu_mbiv_mailbox"
+        android:src="@drawable/index_fb" />
+
+    <ImageView
+        android:id="@+id/act_mainmenu_iv_card_editor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/act_mainmenu_iv_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dip"
+        android:src="@drawable/nav1" />
+
+    <ImageView
+        android:id="@+id/act_mainmenu_iv_news_editor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/act_mainmenu_iv_card_editor"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dip"
+        android:src="@drawable/nav2" />
+
+    <ImageView
+        android:id="@+id/act_mainmenu_iv_memorial_day_editor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/act_mainmenu_iv_news_editor"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dip"
+        android:src="@drawable/nav3" />
+
+    <RelativeLayout
+        android:id="@+id/act_mainmenu_rlyt_bottom_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_wooden" >
+
+        <eoc.studio.voicecard.mainmenu.MemorialDayNotificationView
+            android:id="@+id/act_mainmenu_mdnv_memorial_notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:translationX="-90dip" />
+
+        <eoc.studio.voicecard.mainmenu.AdvertisementView
+            android:id="@+id/act_mainmenu_av_advertisement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:translationX="85dip" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/act_mainmenu_rlyt_bottom_background"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-10dip"
+        android:src="@drawable/charlie"
+        android:translationX="25dip" />
+
+    <ImageView
+        android:id="@+id/act_mainmenu_iv_copyright"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/act_mainmenu_rlyt_bottom_background"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="20dip"
+        android:src="@drawable/copyright" />
+
+</RelativeLayout>

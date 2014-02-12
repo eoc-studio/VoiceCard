@@ -57,4 +57,11 @@
         android:layout_below="@id/test_contacts"
         android:text="Memorial Day Test" />
 
+    <Button
+        android:id="@+id/main_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/test_memorial_day"
+        android:text="Main Menu" />
+
 </RelativeLayout>

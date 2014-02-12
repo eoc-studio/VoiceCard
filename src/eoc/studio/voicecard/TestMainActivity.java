@@ -8,7 +8,7 @@ import eoc.studio.voicecard.animation.TestAnimationActivity;
 import eoc.studio.voicecard.calendarview.CalendarViewTest;
 import eoc.studio.voicecard.contact.ContactActivity;
 import eoc.studio.voicecard.facebook.TestFacebookActivity;
-import eoc.studio.voicecard.manufacture.CeateSignatureActivity;
+import eoc.studio.voicecard.mainmenu.MainMenuActivity;
 import eoc.studio.voicecard.manufacture.EditSignatureActivity;
 
 public class TestMainActivity extends BaseActivity
@@ -61,6 +61,15 @@ public class TestMainActivity extends BaseActivity
 			public void onClick(View v)
 			{
 				Intent intent = new Intent(TestMainActivity.this, CalendarViewTest.class);
+				startActivity(intent);
+			}
+		});
+		findViewById(R.id.main_menu).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Intent intent = new Intent(TestMainActivity.this, MainMenuActivity.class);
 				startActivity(intent);
 			}
 		});

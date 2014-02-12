@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/index_mail"
+    android:gravity="center" >
+
+    <TextView
+        android:id="@+id/glb_mailbox_icon_tv_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mail"
+        android:textSize="12sp"
+        android:translationY="15dip" />
+
+</RelativeLayout>

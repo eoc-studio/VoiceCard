@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">VoiceCard</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">設定</string>
     <string name="hello_world">Hello world!</string>
 
     <!-- About Test Facebook -->
@@ -26,9 +26,9 @@
     <string name="next_month_placeholder">&gt;&gt;</string>
 
     <!-- MailBoxIconView -->
-    <string name="mail">Inbox</string>
+    <string name="mail">郵件</string>
 
     <!-- MemorialDayNotificationView -->
-    <string name="a_normal_day">Nothing special</string>
+    <string name="a_normal_day">平凡的一天</string>
 
 </resources>
