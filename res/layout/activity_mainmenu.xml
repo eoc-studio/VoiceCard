@@ -102,13 +102,5 @@
         android:src="@drawable/charlie"
         android:translationX="25dip" />
 
-    <ImageView
-        android:id="@+id/act_mainmenu_iv_copyright"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/act_mainmenu_rlyt_bottom_background"
-        android:layout_centerHorizontal="true"
-        android:paddingBottom="20dip"
-        android:src="@drawable/copyright" />
 
 </RelativeLayout>
