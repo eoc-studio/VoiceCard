@@ -83,6 +83,7 @@
             android:layout_toLeftOf="@id/act_card_selector_v_menu_divider" />
 
         <eoc.studio.voicecard.menu.AddToFavorite
+            android:id="@+id/act_card_selector_adf_add_to_favorite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

@@ -2,6 +2,7 @@ package eoc.studio.voicecard.card;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Parcelable;
 
 public class Card
 {
@@ -19,8 +20,9 @@ public class Card
 	private String message;
 	private Bitmap signature;
 
-	public Card(int id, CardCategory category, String name, int image3dCoverResId, int image3dOpenResId, int imageCoverResId,
-			int imageInnerLeftResId, int imageInnerRightResId)
+	public Card(int id, CardCategory category, String name, int image3dCoverResId,
+			int image3dOpenResId, int imageCoverResId, int imageInnerLeftResId,
+			int imageInnerRightResId)
 	{
 		this.id = id;
 		this.category = category;
@@ -32,6 +34,18 @@ public class Card
 		this.imageInnerRightResId = imageInnerRightResId;
 	}
 
+	public Card(Card card)
+	{
+		this.id = card.id;
+		this.category = card.category;
+		this.name = card.name;
+		this.image3dCoverResId = card.image3dCoverResId;
+		this.image3dOpenResId = card.image3dOpenResId;
+		this.imageCoverResId = card.imageCoverResId;
+		this.imageInnerLeftResId = card.imageInnerLeftResId;
+		this.imageInnerRightResId = card.imageInnerRightResId;
+	}
+
 	public int getId()
 	{
 		return id;
@@ -40,6 +54,16 @@ public class Card
 	public void setId(int id)
 	{
 		this.id = id;
+	}
+
+	public CardCategory getCategory()
+	{
+		return category;
+	}
+
+	public void setCategory(CardCategory category)
+	{
+		this.category = category;
 	}
 
 	public String getName()

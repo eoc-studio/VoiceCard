@@ -10,16 +10,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.card.CardCategory;
 import eoc.studio.voicecard.card.FakeData;
+import eoc.studio.voicecard.menu.AddToFavorite;
 
 public class CardSelectorActivity extends BaseActivity
 {
@@ -28,10 +31,12 @@ public class CardSelectorActivity extends BaseActivity
 	private static final String TAG = "CardSelector";
 
 	private CardCategory category;
+	private Card currentCenteredCard;
 
 	private Gallery list;
 	private ImageView back;
 	private TextView centerCardName;
+	private AddToFavorite addToFavorite;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -67,6 +72,7 @@ public class CardSelectorActivity extends BaseActivity
 		Intent intent = getIntent();
 		category = (CardCategory) intent.getSerializableExtra(EXTRA_KEY_CATEGORY);
 		Log.d(TAG, "list card for category " + category.name());
+		Toast.makeText(this, "CATEGORY: " + category.name(), Toast.LENGTH_LONG).show();
 	}
 
 	private void initLayout()
@@ -94,7 +100,8 @@ public class CardSelectorActivity extends BaseActivity
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 			{
-				centerCardName.setText(((Card) list.getItemAtPosition(position)).getName());
+				currentCenteredCard = (Card) list.getItemAtPosition(position);
+				centerCardName.setText(currentCenteredCard.getName());
 			}
 
 			@Override
@@ -104,6 +111,30 @@ public class CardSelectorActivity extends BaseActivity
 
 			}
 		});
+		list.setOnItemClickListener(new OnItemClickListener()
+		{
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				Card card = (Card) list.getItemAtPosition(position);
+				if (card == currentCenteredCard)
+				{
+					startCardEditor(card);
+				}
+			}
+
+		});
+		addToFavorite.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				addToFavorite(currentCenteredCard);
+			}
+
+		});
 	}
 
 	private void findViews()
@@ -111,14 +142,30 @@ public class CardSelectorActivity extends BaseActivity
 		back = (ImageView) findViewById(R.id.act_card_selector_iv_back);
 		list = (Gallery) findViewById(R.id.act_card_selector_gl_list);
 		centerCardName = (TextView) findViewById(R.id.act_card_select_tv_name);
+		addToFavorite = (AddToFavorite) findViewById(R.id.act_card_selector_adf_add_to_favorite);
 	}
 
 	private void initList()
 	{
 		// TODO get card list from Bruce
 		List<Card> cards = FakeData.getCardList(category);
+		Log.d(TAG, "get " + cards.size() + " cards from data provider");
 		CardAdapter adapter = new CardAdapter(cards);
 		list.setAdapter(adapter);
+	}
+
+	private void addToFavorite(Card card)
+	{
+		// TODO tell Bruce to add card to favorite
+		Log.d(TAG, "add " + card.getName() + " to favorite");
+	}
+
+	private void startCardEditor(Card card)
+	{
+		Log.d(TAG, "start editor for " + card.getName());
+		Intent intent = new Intent(this, CardEditorActivity.class);
+		intent.putExtra(CardEditorActivity.EXTRA_KEY_CARD_ID, card.getId());
+		startActivity(intent);
 	}
 
 	private class CardAdapter extends BaseAdapter

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/act_card_editor_iv_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/header_bg1" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/title_edit_card" />
+
+        <ImageView
+            android:id="@+id/act_card_editor_iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dip"
+            android:src="@drawable/icon_ar1_left" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/act_card_editor_iv_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/act_card_editor_iv_header"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dip"
+        android:layout_marginTop="20dip"
+        android:src="@drawable/handwrite_01" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/act_card_editor_iv_footer_bg"
+        android:layout_below="@id/act_card_editor_iv_tip" >
+
+        <RelativeLayout
+            android:id="@+id/act_card_editor_rlyt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/act_card_editor_iv_card_inner_page"
+                android:layout_width="500dip"
+                android:layout_height="300dip"
+                android:scaleType="fitXY"
+                android:layout_marginLeft="20dip"
+                android:layout_marginRight="20dip" >
+            </ImageView>
+        </RelativeLayout>
+    </HorizontalScrollView>
+
+    <ImageView
+        android:id="@+id/act_card_editor_iv_footer_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/menu_bg" />
+
+    <RelativeLayout
+        android:id="@+id/act_card_editor_rlyt_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dip" >
+
+        <eoc.studio.voicecard.menu.SaveDraft
+            android:id="@+id/act_card_editor_iv_menu_save_draft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <View
+            android:id="@+id/act_card_editor_v_menu_divider_left"
+            android:layout_width="1dip"
+            android:layout_height="40dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dip"
+            android:layout_marginRight="20dip"
+            android:layout_toLeftOf="@id/act_card_editor_iv_menu_save_draft"
+            android:background="@color/white" />
+
+        <eoc.studio.voicecard.menu.Index
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/act_card_editor_v_menu_divider_left" />
+
+        <View
+            android:id="@+id/act_card_editor_v_menu_divider_right"
+            android:layout_width="1dip"
+            android:layout_height="40dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dip"
+            android:layout_marginRight="20dip"
+            android:layout_toRightOf="@id/act_card_editor_iv_menu_save_draft"
+            android:background="@color/white" />
+
+        <eoc.studio.voicecard.menu.OpenDraft
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/act_card_editor_v_menu_divider_right" />
+    </RelativeLayout>
+
+</RelativeLayout>
