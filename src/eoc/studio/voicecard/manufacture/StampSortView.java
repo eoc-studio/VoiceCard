@@ -2,7 +2,17 @@ package eoc.studio.voicecard.manufacture;
 
 import android.widget.AbsoluteLayout;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.manufacture.MultiTouchController.MultiTouchObjectCanvas;
@@ -24,6 +34,7 @@ import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -43,7 +54,7 @@ public class StampSortView extends AbsoluteLayout implements
 
 	private ArrayList<Integer> mImagesList = new ArrayList<Integer>();
 
-	private static ArrayList<Img> mImages = new ArrayList<Img>();
+	private  ArrayList<Img> mImages = new ArrayList<Img>();
 
 	private MultiTouchController<Img> multiTouchController = new MultiTouchController<Img>(this);
 
@@ -214,16 +225,59 @@ public class StampSortView extends AbsoluteLayout implements
 		 * Resources res = context.getResources(); int n = mImages.size(); for
 		 * (int i = 0; i < n; i++) mImages.get(i).load(res);
 		 */
+        // get seals from json in file
+		
+		
+		String root = Environment.getExternalStorageDirectory().toString();
+		File tempDir = new File(root + "/VoiceCard_seals");
 
+		File pathDir = new File(tempDir.toString());
+		pathDir.mkdirs();
+
+		String fname = "seal.json";
+		File file = new File(tempDir + "/" + fname);
+		
+		FileInputStream fIn;
+		String json = ""; // Holds the text
+		try
+		{
+			fIn = new FileInputStream(file);
+			BufferedReader myReader = new BufferedReader(new InputStreamReader(fIn));
+			String aDataRow = "";
+			
+			while ((aDataRow = myReader.readLine()) != null)
+			{
+				json += aDataRow;
+			}
+			myReader.close();
+		}
+		catch (IOException e)
+		{
+			
+			e.printStackTrace();
+		}
+
+		Log.e(TAG, "loadImages read json from file is "+json);
+		Gson gson = new Gson();
+		ArrayList<StampGson> sealList= new ArrayList<StampGson>();
+		sealList = gson.fromJson(json, new TypeToken<ArrayList<StampGson>>(){}.getType());
+		int size = sealList.size();
 		Resources res = context.getResources();
-		int size = mImages.size();
+		mImages.clear();
+		
+
+//		mImages.get(mImages.size() - 1).loadWithPosition(res, cx, cy, sx, sy);
 		for (int index = 0; index < size; index++)
 		{
+			Img img = new Img(context, sealList.get(index).getResId(), res);
+			mImages.add(img);
 			Log.e(TAG, "loadImages on resume reload the images index:" + index);
-			mImages.get(index).loadWithPosition(res, mImages.get(index).getCenterX(),
-					mImages.get(index).getCenterY(), mImages.get(index).getScaleX(),
-					mImages.get(index).getScaleY(), mImages.get(index).getAngle());
-
+			mImages.get(index).loadWithPosition(res, sealList.get(index).getResId(),
+					sealList.get(index).getCenterX(), sealList.get(index).getCenterY(),
+					sealList.get(index).getScaleX(), sealList.get(index).getScaleY(),
+					sealList.get(index).getAngle(), sealList.get(index).getDisplayWidth(),
+					sealList.get(index).getDisplayHeight());
+		
 			if (index == size - 1)
 			{
 
@@ -236,26 +290,200 @@ public class StampSortView extends AbsoluteLayout implements
 
 				if (dragImageView == null)
 				{
-					createDummyDragView(context, imageWidth, imageHeight, x_position, y_position);
+					
+					createDummyDragView(context, imageWidth, imageHeight, x_position, x_position);
+//					dragImageView = new ImageView(context);
+//					dragImageView.setScaleType(ImageView.ScaleType.MATRIX);
+//					dragImageView.setBackgroundDrawable(transparentDrawable);
+//					AbsoluteLayout.LayoutParams dragLp = new AbsoluteLayout.LayoutParams(
+//							, imageHeight, x_position, y_position);
+//					dragImageView.setLayoutParams(dragLp);
+//					dragImageView.invalidate();
+//					this.addView(dragImageView);
+//					dragImageView.setClickable(false);
+//					dragImageView.setFocusable(false);
 				}
 				else
 				{
-					updateDummyDragViewPosition(imageWidth, imageHeight, x_position, y_position);
+					
+					updateDummyDragViewPosition(imageWidth, imageHeight, x_position, x_position);
+//					AbsoluteLayout.LayoutParams dragLp = new AbsoluteLayout.LayoutParams(
+//							imageWidth, imageHeight, x_position, y_position);
+//					dragImageView.setLayoutParams(dragLp);
+//					dragImageView.setBackgroundDrawable(transparentDrawable);
+//					dragImageView.invalidate();
+//					this.updateViewLayout(dragImageView, dragLp);
 				}
 			}
 		}
 
-		invalidate();
+//		Type listType = new TypeToken<ArrayList<YourClass>>() {
+//        }.getType();
+//List<YourClass> yourClassList = new Gson().fromJson(jsonArray, listType);
+		
+		
+		
+		// get seals from mImages
+//		Resources res = context.getResources();
+//		int size = mImages.size();
+//		for (int index = 0; index < size; index++)
+//		{
+//			Log.e(TAG, "loadImages on resume reload the images index:" + index);
+//			mImages.get(index).loadWithPosition(res, mImages.get(index).getCenterX(),
+//					mImages.get(index).getCenterY(), mImages.get(index).getScaleX(),
+//					mImages.get(index).getScaleY(), mImages.get(index).getAngle());
+//
+//			if (index == size - 1)
+//			{
+//
+//				int imageWidth = mImages.get(index).getWidth();
+//				int imageHeight = mImages.get(index).getHeight();
+//				int x_position = (int) (mImages.get(index).getCenterX() - (mImages.get(index)
+//						.getWidth() / 2));
+//				int y_position = (int) (mImages.get(index).getCenterY() - (mImages.get(index)
+//						.getHeight() / 2));
+//
+//				if (dragImageView == null)
+//				{
+//					dragImageView = new ImageView(context);
+//					dragImageView.setScaleType(ImageView.ScaleType.MATRIX);
+//					dragImageView.setBackgroundDrawable(transparentDrawable);
+//					AbsoluteLayout.LayoutParams dragLp = new AbsoluteLayout.LayoutParams(
+//							imageWidth, imageHeight, x_position, y_position);
+//					dragImageView.setLayoutParams(dragLp);
+//					dragImageView.invalidate();
+//					this.addView(dragImageView);
+//					dragImageView.setClickable(false);
+//					dragImageView.setFocusable(false);
+//				}
+//				else
+//				{
+//					AbsoluteLayout.LayoutParams dragLp = new AbsoluteLayout.LayoutParams(
+//							imageWidth, imageHeight, x_position, y_position);
+//					dragImageView.setLayoutParams(dragLp);
+//					dragImageView.setBackgroundDrawable(transparentDrawable);
+//					dragImageView.invalidate();
+//					this.updateViewLayout(dragImageView, dragLp);
+//				}
+//			}
+//		}
+
+		invalidate();  
+	}	
+//	public void loadImages(Context context)
+//	{
+//
+//		/*
+//		 * Resources res = context.getResources(); int n = mImages.size(); for
+//		 * (int i = 0; i < n; i++) mImages.get(i).load(res);
+//		 */
+//
+//		Resources res = context.getResources();
+//		for (int index = 0; index < mImages.size(); index++)
+//		{
+//			Log.e(TAG, "loadImages on resume reload the images index:" + index);
+//			mImages.get(index).loadWithPosition(res, mImages.get(index).getCenterX(),
+//					mImages.get(index).getCenterY(), mImages.get(index).getScaleX(),
+//					mImages.get(index).getScaleY(), mImages.get(index).getAngle());
+//
+//			int lastIndex = mImages.size() - 1;
+//			if (index == lastIndex)
+//			{
+//
+//				int imageWidth = mImages.get(index).getWidth();
+//				int imageHeight = mImages.get(index).getHeight();
+//				int x_position = (int) (mImages.get(index).getCenterX() - (mImages.get(index)
+//						.getWidth() / 2));
+//				int y_position = (int) (mImages.get(index).getCenterY() - (mImages.get(index)
+//						.getHeight() / 2));
+//
+//				if (dragImageView == null)
+//				{
+//					createDummyDragView(context, imageWidth, imageHeight, x_position, y_position);
+//				}
+//				else
+//				{
+//					updateDummyDragViewPosition(imageWidth, imageHeight, x_position, y_position);
+//				}
+//			}
+//		}
+//
+//		invalidate();
+//	}
+	
+	public void saveImageInfoToGson()
+	{
+
+		Log.e(TAG, "saveImageInfoToGson()");
+		ArrayList<StampGson> sealList = new ArrayList<StampGson>();
+		int size = mImages.size();
+
+		for (int index = 0; index < size; index++)
+		{
+			StampGson seal = new StampGson();
+
+			seal.setResId(mImages.get(index).getResId());
+			seal.setAngle(mImages.get(index).getAngle());
+			seal.setCenterX(mImages.get(index).getCenterX());
+			seal.setCenterY(mImages.get(index).getCenterY());
+			seal.setWidth(mImages.get(index).getImgWidth());
+			seal.setHeight(mImages.get(index).getImgHeight());
+			seal.setScaleX(mImages.get(index).getScaleX());
+			seal.setScaleY(mImages.get(index).getScaleY());
+			seal.setDisplayWidth(mImages.get(index).getDisplayWidth());
+			seal.setDisplayHeight(mImages.get(index).getDisplayHeight());
+			sealList.add(seal);
+		}
+		final GsonBuilder builder = new GsonBuilder();
+		final Gson gson = builder.create();
+		final String json = gson.toJson(sealList);
+
+		String root = Environment.getExternalStorageDirectory().toString();
+		File tempDir = new File(root + "/VoiceCard_seals");
+
+		File pathDir = new File(tempDir.toString());
+		pathDir.mkdirs();
+
+		String fname = "seal.json";
+		File file = new File(tempDir + "/" + fname);
+
+		if (file.exists()) file.delete();
+		try
+		{
+
+			FileWriter writer = null;
+			try
+			{
+				writer = new FileWriter(file);
+
+				/** Saving the contents to the file */
+				writer.write(json);
+
+				/** Closing the writer object */
+				writer.close();
+
+				// Toast.makeText(context, "Successfully saved",
+				// Toast.LENGTH_SHORT).show();
+
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
+	
+	
 
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
 
 		Log.i("Tag", "width: " + getWidth() + ",height: " + getHeight());
-		// Log.i("Tag", "MeasuredWidth: " + getMeasuredWidth() +
-		// ",MeasuredHeight: "
-		// + getMeasuredHeight());
 		super.onDraw(canvas);
 		this.StampSortViewWidth = getWidth();
 		this.StampSortViewHeight = getHeight();
@@ -278,8 +506,6 @@ public class StampSortView extends AbsoluteLayout implements
 
 		if (currTouchPoint.isDown())
 		{
-			// Log.e(TAG, "drawMultitouchDebugMarks() currTouchPoint.isDown()");
-
 			float[] xs = currTouchPoint.getXs();
 			float[] ys = currTouchPoint.getYs();
 			float[] pressures = currTouchPoint.getPressures();
@@ -291,7 +517,6 @@ public class StampSortView extends AbsoluteLayout implements
 		}
 	}
 
-	// ---------------------------------------------------------------------------------------------------
 	/** Pass touch events to the MT controller */
 	@Override
 	public boolean onTouchEvent(MotionEvent event)
@@ -299,11 +524,6 @@ public class StampSortView extends AbsoluteLayout implements
 
 		Log.e(TAG, "onTouchEvent() event.getX()" + event.getX() + ", event.getY()" + event.getY());
 		currentTouchY = event.getY();
-		// if (event.getX() > borderXofTrash || event.getX() < 50 ||
-		// event.getY() < 50) { return true; }
-
-		// if (event.getY() > 860 || event.getX() >borderXofTrash ||
-		// event.getX()< 0 || event.getY()< 0) { return true; }
 
 		return multiTouchController.onTouchEvent(event);
 	}
@@ -390,7 +610,6 @@ public class StampSortView extends AbsoluteLayout implements
 		Log.e(TAG, "=== setPositionAndScale() distanceOfStapSortView is " + distanceOfStapSortView);
 
 		// try to save last point that can not be drag to trash mode
-//		if (distanceOfStapSortView  >  ((-effectHeight)*1.5) && distanceOfStapSortView < ((-effectHeight)*0.5))
 		if (distanceOfStapSortView  >  0 && distanceOfStapSortView < deviation)
 		{
 			Log.e(TAG, "=== setPositionAndScale() save the last point");
@@ -521,6 +740,8 @@ public class StampSortView extends AbsoluteLayout implements
 
 		private int width, height, displayWidth, displayHeight;
 
+
+
 		private float centerX, centerY, scaleX, scaleY, angle;
 
 		private float minX, maxX, minY, maxY;
@@ -634,6 +855,20 @@ public class StampSortView extends AbsoluteLayout implements
 			this.height = drawable.getIntrinsicHeight();
 			setPos(cx, cy, sx, sy, angle);
 		}
+		
+		public void loadWithPosition(Resources res, int resId ,float cx, float cy, float sx, float sy,
+				float angle,int displayWidth, int displayHeight)
+		{
+
+			getMetrics(res);
+			this.drawable = res.getDrawable(resId);
+			this.resId = resId;
+			this.width = drawable.getIntrinsicWidth();
+			this.height = drawable.getIntrinsicHeight();
+			this.displayWidth = displayWidth;
+			this.displayHeight = displayHeight;
+			setPos(cx, cy, sx, sy, angle);
+		}
 
 		/** Called by activity's onResume() method to load the images */
 		public void load(Resources res)
@@ -715,8 +950,23 @@ public class StampSortView extends AbsoluteLayout implements
 			if (newMinX > displayWidth - screenMargin || newMaxX < screenMargin
 					|| newMinY > displayHeight - screenMargin || newMaxY < screenMargin)
 			{
-				Log.e(TAG, "!!!!!setPos() Position out of Display Screen");
-
+				
+				//for deg bug
+//				Log.e(TAG, "!!!!!setPos() Position out of Display Screen");
+//				Log.e(TAG, "!!!!!setPos() width:"+width);
+//				Log.e(TAG, "!!!!!setPos() height:"+height);
+//				Log.e(TAG, "!!!!!setPos() scaleX:"+scaleX);
+//				Log.e(TAG, "!!!!!setPos() scaleY:"+scaleY);
+//				Log.e(TAG, "!!!!!setPos() ws:"+ws);
+//				Log.e(TAG, "!!!!!setPos() hs:"+hs);
+//				Log.e(TAG, "!!!!!setPos() newMinX:"+newMinX);
+//				Log.e(TAG, "!!!!!setPos() newMaxX:"+newMaxX);
+//				Log.e(TAG, "!!!!!setPos() newMinY:"+newMinY);
+//				Log.e(TAG, "!!!!!setPos() newMaxY:"+newMaxY);
+//				Log.e(TAG, "!!!!!setPos() screenMargin:"+screenMargin);
+//				Log.e(TAG, "!!!!!setPos() displayWidth:"+displayWidth);
+//				Log.e(TAG, "!!!!!setPos() displayHeight:"+displayHeight);
+				
 				return false;
 			}
 
@@ -849,6 +1099,42 @@ public class StampSortView extends AbsoluteLayout implements
 		{
 		
 			this.screenMargin = screenMargin;
+		}
+		
+		public int getResId()
+		{
+		
+			return resId;
+		}
+
+		public void setResId(int resId)
+		{
+		
+			this.resId = resId;
+		}
+		
+		public int getDisplayWidth()
+		{
+		
+			return displayWidth;
+		}
+
+		public void setDisplayWidth(int displayWidth)
+		{
+		
+			this.displayWidth = displayWidth;
+		}
+
+		public int getDisplayHeight()
+		{
+		
+			return displayHeight;
+		}
+
+		public void setDisplayHeight(int displayHeight)
+		{
+		
+			this.displayHeight = displayHeight;
 		}
 	}
 

@@ -1,5 +1,8 @@
 package eoc.studio.voicecard.manufacture;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import android.R.integer;
@@ -8,9 +11,13 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.DragEvent;
@@ -79,6 +86,10 @@ public class EditSignatureActivity extends Activity
 
 	private static final float TARGET_HEIGHT_DP = 45;
 
+	private static final String DRAFT_FOLDER_NAME = "VoiceCard_images";
+
+	private static final String DRAFT_IMAGE_NAME = "signatureDraft.jpg";
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -88,6 +99,84 @@ public class EditSignatureActivity extends Activity
 		context = getApplicationContext();
 
 		initializeAllView();
+
+	}
+
+	@Override
+	protected void onResume()
+	{
+
+		super.onResume();
+		Log.d(TAG, "CeateSignatureActivity: onResume()");
+
+		try
+		{
+			stampSorterView.loadImages(context);
+			loadHandWrtingViewFromFile();
+			
+		}
+		catch (Exception e)
+		{
+			// TODO: handle exception
+		}
+		
+		handWritingView.setPenColor(Color.BLACK);
+
+	}
+
+	public void loadHandWrtingViewFromFile()
+	{
+
+		String root = Environment.getExternalStorageDirectory().toString();
+		File tempDir = new File(root + "/" + DRAFT_FOLDER_NAME);
+
+		File imagefile = new File(tempDir, DRAFT_IMAGE_NAME);
+		FileInputStream fis = null;
+		try
+		{
+			fis = new FileInputStream(imagefile);
+			Bitmap draftBitmap = BitmapFactory.decodeStream(fis)
+					.copy(Bitmap.Config.ARGB_8888, true);
+			if (draftBitmap != null)
+			{
+				handWritingView.new1Bitmap = FileUtility.clearBitmapBackgroudColor(draftBitmap,
+						Color.GRAY, Color.TRANSPARENT);
+				handWritingView.new1Bitmap.setHasAlpha(true);
+
+				handWritingView.invalidate();
+			}
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+			Log.d(TAG, "EditSignatureActivity: onResume() FileNotFoundException");
+		}
+		catch (Exception e)
+		{
+			Log.d(TAG, "EditSignatureActivity: onResume() Exception");
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	protected void onPause()
+	{
+
+		super.onPause();
+		Log.d(TAG, "EditSignatureActivity: onPause()");
+		String root = Environment.getExternalStorageDirectory().toString();
+		File tempDir = new File(root + "/" + DRAFT_FOLDER_NAME);
+
+		FileUtility.saveLayoutToFile(context, (View) handWritingView, tempDir.toString(),
+				DRAFT_IMAGE_NAME);
+		/*
+		 * tempDraftBitmap =
+		 * handWritingView.new1Bitmap.copy(handWritingView.new1Bitmap
+		 * .getConfig(), true);
+		 */
+
+		// try to save seal info to gson
+		stampSorterView.saveImageInfoToGson();
 
 	}
 
@@ -219,8 +308,9 @@ public class EditSignatureActivity extends Activity
 			case DragEvent.ACTION_DROP:
 
 				ClipData clipDate = event.getClipData();
-				boolean isFromStamp = clipDate.getItemAt(0).getText().equals(DragUtility.LABLE_STAMP);
-				
+				boolean isFromStamp = clipDate.getItemAt(0).getText()
+						.equals(DragUtility.LABLE_STAMP);
+
 				if (isFromStamp)
 				{
 					Log.e(TAG, "ACTION_DROP event.getX()" + event.getX());
@@ -243,6 +333,7 @@ public class EditSignatureActivity extends Activity
 			}
 			return true;
 		}
+
 		public float calculateScaleY(Drawable drawable)
 		{
 
@@ -304,7 +395,7 @@ public class EditSignatureActivity extends Activity
 						return false;
 					}
 				});
-				addViewByOrder(stampSorterView,handWritingView);
+				addViewByOrder(stampSorterView, handWritingView);
 				uiMode = MODE_WRITING;
 				changeModeButton.setBackgroundResource(R.drawable.draw_mode);
 				Log.e(TAG, "change to MODE_WRITING");
@@ -323,7 +414,7 @@ public class EditSignatureActivity extends Activity
 
 	public void initChooseColorImageView()
 	{
- 
+
 		chooseColorImageView = (ImageView) findViewById(R.id.act_edit_signature_iv_choose_color);
 		chooseColorImageView.setOnClickListener(new View.OnClickListener()
 		{
@@ -467,19 +558,17 @@ public class EditSignatureActivity extends Activity
 		rbSizeThree.setOnClickListener(listener);
 	}
 
-/*	private int getRelativeLeft(View myView)
-	{
-
-		if (myView.getParent() == myView.getRootView())
-			return myView.getLeft();
-		else return myView.getLeft() + getRelativeLeft((View) myView.getParent());
-	}
-
-	private int getRelativeTop(View myView)
-	{
-
-		if (myView.getParent() == myView.getRootView())
-			return myView.getTop();
-		else return myView.getTop() + getRelativeTop((View) myView.getParent());
-	}*/
+	/*
+	 * private int getRelativeLeft(View myView) {
+	 * 
+	 * if (myView.getParent() == myView.getRootView()) return myView.getLeft();
+	 * else return myView.getLeft() + getRelativeLeft((View)
+	 * myView.getParent()); }
+	 * 
+	 * private int getRelativeTop(View myView) {
+	 * 
+	 * if (myView.getParent() == myView.getRootView()) return myView.getTop();
+	 * else return myView.getTop() + getRelativeTop((View) myView.getParent());
+	 * }
+	 */
 }
