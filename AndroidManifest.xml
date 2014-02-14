@@ -32,9 +32,9 @@
             </intent-filter>
         </activity>
         <activity android:name="eoc.studio.voicecard.facebook.TestFacebookActivity" />
-        <activity android:name="eoc.studio.voicecard.facebook.SelectFriendActivity" 
-            android:configChanges="keyboard|keyboardHidden|orientation"
-            />
+        <activity
+            android:name="eoc.studio.voicecard.facebook.SelectFriendActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation" />
         <activity android:name="eoc.studio.voicecard.animation.TestAnimationActivity" />
 
         <meta-data
@@ -47,16 +47,21 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity android:name="eoc.studio.voicecard.manufacture.CeateSignatureActivity" />
-	<activity android:name="eoc.studio.voicecard.manufacture.EditSignatureActivity" 
-			 android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-			 android:screenOrientation="portrait"
-			 />
-
+        <activity
+            android:name="eoc.studio.voicecard.manufacture.EditSignatureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
         <activity android:name="eoc.studio.voicecard.contact.ContactActivity" />
         <activity android:name="eoc.studio.voicecard.calendarview.CalendarViewTest" />
-        <activity android:name="eoc.studio.voicecard.mainmenu.MainMenuActivity" />
-        <activity android:name="eoc.studio.voicecard.card.editor.CardCategorySelectorActivity" />
-        <activity android:name="eoc.studio.voicecard.card.editor.CardSelectorActivity" />
+        <activity
+            android:name="eoc.studio.voicecard.mainmenu.MainMenuActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="eoc.studio.voicecard.card.editor.CardCategorySelectorActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="eoc.studio.voicecard.card.editor.CardSelectorActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
