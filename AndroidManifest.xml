@@ -55,6 +55,8 @@
         <activity android:name="eoc.studio.voicecard.contact.ContactActivity" />
         <activity android:name="eoc.studio.voicecard.calendarview.CalendarViewTest" />
         <activity android:name="eoc.studio.voicecard.mainmenu.MainMenuActivity" />
+        <activity android:name="eoc.studio.voicecard.card.editor.CardCategorySelectorActivity" />
+        <activity android:name="eoc.studio.voicecard.card.editor.CardSelectorActivity" />
     </application>
 
 </manifest>

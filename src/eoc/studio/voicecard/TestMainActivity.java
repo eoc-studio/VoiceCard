@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import eoc.studio.voicecard.animation.TestAnimationActivity;
 import eoc.studio.voicecard.calendarview.CalendarViewTest;
+import eoc.studio.voicecard.card.editor.CardCategorySelectorActivity;
 import eoc.studio.voicecard.contact.ContactActivity;
 import eoc.studio.voicecard.facebook.SelectFriendActivity;
-import eoc.studio.voicecard.facebook.TestFacebookActivity;
 import eoc.studio.voicecard.mainmenu.MainMenuActivity;
 import eoc.studio.voicecard.manufacture.EditSignatureActivity;
 
@@ -65,7 +65,7 @@ public class TestMainActivity extends BaseActivity
 				startActivity(intent);
 			}
 		});
-		findViewById(R.id.main_menu).setOnClickListener(new OnClickListener()
+		findViewById(R.id.test_main_menu).setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)

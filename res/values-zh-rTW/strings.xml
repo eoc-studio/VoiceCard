@@ -31,4 +31,11 @@
     <!-- MemorialDayNotificationView -->
     <string name="a_normal_day">平凡的一天</string>
 
+    <!-- Card Category -->
+    <string name="mothers_day">母親節</string>
+    <string name="birthday">生日</string>
+    <string name="valentines_day">情人節</string>
+    <string name="xmas">聖誕節</string>
+    <string name="halloween">萬聖節</string>
+    <string name="thanks_note">感謝卡</string>
 </resources>

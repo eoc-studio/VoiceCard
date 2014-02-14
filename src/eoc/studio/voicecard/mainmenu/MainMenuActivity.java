@@ -1,5 +1,6 @@
 package eoc.studio.voicecard.mainmenu;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.card.editor.CardCategorySelectorActivity;
 
 public class MainMenuActivity extends BaseActivity implements OnClickListener
 {
@@ -150,7 +152,8 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 	private void onCardEditorClicked()
 	{
 
-		Log.d(TAG, "go to card editor");
+		Intent intent = new Intent(this, CardCategorySelectorActivity.class);
+		startActivity(intent);
 	}
 
 	private void onMailboxClicked()
