@@ -5,4 +5,9 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="show_friends_height">300dp</dimen>
  	<dimen name="com_facebook_picker_place_image_size">64dp</dimen>
+ 	
+ 	<!-- dash border -->
+ 	<dimen name="dash_border_stroke_dash_gap">5dip</dimen>
+ 	<dimen name="dash_border_stroke_dash_width">8dip</dimen>
+ 	<dimen name="dash_border_stroke_width">2dip</dimen>
 </resources>

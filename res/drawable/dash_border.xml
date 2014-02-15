@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item>
-        <shape>
-            <corners android:radius="5dip" />
+    <corners android:radius="5dip" />
 
-            <solid android:color="@android:color/transparent" />
+    <solid android:color="@android:color/transparent" />
 
-            <stroke
-                android:dashGap="5dip"
-                android:dashWidth="8dip"
-                android:width="2dip"
-                android:color="@color/dark_wooden" />
+    <stroke
+        android:dashGap="@dimen/dash_border_stroke_dash_gap"
+        android:dashWidth="@dimen/dash_border_stroke_dash_width"
+        android:width="@dimen/dash_border_stroke_width"
+        android:color="@color/dark_wooden" />
 
-            <padding
-                android:bottom="5dip"
-                android:left="5dip"
-                android:right="5dip"
-                android:top="5dip" />
-        </shape>
-    </item>
+    <padding
+        android:bottom="5dip"
+        android:left="5dip"
+        android:right="5dip"
+        android:top="5dip" />
 
-</layer-list>
+</shape>

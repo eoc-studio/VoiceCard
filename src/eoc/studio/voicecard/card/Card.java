@@ -20,9 +20,11 @@ public class Card
 	private String message;
 	private Bitmap signature;
 
+	private int textColor;
+
 	public Card(int id, CardCategory category, String name, int image3dCoverResId,
 			int image3dOpenResId, int imageCoverResId, int imageInnerLeftResId,
-			int imageInnerRightResId)
+			int imageInnerRightResId, int textColor)
 	{
 		this.id = id;
 		this.category = category;
@@ -32,6 +34,7 @@ public class Card
 		this.imageCoverResId = imageCoverResId;
 		this.imageInnerLeftResId = imageInnerLeftResId;
 		this.imageInnerRightResId = imageInnerRightResId;
+		this.textColor = textColor;
 	}
 
 	public Card(Card card)
@@ -44,6 +47,7 @@ public class Card
 		this.imageCoverResId = card.imageCoverResId;
 		this.imageInnerLeftResId = card.imageInnerLeftResId;
 		this.imageInnerRightResId = card.imageInnerRightResId;
+		this.textColor = card.textColor;
 	}
 
 	public int getId()
@@ -166,10 +170,24 @@ public class Card
 		this.signature = signature;
 	}
 
+	public int getTextColor()
+	{
+		return textColor;
+	}
+
+	public void setTextColor(int color)
+	{
+		this.textColor = color;
+	}
+
 	@Override
 	public String toString()
 	{
-		return "Card [name=" + name + ", sound=" + sound + ", image=" + image + ", message="
-				+ message + ", signature=" + signature + "]";
+		return "Card [id=" + id + ", category=" + category + ", name=" + name
+				+ ", image3dCoverResId=" + image3dCoverResId + ", image3dOpenResId="
+				+ image3dOpenResId + ", imageCoverResId=" + imageCoverResId
+				+ ", imageInnerLeftResId=" + imageInnerLeftResId + ", imageInnerRightResId="
+				+ imageInnerRightResId + ", sound=" + sound + ", image=" + image + ", message="
+				+ message + ", signature=" + signature + ", textColor=" + textColor + "]";
 	}
 }

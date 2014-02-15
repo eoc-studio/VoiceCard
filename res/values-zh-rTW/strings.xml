@@ -38,4 +38,10 @@
     <string name="xmas">聖誕節</string>
     <string name="halloween">萬聖節</string>
     <string name="thanks_note">感謝卡</string>
+
+    <!-- Card Editor -->
+    <string name="insert_image">匯入圖片</string>
+    <string name="insert_voice">語音留言</string>
+    <string name="insert_text">編輯文字</string>
+    <string name="insert_signature">手寫簽名</string>
 </resources>
