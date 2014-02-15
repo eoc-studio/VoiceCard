@@ -1,9 +1,16 @@
 package eoc.studio.voicecard.card.editor;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +30,9 @@ public class CardEditorActivity extends BaseActivity
 
 	private static final String TAG = "CardEditor";
 
+	private static final int REQ_PICK_IMAGE = 1;
+	private static final int REQ_CROP_IMAGE = 2;
+
 	private ImageView back;
 	private ImageView innerPage;
 	private FrameLayout editableImageFrame;
@@ -34,6 +44,8 @@ public class CardEditorActivity extends BaseActivity
 	private TextView editableVoiceTip;
 	private TextView editableTextTip;
 	private TextView editableSignatureTip;
+
+	private ImageView editableImage;
 
 	private static Card card;
 
@@ -110,6 +122,8 @@ public class CardEditorActivity extends BaseActivity
 		editableVoiceTip = (TextView) findViewById(R.id.act_card_editor_tv_editable_voice_tip);
 		editableTextTip = (TextView) findViewById(R.id.act_card_editor_tv_editable_text_tip);
 		editableSignatureTip = (TextView) findViewById(R.id.act_card_editor_tv_editable_signature_tip);
+
+		editableImage = (ImageView) findViewById(R.id.act_card_editor_iv_editable_image);
 	}
 
 	private void setupCard()
@@ -158,6 +172,7 @@ public class CardEditorActivity extends BaseActivity
 			public void onClick(View v)
 			{
 				Log.d(TAG, "EDIT IMAGE");
+				startImagePicker();
 			}
 
 		});
@@ -189,6 +204,110 @@ public class CardEditorActivity extends BaseActivity
 				Log.d(TAG, "EDIT SIGNATURE");
 			}
 		});
+	}
+
+	private void startImagePicker()
+	{
+		Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+		photoPickerIntent.setType("image/*");
+		startActivityForResult(photoPickerIntent, REQ_PICK_IMAGE);
+	}
+
+	private void startImageCropper(Uri photoUri)
+	{
+		int w = editableImage.getWidth();
+		int h = editableImage.getHeight();
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setData(photoUri);
+		intent.putExtra("outputX", w);
+		intent.putExtra("outputY", h);
+		intent.putExtra("aspectX", w);
+		intent.putExtra("aspectY", h);
+		intent.putExtra("scale", true);
+		intent.putExtra("return-data", true);
+		startActivityForResult(intent, REQ_CROP_IMAGE);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent)
+	{
+		super.onActivityResult(requestCode, resultCode, intent);
+
+		if (requestCode == REQ_PICK_IMAGE)
+		{
+			Uri photoUri = intent.getData();
+			if (photoUri != null)
+			{
+				startImageCropper(photoUri);
+			}
+		}
+		else if (requestCode == REQ_CROP_IMAGE)
+		{
+			Bundle extras = intent.getExtras();
+			if (extras != null)
+			{
+				Bitmap cropped = extras.getParcelable("data");
+				setEditableImage(cropped);
+			}
+		}
+	}
+
+	private void setEditableImage(Bitmap bitmap)
+	{
+		editableImage.setImageBitmap(bitmap);
+
+		new SaveCardImageThread(bitmap).start();
+
+	}
+
+	private class SaveCardImageThread extends Thread
+	{
+		private Bitmap bitmap;
+
+		public SaveCardImageThread(Bitmap bitmap)
+		{
+			this.bitmap = bitmap;
+		}
+
+		@Override
+		public void run()
+		{
+			String fileName = System.currentTimeMillis() + ".png";
+			File file = new File(getCacheDir(), fileName);
+			if (saveBitmapToFile(bitmap, file))
+			{
+				card.setImage(Uri.fromFile(file));
+				Log.d(TAG, "Card image set:" + card.getImage().toString());
+			}
+			else
+			{
+				Log.e(TAG, "Failed to save bitmap");
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param bitmap
+	 * @param file
+	 * @return true if save successfully
+	 */
+	private boolean saveBitmapToFile(Bitmap bitmap, File file)
+	{
+		boolean result = false;
+		FileOutputStream out = null;
+		try
+		{
+			out = new FileOutputStream(file);
+			bitmap.compress(CompressFormat.PNG, 100, out);
+			out.close();
+			result = true;
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 }
