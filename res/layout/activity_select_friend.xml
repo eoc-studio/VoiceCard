@@ -59,7 +59,6 @@
         android:layout_height="@dimen/act_select_friend_list_height"
         android:background="@color/whitesmoke"
         android:cacheColorHint="@color/black"
-        android:choiceMode="multipleChoice"
         android:dividerHeight="@dimen/act_select_friend_divider_height" >
     </ListView>
 

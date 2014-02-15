@@ -37,7 +37,7 @@ public class TestFacebookActivity extends BaseActivity
 	private static final String DESCRIPTION = "DESCRIPTION";
 	private static final String LINK = "http://upload.wikimedia.org/wikipedia/commons/2/26/YellowLabradorLooking_new.jpg";
 	private FacebookManager facebookManager;
-	private FriendsAdapter friendsAdapter;
+	private FriendsAdapterView friendsAdapter;
 	private ImageView showPicture;
 	private ListView showFriends;
 	private String userId = "1442881101";
