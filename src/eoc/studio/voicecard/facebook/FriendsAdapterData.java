@@ -68,7 +68,7 @@ public class FriendsAdapterData {
     }
 
     /** Get all items from database*/
-    public Cursor getall() {
+    public Cursor getAll() {
         return db.query(DATABASE_TABLE, new String[] { KEY_ROWID, KEY_FRIEND_ID, KEY_FRIEND_NAME, KEY_FRIEND_BIRTHDAY,
                 KEY_FRIEND_IMG_LINK, KEY_FRIEND_IMG, KEY_SELECT_STATE, KEY_INSTALL_STATE }, null, null, null, null,
                 KEY_FRIEND_NAME);
@@ -90,7 +90,7 @@ public class FriendsAdapterData {
 
     /** Delete one item from database */
     public boolean delete(String friendId) {
-        if (db != null)
+        if (db != null && db.isOpen())
             return db.delete(DATABASE_TABLE, KEY_FRIEND_ID + "=" + friendId, null) > 0;
         else
             return false;
@@ -98,7 +98,7 @@ public class FriendsAdapterData {
 
     /** Delete all item from database */
     public boolean delete() {
-        if (db != null)
+        if (db != null && db.isOpen())
             return db.delete(DATABASE_TABLE, null, null) > 0;
         else
             return false;
@@ -113,6 +113,18 @@ public class FriendsAdapterData {
             if (cursor != null) {
                 cursor.moveToFirst();
             }
+            return cursor;
+        } else {
+            return null;
+        }
+    }
+    
+    public Cursor seachResult(String selectionName) throws SQLException {
+        if (db.isOpen()) {
+            String where = KEY_FRIEND_NAME + " like ?";
+            String[] selection = new String[] { selectionName + "%"};
+            Cursor cursor = db.query(true, DATABASE_TABLE, new String[] { KEY_FRIEND_ID, KEY_FRIEND_NAME,
+                    KEY_FRIEND_BIRTHDAY, KEY_FRIEND_IMG_LINK, KEY_FRIEND_IMG, KEY_SELECT_STATE }, where, selection, null, null, null, null);
             return cursor;
         } else {
             return null;

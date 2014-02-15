@@ -30,6 +30,13 @@
 
     <!-- MemorialDayNotificationView -->
     <string name="a_normal_day">平凡的一天</string>
+    
+    <!-- About Select Friend -->
+    <string name="search_friend">搜尋朋友</string>
+    <string name="user_not_install_message">若聯絡人尚未安裝則發送訊息通知</string>
+    
+    <!-- About Friend Info -->
+    <string name="not_install">未安裝</string>
 
     <!-- Card Category -->
     <string name="mothers_day">母親節</string>

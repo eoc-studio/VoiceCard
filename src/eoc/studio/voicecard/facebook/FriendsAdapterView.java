@@ -28,7 +28,8 @@ public class FriendsAdapterView extends BaseAdapter
 	private List<FriendInfo> friends;
 	private ListView showFriendView;
 	private ViewTag viewTag;
-	private boolean pauseState = false;
+	private boolean isPause = false;
+	private boolean isInterrupt = false;
 
 	FriendsAdapterView(Context context, List<FriendInfo> friends, FriendsAdapterData friendsAdapterData, ListView showFriendView)
 	{
@@ -37,9 +38,10 @@ public class FriendsAdapterView extends BaseAdapter
 		this.friendsAdapterData = friendsAdapterData;
 		this.showFriendView = showFriendView;
 		layoutInflater = LayoutInflater.from(context);
-		pauseState = false;
+		isPause = false;
+		isInterrupt = false;
 		
-		DownlaodImageThread downlaodImageThread = new DownlaodImageThread(friends);
+		DownlaodImageThread downlaodImageThread = new DownlaodImageThread(friends, 0, friends.size());
 		downlaodImageThread.start();
 	}
 
@@ -108,8 +110,18 @@ public class FriendsAdapterView extends BaseAdapter
 	    notifyDataSetChanged();
 	}
 	
-	public void setPauseState(boolean pauseState) {
-	    this.pauseState = pauseState;
+	public void setPause(boolean isPause) {
+	    this.isPause = isPause;
+	}
+	
+	public void setInterrupt(boolean isInterrupt) {
+	    this.isInterrupt = isInterrupt;
+	}
+	
+	public void loadImagefromPosition(int startPostion, int endPosition) {
+        DownlaodImageThread downlaodImageThread = new DownlaodImageThread(friends.subList(startPostion, endPosition),
+                startPostion, endPosition);
+        downlaodImageThread.start();
 	}
 	
     private Handler showImgHandler = new Handler() {
@@ -136,6 +148,10 @@ public class FriendsAdapterView extends BaseAdapter
             }
         }
     };
+    
+    public void clearList() {
+        friends.clear();
+    }
 
 	class ViewTag
 	{
@@ -155,22 +171,32 @@ public class FriendsAdapterView extends BaseAdapter
 	
     private class DownlaodImageThread extends Thread {
         List<FriendInfo> friendList;
+        int startPosition;
+        int endPosition;
 
-        public DownlaodImageThread(List<FriendInfo> friendList) {
+        public DownlaodImageThread(List<FriendInfo> friendList, int startPosition, int endPosition) {
             this.friendList = friendList;
+            this.startPosition = startPosition;
+            this.endPosition = endPosition;
         }
 
         @Override
         public void run() {
-            for (int i = 0; i < friendList.size(); i++) {
-                if (!pauseState) {
-                    FriendInfo friendInfo = friendList.get(i);
+            Log.d(TAG, "friendList size === " + friendList.size());
+            Log.d(TAG, "startPosition === " + startPosition);
+            Log.d(TAG, "endPosition === " + endPosition);
+            for (int i = startPosition; i < endPosition; i++) {
+                if (isInterrupt) {
+                    break;
+                }
+                if (!isPause) {
+                    FriendInfo friendInfo = friendList.get(i - startPosition);
                     byte[] friendImg = friendInfo.getFriendImg();
 
                     if (friendImg == null) {
                         friendImg = WebImageUtility.getWebImage(friendInfo.getFriendImgLink());
                         friendsAdapterData.updateFriendImg(friendInfo.getFriendId(), friendImg);
-                        friendList.get(i).setFriendImg(friendImg);
+                        friendList.get(i - startPosition).setFriendImg(friendImg);
                     }
                     showImgHandler.sendMessage(showImgHandler.obtainMessage(i));
                 } else {
