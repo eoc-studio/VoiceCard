@@ -3,10 +3,139 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/act_card_editor_rlyt_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/act_card_editor_iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dip"
+            android:src="@drawable/icon_ar1_left" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/act_card_editor_iv_back"
+            android:src="@drawable/title_edit_card2" />
+
+        <ImageView
+            android:id="@+id/act_card_editor_iv_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dip"
+            android:src="@drawable/icon_ar1_right" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/act_card_editor_iv_card_inner_page"
+        android:layout_width="500dip"
+        android:layout_height="300dip"
+        android:layout_below="@id/act_card_editor_rlyt_header"
+        android:layout_centerHorizontal="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/card02_open" />
+
+    <FrameLayout
+        android:id="@+id/act_card_editor_flyt_editable_image_frame"
+        android:layout_width="200dip"
+        android:layout_height="150dip"
+        android:layout_alignLeft="@id/act_card_editor_iv_card_inner_page"
+        android:layout_alignTop="@id/act_card_editor_iv_card_inner_page"
+        android:background="@drawable/dash_border"
+        android:translationX="30dip"
+        android:translationY="20dip" >
+
+        <TextView
+            android:id="@+id/act_card_editor_tv_editable_image_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/insert_image" />
+
+        <ImageView
+            android:id="@+id/act_card_editor_iv_editable_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/act_card_editor_flyt_editable_voice_frame"
+        android:layout_width="200dip"
+        android:layout_height="70dip"
+        android:layout_alignBottom="@id/act_card_editor_iv_card_inner_page"
+        android:layout_alignLeft="@id/act_card_editor_iv_card_inner_page"
+        android:background="@drawable/dash_border"
+        android:translationX="30dip"
+        android:translationY="-30dip" >
+
+        <TextView
+            android:id="@+id/act_card_editor_tv_editable_voice_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/insert_voice" />
+
+        <ImageView
+            android:id="@+id/act_card_editor_iv_editable_voice_controller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_play"
+            android:visibility="invisible" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/act_card_editor_flyt_editable_text_frame"
+        android:layout_width="200dip"
+        android:layout_height="120dip"
+        android:layout_alignRight="@id/act_card_editor_iv_card_inner_page"
+        android:layout_alignTop="@id/act_card_editor_iv_card_inner_page"
+        android:background="@drawable/dash_border"
+        android:translationX="-30dip"
+        android:translationY="20dip" >
+
+        <TextView
+            android:id="@+id/act_card_editor_tv_editable_text_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/insert_text" />
+
+        <TextView
+            android:id="@+id/act_card_editor_tv_editable_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/act_card_editor_flyt_editable_signature_frame"
+        android:layout_width="200dip"
+        android:layout_height="100dip"
+        android:layout_alignBottom="@id/act_card_editor_iv_card_inner_page"
+        android:layout_alignRight="@id/act_card_editor_iv_card_inner_page"
+        android:background="@drawable/dash_border"
+        android:translationX="-30dip"
+        android:translationY="-30dip" >
+
+        <TextView
+            android:id="@+id/act_card_editor_tv_editable_signature_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/insert_signature" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/act_card_editor_landscape_iv_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="card editor - layout for landscape" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="10dip"
+        android:src="@drawable/icon_menu" />
 
 </RelativeLayout>

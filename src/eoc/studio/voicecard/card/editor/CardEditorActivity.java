@@ -18,7 +18,6 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.Card;
@@ -33,7 +32,10 @@ public class CardEditorActivity extends BaseActivity
 	private static final int REQ_PICK_IMAGE = 1;
 	private static final int REQ_CROP_IMAGE = 2;
 
+	private static final String EXTRA_KEY_USER_IMAGE = "user_image";
+
 	private ImageView back;
+	private ImageView next;
 	private ImageView innerPage;
 	private FrameLayout editableImageFrame;
 	private FrameLayout editableVoiceFrame;
@@ -47,14 +49,25 @@ public class CardEditorActivity extends BaseActivity
 
 	private ImageView editableImage;
 
-	private static Card card;
+	private Card card;
+	private Bitmap userImage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		getCard();
+		if (savedInstanceState != null)
+		{
+			Log.d(TAG, "from savedInstanceState");
+			restoreUserData(savedInstanceState);
+		}
+		else
+		{
+			Log.d(TAG, "from intent");
+			card = getCardFromIntent(getIntent());
+		}
 		initLayout();
 		setupCard();
+		setupUserData();
 		super.onCreate(savedInstanceState);
 	}
 
@@ -62,6 +75,22 @@ public class CardEditorActivity extends BaseActivity
 	public void onConfigurationChanged(Configuration newConfig)
 	{
 		super.onConfigurationChanged(newConfig);
+
+		if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+		{
+			Log.d(TAG, "LANDSCAPE");
+		}
+		else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
+		{
+			Log.d(TAG, "PORTRAIT");
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState)
+	{
+		saveUserData(savedInstanceState);
+		super.onSaveInstanceState(savedInstanceState);
 	}
 
 	@Override
@@ -84,22 +113,62 @@ public class CardEditorActivity extends BaseActivity
 		super.onResume();
 	}
 
-	private void getCard()
+	private void setupUserData()
 	{
-		Intent intent = getIntent();
-		int cardId = intent.getIntExtra(EXTRA_KEY_CARD_ID, -1);
-		if (cardId != -1)
+		if (userImage != null)
 		{
-			card = FakeData.getCard(cardId);
+			editableImage.setImageBitmap(userImage);
+		}
+
+	}
+
+	private void restoreUserData(Bundle savedInstanceState)
+	{
+		card = getCardFromSavedInstanceState(savedInstanceState);
+		userImage = getUserImageFromSavedInstanceState(savedInstanceState);
+	}
+
+	private void saveUserData(Bundle savedInstanceState)
+	{
+		savedInstanceState.putInt(EXTRA_KEY_CARD_ID, card.getId());
+		if (userImage != null)
+		{
+			savedInstanceState.putParcelable(EXTRA_KEY_USER_IMAGE, userImage);
+		}
+	}
+
+	private Card getCardFromIntent(Intent intent)
+	{
+		int cardId = intent.getIntExtra(EXTRA_KEY_CARD_ID, -1);
+		return getCardById(cardId);
+	}
+
+	private Card getCardFromSavedInstanceState(Bundle savedInstanceState)
+	{
+		int cardId = savedInstanceState.getInt(EXTRA_KEY_CARD_ID, -1);
+		return getCardById(cardId);
+	}
+
+	private Card getCardById(int id)
+	{
+		Card card;
+		if (id != -1)
+		{
+			card = FakeData.getCard(id);
 			assert card != null;
 
 			Log.d(TAG, "EDIT : " + card.getName());
-			Toast.makeText(this, "EDIT: " + card.getName(), Toast.LENGTH_LONG).show();
 		}
 		else
 		{
-			throw new RuntimeException("invalid intent, card id " + cardId);
+			throw new RuntimeException("invalid id -1");
 		}
+		return card;
+	}
+
+	private Bitmap getUserImageFromSavedInstanceState(Bundle savedInstanceState)
+	{
+		return savedInstanceState.getParcelable(EXTRA_KEY_USER_IMAGE);
 	}
 
 	private void initLayout()
@@ -112,6 +181,7 @@ public class CardEditorActivity extends BaseActivity
 	private void findViews()
 	{
 		back = (ImageView) findViewById(R.id.act_card_editor_iv_back);
+		next = (ImageView) findViewById(R.id.act_card_editor_iv_next);
 		innerPage = (ImageView) findViewById(R.id.act_card_editor_iv_card_inner_page);
 		editableImageFrame = (FrameLayout) findViewById(R.id.act_card_editor_flyt_editable_image_frame);
 		editableVoiceFrame = (FrameLayout) findViewById(R.id.act_card_editor_flyt_editable_voice_frame);
@@ -162,6 +232,16 @@ public class CardEditorActivity extends BaseActivity
 			public void onClick(View v)
 			{
 				finish();
+			}
+
+		});
+		next.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				Log.d(TAG, "next");
 			}
 
 		});
@@ -247,17 +327,11 @@ public class CardEditorActivity extends BaseActivity
 			if (extras != null)
 			{
 				Bitmap cropped = extras.getParcelable("data");
-				setEditableImage(cropped);
+				userImage = cropped;
+				editableImage.setImageBitmap(cropped);
+				new SaveCardImageThread(cropped).start();
 			}
 		}
-	}
-
-	private void setEditableImage(Bitmap bitmap)
-	{
-		editableImage.setImageBitmap(bitmap);
-
-		new SaveCardImageThread(bitmap).start();
-
 	}
 
 	private class SaveCardImageThread extends Thread

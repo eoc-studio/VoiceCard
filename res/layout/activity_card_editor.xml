@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <RelativeLayout
-        android:id="@+id/act_card_editor_iv_header"
+        android:id="@+id/act_card_editor_rlyt_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/header_bg1" >
@@ -23,13 +23,22 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dip"
             android:src="@drawable/icon_ar1_left" />
+
+        <ImageView
+            android:id="@+id/act_card_editor_iv_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dip"
+            android:src="@drawable/icon_ar1_right" />
     </RelativeLayout>
 
     <ImageView
         android:id="@+id/act_card_editor_iv_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/act_card_editor_iv_header"
+        android:layout_below="@id/act_card_editor_rlyt_header"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dip"
         android:layout_marginTop="20dip"
