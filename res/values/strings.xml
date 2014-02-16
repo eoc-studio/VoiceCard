@@ -1,58 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">VoiceCard</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+		<string name="app_name">VoiceCard</string>
+		<string name="action_settings">Settings</string>
+		<string name="hello_world">Hello world!</string>
 
-    <!-- About Test Facebook -->
-    <string name="app_id">584057725018260</string>
-    <string name="get_user_profile">Get User Profile</string>
-    <string name="get_friend_list">Get Friends</string>
-    <string name="get_picture">Get Picture</string>
-    <string name="user_info">User Info</string>
-    <string name="invite_friend">Invite Friend</string>
-    <string name="invite_message">I want invite you!</string>
-    <string name="publish_me">Publish to timeline</string>
-    <string name="publish_friend">Publish to friend</string>
+		<!-- About Test Facebook -->
+		<string name="app_id">584057725018260</string>
+		<string name="get_user_profile">Get User Profile</string>
+		<string name="get_friend_list">Get Friends</string>
+		<string name="get_picture">Get Picture</string>
+		<string name="user_info">User Info</string>
+		<string name="invite_friend">Invite Friend</string>
+		<string name="invite_message">I want invite you!</string>
+		<string name="publish_me">Publish to timeline</string>
+		<string name="publish_friend">Publish to friend</string>
 
-    <!-- About Contact -->
-    <string name="file_process_loading">Loading</string>
-    <string name="noData">NoData</string>
+		<!-- About Contact -->
+		<string name="file_process_loading">Loading</string>
+		<string name="noData">NoData</string>
 
-    <!-- About MemorialDay -->
-    <string name="current_month_placeholder">1970-January</string>
-    <string name="previous_month_placeholder">&lt;&lt;</string>
-    <string name="next_month_placeholder">&gt;&gt;</string>
+		<!-- About MemorialDay -->
+		<string name="current_month_placeholder">1970-January</string>
+		<string name="previous_month_placeholder">&lt;&lt;</string>
+		<string name="next_month_placeholder">&gt;&gt;</string>
 
-    <!-- MailBoxIconView -->
-    <string name="mail">Inbox</string>
+		<!-- MailBoxIconView -->
+		<string name="mail">Inbox</string>
 
-    <!-- MemorialDayNotificationView -->
-    <string name="a_normal_day">Nothing special</string>
-    
-    <!-- About Select Friend -->
-    <string name="search_friend">Search Friend</string>
-    <string name="user_not_install_message">If user not install this app then send message to him/her.</string>
-    <string name="user_no_result">No friends or no search result</string>
-    
-    <!-- About Friend Info -->
-    <string name="not_install">not install</string>
+		<!-- MemorialDayNotificationView -->
+		<string name="a_normal_day">Nothing special</string>
 
-    <!-- Card Category -->
-    <string name="mothers_day">Mother\'s Day</string>
-    <string name="birthday">Birthday</string>
-    <string name="valentines_day">Valentine\'s Day</string>
-    <string name="xmas">Xmas</string>
-    <string name="halloween">Halloween</string>
-    <string name="thanks_note">Thanks Note</string>
+		<!-- About Select Friend -->
+		<string name="search_friend">Search Friend</string>
+		<string name="user_not_install_message">If user not install this app then send message to
+				him/her.</string>
 
-    <!-- Card Editor -->
-    <string name="insert_image">Insert image</string>
-    <string name="insert_voice">Record voice</string>
-    <string name="insert_text">Insert text</string>
-    <string name="insert_signature">Insert signature</string>
-    <string name="play_voice_message">Play message %s</string>
+		<!-- About Friend Info -->
+		<string name="not_install">not install</string>
+
+		<!-- view_recommend_listview_item -->
+		<string name="detail_info">Detail information</string>
 
     <!-- RichTextEditor -->
     <string name="text_limit">/%s words</string>

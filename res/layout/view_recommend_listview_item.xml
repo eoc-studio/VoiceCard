@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="vertical">
+		<LinearLayout
+				android:id="@+id/view_recommend_listview_item_llyt_main"
+				android:layout_width="match_parent"
+				android:layout_height="177dp"
+				android:orientation="horizontal">
+				<LinearLayout
+						android:id="@+id/view_recommend_listview_item_llyt_image"
+						android:layout_width="158dp"
+						android:layout_height="match_parent"
+						android:gravity="center"
+						android:orientation="horizontal">
+						<RelativeLayout
+								android:id="@+id/view_recommend_listview_item_rlyt_image"
+								android:layout_width="125dp"
+								android:layout_height="125dp"
+								android:background="@color/white">
+								<ImageView
+										android:id="@+id/view_recommend_listview_item_iv_image"
+										android:layout_width="121dp"
+										android:layout_height="121dp"
+										android:layout_alignParentTop="true"
+										android:layout_centerHorizontal="true"
+										android:layout_marginLeft="2dp"
+										android:layout_marginTop="2dp"
+										android:scaleType="centerCrop"
+										android:src="@drawable/recommed_dummy"
+										android:visibility="invisible"			/>					
+										<com.android.volley.toolbox.NetworkImageView
+												android:id="@+id/view_recommend_listview_item_niv_image"
+												android:layout_width="121dp"
+												android:layout_height="121dp"
+												android:layout_alignParentTop="true"
+												android:layout_centerHorizontal="true"
+												android:layout_marginLeft="2dp"
+												android:layout_marginTop="2dp"
+												android:scaleType="centerCrop" />
+										<ImageView 
+												android:id="@+id/view_recommend_listview_item_iv_new"
+												android:layout_width="40dp"
+												android:layout_height="40dp"
+												android:layout_alignParentBottom="false"
+												android:layout_alignParentLeft="false"
+												android:layout_alignParentRight="false"
+												android:layout_alignParentTop="false"
+												android:src="@drawable/icon_new" />
+						</RelativeLayout>
+				</LinearLayout>
+				<LinearLayout
+						android:id="@+id/view_recommend_listview_item_llyt_right"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:orientation="vertical">
+						<LinearLayout
+								android:id="@+id/view_recommend_listview_item_llyt_right_top"
+								android:layout_width="match_parent"
+								android:layout_height="50dp"
+								android:orientation="vertical">
+								<TextView
+										android:id="@+id/view_recommend_listview_item_tv_title"
+										android:layout_width="wrap_content"
+										android:layout_height="wrap_content"
+										android:layout_gravity="bottom|left"
+										android:layout_marginTop="25dp"
+										android:text="This is Title"
+										android:textColor="#604d47"
+										android:textSize="15sp" />
+						</LinearLayout>
+						<LinearLayout
+								android:id="@+id/view_recommend_listview_item_llyt_right_middle"
+								android:layout_width="match_parent"
+								android:layout_height="84dp"
+								android:orientation="vertical">
+								<TextView
+										android:id="@+id/view_recommend_listview_item_tv_promotion"
+
+										android:layout_width="fill_parent"
+										android:layout_height="wrap_content"
+										android:textColor="#7c6a52"
+										android:background="#e0d0ae"
+										android:text="This is promotion! This is promotion! This is promotion! " />
+						</LinearLayout>
+						<LinearLayout
+								android:id="@+id/view_recommend_listview_item_llyt_right_bottom"
+								android:layout_width="match_parent"
+								android:layout_height="43dp"
+								android:orientation="horizontal">
+
+
+								<ImageView
+										android:layout_width="9dp"
+										android:layout_height="9dp"
+										android:layout_marginRight="5dp"
+										android:src="@drawable/icon_ar_org" />
+								<TextView
+										android:id="@+id/view_recommend_listview_item_tv_detail_info"
+										android:layout_width="wrap_content"
+										android:layout_height="12dp"
+										android:textSize="10sp"
+										android:textColor="#7e5d3a"
+										android:text="@string/detail_info" />
+						</LinearLayout>
+				</LinearLayout>
+		</LinearLayout>
+		<LinearLayout
+				android:id="@+id/view_recommend_listview_item_llyt_dash_horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:background="@layout/view_dash_horizontal_repeat"></LinearLayout>
+
+</LinearLayout>

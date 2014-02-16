@@ -11,6 +11,8 @@ import eoc.studio.voicecard.facebook.TestFacebookActivity;
 import eoc.studio.voicecard.mainmenu.MainMenuActivity;
 import eoc.studio.voicecard.manufacture.EditSignatureActivity;
 import eoc.studio.voicecard.richtexteditor.RichTextEditorActivity;
+import eoc.studio.voicecard.recommend.RecommendActivity;
+import eoc.studio.voicecard.volley.test.JsonTestActivity;
 
 public class TestMainActivity extends BaseActivity
 {
@@ -47,6 +49,17 @@ public class TestMainActivity extends BaseActivity
 				startActivity(intent);
 			}
 		});
+		
+		findViewById(R.id.test_web_api).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+
+				Intent intent = new Intent(TestMainActivity.this, JsonTestActivity.class);
+				startActivity(intent);
+			}
+		});
 		findViewById(R.id.test_contacts).setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -80,6 +93,16 @@ public class TestMainActivity extends BaseActivity
 			public void onClick(View v)
 			{
 				Intent intent = new Intent(TestMainActivity.this, MainMenuActivity.class);
+				startActivity(intent);
+			}
+		});
+		findViewById(R.id.test_recommend).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+
+				Intent intent = new Intent(TestMainActivity.this, RecommendActivity.class);
 				startActivity(intent);
 			}
 		});
