@@ -80,12 +80,30 @@
             android:layout_gravity="center"
             android:text="@string/insert_voice" />
 
-        <ImageView
-            android:id="@+id/act_card_editor_iv_editable_voice_controller"
+        <LinearLayout
+            android:id="@+id/act_card_editor_llyt_editable_voice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_play"
-            android:visibility="invisible" />
+            android:layout_gravity="center"
+            android:background="@drawable/voice_message_controller_background"
+            android:orientation="horizontal"
+            android:visibility="invisible" >
+
+            <ImageView
+                android:id="@+id/act_card_editor_iv_editable_voice_play_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
+                android:src="@drawable/icon_play" />
+
+            <TextView
+                android:id="@+id/act_card_editor_tv_editable_voice_play_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
+                android:text="@string/play_voice_message"
+                android:textColor="@color/white" />
+        </LinearLayout>
     </FrameLayout>
 
     <FrameLayout
@@ -129,13 +147,86 @@
             android:text="@string/insert_signature" />
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/act_card_editor_landscape_iv_menu"
+    <LinearLayout
+        android:id="@+id/act_card_editor_landscape_llyt_menu_opener_wrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_margin="10dip"
-        android:src="@drawable/icon_menu" />
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/handwrite_02" />
+
+        <ImageView
+            android:id="@+id/act_card_editor_landscape_iv_menu_opener"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_menu" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/act_card_editor_landscape_rlyt_menu_mode_screen_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#33000000"
+        android:visibility="invisible" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/menu_bg" />
+
+        <RelativeLayout
+            android:id="@+id/act_card_editor_rlyt_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dip" >
+
+            <eoc.studio.voicecard.menu.SaveDraft
+                android:id="@+id/act_card_editor_iv_menu_save_draft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+
+            <View
+                android:id="@+id/act_card_editor_v_menu_divider_left"
+                android:layout_width="1dip"
+                android:layout_height="40dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dip"
+                android:layout_marginRight="20dip"
+                android:layout_toLeftOf="@id/act_card_editor_iv_menu_save_draft"
+                android:background="@color/white" />
+
+            <eoc.studio.voicecard.menu.Index
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/act_card_editor_v_menu_divider_left" />
+
+            <View
+                android:id="@+id/act_card_editor_v_menu_divider_right"
+                android:layout_width="1dip"
+                android:layout_height="40dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dip"
+                android:layout_marginRight="20dip"
+                android:layout_toRightOf="@id/act_card_editor_iv_menu_save_draft"
+                android:background="@color/white" />
+
+            <eoc.studio.voicecard.menu.OpenDraft
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/act_card_editor_v_menu_divider_right" />
+        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

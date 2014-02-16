@@ -64,7 +64,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="eoc.studio.voicecard.card.editor.CardEditorActivity"
-            android:configChanges="orientation"/>
+            android:configChanges="orientation" />
+        <activity
+            android:name="eoc.studio.voicecard.audio.AudioRecorderActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

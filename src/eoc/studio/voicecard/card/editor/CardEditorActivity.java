@@ -10,13 +10,20 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.GradientDrawable;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
@@ -31,12 +38,21 @@ public class CardEditorActivity extends BaseActivity
 
 	private static final int REQ_PICK_IMAGE = 1;
 	private static final int REQ_CROP_IMAGE = 2;
+	private static final int REQ_RECORD_VOICE = 3;
 
 	private static final String EXTRA_KEY_USER_IMAGE = "user_image";
+	private static final String EXTRA_KEY_USER_IMAGE_BITMAP = "user_image_bitmap";
+	private static final String EXTRA_KEY_USER_VOICE = "user_voice";
+	private static final String EXTRA_KEY_USER_VOICE_DURATION = "user_voice_duration";
 
 	private ImageView back;
 	private ImageView next;
 	private ImageView innerPage;
+
+	private LinearLayout landscapeMenuOpenerWrapper;
+	private ImageView landscapeMenuOpener;
+	private RelativeLayout landscapeMenuModeScreenMask;
+
 	private FrameLayout editableImageFrame;
 	private FrameLayout editableVoiceFrame;
 	private FrameLayout editableTextFrame;
@@ -48,9 +64,14 @@ public class CardEditorActivity extends BaseActivity
 	private TextView editableSignatureTip;
 
 	private ImageView editableImage;
+	private LinearLayout editableVoice;
+	private TextView editableVoiceText;
 
 	private Card card;
-	private Bitmap userImage;
+	private Uri userImage;
+	private Bitmap userImageBitmap;
+	private Uri userVoice;
+	private String userVoiceDuration;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -63,10 +84,10 @@ public class CardEditorActivity extends BaseActivity
 		else
 		{
 			Log.d(TAG, "from intent");
-			card = getCardFromIntent(getIntent());
+			card = getEmptyCardFromIntent(getIntent());
 		}
 		initLayout();
-		setupCard();
+		setupCardView();
 		setupUserData();
 		super.onCreate(savedInstanceState);
 	}
@@ -117,15 +138,30 @@ public class CardEditorActivity extends BaseActivity
 	{
 		if (userImage != null)
 		{
-			editableImage.setImageBitmap(userImage);
+			editableImage.setImageBitmap(userImageBitmap);
 		}
-
+		if (userVoice != null)
+		{
+			editableVoice.setVisibility(View.VISIBLE);
+			editableVoiceText.setText(userVoiceDuration);
+		}
 	}
 
 	private void restoreUserData(Bundle savedInstanceState)
 	{
-		card = getCardFromSavedInstanceState(savedInstanceState);
-		userImage = getUserImageFromSavedInstanceState(savedInstanceState);
+		card = getEmptyCardFromSavedInstanceState(savedInstanceState);
+		userImage = savedInstanceState.getParcelable(EXTRA_KEY_USER_IMAGE);
+		userImageBitmap = savedInstanceState.getParcelable(EXTRA_KEY_USER_IMAGE_BITMAP);
+		userVoice = savedInstanceState.getParcelable(EXTRA_KEY_USER_VOICE);
+		userVoiceDuration = savedInstanceState.getString(EXTRA_KEY_USER_VOICE_DURATION);
+
+		Log.d(TAG, "restore user data -- IMAGE URI: " + userImage);
+		Log.d(TAG, "restore user data -- IMAGE BITMAP: " + userImageBitmap);
+		Log.d(TAG, "restore user data -- VOICE URI: " + userVoice);
+		Log.d(TAG, "restore user data -- VOICE DURATION: " + userVoiceDuration);
+
+		card.setImage(userImage);
+		card.setSound(userVoice);
 	}
 
 	private void saveUserData(Bundle savedInstanceState)
@@ -134,16 +170,32 @@ public class CardEditorActivity extends BaseActivity
 		if (userImage != null)
 		{
 			savedInstanceState.putParcelable(EXTRA_KEY_USER_IMAGE, userImage);
+			Log.d(TAG, "save user data -- IMAGE URI: " + userImage);
+		}
+		if (userImageBitmap != null)
+		{
+			savedInstanceState.putParcelable(EXTRA_KEY_USER_IMAGE_BITMAP, userImageBitmap);
+			Log.d(TAG, "save user data -- IMAGE BITMAP: " + userImageBitmap);
+		}
+		if (userVoice != null)
+		{
+			savedInstanceState.putParcelable(EXTRA_KEY_USER_VOICE, userVoice);
+			Log.d(TAG, "save user data -- VOICE URI: " + userVoice);
+		}
+		if (userVoiceDuration != null)
+		{
+			savedInstanceState.putString(EXTRA_KEY_USER_VOICE_DURATION, userVoiceDuration);
+			Log.d(TAG, "save user data -- VOICE DURATION: " + userVoiceDuration);
 		}
 	}
 
-	private Card getCardFromIntent(Intent intent)
+	private Card getEmptyCardFromIntent(Intent intent)
 	{
 		int cardId = intent.getIntExtra(EXTRA_KEY_CARD_ID, -1);
 		return getCardById(cardId);
 	}
 
-	private Card getCardFromSavedInstanceState(Bundle savedInstanceState)
+	private Card getEmptyCardFromSavedInstanceState(Bundle savedInstanceState)
 	{
 		int cardId = savedInstanceState.getInt(EXTRA_KEY_CARD_ID, -1);
 		return getCardById(cardId);
@@ -166,11 +218,6 @@ public class CardEditorActivity extends BaseActivity
 		return card;
 	}
 
-	private Bitmap getUserImageFromSavedInstanceState(Bundle savedInstanceState)
-	{
-		return savedInstanceState.getParcelable(EXTRA_KEY_USER_IMAGE);
-	}
-
 	private void initLayout()
 	{
 		setContentView(R.layout.activity_card_editor);
@@ -183,6 +230,14 @@ public class CardEditorActivity extends BaseActivity
 		back = (ImageView) findViewById(R.id.act_card_editor_iv_back);
 		next = (ImageView) findViewById(R.id.act_card_editor_iv_next);
 		innerPage = (ImageView) findViewById(R.id.act_card_editor_iv_card_inner_page);
+
+		landscapeMenuOpenerWrapper = (LinearLayout) findViewById(R.id.act_card_editor_landscape_llyt_menu_opener_wrapper);
+		if (landscapeMenuOpenerWrapper != null)
+		{
+			landscapeMenuOpener = (ImageView) findViewById(R.id.act_card_editor_landscape_iv_menu_opener);
+			landscapeMenuModeScreenMask = (RelativeLayout) findViewById(R.id.act_card_editor_landscape_rlyt_menu_mode_screen_mask);
+		}
+
 		editableImageFrame = (FrameLayout) findViewById(R.id.act_card_editor_flyt_editable_image_frame);
 		editableVoiceFrame = (FrameLayout) findViewById(R.id.act_card_editor_flyt_editable_voice_frame);
 		editableTextFrame = (FrameLayout) findViewById(R.id.act_card_editor_flyt_editable_text_frame);
@@ -194,9 +249,11 @@ public class CardEditorActivity extends BaseActivity
 		editableSignatureTip = (TextView) findViewById(R.id.act_card_editor_tv_editable_signature_tip);
 
 		editableImage = (ImageView) findViewById(R.id.act_card_editor_iv_editable_image);
+		editableVoice = (LinearLayout) findViewById(R.id.act_card_editor_llyt_editable_voice);
+		editableVoiceText = (TextView) findViewById(R.id.act_card_editor_tv_editable_voice_play_text);
 	}
 
-	private void setupCard()
+	private void setupCardView()
 	{
 		innerPage.setImageResource(card.getImage3dOpenResId());
 		setCardColor();
@@ -245,6 +302,32 @@ public class CardEditorActivity extends BaseActivity
 			}
 
 		});
+		if (landscapeMenuOpener != null)
+		{
+			landscapeMenuOpener.setOnClickListener(new OnClickListener()
+			{
+
+				@Override
+				public void onClick(View v)
+				{
+					Log.d(TAG, "landscape menu opener clicked");
+					openLandscapeMenu();
+				}
+
+			});
+			landscapeMenuModeScreenMask.setOnTouchListener(new OnTouchListener()
+			{
+
+				@Override
+				public boolean onTouch(View v, MotionEvent event)
+				{
+					Log.d(TAG, "landscape menu mode screen mask touched");
+					closeLandscapeMenu();
+					return true;
+				}
+
+			});
+		}
 		editableImageFrame.setOnClickListener(new OnClickListener()
 		{
 
@@ -263,6 +346,7 @@ public class CardEditorActivity extends BaseActivity
 			public void onClick(View v)
 			{
 				Log.d(TAG, "EDIT VOICE");
+				startVoiceRecorder();
 			}
 
 		});
@@ -286,11 +370,32 @@ public class CardEditorActivity extends BaseActivity
 		});
 	}
 
+	private void openLandscapeMenu()
+	{
+		landscapeMenuOpenerWrapper.setVisibility(View.INVISIBLE);
+		landscapeMenuModeScreenMask.setVisibility(View.VISIBLE);
+	}
+
+	private void closeLandscapeMenu()
+	{
+		landscapeMenuOpenerWrapper.setVisibility(View.VISIBLE);
+		landscapeMenuModeScreenMask.setVisibility(View.INVISIBLE);
+	}
+
 	private void startImagePicker()
 	{
 		Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
 		photoPickerIntent.setType("image/*");
 		startActivityForResult(photoPickerIntent, REQ_PICK_IMAGE);
+	}
+
+	private void onImagePickerResult(int resultCode, Intent data)
+	{
+		Uri photoUri = data.getData();
+		if (photoUri != null)
+		{
+			startImageCropper(photoUri);
+		}
 	}
 
 	private void startImageCropper(Uri photoUri)
@@ -308,29 +413,116 @@ public class CardEditorActivity extends BaseActivity
 		startActivityForResult(intent, REQ_CROP_IMAGE);
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent intent)
+	private void onImageCropperResult(int resultCode, Intent data)
 	{
-		super.onActivityResult(requestCode, resultCode, intent);
-
-		if (requestCode == REQ_PICK_IMAGE)
+		Bundle extras = data.getExtras();
+		if (extras != null)
 		{
-			Uri photoUri = intent.getData();
-			if (photoUri != null)
-			{
-				startImageCropper(photoUri);
-			}
+			Bitmap cropped = extras.getParcelable("data");
+			userImageBitmap = cropped;
+			editableImage.setImageBitmap(cropped);
+			new SaveCardImageThread(cropped).start();
 		}
-		else if (requestCode == REQ_CROP_IMAGE)
+	}
+
+	private void startVoiceRecorder()
+	{
+		// Intent intent = new Intent(this, AudioRecorderActivity.class);
+		Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+		startActivityForResult(intent, REQ_RECORD_VOICE);
+	}
+
+	private void onVoiceRecorderResult(int resultCode, Intent data)
+	{
+		Uri uri = data.getData();
+		userVoice = uri;
+		card.setSound(uri);
+		setVoiceMessageText(uri);
+	}
+
+	private void setVoiceMessageText(Uri uri)
+	{
+		MediaPlayer mp = new MediaPlayer();
+		try
 		{
-			Bundle extras = intent.getExtras();
-			if (extras != null)
+			mp.setDataSource(this, uri);
+			mp.setOnPreparedListener(new OnPreparedListener()
 			{
-				Bitmap cropped = extras.getParcelable("data");
-				userImage = cropped;
-				editableImage.setImageBitmap(cropped);
-				new SaveCardImageThread(cropped).start();
-			}
+
+				@Override
+				public void onPrepared(final MediaPlayer mp)
+				{
+
+					runOnUiThread(new Runnable()
+					{
+
+						@Override
+						public void run()
+						{
+							int duration = mp.getDuration();
+							int min = duration / 1000 / 60;
+							int sec = duration / 1000 % 60;
+							userVoiceDuration = getString(R.string.play_voice_message, min + ":"
+									+ String.format("%02d", sec));
+							editableVoiceText.setText(userVoiceDuration);
+							editableVoice.setVisibility(View.VISIBLE);
+							Log.d(TAG, "userVoiceDuration: " + userVoiceDuration);
+
+							new Thread("ReleasePlayer")
+							{
+								@Override
+								public void run()
+								{
+									Log.d(TAG, "Release MediaPlayer");
+									mp.release();
+								}
+							}.start();
+						}
+					});
+				}
+
+			});
+			mp.prepareAsync();
+		}
+		catch (IllegalArgumentException e)
+		{
+			e.printStackTrace();
+		}
+		catch (SecurityException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IllegalStateException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (data == null)
+		{
+			Log.d(TAG, "onActivityResult, data null");
+			return;
+		}
+		switch (requestCode)
+		{
+		case REQ_PICK_IMAGE:
+			onImagePickerResult(resultCode, data);
+			break;
+		case REQ_CROP_IMAGE:
+			onImageCropperResult(resultCode, data);
+			break;
+		case REQ_RECORD_VOICE:
+			onVoiceRecorderResult(resultCode, data);
+			break;
 		}
 	}
 
@@ -350,7 +542,8 @@ public class CardEditorActivity extends BaseActivity
 			File file = new File(getCacheDir(), fileName);
 			if (saveBitmapToFile(bitmap, file))
 			{
-				card.setImage(Uri.fromFile(file));
+				userImage = Uri.fromFile(file);
+				card.setImage(userImage);
 				Log.d(TAG, "Card image set:" + card.getImage().toString());
 			}
 			else

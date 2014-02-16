@@ -104,12 +104,30 @@
                     android:layout_gravity="center"
                     android:text="@string/insert_voice" />
 
-                <ImageView
-                    android:id="@+id/act_card_editor_iv_editable_voice_controller"
+                <LinearLayout
+                    android:id="@+id/act_card_editor_llyt_editable_voice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_play"
-                    android:visibility="invisible" />
+                    android:layout_gravity="center"
+                    android:background="@drawable/voice_message_controller_background"
+                    android:orientation="horizontal"
+                    android:visibility="invisible" >
+
+                    <ImageView
+                        android:id="@+id/act_card_editor_iv_editable_voice_play_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dip"
+                        android:src="@drawable/icon_play" />
+
+                    <TextView
+                        android:id="@+id/act_card_editor_tv_editable_voice_play_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dip"
+                        android:text="@string/play_voice_message"
+                        android:textColor="@color/white" />
+                </LinearLayout>
             </FrameLayout>
 
             <FrameLayout

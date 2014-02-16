@@ -50,6 +50,7 @@
 		<color name="whitesmoke">#F5F5F5</color><!--烟白色 --> 
 		
 		<color name="dark_wooden">#462300</color>
+		<color name="voice_message_controller_background">#090a09</color>
 </resources>
 
 
