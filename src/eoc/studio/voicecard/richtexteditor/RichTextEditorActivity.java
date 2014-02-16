@@ -1,8 +1,14 @@
 package eoc.studio.voicecard.richtexteditor;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,16 +18,20 @@ import android.widget.Toast;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.colorpickerview.dialog.ColorPickerDialog;
-import eoc.studio.voicecard.manufacture.EditSignatureActivity;
 
 public class RichTextEditorActivity extends BaseActivity
 {
 
+//	public static final String EXTRA_KEY_TEXT_LIMIT = "text_limit";
+//	public static final String EXTRA_KEY_RETURN_HTML_STRING = "return_html_string";
 	private RichEditText editText;
 	private Button setSmall;
 	private Button setNormal;
 	private Button setLarge;
 	private ImageView setColor;
+
+	private Button save;
+	private Button load;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -33,6 +43,9 @@ public class RichTextEditorActivity extends BaseActivity
 		setNormal = (Button) findViewById(R.id.test_normal);
 		setLarge = (Button) findViewById(R.id.test_big);
 		setColor = (ImageView) findViewById(R.id.test_color);
+		save = (Button) findViewById(R.id.test_save);
+		load = (Button) findViewById(R.id.test_load);
+
 		setColor.setBackgroundColor(editText.getCurrentTextColor());
 		setColor.setOnClickListener(new View.OnClickListener()
 		{
@@ -77,6 +90,28 @@ public class RichTextEditorActivity extends BaseActivity
 			public void onClick(View v)
 			{
 				editText.setTextSizeLarge();
+			}
+
+		});
+
+		save.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				editText.save();
+				editText.setText("");
+			}
+
+		});
+		load.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				editText.load();
 			}
 
 		});

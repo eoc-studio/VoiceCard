@@ -29,6 +29,7 @@ import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.card.FakeData;
+import eoc.studio.voicecard.richtexteditor.RichTextEditorActivity;
 
 public class CardEditorActivity extends BaseActivity
 {
@@ -39,6 +40,7 @@ public class CardEditorActivity extends BaseActivity
 	private static final int REQ_PICK_IMAGE = 1;
 	private static final int REQ_CROP_IMAGE = 2;
 	private static final int REQ_RECORD_VOICE = 3;
+	private static final int REQ_EDIT_TEXT = 4;
 
 	private static final String EXTRA_KEY_USER_IMAGE = "user_image";
 	private static final String EXTRA_KEY_USER_IMAGE_BITMAP = "user_image_bitmap";
@@ -355,6 +357,7 @@ public class CardEditorActivity extends BaseActivity
 			public void onClick(View v)
 			{
 				Log.d(TAG, "EDIT TEXT");
+				startRichTextEditor();
 			}
 
 		});
@@ -498,6 +501,14 @@ public class CardEditorActivity extends BaseActivity
 		{
 			e.printStackTrace();
 		}
+	}
+
+	private void startRichTextEditor()
+	{
+//		Intent intent = new Intent(this, RichTextEditorActivity.class);
+//		intent.putExtra(RichTextEditorActivity.EXTRA_KEY_RETURN_HTML_STRING, true);
+//		intent.putExtra(RichTextEditorActivity.EXTRA_KEY_TEXT_LIMIT, 60);
+//		startActivityForResult(intent, REQ_EDIT_TEXT);
 	}
 
 	@Override
