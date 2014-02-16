@@ -7,7 +7,7 @@ import android.view.View.OnClickListener;
 import eoc.studio.voicecard.animation.TestAnimationActivity;
 import eoc.studio.voicecard.calendarview.CalendarViewTest;
 import eoc.studio.voicecard.contact.ContactActivity;
-import eoc.studio.voicecard.facebook.SelectFriendActivity;
+import eoc.studio.voicecard.facebook.TestFacebookActivity;
 import eoc.studio.voicecard.mainmenu.MainMenuActivity;
 import eoc.studio.voicecard.manufacture.EditSignatureActivity;
 import eoc.studio.voicecard.richtexteditor.RichTextEditorActivity;
@@ -43,7 +43,7 @@ public class TestMainActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
-				Intent intent = new Intent(TestMainActivity.this, SelectFriendActivity.class);
+				Intent intent = new Intent(TestMainActivity.this, TestFacebookActivity.class);
 				startActivity(intent);
 			}
 		});

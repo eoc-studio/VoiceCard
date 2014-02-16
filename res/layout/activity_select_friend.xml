@@ -25,14 +25,27 @@
             android:src="@drawable/title_address" />
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/act_select_friend_search_bar"
-        style="@style/inputTextStyle"
-        android:layout_marginTop="@dimen/act_select_friend_margin_top"
-        android:background="@drawable/search"
-        android:hint="@string/search_friend"
-        android:inputType="text"
-        android:textCursorDrawable="@null" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/act_select_friend_margin_top" >
+
+        <EditText
+            android:id="@+id/act_select_friend_search_bar"
+            style="@style/inputTextStyle"
+            android:layout_centerInParent="true"
+            android:background="@drawable/search"
+            android:hint="@string/search_friend"
+            android:inputType="text"
+            android:textCursorDrawable="@null" />
+
+        <ImageView
+            android:id="@+id/act_select_friend_search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/act_select_friend_search_bar"
+            android:src="@drawable/search_btn" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/act_select_friend_llyt_drag_and_stamps_up_dash_horizontal"
@@ -48,9 +61,9 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/common_txt_height_long"
         android:background="@color/whitesmoke"
-        android:textColor="@color/select_friend_tip_color"
         android:gravity="center"
         android:text="@string/user_not_install_message"
+        android:textColor="@color/select_friend_tip_color"
         android:textSize="@dimen/common_font_small_size" />
 
     <ListView
@@ -81,13 +94,13 @@
             android:id="@+id/act_select_friend_iv_button_return"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/btn_return" />
+            android:src="@drawable/btn_return_selector" />
 
         <ImageView
             android:id="@+id/act_select_friend_iv_button_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/btn_sure" />
+            android:src="@drawable/btn_sure_selector" />
     </LinearLayout>
 
 </LinearLayout>

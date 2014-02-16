@@ -108,7 +108,7 @@ public class FriendsAdapterData {
     public Cursor get(String friendId) throws SQLException {
         if (db.isOpen()) {
             Cursor cursor = db.query(true, DATABASE_TABLE, new String[] { KEY_ROWID, KEY_FRIEND_ID, KEY_FRIEND_NAME,
-                    KEY_FRIEND_BIRTHDAY, KEY_FRIEND_IMG_LINK, KEY_FRIEND_IMG, KEY_SELECT_STATE }, KEY_FRIEND_ID + "="
+                    KEY_FRIEND_BIRTHDAY, KEY_FRIEND_IMG_LINK, KEY_FRIEND_IMG, KEY_SELECT_STATE, KEY_INSTALL_STATE }, KEY_FRIEND_ID + "="
                     + friendId, null, null, null, null, null);
             if (cursor != null) {
                 cursor.moveToFirst();
@@ -122,9 +122,10 @@ public class FriendsAdapterData {
     public Cursor seachResult(String selectionName) throws SQLException {
         if (db.isOpen()) {
             String where = KEY_FRIEND_NAME + " like ?";
-            String[] selection = new String[] { selectionName + "%"};
+            String[] selection = new String[] { selectionName + "%" };
             Cursor cursor = db.query(true, DATABASE_TABLE, new String[] { KEY_FRIEND_ID, KEY_FRIEND_NAME,
-                    KEY_FRIEND_BIRTHDAY, KEY_FRIEND_IMG_LINK, KEY_FRIEND_IMG, KEY_SELECT_STATE }, where, selection, null, null, null, null);
+                    KEY_FRIEND_BIRTHDAY, KEY_FRIEND_IMG_LINK, KEY_FRIEND_IMG, KEY_SELECT_STATE, KEY_INSTALL_STATE },
+                    where, selection, null, null, null, null);
             return cursor;
         } else {
             return null;
@@ -145,9 +146,19 @@ public class FriendsAdapterData {
         return state;
     }
     
+    public Cursor getSelectedFriend() throws SQLException {
+        if (db.isOpen()) {
+            Cursor cursor = db.query(true, DATABASE_TABLE, new String[] { KEY_FRIEND_ID, KEY_FRIEND_NAME,
+                    KEY_FRIEND_BIRTHDAY }, KEY_SELECT_STATE + "=" + SELECT, null, null, null, null, null);
+            return cursor;
+        } else {
+            return null;
+        }
+    }
+    
     /** Update the database */
     public boolean update(String friendId, String name, String birthday, String imgLink, byte[] img,
-            int selectState) {
+            int selectState, int installState) {
         if (db.isOpen()) {
             ContentValues args = new ContentValues();
             args.put(KEY_FRIEND_NAME, name);
@@ -155,6 +166,7 @@ public class FriendsAdapterData {
             args.put(KEY_FRIEND_IMG_LINK, imgLink);
             args.put(KEY_FRIEND_IMG, img);
             args.put(KEY_SELECT_STATE, selectState);
+            args.put(KEY_INSTALL_STATE, installState);
             return db.update(DATABASE_TABLE, args, KEY_FRIEND_ID + "=" + friendId, null) > 0;
         } else {
             return false;

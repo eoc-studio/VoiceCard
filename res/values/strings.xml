@@ -34,6 +34,7 @@
     <!-- About Select Friend -->
     <string name="search_friend">Search Friend</string>
     <string name="user_not_install_message">If user not install this app then send message to him/her.</string>
+    <string name="user_no_result">No friends or no search result</string>
     
     <!-- About Friend Info -->
     <string name="not_install">not install</string>

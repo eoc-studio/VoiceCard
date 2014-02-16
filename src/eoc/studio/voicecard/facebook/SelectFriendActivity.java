@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -26,9 +24,9 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
-import eoc.studio.voicecard.utils.WebImageUtility;
 
 public class SelectFriendActivity extends BaseActivity {
     private static final String TAG = "SelectFriendActivity";
@@ -40,12 +38,14 @@ public class SelectFriendActivity extends BaseActivity {
     private FriendsAdapterData friendsAdapterData;
     
     private List<FriendInfo> friendList;
-    private int position = 0;
+    private int firstVisiblePosition = 0;
     private int currentListSize = 0;
     private int lastVisiblePosition = 0;
     
     //Views
     private ListView showFriends;
+    private EditText searchFriend;
+    private TextView displayMessage;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +65,19 @@ public class SelectFriendActivity extends BaseActivity {
     @Override
     public void onPause() {
         super.onPause();
-        if (friendsAdapterView != null)
+        if (friendsAdapterView != null) {
             friendsAdapterView.setPause(true);
+            friendsAdapterView.clearList();
+        }
+        
         if (friendsAdapterData != null) {
             friendsAdapterData.delete();
             friendsAdapterData.close();
         }
+        if (friendList != null) {
+            friendList.clear();
+        }
+        
         facebookManager.dialogHandler.sendEmptyMessage(FacebookManager.DISMISS_WAITING_DIALOG);
     }
     
@@ -81,26 +88,73 @@ public class SelectFriendActivity extends BaseActivity {
     }
     
     private void findViews() {
-        final EditText searchFriend = (EditText) findViewById(R.id.act_select_friend_search_bar);
+        searchFriend = (EditText) findViewById(R.id.act_select_friend_search_bar);
         showFriends = (ListView) findViewById(R.id.act_select_friend_list);
         ImageView returnButton = (ImageView) findViewById(R.id.act_select_friend_iv_button_return);
         ImageView okButton = (ImageView) findViewById(R.id.act_select_friend_iv_button_ok);
+        ImageView searchButton = (ImageView) findViewById(R.id.act_select_friend_search_button);
+        displayMessage = (TextView) findViewById(R.id.act_select_friend_display_message);
+        
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         
         showFriends.setOnItemClickListener(new UserListClickListener());
         showFriends.setOnScrollListener(listScrollListener);
         
+        returnButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        
         okButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                facebookManager.dialogHandler.sendEmptyMessage(FacebookManager.SHOW_WAITING_DIALOG);
-                friendsAdapterView.setInterrupt(true);
-                friendList.clear();
-                LoadDbThread loadDbThread = new LoadDbThread(searchFriend.getText().toString());
-                loadDbThread.start();
+                confirmAction();
             }
         });
+        
+        searchButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                searchAction();
+            }
+        });
+    }
+    
+    private void confirmAction() {
+        String friendId, friendName, firendBirthday;
+        ArrayList<FriendInfo> selectedFriendList = new ArrayList<FriendInfo>();
+        
+        Cursor cursor = friendsAdapterData.getSelectedFriend();
+        Log.d(TAG, "confirmAction() cursor size is " + cursor.getCount());
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                friendId = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_ID));
+                friendName = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_NAME));
+                firendBirthday = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_BIRTHDAY));
+                selectedFriendList.add(new FriendInfo(friendId, friendName, firendBirthday, "", null, 0, 0));
+            }
+        }
+        cursor.close();
+        
+        Intent returnIntent = new Intent();
+        Bundle returnBundle = new Bundle();
+        returnBundle.putParcelableArrayList(FriendInfo.GET_FRIEND, selectedFriendList);
+        returnIntent.putExtras(returnBundle);
+        setResult(RESULT_OK, returnIntent);
+        finish();
+    }
+    
+    private void searchAction() {
+        facebookManager.dialogHandler.sendEmptyMessage(FacebookManager.SHOW_WAITING_DIALOG);
+        friendsAdapterView.setInterrupt(true);
+        friendList.clear();
+        LoadDbThread loadDbThread = new LoadDbThread(searchFriend.getText().toString());
+        loadDbThread.start();
     }
     
     private void getFriendsfromWeb() {
@@ -110,9 +164,9 @@ public class SelectFriendActivity extends BaseActivity {
     
     private void getFriendsImgfromDB() {
         if (friendsAdapterData != null) {
-            Log.d(TAG, "position is xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " + position);
-            Log.d(TAG, "lastVisiblePosition is xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " + lastVisiblePosition);
-            friendsAdapterView.loadImagefromPosition(position, lastVisiblePosition);
+            Log.d(TAG, "firstVisiblePosition is " + firstVisiblePosition);
+            Log.d(TAG, "lastVisiblePosition is " + lastVisiblePosition);
+            friendsAdapterView.loadImagefromPosition(firstVisiblePosition, lastVisiblePosition);
         }
     }
     
@@ -153,9 +207,15 @@ public class SelectFriendActivity extends BaseActivity {
     }
     
     private void updateView() {
-        friendsAdapterView = new FriendsAdapterView(SelectFriendActivity.this, friendList, friendsAdapterData,
-                showFriends);
-        showFriends.setAdapter(friendsAdapterView);
+        if (friendList.size() > 0) {
+            friendsAdapterView = new FriendsAdapterView(SelectFriendActivity.this, friendList, friendsAdapterData,
+                    showFriends);
+            showFriends.setVisibility(View.VISIBLE);
+            showFriends.setAdapter(friendsAdapterView);
+        } else {
+            displayMessage.setText(getResources().getString(R.string.user_no_result));
+            showFriends.setVisibility(View.INVISIBLE);
+        }
         facebookManager.dialogHandler.sendEmptyMessage(FacebookManager.DISMISS_WAITING_DIALOG);
     }
         
@@ -189,8 +249,8 @@ public class SelectFriendActivity extends BaseActivity {
     private AbsListView.OnScrollListener listScrollListener = new AbsListView.OnScrollListener() {
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            position = firstVisibleItem;
-            lastVisiblePosition = position + visibleItemCount - 1;
+            firstVisiblePosition = firstVisibleItem;
+            lastVisiblePosition = firstVisiblePosition + visibleItemCount - 1;
         }
 
         @Override
@@ -234,7 +294,7 @@ public class SelectFriendActivity extends BaseActivity {
             byte[] friendImg = null;
             int selectState = 0, installState = 0;
             Cursor cursor = friendsAdapterData.seachResult(keyword);
-            Log.d(TAG, "cursor size is xxxxxxxxxxxxxxxxxxxxxx " + cursor.getCount());
+            Log.d(TAG, "cursor size is " + cursor.getCount());
             if (cursor != null) {
                 while (cursor.moveToNext()) {
                     friendId = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_ID));
@@ -243,7 +303,7 @@ public class SelectFriendActivity extends BaseActivity {
                     friendImgLink = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_IMG_LINK));
                     friendImg = cursor.getBlob(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_IMG));
                     selectState = cursor.getInt(cursor.getColumnIndex(FriendsAdapterData.KEY_SELECT_STATE));
-//                    installState = cursor.getInt(cursor.getColumnIndex(FriendsAdapterData.KEY_INSTALL_STATE));
+                    installState = cursor.getInt(cursor.getColumnIndex(FriendsAdapterData.KEY_INSTALL_STATE));
                     friendList.add(new FriendInfo(friendId, friendName, firendBirthday, friendImgLink, friendImg,
                             selectState, installState));
                 }

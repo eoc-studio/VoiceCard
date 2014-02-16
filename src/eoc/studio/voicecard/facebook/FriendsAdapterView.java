@@ -196,9 +196,11 @@ public class FriendsAdapterView extends BaseAdapter
                     if (friendImg == null) {
                         friendImg = WebImageUtility.getWebImage(friendInfo.getFriendImgLink());
                         friendsAdapterData.updateFriendImg(friendInfo.getFriendId(), friendImg);
-                        friendList.get(i - startPosition).setFriendImg(friendImg);
+                        if (friendList.size() > 0)
+                            friendList.get(i - startPosition).setFriendImg(friendImg);
                     }
-                    showImgHandler.sendMessage(showImgHandler.obtainMessage(i));
+                    if (friendList.size() > 0)
+                        showImgHandler.sendMessage(showImgHandler.obtainMessage(i));
                 } else {
                     break;
                 }

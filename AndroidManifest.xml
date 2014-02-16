@@ -34,7 +34,8 @@
         <activity android:name="eoc.studio.voicecard.facebook.TestFacebookActivity" />
         <activity
             android:name="eoc.studio.voicecard.facebook.SelectFriendActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation" />
+            android:configChanges="keyboard|keyboardHidden|orientation" 
+            android:screenOrientation="portrait"/>
         <activity android:name="eoc.studio.voicecard.animation.TestAnimationActivity" />
 
         <meta-data
