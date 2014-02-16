@@ -53,4 +53,7 @@
     <string name="insert_text">編輯文字</string>
     <string name="insert_signature">手寫簽名</string>
     <string name="play_voice_message">播放留言 %s</string>
+    
+    <!-- RichTextEditor -->
+    <string name="text_limit">/%s字</string>
 </resources>

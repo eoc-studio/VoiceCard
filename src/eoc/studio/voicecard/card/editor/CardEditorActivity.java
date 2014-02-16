@@ -15,6 +15,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +30,7 @@ import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.card.FakeData;
+import eoc.studio.voicecard.richtexteditor.RichEditText;
 import eoc.studio.voicecard.richtexteditor.RichTextEditorActivity;
 
 public class CardEditorActivity extends BaseActivity
@@ -46,6 +48,7 @@ public class CardEditorActivity extends BaseActivity
 	private static final String EXTRA_KEY_USER_IMAGE_BITMAP = "user_image_bitmap";
 	private static final String EXTRA_KEY_USER_VOICE = "user_voice";
 	private static final String EXTRA_KEY_USER_VOICE_DURATION = "user_voice_duration";
+	private static final String EXTRA_KEY_USER_TEXT_SHARED_PREFERENCES_NAME = "user_text_shared_pref_name";
 
 	private ImageView back;
 	private ImageView next;
@@ -68,12 +71,14 @@ public class CardEditorActivity extends BaseActivity
 	private ImageView editableImage;
 	private LinearLayout editableVoice;
 	private TextView editableVoiceText;
+	private RichEditText editableText;
 
 	private Card card;
 	private Uri userImage;
 	private Bitmap userImageBitmap;
 	private Uri userVoice;
 	private String userVoiceDuration;
+	private String userTextSharedPrefName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -145,6 +150,15 @@ public class CardEditorActivity extends BaseActivity
 			editableVoice.setVisibility(View.VISIBLE);
 			editableVoiceText.setText(userVoiceDuration);
 		}
+		if (userTextSharedPrefName != null)
+		{
+			editableText.load(userTextSharedPrefName);
+			editableText.setVisibility(View.VISIBLE);
+			if (editableText.getText().length() > 0)
+			{
+				editableTextTip.setVisibility(View.INVISIBLE);
+			}
+		}
 	}
 
 	private void restoreUserData(Bundle savedInstanceState)
@@ -154,14 +168,21 @@ public class CardEditorActivity extends BaseActivity
 		userImageBitmap = savedInstanceState.getParcelable(EXTRA_KEY_USER_IMAGE_BITMAP);
 		userVoice = savedInstanceState.getParcelable(EXTRA_KEY_USER_VOICE);
 		userVoiceDuration = savedInstanceState.getString(EXTRA_KEY_USER_VOICE_DURATION);
-
+		userTextSharedPrefName = savedInstanceState
+				.getString(EXTRA_KEY_USER_TEXT_SHARED_PREFERENCES_NAME);
 		Log.d(TAG, "restore user data -- IMAGE URI: " + userImage);
 		Log.d(TAG, "restore user data -- IMAGE BITMAP: " + userImageBitmap);
 		Log.d(TAG, "restore user data -- VOICE URI: " + userVoice);
 		Log.d(TAG, "restore user data -- VOICE DURATION: " + userVoiceDuration);
-
+		Log.d(TAG, "restore user data -- TEXT SHARED_PREF: " + userTextSharedPrefName);
 		card.setImage(userImage);
 		card.setSound(userVoice);
+
+//		RichEditText richEditText = new RichEditText(this);
+//		richEditText.load(userTextSharedPrefName);
+//		card.setMessage(Html.toHtml(richEditText.getText()));
+//
+//		Log.d(TAG, "card msg: " + card.getMessage());
 	}
 
 	private void saveUserData(Bundle savedInstanceState)
@@ -186,6 +207,12 @@ public class CardEditorActivity extends BaseActivity
 		{
 			savedInstanceState.putString(EXTRA_KEY_USER_VOICE_DURATION, userVoiceDuration);
 			Log.d(TAG, "save user data -- VOICE DURATION: " + userVoiceDuration);
+		}
+		if (userTextSharedPrefName != null)
+		{
+			savedInstanceState.putString(EXTRA_KEY_USER_TEXT_SHARED_PREFERENCES_NAME,
+					userTextSharedPrefName);
+			Log.d(TAG, "save user data --TEXT SHARED_PREF: " + userTextSharedPrefName);
 		}
 	}
 
@@ -251,6 +278,7 @@ public class CardEditorActivity extends BaseActivity
 		editableImage = (ImageView) findViewById(R.id.act_card_editor_iv_editable_image);
 		editableVoice = (LinearLayout) findViewById(R.id.act_card_editor_llyt_editable_voice);
 		editableVoiceText = (TextView) findViewById(R.id.act_card_editor_tv_editable_voice_play_text);
+		editableText = (RichEditText) findViewById(R.id.act_card_editor_ret_editable_text);
 	}
 
 	private void setupCardView()
@@ -368,6 +396,16 @@ public class CardEditorActivity extends BaseActivity
 			{
 				Log.d(TAG, "EDIT SIGNATURE");
 			}
+		});
+		editableText.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				// do nothing
+			}
+
 		});
 	}
 
@@ -505,10 +543,29 @@ public class CardEditorActivity extends BaseActivity
 
 	private void startRichTextEditor()
 	{
-//		Intent intent = new Intent(this, RichTextEditorActivity.class);
-//		intent.putExtra(RichTextEditorActivity.EXTRA_KEY_RETURN_HTML_STRING, true);
-//		intent.putExtra(RichTextEditorActivity.EXTRA_KEY_TEXT_LIMIT, 60);
-//		startActivityForResult(intent, REQ_EDIT_TEXT);
+		Intent intent = new Intent(this, RichTextEditorActivity.class);
+		intent.putExtra(RichTextEditorActivity.EXTRA_KEY_TEXT_LIMIT, 60);
+		if (userTextSharedPrefName != null)
+		{
+			intent.putExtra(RichTextEditorActivity.EXTRA_KEY_SHARED_PREFERENCES_NAME,
+					userTextSharedPrefName);
+		}
+		startActivityForResult(intent, REQ_EDIT_TEXT);
+	}
+
+	private void onRichTextEditorResult(int resultCode, Intent data)
+	{
+		userTextSharedPrefName = data
+				.getStringExtra(RichTextEditorActivity.EXTRA_KEY_SHARED_PREFERENCES_NAME);
+		Log.d(TAG, "back from RichTextEditor: " + userTextSharedPrefName);
+		editableText.load(userTextSharedPrefName);
+		editableText.setVisibility(View.VISIBLE);
+		if (editableText.getText().length() > 0)
+		{
+			editableTextTip.setVisibility(View.INVISIBLE);
+		}
+
+		card.setMessage(Html.toHtml(editableText.getEditableText()));
 	}
 
 	@Override
@@ -531,6 +588,9 @@ public class CardEditorActivity extends BaseActivity
 			break;
 		case REQ_RECORD_VOICE:
 			onVoiceRecorderResult(resultCode, data);
+			break;
+		case REQ_EDIT_TEXT:
+			onRichTextEditorResult(resultCode, data);
 			break;
 		}
 	}

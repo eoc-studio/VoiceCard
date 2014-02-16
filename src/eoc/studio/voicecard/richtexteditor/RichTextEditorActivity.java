@@ -1,19 +1,18 @@
 package eoc.studio.voicecard.richtexteditor;
 
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
@@ -22,32 +21,104 @@ import eoc.studio.voicecard.colorpickerview.dialog.ColorPickerDialog;
 public class RichTextEditorActivity extends BaseActivity
 {
 
-//	public static final String EXTRA_KEY_TEXT_LIMIT = "text_limit";
-//	public static final String EXTRA_KEY_RETURN_HTML_STRING = "return_html_string";
-	private RichEditText editText;
-	private Button setSmall;
-	private Button setNormal;
-	private Button setLarge;
-	private ImageView setColor;
+	public static final String EXTRA_KEY_TEXT_LIMIT = "text_limit";
+	public static final String EXTRA_KEY_SHARED_PREFERENCES_NAME = "shared_pref_name";
 
-	private Button save;
-	private Button load;
+	private static final String TAG = "RichTextEditorActivity";
+
+	private String sharedPreferencesName = null;
+	private int textLengthLimit = 60;
+
+	private RichEditText editText;
+	private RelativeLayout smallSetter;
+	private RelativeLayout normalSetter;
+	private RelativeLayout largeSetter;
+	private ImageView colorPicker;
+	private ImageView eraser;
+
+	private TextView textCounter;
+	private TextView textLimitTip;
+
+	private Button back;
+	private Button ok;
+
+	// private Button save;
+	// private Button load;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		getConfigFromIntent();
+		initLayout();
+		applyConfig();
+		super.onCreate(savedInstanceState);
+	}
+
+	private void getConfigFromIntent()
+	{
+		Intent intent = getIntent();
+		textLengthLimit = intent.getIntExtra(EXTRA_KEY_TEXT_LIMIT, textLengthLimit);
+		sharedPreferencesName = intent.getStringExtra(EXTRA_KEY_SHARED_PREFERENCES_NAME);
+	}
+
+	private void initLayout()
+	{
 		setContentView(R.layout.activity_rich_text_editor);
+		findViews();
+		setListener();
+		initColorPicker();
+	}
 
+	private void applyConfig()
+	{
+		editText.setTextLengthLimit(textLengthLimit);
+		textLimitTip.setText(getString(R.string.text_limit, textLengthLimit));
+		if (sharedPreferencesName != null)
+		{
+			editText.load(sharedPreferencesName);
+		}
+	}
+
+	private void findViews()
+	{
 		editText = (RichEditText) findViewById(R.id.act_rich_text_editor_rte_editor);
-		setSmall = (Button) findViewById(R.id.test_small);
-		setNormal = (Button) findViewById(R.id.test_normal);
-		setLarge = (Button) findViewById(R.id.test_big);
-		setColor = (ImageView) findViewById(R.id.test_color);
-		save = (Button) findViewById(R.id.test_save);
-		load = (Button) findViewById(R.id.test_load);
+		smallSetter = (RelativeLayout) findViewById(R.id.act_rich_editor_rlyt_text_size_small);
+		normalSetter = (RelativeLayout) findViewById(R.id.act_rich_editor_rlyt_text_size_normal);
+		largeSetter = (RelativeLayout) findViewById(R.id.act_rich_editor_rlyt_text_size_large);
+		colorPicker = (ImageView) findViewById(R.id.act_rich_text_editor_iv_color_picker);
+		eraser = (ImageView) findViewById(R.id.act_rich_text_editor_iv_eraser);
 
-		setColor.setBackgroundColor(editText.getCurrentTextColor());
-		setColor.setOnClickListener(new View.OnClickListener()
+		textCounter = (TextView) findViewById(R.id.act_rich_text_editor_tv_text_counter);
+		textLimitTip = (TextView) findViewById(R.id.act_rich_text_editor_tv_text_limit);
+
+		back = (Button) findViewById(R.id.act_rich_text_editor_btn_return);
+		ok = (Button) findViewById(R.id.act_rich_text_editor_btn_sure);
+	}
+
+	private void setListener()
+	{
+		editText.addTextChangedListener(new TextWatcher()
+		{
+
+			@Override
+			public void afterTextChanged(Editable editable)
+			{
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after)
+			{
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count)
+			{
+				textCounter.setText(String.valueOf(editText.getText().length()));
+			}
+
+		});
+		colorPicker.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
@@ -55,15 +126,14 @@ public class RichTextEditorActivity extends BaseActivity
 
 				if (editText.hasSelection())
 				{
-					editText.setMarkSelection(); // because the selection will
-													// be gone after dialog is
-													// opened
+					// because the selection will be gone after dialog is opened
+					editText.setMarkSelection();
 				}
 				colorPicker();
 			}
 		});
 
-		setSmall.setOnClickListener(new OnClickListener()
+		smallSetter.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
@@ -73,7 +143,7 @@ public class RichTextEditorActivity extends BaseActivity
 			}
 
 		});
-		setNormal.setOnClickListener(new OnClickListener()
+		normalSetter.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
@@ -83,7 +153,7 @@ public class RichTextEditorActivity extends BaseActivity
 			}
 
 		});
-		setLarge.setOnClickListener(new OnClickListener()
+		largeSetter.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
@@ -93,36 +163,46 @@ public class RichTextEditorActivity extends BaseActivity
 			}
 
 		});
-
-		save.setOnClickListener(new OnClickListener()
+		eraser.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
 			public void onClick(View v)
 			{
-				editText.save();
-				editText.setText("");
+				editText.clearFormat();
+				initColorPicker();
 			}
-
 		});
-		load.setOnClickListener(new OnClickListener()
+		back.setOnClickListener(new OnClickListener()
 		{
-
 			@Override
 			public void onClick(View v)
 			{
-				editText.load();
+				// TODO a dialog to notify user that he/she will lost the text
+
+				setResult(RESULT_CANCELED);
+				finish();
 			}
-
 		});
+		ok.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				returnTheResult();
+			}
+		});
+	}
 
-		super.onCreate(savedInstanceState);
+	private void initColorPicker()
+	{
+		colorPicker.setBackgroundColor(editText.getCurrentTextColor());
 	}
 
 	public void colorPicker()
 	{
 
-		ColorDrawable drawable = (ColorDrawable) setColor.getBackground();
+		ColorDrawable drawable = (ColorDrawable) colorPicker.getBackground();
 
 		int initialValue = drawable.getColor();
 
@@ -144,7 +224,7 @@ public class RichTextEditorActivity extends BaseActivity
 						Toast.makeText(RichTextEditorActivity.this,
 								"Selected Color: " + colorToHexString(colorDialog.getColor()),
 								Toast.LENGTH_LONG).show();
-						setColor.setBackgroundColor(colorDialog.getColor());
+						colorPicker.setBackgroundColor(colorDialog.getColor());
 						editText.setTextColor(colorDialog.getColor());
 					}
 				});
@@ -168,6 +248,26 @@ public class RichTextEditorActivity extends BaseActivity
 	{
 
 		return String.format("#%06X", 0xFFFFFFFF & color);
+	}
+
+	private void returnTheResult()
+	{
+		if (sharedPreferencesName == null)
+		{
+			sharedPreferencesName = generateSharedPreferencesName();
+			Log.d(TAG, "New shared pref name: " + sharedPreferencesName);
+		}
+		editText.save(sharedPreferencesName);
+
+		Intent intent = new Intent();
+		intent.putExtra(EXTRA_KEY_SHARED_PREFERENCES_NAME, sharedPreferencesName);
+		setResult(RESULT_OK, intent);
+		finish();
+	}
+
+	private String generateSharedPreferencesName()
+	{
+		return TAG + "_" + System.currentTimeMillis();
 	}
 
 }

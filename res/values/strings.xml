@@ -54,4 +54,6 @@
     <string name="insert_signature">Insert signature</string>
     <string name="play_voice_message">Play message %s</string>
 
+    <!-- RichTextEditor -->
+    <string name="text_limit">/%s words</string>
 </resources>

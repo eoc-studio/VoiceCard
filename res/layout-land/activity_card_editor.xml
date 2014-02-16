@@ -123,10 +123,14 @@
             android:layout_gravity="center"
             android:text="@string/insert_text" />
 
-        <TextView
-            android:id="@+id/act_card_editor_tv_editable_text"
+        <eoc.studio.voicecard.richtexteditor.RichEditText
+            android:id="@+id/act_card_editor_ret_editable_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            android:focusable="false"
+            android:gravity="start"
+            android:background="@android:color/transparent" />
     </FrameLayout>
 
     <FrameLayout
@@ -179,7 +183,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/menu_bg" />
+            android:background="@drawable/menu_bg" />
 
         <RelativeLayout
             android:id="@+id/act_card_editor_rlyt_menu"

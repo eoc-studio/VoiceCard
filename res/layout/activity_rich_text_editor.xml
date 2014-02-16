@@ -1,55 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <ImageView
+        android:id="@+id/act_rich_text_editor_iv_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dip"
+        android:background="@drawable/header_bg2"
+        android:scaleType="center"
+        android:src="@drawable/title_edit_text" />
+
+    <LinearLayout
+        android:id="@+id/act_rich_text_editor_llyt_control_size_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/act_rich_text_editor_rte_editor"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/act_rich_editor_rlyt_text_size_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_editor_bg1" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
+                android:src="@drawable/icon_font" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/act_rich_editor_rlyt_text_size_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_editor_bg1" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
+                android:src="@drawable/icon_font" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/act_rich_editor_rlyt_text_size_large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_editor_bg1" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icon_font" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="34dip"
+            android:layout_height="34dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/icon_editor_bg1" >
+
+            <ImageView
+                android:id="@+id/act_rich_text_editor_iv_color_picker"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="2dip"
+                android:background="#777" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/act_rich_text_editor_iv_eraser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
+            android:src="@drawable/icon_editor_clear" />
+    </LinearLayout>
+
     <eoc.studio.voicecard.richtexteditor.RichEditText
         android:id="@+id/act_rich_text_editor_rte_editor"
         android:layout_width="match_parent"
-        android:layout_height="100dip"
-        android:gravity="start" />"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/act_rich_text_editor_tv_text_counter"
+        android:layout_below="@id/act_rich_text_editor_iv_header"
+        android:layout_marginBottom="10dip"
+        android:layout_marginLeft="10dip"
+        android:layout_toLeftOf="@id/act_rich_text_editor_llyt_control_size_bar"
+        android:gravity="start" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/act_rich_text_editor_tv_text_counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/act_rich_text_editor_bottom_bar"
+        android:layout_alignLeft="@id/act_rich_text_editor_rte_editor"
+        android:layout_marginBottom="10dip"
+        android:text="20" />
+
+    <TextView
+        android:id="@+id/act_rich_text_editor_tv_text_limit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/act_rich_text_editor_tv_text_counter"
+        android:layout_toRightOf="@id/act_rich_text_editor_tv_text_counter"
+        android:text="@string/text_limit" />
+
+    <LinearLayout
+        android:id="@+id/act_rich_text_editor_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/test_small"
+            android:id="@+id/act_rich_text_editor_btn_return"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="small" />
+            android:layout_margin="10dip"
+            android:background="@drawable/btn_return_selector" />
 
         <Button
-            android:id="@+id/test_normal"
+            android:id="@+id/act_rich_text_editor_btn_sure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="normal" />
-
-        <Button
-            android:id="@+id/test_big"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="big" />
-
-        <ImageView
-            android:id="@+id/test_color"
-            android:layout_width="20dip"
-            android:layout_height="20dip" />
-
-        <Button
-            android:id="@+id/test_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dip"
-            android:text="save" />
-
-        <Button
-            android:id="@+id/test_load"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="load" />
+            android:layout_margin="10dip"
+            android:background="@drawable/btn_sure_selector" />
     </LinearLayout>
 
-</LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_alignTop="@id/act_rich_text_editor_bottom_bar"
+        android:background="@layout/view_dash_horizontal_repeat" />
+
+</RelativeLayout>

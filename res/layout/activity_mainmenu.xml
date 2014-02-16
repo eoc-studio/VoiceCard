@@ -19,11 +19,11 @@
 
     <ImageView
         android:id="@+id/act_mainmenu_iv_logo"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/logo" />
+        android:background="@drawable/logo" />
 
     <eoc.studio.voicecard.mainmenu.MailboxIconView
         android:id="@+id/act_mainmenu_mbiv_mailbox"
