@@ -3,7 +3,7 @@
     android:id="@+id/act_select_friend_llyt_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@layout/view_main_backgroud_repeat"
+    android:background="@drawable/view_main_backgroud_repeat"
     android:clipToPadding="false"
     android:gravity="center_horizontal"
     android:orientation="vertical" >
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/act_select_friend_dash_horizontal_height"
         android:layout_marginTop="@dimen/act_select_friend_margin_top"
-        android:background="@layout/view_dash_horizontal_repeat"
+        android:background="@drawable/view_dash_horizontal_repeat"
         android:orientation="vertical" >
     </LinearLayout>
 
@@ -79,7 +79,7 @@
         android:id="@+id/act_select_friend_llyt_drag_and_stamps_up_dash_horizontal_down"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/act_select_friend_dash_horizontal_height"
-        android:background="@layout/view_dash_horizontal_repeat"
+        android:background="@drawable/view_dash_horizontal_repeat"
         android:orientation="vertical" >
     </LinearLayout>
 

@@ -112,6 +112,6 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="vertical"
-				android:background="@layout/view_dash_horizontal_repeat"></LinearLayout>
+				android:background="@drawable/view_dash_horizontal_repeat"></LinearLayout>
 
 </LinearLayout>

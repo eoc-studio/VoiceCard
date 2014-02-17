@@ -143,6 +143,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dip"
         android:layout_alignTop="@id/act_rich_text_editor_bottom_bar"
-        android:background="@layout/view_dash_horizontal_repeat" />
+        android:background="@drawable/view_dash_horizontal_repeat" />
 
 </RelativeLayout>
