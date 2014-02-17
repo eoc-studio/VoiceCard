@@ -27,7 +27,7 @@
 		<RelativeLayout
 				android:id="@+id/act_recommend_rlyt_middle"
 				android:layout_width="match_parent"
-				android:layout_height="447dp"
+				android:layout_height="428dp"
 				android:clipChildren="false"
 				android:clipToPadding="false">
 				<ListView

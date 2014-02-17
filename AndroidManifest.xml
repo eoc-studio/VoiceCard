@@ -51,8 +51,7 @@
 				<activity android:name="eoc.studio.voicecard.manufacture.CeateSignatureActivity" />
 				<activity
 						android:name="eoc.studio.voicecard.manufacture.EditSignatureActivity"
-						android:screenOrientation="portrait"
-						android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+						android:screenOrientation="portrait"/>
 				<activity android:name="eoc.studio.voicecard.contact.ContactActivity" />
 				<activity android:name="eoc.studio.voicecard.calendarview.CalendarViewTest" />
 				<activity
@@ -76,12 +75,10 @@
 
 				<activity
 						android:name="eoc.studio.voicecard.recommend.RecommendActivity"
-						android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
 						android:screenOrientation="portrait" />
 
 				<activity
 						android:name="eoc.studio.voicecard.volley.test.JsonTestActivity"
-						android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
 						android:screenOrientation="portrait" />
 		</application>
 

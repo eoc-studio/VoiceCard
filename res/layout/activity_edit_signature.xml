@@ -288,7 +288,7 @@
         <LinearLayout
             android:id="@+id/act_edit_signature_llyt_bottom"
             android:layout_width="match_parent"
-            android:layout_height="105dp"
+            android:layout_height="86dp"
             android:gravity="center"
             android:orientation="horizontal" >
 
