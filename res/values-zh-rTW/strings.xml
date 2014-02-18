@@ -59,6 +59,10 @@
 
     <!-- view_recommend_listview_item -->
 	<string name="detail_info">詳細介紹</string>
+
+    <!-- About Mailbox -->
+        <string name="select_mails">已選取 %s 封郵件</string>
+        <string name="select_all">選取全部</string>
     
 
 </resources>

@@ -8,6 +8,7 @@ import eoc.studio.voicecard.animation.TestAnimationActivity;
 import eoc.studio.voicecard.calendarview.CalendarViewTest;
 import eoc.studio.voicecard.contact.ContactActivity;
 import eoc.studio.voicecard.facebook.TestFacebookActivity;
+import eoc.studio.voicecard.mailbox.MailboxActivity;
 import eoc.studio.voicecard.mainmenu.MainMenuActivity;
 import eoc.studio.voicecard.manufacture.EditSignatureActivity;
 import eoc.studio.voicecard.richtexteditor.RichTextEditorActivity;
@@ -106,6 +107,14 @@ public class TestMainActivity extends BaseActivity
 				startActivity(intent);
 			}
 		});
+		findViewById(R.id.test_mailbox).setOnClickListener(new OnClickListener() 
+        {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TestMainActivity.this, MailboxActivity.class);
+                startActivity(intent);
+            }
+        });
 		super.onCreate(savedInstanceState);
 	}
 }

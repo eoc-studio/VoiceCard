@@ -31,7 +31,7 @@
         android:layout_marginTop="@dimen/act_select_friend_margin_top" >
 
         <EditText
-            android:id="@+id/act_select_friend_search_bar"
+            android:id="@+id/act_select_friend_et_search_bar"
             style="@style/inputTextStyle"
             android:layout_centerInParent="true"
             android:background="@drawable/search"
@@ -40,10 +40,10 @@
             android:textCursorDrawable="@null" />
 
         <ImageView
-            android:id="@+id/act_select_friend_search_button"
+            android:id="@+id/act_select_friend_iv_search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/act_select_friend_search_bar"
+            android:layout_toRightOf="@+id/act_select_friend_et_search_bar"
             android:src="@drawable/search_btn" />
     </RelativeLayout>
 
@@ -57,7 +57,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/act_select_friend_display_message"
+        android:id="@+id/act_select_friend_tv_display_message"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/common_txt_height_long"
         android:background="@color/whitesmoke"
@@ -67,7 +67,7 @@
         android:textSize="@dimen/common_font_small_size" />
 
     <ListView
-        android:id="@+id/act_select_friend_list"
+        android:id="@+id/act_select_friend_lv"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/act_select_friend_list_height"
         android:background="@color/whitesmoke"

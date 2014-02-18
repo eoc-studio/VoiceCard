@@ -27,12 +27,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.utils.ListUtility;
 
 public class SelectFriendActivity extends BaseActivity {
     private static final String TAG = "SelectFriendActivity";
-    private static final int CREATE_DB_COMPLETE = 0;
-    private static final int SEARCH_COMPLETE = 1;
-    private static final int GET_THUMBNAIL = 0;
     private FacebookManager facebookManager;
     private FriendsAdapterView friendsAdapterView;
     private FriendsAdapterData friendsAdapterData;
@@ -88,12 +86,12 @@ public class SelectFriendActivity extends BaseActivity {
     }
     
     private void findViews() {
-        searchFriend = (EditText) findViewById(R.id.act_select_friend_search_bar);
-        showFriends = (ListView) findViewById(R.id.act_select_friend_list);
+        searchFriend = (EditText) findViewById(R.id.act_select_friend_et_search_bar);
+        showFriends = (ListView) findViewById(R.id.act_select_friend_lv);
         ImageView returnButton = (ImageView) findViewById(R.id.act_select_friend_iv_button_return);
         ImageView okButton = (ImageView) findViewById(R.id.act_select_friend_iv_button_ok);
-        ImageView searchButton = (ImageView) findViewById(R.id.act_select_friend_search_button);
-        displayMessage = (TextView) findViewById(R.id.act_select_friend_display_message);
+        ImageView searchButton = (ImageView) findViewById(R.id.act_select_friend_iv_search_button);
+        displayMessage = (TextView) findViewById(R.id.act_select_friend_tv_display_message);
         
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         
@@ -223,10 +221,10 @@ public class SelectFriendActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-            case CREATE_DB_COMPLETE:
+            case ListUtility.CREATE_DB_COMPLETE:
                 updateView();
                 break;
-            case SEARCH_COMPLETE:
+            case ListUtility.SEARCH_COMPLETE:
                 friendsAdapterView.clearList();
                 updateView();
                 break;
@@ -237,7 +235,7 @@ public class SelectFriendActivity extends BaseActivity {
     private Handler downloadHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
-            case GET_THUMBNAIL:
+            case ListUtility.GET_THUMBNAIL:
                 Log.d(TAG, "GET_THUMBNAIL ");
                 friendsAdapterView.setInterrupt(false);
                 getFriendsImgfromDB();
@@ -258,10 +256,10 @@ public class SelectFriendActivity extends BaseActivity {
             Log.d(TAG, "scrollState " + scrollState);
             if (currentListSize != 0) {
                 if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && friendsAdapterView != null) {
-                    downloadHandler.sendEmptyMessageDelayed(GET_THUMBNAIL, 1500);
+                    downloadHandler.sendEmptyMessageDelayed(ListUtility.GET_THUMBNAIL, 1500);
                 }
                 if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL && friendsAdapterView != null) {
-                    downloadHandler.removeMessages(GET_THUMBNAIL);
+                    downloadHandler.removeMessages(ListUtility.GET_THUMBNAIL);
                 }
                 friendsAdapterView.setInterrupt(true);
             } else {
@@ -278,7 +276,7 @@ public class SelectFriendActivity extends BaseActivity {
         @Override
         public void run() {
             createDb(users);
-            uiHandler.sendEmptyMessage(CREATE_DB_COMPLETE);
+            uiHandler.sendEmptyMessage(ListUtility.CREATE_DB_COMPLETE);
         }
     }
     
@@ -309,7 +307,7 @@ public class SelectFriendActivity extends BaseActivity {
                 }
             }
             cursor.close();
-            uiHandler.sendEmptyMessage(SEARCH_COMPLETE);
+            uiHandler.sendEmptyMessage(ListUtility.SEARCH_COMPLETE);
         }
     }
         

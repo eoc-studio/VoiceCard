@@ -74,12 +74,20 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/test_memorial_day"
             android:text="Main Menu" />
+
         <Button
-        android:id="@+id/test_recommend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/test_main_menu"
-        android:text="Recommend" />
+            android:id="@+id/test_recommend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/test_main_menu"
+            android:text="Recommend" />
+        
+        <Button
+            android:id="@+id/test_mailbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/test_recommend"
+            android:text="Mailbox" />
     </RelativeLayout>
 
 </ScrollView>

@@ -51,6 +51,11 @@
 		
 		<color name="dark_wooden">#462300</color>
 		<color name="voice_message_controller_background">#090a09</color>
+		
+		<!-- About Mailbox -->
+		<color name="mail_box_titlebar_background">#F8D4D4</color>
+		<color name="mail_box_select_all_btn_background">#693837</color>
+		<color name="mail_box_titlebar_divider_background">#D0A3A2</color>
 </resources>
 
 
