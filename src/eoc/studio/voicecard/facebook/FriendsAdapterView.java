@@ -67,11 +67,11 @@ public class FriendsAdapterView extends BaseAdapter
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.user_info, null);
-            viewTag = new ViewTag((TextView) convertView.findViewById(R.id.user_info_not_install),
-                    (ImageView) convertView.findViewById(R.id.user_info_header),
-                    (TextView) convertView.findViewById(R.id.user_info_name),
-                    (ImageView) convertView.findViewById(R.id.user_info_check_icon));
+            convertView = layoutInflater.inflate(R.layout.select_friend_list_item, null);
+            viewTag = new ViewTag((TextView) convertView.findViewById(R.id.glb_selectfriend_list_item_not_install),
+                    (ImageView) convertView.findViewById(R.id.glb_selectfriend_list_item_header),
+                    (TextView) convertView.findViewById(R.id.glb_selectfriend_list_item_name),
+                    (ImageView) convertView.findViewById(R.id.glb_selectfriend_list_item_check_icon));
             convertView.setTag(viewTag);
         } else {
             viewTag = (ViewTag) convertView.getTag();

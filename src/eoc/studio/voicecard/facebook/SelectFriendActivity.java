@@ -325,7 +325,7 @@ public class SelectFriendActivity extends BaseActivity {
             if (friendsAdapterData != null) {
                 state = friendsAdapterData.getSelectedState(((FriendInfo) friendsAdapterView.getItem(position))
                         .getFriendId());
-                ImageView selectIcon = (ImageView) view.findViewById(R.id.user_info_check_icon);
+                ImageView selectIcon = (ImageView) view.findViewById(R.id.glb_selectfriend_list_item_check_icon);
                 Log.d(TAG, "state is === " + state);
                 
                 if (state == FriendsAdapterData.UNSELECT) {

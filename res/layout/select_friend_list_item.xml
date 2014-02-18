@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/user_info_not_install"
+        android:id="@+id/glb_selectfriend_list_item_not_install"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -13,29 +13,29 @@
         android:visibility="invisible" />
 
     <ImageView
-        android:id="@+id/user_info_header"
+        android:id="@+id/glb_selectfriend_list_item_header"
         android:layout_width="@dimen/user_info_header_edge"
         android:layout_height="@dimen/user_info_header_edge"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/user_info_not_install"
+        android:layout_toRightOf="@+id/glb_selectfriend_list_item_not_install"
         android:src="@drawable/dummy" />
 
     <TextView
-        android:id="@+id/user_info_name"
+        android:id="@+id/glb_selectfriend_list_item_name"
         android:layout_width="@dimen/user_info_name_width"
         android:layout_height="@dimen/user_info_name_height"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/user_info_name_margin_left"
-        android:layout_toRightOf="@+id/user_info_header"
+        android:layout_toRightOf="@+id/glb_selectfriend_list_item_header"
         android:gravity="center_vertical" />
 
     <ImageView
-        android:id="@+id/user_info_check_icon"
-        android:layout_width="@dimen/user_info_check_icon_edge"
-        android:layout_height="@dimen/user_info_check_icon_edge"
+        android:id="@+id/glb_selectfriend_list_item_check_icon"
+        android:layout_width="@dimen/common_check_icon_edge"
+        android:layout_height="@dimen/common_check_icon_edge"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/user_info_check_margin_right"
+        android:layout_marginRight="@dimen/common_check_icon_margin"
         android:src="@drawable/icon_checkbox" />
 
 </RelativeLayout>

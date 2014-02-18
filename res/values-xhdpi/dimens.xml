@@ -11,6 +11,8 @@
     <dimen name="common_txt_height">40dp</dimen>
     <dimen name="common_txt_height_long">60dp</dimen>
     <dimen name="common_input_padding">12dp</dimen>
+    <dimen name="common_check_icon_edge">20dp</dimen>
+    <dimen name="common_check_icon_margin">20dp</dimen>
     
     <!-- About Select Friend -->
     <dimen name="act_select_friend_margin_top">30dp</dimen>
@@ -24,8 +26,6 @@
 	<dimen name="user_info_name_width">50dp</dimen>
 	<dimen name="user_info_name_height">80dp</dimen>
 	<dimen name="user_info_name_margin_left">20dp</dimen>
-	<dimen name="user_info_check_icon_edge">20dp</dimen>
-	<dimen name="user_info_check_margin_right">20dp</dimen>
 	
 	<!-- About Mailbox -->
 	<dimen name="act_mailbox_rlyt_menu_marginBottom">10dp</dimen>
@@ -39,4 +39,7 @@
 	<dimen name="act_mailbox_v_titlebar_divider_height">20dp</dimen>
 	<dimen name="act_mailbox_v_titlebar_margin_left_right">10dp</dimen>
 	<dimen name="act_mailbox_v_titlebar_margin_top">5dp</dimen>
+	
+	<!-- About Mailbox Item -->
+	
 </resources>
