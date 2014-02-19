@@ -1,5 +1,6 @@
 package eoc.studio.voicecard.facebook;
 
+import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
@@ -128,28 +129,32 @@ public class FriendsAdapterView extends BaseAdapter
         @Override
         public void handleMessage(Message msg) {
             Log.d(TAG, "showImgHandler === msg.what === " + msg.what);
-
-            if (friends.get(msg.what).getFriendImg() == null) {
-                Log.d(TAG, "friends is null");
-                if (showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
-                    viewTag = (ViewTag) showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
+            if (msg.what < friends.size()) {
+                if (friends.get(msg.what).getFriendImg() == null) {
+                    Log.d(TAG, "friends is null");
+                    if (showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
+                        viewTag = (ViewTag) showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
+                    } else {
+                        Log.d(TAG, "friends.get(msg.what) is null");
+                    }
                 } else {
-                    Log.d(TAG, "friends.get(msg.what) is null");
-                }
-            } else {
-                Log.d(TAG, "friends not null");
-                if (showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
-                    viewTag = (ViewTag) showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
-                    byte[] img = friends.get(msg.what).getFriendImg();
-                    viewTag.header.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
-                } else {
-                    Log.d(TAG, "friends.get(msg.what) not null but findView is null");
+                    Log.d(TAG, "friends not null");
+                    if (showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
+                        viewTag = (ViewTag) showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
+                        byte[] img = friends.get(msg.what).getFriendImg();
+                        viewTag.header.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
+                    } else {
+                        Log.d(TAG, "friends.get(msg.what) not null but findView is null");
+                    }
                 }
             }
         }
     };
     
     public void clearList() {
+        for(Iterator it = friends.iterator(); it.hasNext();){
+            it.remove();
+        }
         friends.clear();
     }
 
@@ -190,17 +195,21 @@ public class FriendsAdapterView extends BaseAdapter
                     break;
                 }
                 if (!isPause) {
-                    FriendInfo friendInfo = friendList.get(i - startPosition);
-                    byte[] friendImg = friendInfo.getFriendImg();
+                    int position = i - startPosition;
+                    if (position < friendList.size()) {
+                        FriendInfo friendInfo = friendList.get(position);
+                        byte[] friendImg = friendInfo.getFriendImg();
 
-                    if (friendImg == null) {
-                        friendImg = WebImageUtility.getWebImage(friendInfo.getFriendImgLink());
-                        friendsAdapterData.updateFriendImg(friendInfo.getFriendId(), friendImg);
-                        if (friendList.size() > 0)
-                            friendList.get(i - startPosition).setFriendImg(friendImg);
-                    }
-                    if (friendList.size() > 0)
+                        if (friendImg == null) {
+                            friendImg = WebImageUtility.getWebImage(friendInfo.getFriendImgLink());
+                            friendsAdapterData.updateFriendImg(friendInfo.getFriendId(), friendImg);
+                            if (position < friendList.size())
+                                friendList.get(position).setFriendImg(friendImg);
+                        }
                         showImgHandler.sendMessage(showImgHandler.obtainMessage(i));
+                    } else {
+                        break;
+                    }
                 } else {
                     break;
                 }

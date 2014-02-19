@@ -1,14 +1,19 @@
 package eoc.studio.voicecard.mailbox;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.facebook.FriendInfo;
 import eoc.studio.voicecard.utils.ListUtility;
+import eoc.studio.voicecard.utils.WebImageUtility;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +50,9 @@ public class MailsAdapterView extends BaseAdapter {
         isPause = false;
         isInterrupt = false;
         selecedMail = new HashSet<String>();
+        
+        DownlaodImageThread downlaodImageThread = new DownlaodImageThread(mails, 0, mails.size());
+        downlaodImageThread.start();
     }
 
     @Override
@@ -154,9 +162,52 @@ public class MailsAdapterView extends BaseAdapter {
     }
     
     public void clearData() {
+        for(Iterator it = mails.iterator(); it.hasNext();){
+            it.remove();
+        }
         mails.clear();
         selecedMail.clear();
     }
+    
+    public void setPause(boolean isPause) {
+        this.isPause = isPause;
+    }
+    
+    public void setInterrupt(boolean isInterrupt) {
+        this.isInterrupt = isInterrupt;
+    }
+    
+    public void loadImagefromPosition(int startPostion, int endPosition) {
+        DownlaodImageThread downlaodImageThread = new DownlaodImageThread(mails.subList(startPostion, endPosition),
+                startPostion, endPosition);
+        downlaodImageThread.start();
+    }
+    
+    private Handler showImgHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what < mails.size()) {
+                Log.d(TAG, "showImgHandler === msg.what === " + msg.what);
+                if (mails.get(msg.what).getImg() == null) {
+                    Log.d(TAG, "friends is null");
+                    if (showMails.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
+                        viewTag = (ViewTag) showMails.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
+                    } else {
+                        Log.d(TAG, "friends.get(msg.what) is null");
+                    }
+                } else {
+                    Log.d(TAG, "friends not null");
+                    if (showMails.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
+                        viewTag = (ViewTag) showMails.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
+                        byte[] img = mails.get(msg.what).getImg();
+                        viewTag.itemImg.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
+                    } else {
+                        Log.d(TAG, "friends.get(msg.what) not null but findView is null");
+                    }
+                }
+            }
+        }
+    };
     
     class ViewTag
     {
@@ -173,6 +224,50 @@ public class MailsAdapterView extends BaseAdapter {
             this.subject = subject;
             this.sendTime = sendTime;
             this.newIcon = newIcon;
+        }
+    }
+    
+    private class DownlaodImageThread extends Thread {
+        List<Mail> mails;
+        int startPosition;
+        int endPosition;
+
+        public DownlaodImageThread(List<Mail> mails, int startPosition, int endPosition) {
+            this.mails = mails;
+            this.startPosition = startPosition;
+            this.endPosition = endPosition;
+        }
+
+        @Override
+        public void run() {
+            Log.d(TAG, "friendList size === " + mails.size());
+            Log.d(TAG, "startPosition === " + startPosition);
+            Log.d(TAG, "endPosition === " + endPosition);
+            for (int i = startPosition; i < endPosition; i++) {
+                if (isInterrupt) {
+                    break;
+                }
+                if (!isPause) {
+                    int position = i - startPosition;
+                    if (position < mails.size()) {
+                        Mail mail = mails.get(position);
+                        byte[] mailImg = mail.getImg();
+
+                        if (mailImg == null) {
+                            mailImg = WebImageUtility.getWebImage(mail.getImgLink());
+                            mailsAdapterData.updateImg(mail.getRowId(), mailImg);
+                            if (position < mails.size())
+                                mails.get(position).setImg(mailImg);
+                        }
+                        showImgHandler.sendMessage(showImgHandler.obtainMessage(i));
+                    } else {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+            Log.d(TAG, "Download img finish() ");
         }
     }
 }

@@ -12,9 +12,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AbsListView.OnScrollListener;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.facebook.FriendsAdapterData;
@@ -29,6 +31,9 @@ public class MailboxActivity extends BaseActivity {
     private List<Mail> mails;
     private MailsAdapterData mailsAdapterData;
     private MailsAdapterView mailAdapterView;
+    private int firstVisiblePosition = 0;
+    private int currentListSize = 0;
+    private int lastVisiblePosition = 0;
     
     // Views
     private TextView mailInfo, errorMsg;
@@ -56,6 +61,14 @@ public class MailboxActivity extends BaseActivity {
     @Override
     public void onPause() {
         super.onPause();
+        
+        if (mailAdapterView != null) {
+            mailAdapterView.setPause(true);
+            if (mails != null) {
+                mails.clear();
+            }
+            mailAdapterView.clearData();
+        }
     }
     
     private void findViews() {
@@ -79,6 +92,7 @@ public class MailboxActivity extends BaseActivity {
         deleteSelectedMail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mailAdapterView.setInterrupt(true);
                 deleteSelectedMails();
             }
         });
@@ -88,9 +102,12 @@ public class MailboxActivity extends BaseActivity {
         clearAllMail.setOnClickListener(new View.OnClickListener() {     
             @Override
             public void onClick(View v) {
+                mailAdapterView.setInterrupt(true);
                 clearAllMails();
             }
         });
+        
+        showMails.setOnScrollListener(listScrollListener);
     }
     
     private void createFakeDb() {
@@ -187,6 +204,8 @@ public class MailboxActivity extends BaseActivity {
     }
     
     private void updateView(boolean isEmpty) {
+        if (mailAdapterView != null)
+            mailAdapterView.setInterrupt(false);
         if (isEmpty) {
             errorMsg.setVisibility(View.VISIBLE);
             showMails.setVisibility(View.INVISIBLE);
@@ -222,8 +241,8 @@ public class MailboxActivity extends BaseActivity {
     }
     
     private void clearData() {
-        mailAdapterView.clearData();
         mails.clear();
+        mailAdapterView.clearData();
         showMailInfo(0);
         
         LoadDbThread loadDbThread = new LoadDbThread();
@@ -232,6 +251,14 @@ public class MailboxActivity extends BaseActivity {
     
     public void showMailInfo(int count) {
         mailInfo.setText(getResources().getString(R.string.select_mails, count));
+    }
+    
+    private void getMailsImgfromDB() {
+        if (mailsAdapterData != null) {
+            Log.d(TAG, "firstVisiblePosition is " + firstVisiblePosition);
+            Log.d(TAG, "lastVisiblePosition is " + lastVisiblePosition);
+            mailAdapterView.loadImagefromPosition(firstVisiblePosition, lastVisiblePosition);
+        }
     }
             
     private Handler uiHandler = new Handler() {
@@ -268,6 +295,42 @@ public class MailboxActivity extends BaseActivity {
                 break;
             }
         }
+    };
+    
+    private Handler downloadHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+            case ListUtility.GET_THUMBNAIL:
+                Log.d(TAG, "GET_THUMBNAIL ");
+                mailAdapterView.setInterrupt(false);
+                getMailsImgfromDB();
+                break;
+            }
+        }
+    };
+    
+    private AbsListView.OnScrollListener listScrollListener = new AbsListView.OnScrollListener() {
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            firstVisiblePosition = firstVisibleItem;
+            lastVisiblePosition = firstVisiblePosition + visibleItemCount - 1;
+        }
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            Log.d(TAG, "scrollState " + scrollState);
+            if (currentListSize != 0) {
+                if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && mailAdapterView != null) {
+                    downloadHandler.sendEmptyMessageDelayed(ListUtility.GET_THUMBNAIL, 1500);
+                }
+                if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL && mailAdapterView != null) {
+                    downloadHandler.removeMessages(ListUtility.GET_THUMBNAIL);
+                }
+                mailAdapterView.setInterrupt(true);
+            } else {
+                Log.d(TAG, "currentListSize is zero ");
+            }
+        } 
     };
     
     private class CreateFakeDbThread extends Thread {        
