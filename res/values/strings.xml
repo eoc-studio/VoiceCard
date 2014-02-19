@@ -9,12 +9,11 @@
     <string name="app_id">584057725018260</string>
     <string name="get_user_profile">Get User Profile</string>
     <string name="get_friend_list">Get Friends</string>
-    <string name="get_picture">Get Picture</string>
-    <string name="user_info">User Info</string>
     <string name="invite_friend">Invite Friend</string>
     <string name="invite_message">I want invite you!</string>
     <string name="publish_me">Publish to timeline</string>
     <string name="publish_friend">Publish to friend</string>
+    <string name="fb_logout">Logout</string>
 
     <!-- About Contact -->
     <string name="file_process_loading">Loading</string>

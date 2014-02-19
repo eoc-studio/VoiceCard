@@ -40,8 +40,6 @@ public class TestFacebookActivity extends BaseActivity
 	private static final String LINK = "http://upload.wikimedia.org/wikipedia/commons/2/26/YellowLabradorLooking_new.jpg";
 	private FacebookManager facebookManager;
 	private FriendsAdapterView friendsAdapter;
-	private ImageView showPicture;
-	private ListView showFriends;
 	private String userId = "1442881101";
 	private String owerId = "100007720118618";
 	private String testId = "100007720118618";
@@ -52,7 +50,7 @@ public class TestFacebookActivity extends BaseActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_test_facebook);
-//		facebookManager = new FacebookManager(this, savedInstanceState);
+		facebookManager = new FacebookManager(this, savedInstanceState);
 		findViews();
 	}
 
@@ -74,7 +72,7 @@ public class TestFacebookActivity extends BaseActivity
 	protected void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
-		Session.saveSession(Session.getActiveSession(), outState);
+//		Session.saveSession(Session.getActiveSession(), outState);
 	}
 
 	@Override
@@ -108,12 +106,10 @@ public class TestFacebookActivity extends BaseActivity
 
     private void findViews() {
         Button getFriendList = (Button) findViewById(R.id.getFriendList);
-        Button getUserPicture = (Button) findViewById(R.id.getPicture);
         Button inviteFriend = (Button) findViewById(R.id.inviteFriend);
         Button publishMe = (Button) findViewById(R.id.publishMe);
         Button publishFriend = (Button) findViewById(R.id.publishFriend);
-        showPicture = (ImageView) findViewById(R.id.showPicture);
-        showFriends = (ListView) findViewById(R.id.showFriends);
+        Button logout = (Button) findViewById(R.id.logout);
 
         getFriendList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,160 +118,54 @@ public class TestFacebookActivity extends BaseActivity
                 startActivityForResult(intent, FriendInfo.GET_FRIEND_REQUEST_CODE);
             }
         });
-//		getUserPicture.setOnClickListener(new View.OnClickListener()
-//		{
-//			@Override
-//			public void onClick(View v)
-//			{
-//				if (facebookManager != null)
-//				{
-////					showProgressDialog(getResources().getString(R.string.get_picture));
-//					facebookManager.dialogHandler.sendEmptyMessage(FacebookManager.SHOW_WAITING_DIALOG);
-//					facebookManager.getUserImg(true, new RequestUserPicture(), userId);
-//				}
-//			}
-//		});
-//		
-//		inviteFriend.setOnClickListener(new View.OnClickListener()
-//		{
-//			@Override
-//			public void onClick(View v)
-//			{
-//				if (facebookManager != null)
-//				{
-//					facebookManager.inviteFriend(testId, null);
-//				}
-//			}
-//		});
-//		
-//		publishMe.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                if (facebookManager != null)
-//                {
-//                    facebookManager.publishTimeline(owerId, NAME, PICTURE, CAPTION, DESCRIPTION, LINK);
-//                }
-//            }
-//        });
-//		
-//		publishFriend.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                if (facebookManager != null)
-//                {
-//                    facebookManager.publishTimeline(testId, NAME, PICTURE, CAPTION, DESCRIPTION, LINK);
-//                }
-//            }
-//        });
+		
+		inviteFriend.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				if (facebookManager != null)
+				{
+					facebookManager.inviteFriend(testId, null);
+				}
+			}
+		});
+		
+		publishMe.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (facebookManager != null)
+                {
+                    facebookManager.publishTimeline(owerId, NAME, PICTURE, CAPTION, DESCRIPTION, LINK);
+                }
+            }
+        });
+		
+		publishFriend.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (facebookManager != null)
+                {
+                    facebookManager.publishTimeline(testId, NAME, PICTURE, CAPTION, DESCRIPTION, LINK);
+                }
+            }
+        });
+		
+		logout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (facebookManager != null)
+                {
+                    facebookManager.logout();
+                    TestFacebookActivity.this.finish();
+                }
+            }
+        });
 	}
-
-//	private void processUserPictureResponse(ImageResponse response)
-//	{
-//		// First check if the response is for the right request. We may have:
-//		// 1. Sent a new request, thus super-ceding this one.
-//		// 2. Detached this view, in which case the response should be
-//		// discarded.
-//		if (response.getRequest() == facebookManager.getLastRequest())
-//		{
-//			facebookManager.setLastRequest(null);
-//			Bitmap responseImage = response.getBitmap();
-//			Exception error = response.getError();
-//			if (error != null)
-//			{
-//				Log.d(TAG, "error is " + error.toString());
-//			}
-//			else if (responseImage != null)
-//			{
-//				showPicture.setImageBitmap(responseImage);
-//			}
-//		}
-//	}
-
-//	private void processUserListReponse(List<GraphUser> users)
-//	{
-//		if (users != null)
-//		{
-//			Log.d(TAG, "user list size is " + users.size());
-//			friendsAdapter = new FriendsAdapter(TestFacebookActivity.this, users);
-//			showFriends.setAdapter(friendsAdapter);
-//			showFriends.setOnItemClickListener(new UserListClickListener());
-//		}
-//	}
-
-//	private void showToast(GraphUser user)
-//	{
-//		if (user != null)
-//		{
-//			try
-//			{
-//				userId = user.getId();
-//				JSONObject userJSON = user.getInnerJSONObject();
-//				Log.d(TAG, "user is " + userJSON);
-//				Toast.makeText(
-//						TestFacebookActivity.this,
-//						FacebookManager.ShowField.USER_ID
-//								+ userId
-//								+ FacebookManager.ShowField.USER_NAME
-//								+ user.getName()
-//								+ FacebookManager.ShowField.USER_BIRTHDAY
-//								+ user.getBirthday()
-//								+ FacebookManager.ShowField.USER_ICON
-//								+ userJSON.getJSONObject(FacebookManager.JSONTag.PICTURE)
-//										.getJSONObject(FacebookManager.JSONTag.DATA)
-//										.getString(FacebookManager.JSONTag.URL), Toast.LENGTH_SHORT)
-//						.show();
-//			}
-//			catch (JSONException e)
-//			{
-//				e.printStackTrace();
-//			}
-//		}
-//	}
-
-//	private void showProgressDialog(String title)
-//	{
-//		progressDialog = ProgressDialog.show(TestFacebookActivity.this, title, getResources()
-//				.getString(R.string.file_process_loading));
-//	}
-//
-//	public void dismissProgressDialog()
-//	{
-//		if (progressDialog != null)
-//		{
-//			progressDialog.dismiss();
-//		}
-//	}
-
-//	private class RequestGraphUserListCallback implements Request.GraphUserListCallback
-//	{
-//		@Override
-//		public void onCompleted(List<GraphUser> users, Response response)
-//		{
-//		    facebookManager.dialogHandler.sendEmptyMessage(FacebookManager.DISMISS_WAITING_DIALOG);
-//			processUserListReponse(users);
-//		}
-//	}
-
-//	private class RequestUserPicture implements ImageRequest.Callback
-//	{
-//		@Override
-//		public void onCompleted(ImageResponse response)
-//		{
-//		    facebookManager.dialogHandler.sendEmptyMessage(FacebookManager.DISMISS_WAITING_DIALOG);
-//			processUserPictureResponse(response);
-//		}
-//	}
-
-//	private class UserListClickListener implements AdapterView.OnItemClickListener
-//	{
-//		@Override
-//		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-//		{
-//			showToast((GraphUser) friendsAdapter.getItem(position));
-//		}
-//	}
 }

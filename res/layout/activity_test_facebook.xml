@@ -16,29 +16,6 @@
             android:layout_height="wrap_content"
             android:text="@string/get_friend_list" />
 
-        <ListView
-            android:id="@+id/showFriends"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/show_friends_height" >
-        </ListView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/getPicture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/get_picture" />
-
-            <ImageView
-                android:id="@+id/showPicture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
         <Button
             android:id="@+id/inviteFriend"
             android:layout_width="wrap_content"
@@ -62,6 +39,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/publish_friend" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fb_logout" />
     </LinearLayout>
 
 </LinearLayout>

@@ -63,6 +63,9 @@ public class SelectFriendActivity extends BaseActivity {
     @Override
     public void onPause() {
         super.onPause();
+        if (friendList != null) {
+            friendList.clear();
+        }
         if (friendsAdapterView != null) {
             friendsAdapterView.setPause(true);
             friendsAdapterView.clearList();
@@ -71,9 +74,6 @@ public class SelectFriendActivity extends BaseActivity {
         if (friendsAdapterData != null) {
             friendsAdapterData.delete();
             friendsAdapterData.close();
-        }
-        if (friendList != null) {
-            friendList.clear();
         }
         
         facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
