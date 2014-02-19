@@ -12,4 +12,48 @@
         android:layout_marginLeft="@dimen/common_check_icon_margin"
         android:src="@drawable/icon_checkbox" />
 
+    <ImageView
+        android:id="@+id/glb_mailbox_list_item_img"
+        android:layout_width="@dimen/glb_mailbox_list_item_img_edge"
+        android:layout_height="@dimen/glb_mailbox_list_item_img_edge"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/glb_mailbox_list_item_check_icon"
+        android:layout_marginLeft="@dimen/glb_mailbox_list_item_img_marginLeft"
+        android:src="@drawable/user_reflect" />
+
+    <LinearLayout
+        android:id="@+id/glb_mailbox_list_item_llyt_info"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/glb_mailbox_list_item_llyt_info_height"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/glb_mailbox_list_item_img"
+        android:layout_marginLeft="@dimen/glb_mailbox_list_item_llyt_info_marginLeft"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/glb_mailbox_list_item_tv_subject"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/glb_mailbox_list_item_tv_info_height"
+            android:gravity="center_vertical"
+            android:textColor="@color/mail_box_list_item_subject_text_color" 
+            android:textSize="@dimen/glb_mailbox_list_item_tv_subject_text_size"/>
+
+        <TextView
+            android:id="@+id/glb_mailbox_list_item_tv_sendtime"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/glb_mailbox_list_item_tv_info_height"
+            android:gravity="center_vertical"
+            android:textColor="@color/mail_box_list_item_date_text_color"
+            android:textSize="@dimen/glb_mailbox_list_item_tv_sendtime_text_size" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/glb_mailbox_list_item_new_icon"
+        android:layout_width="@dimen/glb_mailbox_list_item_new_icon_width"
+        android:layout_height="@dimen/glb_mailbox_list_item_new_icon_height"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/glb_mailbox_list_item_new_icon_marginRight"
+        android:src="@drawable/icon_new2" />
+
 </RelativeLayout>

@@ -56,6 +56,10 @@
 		<color name="mail_box_titlebar_background">#F8D4D4</color>
 		<color name="mail_box_select_all_btn_background">#693837</color>
 		<color name="mail_box_titlebar_divider_background">#D0A3A2</color>
+		
+		<!-- About Mailbox item -->
+		<color name="mail_box_list_item_subject_text_color">#693837</color>
+		<color name="mail_box_list_item_date_text_color">#D0A3A2</color>
 </resources>
 
 

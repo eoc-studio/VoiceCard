@@ -30,12 +30,12 @@
 
     <!-- MemorialDayNotificationView -->
     <string name="a_normal_day">平凡的一天</string>
-    
+
     <!-- About Select Friend -->
     <string name="search_friend">搜尋朋友</string>
     <string name="user_not_install_message">若聯絡人尚未安裝則發送訊息通知</string>
     <string name="user_no_result">沒有朋友或是沒有搜尋之項目</string>
-    
+
     <!-- About Friend Info -->
     <string name="not_install">未安裝</string>
 
@@ -53,16 +53,16 @@
     <string name="insert_text">編輯文字</string>
     <string name="insert_signature">手寫簽名</string>
     <string name="play_voice_message">播放留言 %s</string>
-    
+
     <!-- RichTextEditor -->
     <string name="text_limit">/%s字</string>
 
     <!-- view_recommend_listview_item -->
-	<string name="detail_info">詳細介紹</string>
+    <string name="detail_info">詳細介紹</string>
 
     <!-- About Mailbox -->
-        <string name="select_mails">已選取 %s 封郵件</string>
-        <string name="select_all">選取全部</string>
-    
+    <string name="select_mails">已選取 %s 封郵件</string>
+    <string name="select_all">選取全部</string>
+    <string name="mailbox_errorMsg">沒有項目</string>
 
 </resources>

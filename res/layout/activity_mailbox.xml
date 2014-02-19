@@ -59,14 +59,28 @@
             android:textColor="@color/white"
             />
     </RelativeLayout>
-
-    <ListView
-        android:id="@+id/act_mailbox_lv"
+    
+    <RelativeLayout
+        android:id="@+id/act_mailbox_rlyt_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/act_mailbox_rlyt_title_bar"
-        android:layout_centerHorizontal="true"
-        android:cacheColorHint="@android:color/transparent" />
+        android:layout_height="@dimen/act_mailbox_rlyt_content_height"
+        android:layout_below="@+id/act_mailbox_rlyt_title_bar"
+        >
+    	<ListView
+        	android:id="@+id/act_mailbox_lv"
+        	android:layout_width="match_parent"
+        	android:layout_height="match_parent"
+        	android:layout_centerHorizontal="true"
+        	android:cacheColorHint="@android:color/transparent" />
+    	
+    	<TextView
+            android:id="@+id/act_mailbox_tv_errorMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/act_mailbox_tv_errorMsg_height"
+            android:layout_centerInParent="true"
+            android:text="@string/mailbox_errorMsg"
+            android:textSize="@dimen/act_mailbox_tv_errorMsg_text_size" />
+	</RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"

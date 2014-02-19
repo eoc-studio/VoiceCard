@@ -16,13 +16,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.utils.ListUtility;
 import eoc.studio.voicecard.utils.WebImageUtility;
 
 public class FriendsAdapterView extends BaseAdapter
 {
 	private static final String TAG = "FriendsAdapter";
 	private FriendsAdapterData friendsAdapterData;
-	private static final int BASE_INDEX = 1000;
 	private LayoutInflater layoutInflater;
 	private Context context;
 	private List<FriendInfo> friends;
@@ -76,7 +76,7 @@ public class FriendsAdapterView extends BaseAdapter
         } else {
             viewTag = (ViewTag) convertView.getTag();
         }
-        convertView.setId(BASE_INDEX + position);
+        convertView.setId(ListUtility.BASE_INDEX + position);
         
 		viewTag.name.setText(friends.get(position).getFriendName());
 		
@@ -131,15 +131,15 @@ public class FriendsAdapterView extends BaseAdapter
 
             if (friends.get(msg.what).getFriendImg() == null) {
                 Log.d(TAG, "friends is null");
-                if (showFriendView.findViewById(BASE_INDEX + msg.what) != null) {
-                    viewTag = (ViewTag) showFriendView.findViewById(BASE_INDEX + msg.what).getTag();
+                if (showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
+                    viewTag = (ViewTag) showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
                 } else {
                     Log.d(TAG, "friends.get(msg.what) is null");
                 }
             } else {
                 Log.d(TAG, "friends not null");
-                if (showFriendView.findViewById(BASE_INDEX + msg.what) != null) {
-                    viewTag = (ViewTag) showFriendView.findViewById(BASE_INDEX + msg.what).getTag();
+                if (showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
+                    viewTag = (ViewTag) showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
                     byte[] img = friends.get(msg.what).getFriendImg();
                     viewTag.header.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
                 } else {

@@ -76,7 +76,7 @@ public class SelectFriendActivity extends BaseActivity {
             friendList.clear();
         }
         
-        facebookManager.dialogHandler.sendEmptyMessage(FacebookManager.DISMISS_WAITING_DIALOG);
+        facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
     }
     
     @Override
@@ -128,8 +128,8 @@ public class SelectFriendActivity extends BaseActivity {
         ArrayList<FriendInfo> selectedFriendList = new ArrayList<FriendInfo>();
         
         Cursor cursor = friendsAdapterData.getSelectedFriend();
-        Log.d(TAG, "confirmAction() cursor size is " + cursor.getCount());
         if (cursor != null) {
+            Log.d(TAG, "confirmAction() cursor size is " + cursor.getCount());
             while (cursor.moveToNext()) {
                 friendId = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_ID));
                 friendName = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_NAME));
@@ -148,7 +148,7 @@ public class SelectFriendActivity extends BaseActivity {
     }
     
     private void searchAction() {
-        facebookManager.dialogHandler.sendEmptyMessage(FacebookManager.SHOW_WAITING_DIALOG);
+        facebookManager.dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
         friendsAdapterView.setInterrupt(true);
         friendList.clear();
         LoadDbThread loadDbThread = new LoadDbThread(searchFriend.getText().toString());
@@ -214,7 +214,7 @@ public class SelectFriendActivity extends BaseActivity {
             displayMessage.setText(getResources().getString(R.string.user_no_result));
             showFriends.setVisibility(View.INVISIBLE);
         }
-        facebookManager.dialogHandler.sendEmptyMessage(FacebookManager.DISMISS_WAITING_DIALOG);
+        facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
     }
         
     private Handler uiHandler = new Handler() {
@@ -292,8 +292,8 @@ public class SelectFriendActivity extends BaseActivity {
             byte[] friendImg = null;
             int selectState = 0, installState = 0;
             Cursor cursor = friendsAdapterData.seachResult(keyword);
-            Log.d(TAG, "cursor size is " + cursor.getCount());
             if (cursor != null) {
+                Log.d(TAG, "cursor size is " + cursor.getCount());
                 while (cursor.moveToNext()) {
                     friendId = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_ID));
                     friendName = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_NAME));

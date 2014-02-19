@@ -38,8 +38,21 @@
 	<dimen name="act_mailbox_v_titlebar_divider_width">1dp</dimen>
 	<dimen name="act_mailbox_v_titlebar_divider_height">20dp</dimen>
 	<dimen name="act_mailbox_v_titlebar_margin_left_right">10dp</dimen>
+	<dimen name="act_mailbox_rlyt_content_height">360dp</dimen>
 	<dimen name="act_mailbox_v_titlebar_margin_top">5dp</dimen>
+	<dimen name="act_mailbox_tv_errorMsg_height">40dp</dimen>
+	<dimen name="act_mailbox_tv_errorMsg_text_size">30dp</dimen>
 	
 	<!-- About Mailbox Item -->
+	<dimen name="glb_mailbox_list_item_img_edge">60dp</dimen>
+	<dimen name="glb_mailbox_list_item_img_marginLeft">20dp</dimen>
+	<dimen name="glb_mailbox_list_item_llyt_info_height">60dp</dimen>
+	<dimen name="glb_mailbox_list_item_llyt_info_marginLeft">10dp</dimen>
+	<dimen name="glb_mailbox_list_item_tv_info_height">20dp</dimen>
+	<dimen name="glb_mailbox_list_item_tv_subject_text_size">16dp</dimen>
+	<dimen name="glb_mailbox_list_item_tv_sendtime_text_size">12dp</dimen>
+	<dimen name="glb_mailbox_list_item_new_icon_width">60dp</dimen>
+	<dimen name="glb_mailbox_list_item_new_icon_height">20dp</dimen>
+	<dimen name="glb_mailbox_list_item_new_icon_marginRight">10dp</dimen>
 	
 </resources>

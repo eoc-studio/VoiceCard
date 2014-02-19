@@ -44,13 +44,12 @@ import com.facebook.widget.WebDialog.OnCompleteListener;
 
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.facebook.SimpleFacebook.OnLogoutListener;
+import eoc.studio.voicecard.utils.ListUtility;
 
 public class FacebookManager
 {
 	private static final String TAG = "FacebookManager";
 	private static final String USER_CANCELED_LOGIN = "User canceled login";
-    public static final int SHOW_WAITING_DIALOG = 0;
-    public static final int DISMISS_WAITING_DIALOG = 1;
 	private Context context;
 	private ImageRequest lastRequest;
 	private int queryHeight = 100;
@@ -224,8 +223,6 @@ public class FacebookManager
                 Log.d(TAG, "exception is null");
                 getUserProfile(new RequestGraphUserCallback());
             }
-//            ((TestFacebookActivity) context).dismissProgressDialog();
-//            dialogHandler.sendEmptyMessage(DISMISS_WAITING_DIALOG);
         }
     }
     
@@ -276,12 +273,12 @@ public class FacebookManager
         @Override  
         public void handleMessage(Message msg) {
             switch (msg.what) {
-            case SHOW_WAITING_DIALOG:
+            case ListUtility.SHOW_WAITING_DIALOG:
                 Log.d(TAG, "show waiting dialog ");
                 progressDialog = ProgressDialog.show(context, "", context.getResources()
                         .getString(R.string.file_process_loading));
                 break;
-            case DISMISS_WAITING_DIALOG:
+            case ListUtility.DISMISS_WAITING_DIALOG:
                 Log.d(TAG, "dismiss dialog ");
                 if (progressDialog != null)
                     progressDialog.dismiss();
@@ -394,15 +391,13 @@ public class FacebookManager
 		else
 		{
 			Log.d(TAG, "session is closed");
-//			((TestFacebookActivity) context).dismissProgressDialog();
-//			dialogHandler.sendEmptyMessage(DISMISS_WAITING_DIALOG);
 		}
 	}
 
 	public void getFriendList(Request.GraphUserListCallback callback)
 	{
 	    Log.d(TAG, "getFriendList");
-	    dialogHandler.sendEmptyMessage(SHOW_WAITING_DIALOG);
+	    dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
 		Session session = Session.getActiveSession();
 		if (session.isOpened())
 		{
@@ -417,8 +412,7 @@ public class FacebookManager
 		else
 		{
 			Log.d(TAG, "session is closed");
-//			((TestFacebookActivity) context).dismissProgressDialog();
-			dialogHandler.sendEmptyMessage(DISMISS_WAITING_DIALOG);
+			dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
 		}
 	}
 	
