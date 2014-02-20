@@ -14,12 +14,22 @@ import com.android.volley.Request.Method;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.manager.GetMailListener;
+import eoc.studio.voicecard.manager.GsonFacebookUser;
+import eoc.studio.voicecard.manager.GsonSend;
+import eoc.studio.voicecard.manager.HttpManager;
+import eoc.studio.voicecard.manager.LoginListener;
+import eoc.studio.voicecard.manager.MailCountListener;
+import eoc.studio.voicecard.manager.NotifyMailReadListener;
+import eoc.studio.voicecard.manager.PostMailListener;
+import eoc.studio.voicecard.utils.FileUtility;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -58,7 +68,7 @@ public class RecommendActivity extends Activity
 
 	private boolean mInError = false;
 
-	private static final int RESULTS_PAGE_SIZE =15;
+	private static final int RESULTS_PAGE_SIZE = 15;
 
 	private ArrayList<PicasaEntry> mEntries = new ArrayList<PicasaEntry>();
 
@@ -115,6 +125,104 @@ public class RecommendActivity extends Activity
 		{
 			loadPage();
 		}
+
+		HttpManager httpManager = new HttpManager();
+		httpManager.init(context,"1118054263");
+		GsonFacebookUser user = new GsonFacebookUser("1118054263", "19900101", "this is img link",
+				"this is locale", "this is link", "this is country", "this is timezone",
+				"this is title", "this is email", "this is name", "male", "this is edu",
+				"this is industry", "this is mobile");
+		httpManager.facebookLogin(context, user, new LoginListener()
+		{
+			@Override
+			public void onResult(Boolean isSuccess, String information)
+			{
+
+				Log.e(TAG, "httpManager.fascebookLogin() isSuccess:" + isSuccess + ",information:"
+						+ information);
+			}
+
+		});
+
+		try
+		{
+			httpManager.postMail(context, "1475871733",
+					Uri.parse("/storage/sdcard0/VoiceCard_images/Image-7833.jpg"),
+					Uri.parse("/storage/sdcard0/MIUI/sound_recorder/speech000.mp3"),
+					Uri.parse("/storage/sdcard0/Document/edittext001.txt"),
+					Uri.parse("/storage/sdcard0/VoiceCard_images/Image-2736.jpg"), "fontSize",
+					"fontColor", "thisCardName", new PostMailListener()
+					{
+						@Override
+						public void onResult(Boolean isSuccess, String information)
+						{
+
+							Log.e(TAG, "httpManager.postMail() isSuccess:" + isSuccess
+									+ ",information:" + information);
+						}
+
+					});
+
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		 try
+		{
+			Thread.sleep(3000);
+		}
+		catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		httpManager.init(context,"1475871733");
+		httpManager.getUnreadMailCount(context, new MailCountListener()
+		{
+			@Override
+			public void onResult(Boolean isSuccess, int count)
+			{
+
+				Log.e(TAG, "httpManager.getUnreadMailCount() isSuccess:" + isSuccess
+						+ ",information:" + String.valueOf(count));
+			}
+
+		});
+
+		httpManager.getMails(context, new GetMailListener()
+		{
+			@Override
+			public void onResult(Boolean isSuccess, ArrayList<GsonSend> mails)
+			{
+
+				Log.e(TAG,
+						"httpManager.getMails() isSuccess:" + isSuccess + ",mails:"
+								+ mails.toString());
+			}
+
+		});
+
+		httpManager.notifyMailsRead(context, new NotifyMailReadListener()
+		{
+
+			@Override
+			public void onResult(Boolean isSuccess, String information)
+			{
+
+				Log.e(TAG, "httpManager.notifyMailsRead() isSuccess:" + isSuccess + ",information:"
+						+ information);
+
+			}
+
+		});
+		
+		
+		Log.e(TAG, "FileUtility.getRandomImageName(\"jpg\"):"+FileUtility.getRandomImageName("jpg"));
+		Log.e(TAG, "FileUtility.getRandomSpeechName(\"mp3\"):"+FileUtility.getRandomSpeechName("mp3"));
+		Log.e(TAG, "FileUtility.getRandomSignName(\"jpg\"):"+FileUtility.getRandomSignName("jpg"));
 	}
 
 	private void loadPage()
@@ -184,7 +292,7 @@ public class RecommendActivity extends Activity
 			public void onErrorResponse(VolleyError error)
 			{
 
-				showErrorDialog();
+//				showErrorDialog();
 			}
 		};
 	}

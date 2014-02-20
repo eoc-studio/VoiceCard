@@ -2,6 +2,9 @@ package eoc.studio.voicecard.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
 
 import android.R.integer;
 import android.content.Context;
@@ -159,5 +162,27 @@ public class FileUtility
 		}
 
 	}
-
+	
+	public static String getRandomImageName(String filenameExtension) {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        Random random = new Random();
+        return sdf.format(date) + "_Image_"+random.nextInt(65535)+"."+filenameExtension;
+    }
+	
+	public static String getRandomSpeechName(String filenameExtension) {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        Random random = new Random();
+        return sdf.format(date) + "_Speech_"+random.nextInt(65535)+"."+filenameExtension;
+    }
+	
+	public static String getRandomSignName(String filenameExtension) {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        Random random = new Random();
+        return sdf.format(date) + "_Sign_"+random.nextInt(65535)+"."+filenameExtension;
+    }
+	
+	
 }
