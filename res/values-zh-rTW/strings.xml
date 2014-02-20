@@ -64,5 +64,8 @@
     <string name="select_mails">已選取 %s 封郵件</string>
     <string name="select_all">選取全部</string>
     <string name="mailbox_errorMsg">沒有項目</string>
+    
+    <!-- Main Loading -->
+	<string name="main_loading">讀取中...</string>		
 
 </resources>

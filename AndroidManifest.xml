@@ -81,6 +81,10 @@
         <activity
             android:name="eoc.studio.voicecard.mailbox.MailboxActivity"
             android:screenOrientation="portrait" />
+		<activity
+				android:name="eoc.studio.voicecard.mainloading.MainLoadingActivity"
+				android:screenOrientation="portrait" />
+        
     </application>
 
 </manifest>

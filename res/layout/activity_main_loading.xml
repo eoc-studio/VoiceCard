@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:ProgressWheel="http://schemas.android.com/apk/res/eoc.studio.voicecard"
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+		<LinearLayout
+				android:id="@+id/act_main_loading_llyt_up"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.90"
+				android:orientation="vertical"
+				android:gravity="center">
+				<RelativeLayout
+						android:layout_width="250dp"
+						android:layout_height="250dp">
+						<ImageView
+								android:id="@+id/act_main_loading_iv_logo"
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:layout_centerHorizontal="true"
+								android:layout_centerVertical="true"
+								android:src="@drawable/loading_logo" />
+						<eoc.studio.voicecard.progresswheel.ProgressWheel
+								android:id="@+id/act_main_loading_progresswheel_main"
+								android:layout_width="250dp"
+								android:layout_height="250dp"
+								ProgressWheel:barColor="#ffd92e"
+								ProgressWheel:barLength="60dp"
+								ProgressWheel:barWidth="5dp"
+								ProgressWheel:rimColor="#a37655"
+								ProgressWheel:rimWidth="5dp"
+								ProgressWheel:spinSpeed="3dp"
+								ProgressWheel:textColor="#5f4023"
+								ProgressWheel:textSize="15sp" />
+
+				</RelativeLayout>
+
+
+
+		</LinearLayout>
+		<LinearLayout
+				android:id="@+id/act_main_loading_llyt_buttom"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.1"
+				android:gravity="center_horizontal|bottom"
+				android:orientation="horizontal">
+				<ImageView
+						android:id="@+id/imageView1"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginBottom="20dp"
+						android:src="@drawable/loading_hermod" />
+		</LinearLayout>
+
+</LinearLayout>

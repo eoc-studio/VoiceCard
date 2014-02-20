@@ -88,6 +88,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/test_recommend"
             android:text="Mailbox" />
+
+		<Button
+				android:id="@+id/test_mainloading"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/test_mailbox"
+				android:text="MainLoading" />
+        
+        
     </RelativeLayout>
 
 </ScrollView>
