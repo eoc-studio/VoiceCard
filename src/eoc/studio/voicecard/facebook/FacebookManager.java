@@ -88,27 +88,27 @@ public class FacebookManager
 	    static final String TO = "to";  
 	}
 	
-	static class BundleParams
+	public static class BundleParams
 	{
-	    static final String ID = "id";
-	    static final String BIRTHDAY = "birthday";
-	    static final String EMAIL = "email";
-	    static final String NAME = "name";
-	    static final String PICTURE = "picture";
-	    static final String EDUCATION = "education";
-	    static final String WORK = "work";
-	    static final String GENDER = "gender";
-	    static final String LINK = "link";
-	    static final String HOMETOWN = "hometown";
-	    static final String TIMEZONE = "timezone";
-	    static final String LOCALE = "locale";
+		public  static final String ID = "id";
+		public static final String BIRTHDAY = "birthday";
+		public static final String EMAIL = "email";
+		public static final String NAME = "name";
+		public static final String PICTURE = "picture";
+		public static final String EDUCATION = "education";
+		public static final String WORK = "work";
+		public static final String GENDER = "gender";
+		public static final String LINK = "link";
+		public static final String HOMETOWN = "hometown";
+		public static final String TIMEZONE = "timezone";
+		public static final String LOCALE = "locale";
 	    
 	    // cannot get
-	    static final String MOBILE = "mobile";
-	    static final String TITLE = "title";
+		public static final String MOBILE = "mobile";
+		public static final String TITLE = "title";
 	}
 	
-	static class Permissions
+	public static class Permissions
 	{        
         static final String BASIC_INFO = "basic_info";
         
@@ -200,7 +200,7 @@ public class FacebookManager
         static final String MANAGE_PAGES = "manage_pages";
         
         static final String[] PUBLISH_PERMISSION = { PUBLISH_CHECKINS, PUBLISH_ACTION, PUBLISH_STREAM };
-        static final String[] READ_PERMISSION = { FRIENDS_BIRTHDAY, USER_BIRTHDAY, USER_ABOUT_ME, EMAIL, USER_LOCATION,
+        public static final String[] READ_PERMISSION = { FRIENDS_BIRTHDAY, USER_BIRTHDAY, USER_ABOUT_ME, EMAIL, USER_LOCATION,
                 USER_WORK_HISTORY, USER_EDUCATION_HISTORY };
 	}
 	

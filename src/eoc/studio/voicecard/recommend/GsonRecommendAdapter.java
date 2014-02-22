@@ -22,6 +22,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.manager.GsonRecommend;
 
 
 import android.content.Context;
@@ -33,12 +34,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public class PicasaArrayAdapter extends ArrayAdapter<PicasaEntry> {
+public class GsonRecommendAdapter extends ArrayAdapter<GsonRecommend> {
     private ImageLoader mImageLoader;
     
-    public PicasaArrayAdapter(Context context, 
+    public GsonRecommendAdapter(Context context, 
                               int textViewResourceId, 
-                              List<PicasaEntry> objects,
+                              List<GsonRecommend> objects,
                               ImageLoader imageLoader
                               ) {
         super(context, textViewResourceId, objects);
@@ -62,15 +63,16 @@ public class PicasaArrayAdapter extends ArrayAdapter<PicasaEntry> {
             v.setTag(R.id.id_holder, holder);
         }        
         
-        PicasaEntry entry = getItem(position);
-        if (entry.getThumbnailUrl() != null) {
-            holder.image.setImageUrl(entry.getThumbnailUrl(), mImageLoader);
+        GsonRecommend entry = getItem(position);
+        
+        if (entry.getImg()!=null) {
+            holder.image.setImageUrl(entry.getImg(), mImageLoader);
         } else {
             holder.image.setImageResource(android.R.color.transparent);
         }
         
-        holder.titleTextView.setText(entry.getTitle());
-		holder.promotionTextView.setText(entry.getTitle());
+        holder.titleTextView.setText(entry.getName());
+		holder.promotionTextView.setText(entry.getPromotion());
 	
         return v;
     }
@@ -78,9 +80,6 @@ public class PicasaArrayAdapter extends ArrayAdapter<PicasaEntry> {
     
     private class ViewHolder {
         NetworkImageView image;
-//        TextView title; 
-        
-//		ImageView recommnendImageView;
 
 		ImageView newImageView;
 

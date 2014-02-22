@@ -29,7 +29,7 @@ public class MailboxIconView extends RelativeLayout
 		indicator = (TextView) findViewById(R.id.glb_mailbox_icon_tv_indicator);
 	}
 
-	private void update(int numberOfNewMail)
+	public void update(int numberOfNewMail)
 	{
 		String prefix = getContext().getString(R.string.mail);
 		CharSequence message;

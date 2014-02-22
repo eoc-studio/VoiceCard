@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.annotations.SerializedName;
 
@@ -27,6 +28,7 @@ import eoc.studio.voicecard.volley.toolbox.StringXORer;
 import eoc.studio.voicecard.volley.toolbox.VolleySingleton;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -313,7 +315,7 @@ public class HttpManager
 
 		paramsFacebookMailPost.put("send_from", facebookID);
 		paramsFacebookMailPost.put("send_to", sendTo);
-		paramsFacebookMailPost.put("subject", "test 888 subject");
+		paramsFacebookMailPost.put("subject", "這是測試");
 		paramsFacebookMailPost.put("font_size", "12154");
 		paramsFacebookMailPost.put("font_color", "ff101010");
 		paramsFacebookMailPost.put("body", editTextBody);
@@ -523,6 +525,32 @@ public class HttpManager
 		VolleySingleton.getInstance(context).getRequestQueue().add(mailUpdateRequest);
 	}
 
+	public void getRecommend(Context context,GetRecommendListener getRecommendListener){
+		java.lang.reflect.Type typeSend = new com.google.gson.reflect.TypeToken<ArrayList<GsonRecommend>>()
+		{
+		}.getType();
+
+		String uriGetRecommend = "http://www.charliefind.com/api.php?op=recomand";
+
+
+		Log.e(TAG, "uriGetRecommend:" + uriGetRecommend);
+		GsonListRequest<ArrayList<GsonRecommend>> getRecommendGsonRequset = new GsonListRequest<ArrayList<GsonRecommend>>(
+				Method.GET, uriGetRecommend, typeSend,
+				createGetRecommendGsonReqSuccessListener(getRecommendListener), createGetRecommendGsonReqErrorListener());
+		getRecommendGsonRequset.setTag("getRecommend");
+		VolleySingleton.getInstance(context).getRequestQueue().add(getRecommendGsonRequset);
+	}
+	
+	public ImageLoader getImageLoader(Context context){
+		return VolleySingleton.getInstance(context).getImageLoader();
+	}
+	
+	public void getBitmapFromWeb(Context context,String url,ImageLoader.ImageListener imageListener){
+        ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
+		imageLoader.get(url, imageListener);
+	}
+	
+	
 	private Response.Listener<ArrayList<GsonSend>> createGetMailReqSuccessListener(
 			final GetMailListener getMailListener)
 	{
@@ -555,6 +583,42 @@ public class HttpManager
 
 	}
 
+	private Response.Listener<ArrayList<GsonRecommend>> createGetRecommendGsonReqSuccessListener(
+			final GetRecommendListener getRecommendListener)
+	{
+
+		return new Response.Listener<ArrayList<GsonRecommend>>()
+		{
+			@Override
+			public void onResponse(ArrayList<GsonRecommend> response)
+			{
+
+				Log.e(TAG, "GsonSend response: " + response.toString());
+
+				if (getRecommendListener != null) getRecommendListener.onResult(true, response);
+			}
+		};
+	}
+	
+	
+	
+	private Response.ErrorListener createGetRecommendGsonReqErrorListener()
+	{
+
+		return new Response.ErrorListener()
+		{
+			@Override
+			public void onErrorResponse(VolleyError error)
+			{
+
+				Log.e(TAG, "GsonRecommend error: " + error.toString());
+			}
+		};
+
+	}
+	
+	
+	
 	private String getStringFromFile(String filePath) throws Exception
 	{
 

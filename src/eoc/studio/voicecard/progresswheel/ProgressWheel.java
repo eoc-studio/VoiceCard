@@ -302,7 +302,11 @@ public class ProgressWheel extends View {
         spinHandler.removeMessages(0);
     }
 
-
+    public void stopSpinningWithOutRestProgress() {
+        isSpinning = false;
+        spinHandler.removeMessages(0);
+    }
+    
     /**
      * Puts the view on spin mode
      */
@@ -333,6 +337,7 @@ public class ProgressWheel extends View {
     public void setProgress(int i) {
         isSpinning = false;
         progress = i;
+        setText(getResources().getString(R.string.main_loading)+Math.round(((float) progress / 360) * 100) + "%");
         spinHandler.sendEmptyMessage(0);
     }
 
