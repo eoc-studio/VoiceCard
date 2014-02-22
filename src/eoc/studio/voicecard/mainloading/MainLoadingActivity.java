@@ -1,9 +1,8 @@
 package eoc.studio.voicecard.mainloading;
 
 import eoc.studio.voicecard.R;
-import eoc.studio.voicecard.facebook.FacebookManager;
 import eoc.studio.voicecard.facebook.FacebookManager.BundleParams;
-import eoc.studio.voicecard.facebook.FacebookManager.Permissions;
+import eoc.studio.voicecard.facebook.Permissions;
 import eoc.studio.voicecard.mailbox.MailboxActivity;
 import eoc.studio.voicecard.mailbox.MailsAdapterData;
 import eoc.studio.voicecard.mainmenu.MainMenuActivity;
@@ -224,7 +223,7 @@ public class MainLoadingActivity extends Activity
 			// FacebookManager.Permissions.READ_PERMISSION));
 			session.openForRead(new Session.OpenRequest(MainLoadingActivity.this)
 					.setCallback(statusCallback)
-					.setPermissions(FacebookManager.Permissions.READ_PERMISSION)
+					.setPermissions(Permissions.READ_PERMISSION)
 					.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO));
 
 		}
@@ -520,7 +519,7 @@ public class MainLoadingActivity extends Activity
 			else
 			{
 				session.requestNewReadPermissions(new Session.NewPermissionsRequest(
-						MainLoadingActivity.this, FacebookManager.Permissions.READ_PERMISSION));
+						MainLoadingActivity.this, Permissions.READ_PERMISSION));
 			}
 		}
 	}

@@ -1,133 +1,97 @@
 package eoc.studio.voicecard.facebook;
 
-import com.facebook.internal.SessionAuthorizationType;
+public class Permissions
+{        
+    static final String BASIC_INFO = "basic_info";
+    
+    static final String USER_ABOUT_ME = "user_about_me";
+    static final String FRIENDS_ABOUT_ME = "friends_about_me";
 
-/**
- * https://developers.facebook.com/docs/howtos/androidsdk/3.0/native-login/
- * 
- * @author sromku
- */
-public enum Permissions
-{
-	BASIC_INFO("basic_info", Type.READ),
-	
-	USER_ABOUT_ME("user_about_me", Type.READ),
-	FRIENDS_ABOUT_ME("friends_about_me", Type.READ),
+    static final String USER_ACTIVITIES = "user_activities";
+    static final String FRIENDS_ACTIVITIES = "friends_activities";
 
-	USER_ACTIVITIES("user_activities", Type.READ),
-	FRIENDS_ACTIVITIES("friends_activities", Type.READ),
+    static final String USER_BIRTHDAY = "user_birthday";
+    static final String FRIENDS_BIRTHDAY = "friends_birthday";
 
-	USER_BIRTHDAY("user_birthday", Type.READ),
-	FRIENDS_BIRTHDAY("friends_birthday", Type.READ),
+    static final String USER_CHECKINS = "user_checkins";
+    static final String FRIENDS_CHECKINS = "friends_checkins";
 
-	USER_CHECKINS("user_checkins", Type.READ),
-	FRIENDS_CHECKINS("friends_checkins", Type.READ),
+    static final String USER_EDUCATION_HISTORY = "user_education_history";
+    static final String FRIENDS_EDUCATION_HISTORY = "friends_education_history";
 
-	USER_EDUCATION_HISTORY("user_education_history", Type.READ),
-	FRIENDS_EDUCATION_HISTORY("friends_education_history", Type.READ),
+    static final String USER_EVENTS = "user_events";
+    static final String FRIENDS_EVENTS = "friends_events";
 
-	USER_EVENTS("user_events", Type.READ),
-	FRIENDS_EVENTS("friends_events", Type.READ),
+    static final String USER_GROUPS = "user_groups";
+    static final String FRIENDS_GROUPS = "friends_groups";
 
-	USER_GROUPS("user_groups", Type.READ),
-	FRIENDS_GROUPS("friends_groups", Type.READ),
+    static final String USER_HOMETOWN = "user_hometown";
+    static final String FRIENDS_HOMETOWN = "friends_hometown";
 
-	USER_HOMETOWN("user_hometown", Type.READ),
-	FRIENDS_HOMETOWN("friends_hometown", Type.READ),
+    static final String USER_INTERESTS = "user_interests";
+    static final String FRIENDS_INTERESTS = "friends_interests";
+    
+    static final String USER_PHOTOS = "user_photos";
+    static final String FRIENDS_PHOTOS = "friends_photos";
 
-	USER_INTERESTS("user_interests", Type.READ),
-	FRIENDS_INTERESTS("friends_interests", Type.READ),
-	
-	USER_PHOTOS("user_photos", Type.READ),
-	FRIENDS_PHOTOS("friends_photos", Type.READ),
+    static final String USER_LIKES = "user_likes";
+    static final String FRIENDS_LIKES = "friends_likes";
 
-	USER_LIKES("user_likes", Type.READ),
-	FRIENDS_LIKES("friends_likes", Type.READ),
+    static final String USER_NOTES = "user_notes";
+    static final String FRIENDS_NOTES = "friends_notes";
 
-	USER_NOTES("user_notes", Type.READ),
-	FRIENDS_NOTES("friends_notes", Type.READ),
+    static final String USER_ONLINE_PRESENCE = "user_online_presence";
+    static final String FRIENDS_ONLINE_PRESENCE = "friends_online_presence";
 
-	USER_ONLINE_PRESENCE("user_online_presence", Type.READ),
-	FRIENDS_ONLINE_PRESENCE("friends_online_presence", Type.READ),
+    static final String USER_RELIGION_POLITICS = "user_religion_politics";
+    static final String FRIENDS_RELIGION_POLITICS = "friends_religion_politics";
 
-	USER_RELIGION_POLITICS("user_religion_politics", Type.READ),
-	FRIENDS_RELIGION_POLITICS("friends_religion_politics", Type.READ),
+    static final String USER_RELATIONSHIPS = "user_relationships";
+    static final String FRIENDS_RELATIONSHIPS = "friends_relationships";
+    
+    static final String USER_RELATIONSHIP_DETAILS = "user_relationship_details";
+    static final String FRIENDS_RELATIONSHIP_DETAILS = "friends_relationship_details";
+    
+    static final String USER_STATUS = "user_status";
+    static final String FRIENDS_STATUS = "friends_status";
 
-	USER_RELATIONSHIPS("user_relationships", Type.READ),
-	FRIENDS_RELATIONSHIPS("friends_relationships", Type.READ),
-	
-	USER_RELATIONSHIP_DETAILS("user_relationship_details", Type.READ),
-	FRIENDS_RELATIONSHIP_DETAILS("friends_relationship_details", Type.READ),
-	
-	USER_STATUS("user_status", Type.READ),
-	FRIENDS_STATUS("friends_status", Type.READ),
+    static final String USER_SUBSCRIPTIONS = "user_subscriptions";
+    static final String FRIENDS_SUBSCRIPTIONS = "friends_subscriptions";
 
-	USER_SUBSCRIPTIONS("user_subscriptions", Type.READ),
-	FRIENDS_SUBSCRIPTIONS("friends_subscriptions", Type.READ),
+    static final String USER_VIDEOS = "user_videos";
+    static final String FRIENDS_VIDEOS = "friends_videos";
 
-	USER_VIDEOS("user_videos", Type.READ),
-	FRIENDS_VIDEOS("friends_videos", Type.READ),
+    static final String USER_WEBSITE = "user_website";
+    static final String FRIENDS_WEBSITE = "friends_website";
 
-	USER_WEBSITE("user_website", Type.READ),
-	FRIENDS_WEBSITE("friends_website", Type.READ),
+    static final String USER_WORK_HISTORY = "user_work_history";
+    static final String FRIENDS_WORK_HISTORY = "friends_work_history";
 
-	USER_WORK_HISTORY("user_work_history", Type.READ),
-	FRIENDS_WORK_HISTORY("friends_work_history", Type.READ),
+    static final String USER_LOCATION = "user_location";
+    static final String FRIENDS_LOCATION = "friends_location";
+    
+    static final String USER_PHOTO_VIDEO_TAGS = "user_photo_video_tags";
+    static final String FRIENDS_PHOTO_VIDEO_TAGS = "friends_photo_video_tags";
+    
+    static final String READ_FRIENDLISTS = "read_friendlists";
+    static final String READ_MAILBOX = "read_mailbox";
+    static final String READ_REQUESTS = "read_requests";
+    static final String READ_STREAM = "read_stream";
+    static final String READ_INSIGHTS = "read_insights";
+    static final String XMPP_LOGIN = "xmpp_login";
+    static final String EMAIL = "email";
 
-	USER_LOCATION("user_location", Type.READ),
-	FRIENDS_LOCATION("friends_location", Type.READ),
-	
-	USER_PHOTO_VIDEO_TAGS("user_photo_video_tags", Type.READ),
-	FRIENDS_PHOTO_VIDEO_TAGS("friends_photo_video_tags", Type.READ),
-	
-	READ_FRIENDLISTS("read_friendlists", Type.READ),
-	READ_MAILBOX("read_mailbox", Type.READ),
-	READ_REQUESTS("read_requests", Type.READ),
-	READ_STREAM("read_stream", Type.READ),
-	READ_INSIGHTS("read_insights", Type.READ),
-	XMPP_LOGIN("xmpp_login", Type.READ),
-	EMAIL("email", Type.READ),
-
-	PUBLISH_ACTION("publish_actions", Type.PUBLISH),
-	PUBLISH_STREAM("publish_stream", Type.PUBLISH),
-	ADS_MANAGMENT("ads_management", Type.PUBLISH),
-	CREATE_EVENT("create_event", Type.PUBLISH),
-	RSVP_EVENT("rsvp_event", Type.PUBLISH),
-	MANAGE_FRIENDLIST("manage_friendlists", Type.PUBLISH),
-	MANAGE_NOTIFICATIONS("manage_notifications", Type.PUBLISH),
-	MANAGE_PAGES("manage_pages", Type.PUBLISH);
-
-	private static class Type
-	{
-		static final SessionAuthorizationType PUBLISH = SessionAuthorizationType.PUBLISH;
-		static final SessionAuthorizationType READ = SessionAuthorizationType.READ;
-	};
-
-	private String mValue;
-	private SessionAuthorizationType mType;
-
-	private Permissions(String value, SessionAuthorizationType type)
-	{
-		mValue = value;
-		mType = type;
-	}
-
-	public String getValue()
-	{
-		return mValue;
-	}
-
-	public SessionAuthorizationType getType()
-	{
-		return mType;
-	}
-	
-	public static Permissions findPermission(String value)
-	{
-		for (Permissions p : Permissions.values()) {
-			if(p.getValue().equals(value)) return p;
-		}
-		return null;
-	}
-
+    static final String PUBLISH_ACTION = "publish_actions";
+    static final String PUBLISH_STREAM = "publish_stream";
+    static final String PUBLISH_CHECKINS = "publish_checkins";
+    static final String ADS_MANAGMENT = "ads_management";
+    static final String CREATE_EVENT = "create_event";
+    static final String RSVP_EVENT = "rsvp_event";
+    static final String MANAGE_FRIENDLIST = "manage_friendlists";
+    static final String MANAGE_NOTIFICATIONS = "manage_notifications";
+    static final String MANAGE_PAGES = "manage_pages";
+    
+    static final String[] PUBLISH_PERMISSION = { PUBLISH_CHECKINS, PUBLISH_ACTION, PUBLISH_STREAM };
+    public static final String[] READ_PERMISSION = { FRIENDS_BIRTHDAY, USER_BIRTHDAY, USER_ABOUT_ME, EMAIL, USER_LOCATION,
+            USER_WORK_HISTORY, USER_EDUCATION_HISTORY };
 }

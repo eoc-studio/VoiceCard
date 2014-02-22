@@ -1,34 +1,18 @@
 package eoc.studio.voicecard.facebook;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import com.facebook.Request;
-import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.internal.ImageRequest;
-import com.facebook.internal.ImageResponse;
-import com.facebook.model.GraphUser;
 
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
-import eoc.studio.voicecard.TestMainActivity;
 
 public class TestFacebookActivity extends BaseActivity
 {
@@ -39,11 +23,8 @@ public class TestFacebookActivity extends BaseActivity
 	private static final String DESCRIPTION = "DESCRIPTION";
 	private static final String LINK = "http://upload.wikimedia.org/wikipedia/commons/2/26/YellowLabradorLooking_new.jpg";
 	private FacebookManager facebookManager;
-	private FriendsAdapterView friendsAdapter;
-	private String userId = "1442881101";
 	private String owerId = "100007720118618";
 	private String testId = "100007720118618";
-//	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -58,21 +39,18 @@ public class TestFacebookActivity extends BaseActivity
 	public void onStart()
 	{
 		super.onStart();
-//		Session.getActiveSession().addCallback(facebookManager.getSessionStatusCallBack());
 	}
 
 	@Override
 	public void onStop()
 	{
 		super.onStop();
-//		Session.getActiveSession().removeCallback(facebookManager.getSessionStatusCallBack());
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
-		Log.d(TAG, "onSaveInstanceState outState is " + outState);
 		Session.saveSession(Session.getActiveSession(), outState);
 	}
 
@@ -100,6 +78,7 @@ public class TestFacebookActivity extends BaseActivity
                             Log.d(TAG, "ID is " + friendList.get(i).getFriendId());
                             Log.d(TAG, "Name is " + friendList.get(i).getFriendName());
                             Log.d(TAG, "Birthday is " + friendList.get(i).getFriendBirthday());
+                            Log.d(TAG, "ImgLink is " + friendList.get(i).getFriendImgLink());
                         }
                     }
                 }

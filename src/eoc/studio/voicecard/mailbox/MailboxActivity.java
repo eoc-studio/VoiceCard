@@ -1,9 +1,7 @@
 package eoc.studio.voicecard.mailbox;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,7 +18,6 @@ import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
-import eoc.studio.voicecard.facebook.FriendsAdapterData;
 import eoc.studio.voicecard.menu.ClearAllMail;
 import eoc.studio.voicecard.menu.DeleteSelectedMail;
 import eoc.studio.voicecard.utils.ListUtility;
