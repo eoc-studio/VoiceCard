@@ -72,17 +72,21 @@ public class TestFacebookActivity extends BaseActivity
 	protected void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
-//		Session.saveSession(Session.getActiveSession(), outState);
+		Log.d(TAG, "onSaveInstanceState outState is " + outState);
+		Session.saveSession(Session.getActiveSession(), outState);
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		super.onActivityResult(requestCode, resultCode, data);
-//		Log.d(TAG, "requestCode is " + requestCode);
-//		Log.d(TAG, "resultCode is " + resultCode);
-//		Log.d(TAG, "data is " + data);
-//		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+		Log.d(TAG, "requestCode is " + requestCode);
+		Log.d(TAG, "resultCode is " + resultCode);
+		Log.d(TAG, "data is " + data);
+		if (data != null) {
+		    Log.d(TAG, "bundle is " + data.getExtras().toString());
+		}
+		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
         switch (requestCode) {
         case FriendInfo.GET_FRIEND_REQUEST_CODE:
             Log.d(TAG, "GET_FRIEND_REQUEST_CODE");
