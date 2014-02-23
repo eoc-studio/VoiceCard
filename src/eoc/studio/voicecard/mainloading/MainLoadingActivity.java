@@ -98,7 +98,9 @@ public class MainLoadingActivity extends Activity
 	private int mailboxUnReadCount = 0;
 
 	private String recommendBitmapUrl;
+
 	private String recommendName;
+
 	HttpManager httpManager;
 
 	Handler progressHandler = new Handler()
@@ -142,7 +144,7 @@ public class MainLoadingActivity extends Activity
 		httpManager = new HttpManager();
 		startProgressWheel();
 		initMailDataBase();
-		getRecommendInfo(); 
+		getRecommendInfo();
 		File dbFile = getDatabasePath("mails.db");
 		Log.i(TAG, "dbFile.getAbsolutePath()" + dbFile.getAbsolutePath());
 	}
@@ -166,7 +168,7 @@ public class MainLoadingActivity extends Activity
 		Log.d(TAG, "onResume()");
 
 		openFacebookSession();
-		
+
 	}
 
 	private void initMailDataBase()
@@ -194,14 +196,13 @@ public class MainLoadingActivity extends Activity
 
 				if (recommends != null && recommends.size() > 0)
 				{
-					Log.e(TAG, "recommends.get(0).getImg():"
-							+ recommends.get(0).getImg()+"recommends.get(0).getName():"+recommends.get(0).getName());
+					Log.e(TAG, "recommends.get(0).getImg():" + recommends.get(0).getImg()
+							+ "recommends.get(0).getName():" + recommends.get(0).getName());
 					recommendBitmapUrl = recommends.get(0).getImg();
 					recommendName = recommends.get(0).getName();
 					addProgressWheel(GET_RECOMMEND_PROGRESS);
 					Log.d(TAG_PROGRESS, "GET_RECOMMEND_PROGRESS");
 				}
-
 
 			}
 
@@ -222,8 +223,7 @@ public class MainLoadingActivity extends Activity
 			// MainLoadingActivity.this,
 			// FacebookManager.Permissions.READ_PERMISSION));
 			session.openForRead(new Session.OpenRequest(MainLoadingActivity.this)
-					.setCallback(statusCallback)
-					.setPermissions(Permissions.READ_PERMISSION)
+					.setCallback(statusCallback).setPermissions(Permissions.READ_PERMISSION)
 					.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO));
 
 		}
@@ -254,17 +254,19 @@ public class MainLoadingActivity extends Activity
 		Log.d(TAG, "goToMainActivity() ");
 		Intent intent = new Intent();
 		Bundle bundle = new Bundle();
-/*		bundle.putString("recommendBitmapUrl", recommendBitmapUrl);
-		bundle.putString("recommendName", recommendName);
-		bundle.putInt("mailboxUnReadCount", this.mailboxUnReadCount);*/
+		/*
+		 * bundle.putString("recommendBitmapUrl", recommendBitmapUrl);
+		 * bundle.putString("recommendName", recommendName);
+		 * bundle.putInt("mailboxUnReadCount", this.mailboxUnReadCount);
+		 */
 		intent.putExtras(bundle);
 		intent.setClass(context, MainMenuActivity.class);
-		
-		String PREFS_FILENAME = "MAIN_MENU_SETTING";  
-		SharedPreferences configPreferences = getSharedPreferences(PREFS_FILENAME, 0); 
+
+		String PREFS_FILENAME = "MAIN_MENU_SETTING";
+		SharedPreferences configPreferences = getSharedPreferences(PREFS_FILENAME, 0);
 		configPreferences.edit().putString("recommendBitmapUrl", recommendBitmapUrl).commit();
 		configPreferences.edit().putString("recommendName", recommendName).commit();
-		Log.d(TAG, "goToMainActivity() this.mailboxUnReadCount:"+this.mailboxUnReadCount);
+		Log.d(TAG, "goToMainActivity() this.mailboxUnReadCount:" + this.mailboxUnReadCount);
 		configPreferences.edit().putInt("mailboxUnReadCount", this.mailboxUnReadCount).commit();
 		startActivity(intent);
 		finish();
@@ -323,25 +325,6 @@ public class MainLoadingActivity extends Activity
 
 	}
 
-	
-	private  String getStringJsonObjectByCheck(JSONObject obj,String key)
-	{
-
-		try
-		{
-			return obj.getString(key);
-			
-		}
-		catch (JSONException e)
-		{
-		
-			e.printStackTrace();
-			return "";
-		}
-	}
-	
-
-
 	public void processSessionStatus(Session session, SessionState state, Exception exception)
 	{
 
@@ -375,8 +358,7 @@ public class MainLoadingActivity extends Activity
 									Log.d(TAG, "email:" + userJSON.getString(JSONTag.EMAIL));
 									Log.d(TAG, "name:" + userJSON.getString(JSONTag.NAME));
 									Log.d(TAG, "gender:" + userJSON.getString(JSONTag.GENDER));
-									Log.d(TAG,
-											"birthday:" + userJSON.getString(JSONTag.BIRTHDAY));
+									Log.d(TAG, "birthday:" + userJSON.getString(JSONTag.BIRTHDAY));
 									Log.d(TAG, "link:" + userJSON.getString(JSONTag.LINK));
 									Log.d(TAG, "timezone:" + userJSON.getInt(JSONTag.TIMEZONE));
 									Log.d(TAG, "locale:" + userJSON.getString(JSONTag.LOCALE));
@@ -398,24 +380,19 @@ public class MainLoadingActivity extends Activity
 								GsonFacebookUser gsonFacebookUser = null;
 								try
 								{
+
 									gsonFacebookUser = new GsonFacebookUser(facebookUserID,
 											userJSON.getString(JSONTag.BIRTHDAY),
-											"this is dummy picture link", userJSON
-													.getString(JSONTag.LOCALE), userJSON
-													.getString(JSONTag.LINK), userJSON
-													.getJSONObject(JSONTag.HOMETOWN)
-													.getString(JSONTag.NAME), userJSON
-													.getString(JSONTag.TIMEZONE),
-											"this is dummy title", userJSON
-													.getString(JSONTag.EMAIL), userJSON
-													.getString(JSONTag.NAME), userJSON
-													.getString(JSONTag.GENDER), userJSON
-													.getJSONArray(JSONTag.EDUCATION)
-													.getJSONObject(0).getJSONObject("school")
-													.getString(JSONTag.NAME), userJSON
-													.getJSONArray(JSONTag.WORK)
-													.getJSONObject(0).getJSONObject("employer")
-													.getString(JSONTag.NAME),
+											"this is dummy picture link",
+											getStringJsonObjectByCheck(userJSON, JSONTag.LOCALE),
+											getStringJsonObjectByCheck(userJSON, JSONTag.LINK),
+											getHomeTown(userJSON), getStringJsonObjectByCheck(
+													userJSON, JSONTag.TIMEZONE),
+											"this is dummy title", getStringJsonObjectByCheck(
+													userJSON, JSONTag.EMAIL),
+											getStringJsonObjectByCheck(userJSON, JSONTag.NAME),
+											getStringJsonObjectByCheck(userJSON, JSONTag.GENDER),
+											getEducation(userJSON), getWork(userJSON),
 											"this is dummy mobile");
 
 								}
@@ -532,7 +509,7 @@ public class MainLoadingActivity extends Activity
 					}
 
 				});
-				
+
 				getMe.executeAsync();
 			}
 			else
@@ -640,16 +617,29 @@ public class MainLoadingActivity extends Activity
 		}
 		return flag;
 	}
+
+	private String getStringJsonObjectByCheck(JSONObject obj, String key)
+	{
+
+		try
+		{
+			return obj.getString(key);
+
+		}
+		catch (JSONException e)
+		{
+
+			e.printStackTrace();
+			return "";
+		}
+	}
 	
 	private String getHomeTown(JSONObject obj)
 	{
-		
-		
+
 		try
 		{
-			return obj
-					.getJSONObject(JSONTag.HOMETOWN)
-					.getString(JSONTag.NAME);
+			return obj.getJSONObject(JSONTag.HOMETOWN).getString(JSONTag.NAME);
 		}
 		catch (JSONException e)
 		{
@@ -658,16 +648,13 @@ public class MainLoadingActivity extends Activity
 			return "";
 		}
 	}
-	
+
 	private String getWork(JSONObject obj)
 	{
-		
-		
+
 		try
 		{
-			return 	obj
-					.getJSONArray(JSONTag.WORK)
-					.getJSONObject(0).getJSONObject("employer")
+			return obj.getJSONArray(JSONTag.WORK).getJSONObject(0).getJSONObject("employer")
 					.getString(JSONTag.NAME);
 		}
 		catch (JSONException e)
@@ -678,16 +665,12 @@ public class MainLoadingActivity extends Activity
 		}
 	}
 
-	
 	private String getEducation(JSONObject obj)
 	{
-		
-		
+
 		try
 		{
-			return obj
-					.getJSONArray(JSONTag.EDUCATION)
-					.getJSONObject(0).getJSONObject("school")
+			return obj.getJSONArray(JSONTag.EDUCATION).getJSONObject(0).getJSONObject("school")
 					.getString(JSONTag.NAME);
 		}
 		catch (JSONException e)
@@ -697,8 +680,7 @@ public class MainLoadingActivity extends Activity
 			return "";
 		}
 	}
-	
-	
+
 	// private class RequestGraphUserCallback implements
 	// Request.GraphUserCallback
 	// {
