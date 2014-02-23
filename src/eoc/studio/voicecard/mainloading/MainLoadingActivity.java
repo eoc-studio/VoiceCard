@@ -323,6 +323,25 @@ public class MainLoadingActivity extends Activity
 
 	}
 
+	
+	private  String getStringJsonObjectByCheck(JSONObject obj,String key)
+	{
+
+		try
+		{
+			return obj.getString(key);
+			
+		}
+		catch (JSONException e)
+		{
+		
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
+
+
 	public void processSessionStatus(Session session, SessionState state, Exception exception)
 	{
 
@@ -379,26 +398,22 @@ public class MainLoadingActivity extends Activity
 								GsonFacebookUser gsonFacebookUser = null;
 								try
 								{
-									gsonFacebookUser = new GsonFacebookUser(facebookUserID,
+									gsonFacebookUser = new GsonFacebookUser(
+											facebookUserID,
 											userJSON.getString(BundleParams.BIRTHDAY),
-											"this is dummy picture link", userJSON
-													.getString(BundleParams.LOCALE), userJSON
-													.getString(BundleParams.LINK), userJSON
-													.getJSONObject(BundleParams.HOMETOWN)
-													.getString(BundleParams.NAME), userJSON
-													.getString(BundleParams.TIMEZONE),
-											"this is dummy title", userJSON
-													.getString(BundleParams.EMAIL), userJSON
-													.getString(BundleParams.NAME), userJSON
-													.getString(BundleParams.GENDER), userJSON
-													.getJSONArray(BundleParams.EDUCATION)
-													.getJSONObject(0).getJSONObject("school")
-													.getString(BundleParams.NAME), userJSON
-													.getJSONArray(BundleParams.WORK)
-													.getJSONObject(0).getJSONObject("employer")
-													.getString(BundleParams.NAME),
-											"this is dummy mobile");
-
+											"this is dummy picture link",
+											getStringJsonObjectByCheck(userJSON,
+													BundleParams.LOCALE),
+											getStringJsonObjectByCheck(userJSON, BundleParams.LINK),
+											getHomeTown(userJSON),
+											getStringJsonObjectByCheck(userJSON,
+													BundleParams.TIMEZONE),
+											"this is dummy title",
+											getStringJsonObjectByCheck(userJSON, BundleParams.EMAIL),
+											getStringJsonObjectByCheck(userJSON, BundleParams.NAME),
+											getStringJsonObjectByCheck(userJSON,
+													BundleParams.GENDER), getEducation(userJSON),
+											getWork(userJSON), "this is dummy mobile");
 								}
 								catch (JSONException e)
 								{
@@ -621,6 +636,65 @@ public class MainLoadingActivity extends Activity
 		}
 		return flag;
 	}
+	
+	private String getHomeTown(JSONObject obj)
+	{
+		
+		
+		try
+		{
+			return obj
+					.getJSONObject(BundleParams.HOMETOWN)
+					.getString(BundleParams.NAME);
+		}
+		catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
+	private String getWork(JSONObject obj)
+	{
+		
+		
+		try
+		{
+			return 	obj
+					.getJSONArray(BundleParams.WORK)
+					.getJSONObject(0).getJSONObject("employer")
+					.getString(BundleParams.NAME);
+		}
+		catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	
+	private String getEducation(JSONObject obj)
+	{
+		
+		
+		try
+		{
+			return obj
+					.getJSONArray(BundleParams.EDUCATION)
+					.getJSONObject(0).getJSONObject("school")
+					.getString(BundleParams.NAME);
+		}
+		catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
+	
 	// private class RequestGraphUserCallback implements
 	// Request.GraphUserCallback
 	// {
