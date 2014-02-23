@@ -648,8 +648,8 @@ public class MainLoadingActivity extends Activity
 		try
 		{
 			return obj
-					.getJSONObject(BundleParams.HOMETOWN)
-					.getString(BundleParams.NAME);
+					.getJSONObject(JSONTag.HOMETOWN)
+					.getString(JSONTag.NAME);
 		}
 		catch (JSONException e)
 		{
@@ -666,9 +666,9 @@ public class MainLoadingActivity extends Activity
 		try
 		{
 			return 	obj
-					.getJSONArray(BundleParams.WORK)
+					.getJSONArray(JSONTag.WORK)
 					.getJSONObject(0).getJSONObject("employer")
-					.getString(BundleParams.NAME);
+					.getString(JSONTag.NAME);
 		}
 		catch (JSONException e)
 		{
@@ -686,9 +686,9 @@ public class MainLoadingActivity extends Activity
 		try
 		{
 			return obj
-					.getJSONArray(BundleParams.EDUCATION)
+					.getJSONArray(JSONTag.EDUCATION)
 					.getJSONObject(0).getJSONObject("school")
-					.getString(BundleParams.NAME);
+					.getString(JSONTag.NAME);
 		}
 		catch (JSONException e)
 		{
