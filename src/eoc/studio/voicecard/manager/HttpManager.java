@@ -105,20 +105,20 @@ public class HttpManager
 		HashMap<String, String> paramsFacebookUpdate = new HashMap<String, String>();
 		paramsFacebookUpdate.put("auth", hash_auth);
 		paramsFacebookUpdate.put("fb_id", facebookID);
-
-		paramsFacebookUpdate.put("birthDay", user.getBirthday());
-		paramsFacebookUpdate.put("img", user.getImg());
-		paramsFacebookUpdate.put("locale", user.getLocale());
-		paramsFacebookUpdate.put("link", user.getLink());
-		paramsFacebookUpdate.put("country", user.getCountry());
-		paramsFacebookUpdate.put("timezone", user.getTimezone());
-		paramsFacebookUpdate.put("title", user.getTitle());
-		paramsFacebookUpdate.put("email", user.getEmail());
-		paramsFacebookUpdate.put("name", user.getName());
-		paramsFacebookUpdate.put("edu", user.getEdu());
-		paramsFacebookUpdate.put("gender", user.getGender());
-		paramsFacebookUpdate.put("industry", user.getIndustry());
-		paramsFacebookUpdate.put("mobile", user.getMobile());
+		
+		if (user.getBirthday() != null) paramsFacebookUpdate.put("birthDay", user.getBirthday());
+		if (user.getImg() != null) paramsFacebookUpdate.put("img", user.getImg());
+		if (user.getLocale() != null) paramsFacebookUpdate.put("locale", user.getLocale());
+		if (user.getLink() != null) paramsFacebookUpdate.put("link", user.getLink());
+		if (user.getCountry() != null) paramsFacebookUpdate.put("country", user.getCountry());
+		if (user.getTimezone() != null) paramsFacebookUpdate.put("timezone", user.getTimezone());
+		if (user.getTitle() != null) paramsFacebookUpdate.put("title", user.getTitle());
+		if (user.getEmail() != null) paramsFacebookUpdate.put("email", user.getEmail());
+		if (user.getName() != null) paramsFacebookUpdate.put("name", user.getName());
+		if (user.getEdu() != null) paramsFacebookUpdate.put("edu", user.getEdu());
+		if (user.getGender() != null) paramsFacebookUpdate.put("gender", user.getGender());
+		if (user.getIndustry() != null) paramsFacebookUpdate.put("industry", user.getIndustry());
+		if (user.getMobile() != null) paramsFacebookUpdate.put("mobile", user.getMobile());
 
 		Log.e(TAG, "fascebookLogin() uri_facebook_update" + uriFacebookUpdate);
 		JsonObjectRequest req = new JsonObjectRequest(uriFacebookUpdate, new JSONObject(

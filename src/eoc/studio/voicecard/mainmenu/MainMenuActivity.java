@@ -58,35 +58,44 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		super.onCreate(savedInstanceState);
 	}
 
-	private void updateAdvertisementInfo() 
+	private void updateAdvertisementInfo()
 	{
+
 		String recommendBitmapUrl = configPreferences.getString("recommendBitmapUrl", null);
 		recommendName = configPreferences.getString("recommendName", null);
-		HttpManager httpManager = new HttpManager();
-		httpManager.getBitmapFromWeb(context, recommendBitmapUrl, new ImageLoader.ImageListener()
+
+		if (recommendBitmapUrl != null && recommendName != null)
 		{
-			@Override
-			public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate)
-			{
+			HttpManager httpManager = new HttpManager();
 
-				Log.e(TAG, "httpManager.getBitmapFromWeb() isImmediate:" + isImmediate);
+			httpManager.getBitmapFromWeb(context, recommendBitmapUrl,
+					new ImageLoader.ImageListener()
+					{
+						@Override
+						public void onResponse(ImageLoader.ImageContainer response,
+								boolean isImmediate)
+						{
 
-				if (response.getBitmap() != null)
-				{
-					Log.e(TAG, "response.getBitmap() != null");
-					advertisement.updateView(
-							response.getBitmap().copy(Bitmap.Config.ARGB_8888, true),
-							recommendName);
-				}
+							Log.e(TAG, "httpManager.getBitmapFromWeb() isImmediate:" + isImmediate);
 
-			}
+							if (response.getBitmap() != null)
+							{
+								Log.e(TAG, "response.getBitmap() != null");
+								advertisement.updateView(
+										response.getBitmap().copy(Bitmap.Config.ARGB_8888, true),
+										recommendName);
+							}
 
-			@Override
-			public void onErrorResponse(VolleyError e)
-			{
-				Log.e(TAG, "getBitmapFromWeb() error:"+e.getMessage());
-			}
-		});
+						}
+
+						@Override
+						public void onErrorResponse(VolleyError e)
+						{
+
+							Log.e(TAG, "getBitmapFromWeb() error:" + e.getMessage());
+						}
+					});
+		}
 
 	}
 
@@ -95,7 +104,7 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		
 		int mailboxUnReadCount = configPreferences.getInt("mailboxUnReadCount", 0);
 		Log.d(TAG, "updateNewMailBoxCount mailboxUnReadCount:"+mailboxUnReadCount);
-		mailbox.update(mailboxUnReadCount);
+		if (mailboxUnReadCount != 0) mailbox.update(mailboxUnReadCount);
 
 	}
 
@@ -124,17 +133,17 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		switch (calendar.get(Calendar.DAY_OF_WEEK))
 		{
 		case Calendar.MONDAY:
-			return "¬P´Á¤@µU¤l¬ï·s¦ç";
+			return "ï¿½Pï¿½ï¿½ï¿½@ï¿½Uï¿½lï¿½ï¿½sï¿½ï¿½";
 		case Calendar.TUESDAY:
-			return "¬P´Á¤GµU¤l¨{¤l¾j";
+			return "ï¿½Pï¿½ï¿½ï¿½Gï¿½Uï¿½lï¿½{ï¿½lï¿½j";
 		case Calendar.WEDNESDAY:
-			return "¬P´Á¤TµU¤l¥hª¦¤s";
+			return "ï¿½Pï¿½ï¿½ï¿½Tï¿½Uï¿½lï¿½hï¿½ï¿½ï¿½s";
 		case Calendar.THURSDAY:
-			return "¬P´Á¥|µU¤l¥h¦Ò¸Õ";
+			return "ï¿½Pï¿½ï¿½ï¿½|ï¿½Uï¿½lï¿½hï¿½Ò¸ï¿½";
 		case Calendar.FRIDAY:
-			return "¬P´Á¤­µU¤l¥h¸õ»R";
+			return "ï¿½Pï¿½ï¿½ï¿½ï¿½ï¿½Uï¿½lï¿½hï¿½ï¿½ï¿½R";
 		case Calendar.SATURDAY:
-			return "¬P´Á¤»µU¤l¥h¤æ¤»";
+			return "ï¿½Pï¿½ï¿½ï¿½ï¿½ï¿½Uï¿½lï¿½hï¿½æ¤»";
 		case Calendar.SUNDAY:
 		default:
 			return null;
