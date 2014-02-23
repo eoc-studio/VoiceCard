@@ -88,7 +88,7 @@
             android:src="@drawable/icon_editor_clear" />
     </LinearLayout>
 
-    <eoc.studio.voicecard.richtexteditor.RichEditText
+    <EditText
         android:id="@+id/act_rich_text_editor_rte_editor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

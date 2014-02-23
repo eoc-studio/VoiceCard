@@ -1,12 +1,16 @@
 package eoc.studio.voicecard.card.editor;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.GradientDrawable;
@@ -15,7 +19,6 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,8 +33,8 @@ import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.card.FakeData;
-import eoc.studio.voicecard.richtexteditor.RichEditText;
-import eoc.studio.voicecard.richtexteditor.RichTextEditorActivity;
+import eoc.studio.voicecard.manufacture.EditSignatureActivity;
+import eoc.studio.voicecard.utils.FileUtility;
 
 public class CardEditorActivity extends BaseActivity
 {
@@ -43,12 +46,19 @@ public class CardEditorActivity extends BaseActivity
 	private static final int REQ_CROP_IMAGE = 2;
 	private static final int REQ_RECORD_VOICE = 3;
 	private static final int REQ_EDIT_TEXT = 4;
+	private static final int REQ_EDIT_SIGNATURE = 5;
 
 	private static final String EXTRA_KEY_USER_IMAGE = "user_image";
 	private static final String EXTRA_KEY_USER_IMAGE_BITMAP = "user_image_bitmap";
 	private static final String EXTRA_KEY_USER_VOICE = "user_voice";
 	private static final String EXTRA_KEY_USER_VOICE_DURATION = "user_voice_duration";
-	private static final String EXTRA_KEY_USER_TEXT_SHARED_PREFERENCES_NAME = "user_text_shared_pref_name";
+	private static final String EXTRA_KEY_USER_TEXT_CONTENT = "user_text_content";
+	private static final String EXTRA_KEY_USER_TEXT_SIZE_TYPE = "user_text_size_type";
+	private static final String EXTRA_KEY_USER_TEXT_COLOR = "user_text_color";
+
+	private static final float TEXT_SIZE_NORMAL = 12.8f;
+	private static final float TEXT_SIZE_SMALL = TEXT_SIZE_NORMAL * 0.8f;
+	private static final float TEXT_SIZE_LARGE = TEXT_SIZE_NORMAL * 1.2f;
 
 	private ImageView back;
 	private ImageView next;
@@ -71,14 +81,16 @@ public class CardEditorActivity extends BaseActivity
 	private ImageView editableImage;
 	private LinearLayout editableVoice;
 	private TextView editableVoiceText;
-	private RichEditText editableText;
+	private TextView editableText;
 
 	private Card card;
 	private Uri userImage;
 	private Bitmap userImageBitmap;
 	private Uri userVoice;
 	private String userVoiceDuration;
-	private String userTextSharedPrefName;
+	private String userTextContent;
+	private int userTextSizeType;
+	private int userTextColor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -150,13 +162,20 @@ public class CardEditorActivity extends BaseActivity
 			editableVoice.setVisibility(View.VISIBLE);
 			editableVoiceText.setText(userVoiceDuration);
 		}
-		if (userTextSharedPrefName != null)
+		if (userTextContent != null)
 		{
-			editableText.load(userTextSharedPrefName);
+			editableText.setText(userTextContent);
+			editableText.setTextSize(getTextSizeByType(userTextSizeType));
+			editableText.setTextColor(userTextColor);
 			editableText.setVisibility(View.VISIBLE);
+
 			if (editableText.getText().length() > 0)
 			{
 				editableTextTip.setVisibility(View.INVISIBLE);
+			}
+			else
+			{
+				editableTextTip.setVisibility(View.VISIBLE);
 			}
 		}
 	}
@@ -168,21 +187,19 @@ public class CardEditorActivity extends BaseActivity
 		userImageBitmap = savedInstanceState.getParcelable(EXTRA_KEY_USER_IMAGE_BITMAP);
 		userVoice = savedInstanceState.getParcelable(EXTRA_KEY_USER_VOICE);
 		userVoiceDuration = savedInstanceState.getString(EXTRA_KEY_USER_VOICE_DURATION);
-		userTextSharedPrefName = savedInstanceState
-				.getString(EXTRA_KEY_USER_TEXT_SHARED_PREFERENCES_NAME);
+		userTextContent = savedInstanceState.getString(EXTRA_KEY_USER_TEXT_CONTENT);
+		userTextSizeType = savedInstanceState.getInt(EXTRA_KEY_USER_TEXT_SIZE_TYPE);
+		userTextColor = savedInstanceState.getInt(EXTRA_KEY_USER_TEXT_COLOR);
 		Log.d(TAG, "restore user data -- IMAGE URI: " + userImage);
 		Log.d(TAG, "restore user data -- IMAGE BITMAP: " + userImageBitmap);
 		Log.d(TAG, "restore user data -- VOICE URI: " + userVoice);
 		Log.d(TAG, "restore user data -- VOICE DURATION: " + userVoiceDuration);
-		Log.d(TAG, "restore user data -- TEXT SHARED_PREF: " + userTextSharedPrefName);
+		Log.d(TAG, "restore user data -- TEXT CONTENT: " + userTextContent);
+		Log.d(TAG, "restore user data -- TEXT SIZE TYPE: " + userTextSizeType);
+		Log.d(TAG, "restore user data -- TEXT COLOR: " + userTextColor);
 		card.setImage(userImage);
 		card.setSound(userVoice);
-
-//		RichEditText richEditText = new RichEditText(this);
-//		richEditText.load(userTextSharedPrefName);
-//		card.setMessage(Html.toHtml(richEditText.getText()));
-//
-//		Log.d(TAG, "card msg: " + card.getMessage());
+		card.setMessage(userTextContent, userTextSizeType, userTextColor);
 	}
 
 	private void saveUserData(Bundle savedInstanceState)
@@ -208,11 +225,14 @@ public class CardEditorActivity extends BaseActivity
 			savedInstanceState.putString(EXTRA_KEY_USER_VOICE_DURATION, userVoiceDuration);
 			Log.d(TAG, "save user data -- VOICE DURATION: " + userVoiceDuration);
 		}
-		if (userTextSharedPrefName != null)
+		if (userTextContent != null)
 		{
-			savedInstanceState.putString(EXTRA_KEY_USER_TEXT_SHARED_PREFERENCES_NAME,
-					userTextSharedPrefName);
-			Log.d(TAG, "save user data --TEXT SHARED_PREF: " + userTextSharedPrefName);
+			savedInstanceState.putString(EXTRA_KEY_USER_TEXT_CONTENT, userTextContent);
+			savedInstanceState.putInt(EXTRA_KEY_USER_TEXT_SIZE_TYPE, userTextSizeType);
+			savedInstanceState.putInt(EXTRA_KEY_USER_TEXT_COLOR, userTextColor);
+			Log.d(TAG, "save user data --TEXT CONTENT: " + userTextContent);
+			Log.d(TAG, "save user data --TEXT SIZE TYPE: " + userTextSizeType);
+			Log.d(TAG, "save user data --TEXT COLOR: " + userTextColor);
 		}
 	}
 
@@ -278,7 +298,7 @@ public class CardEditorActivity extends BaseActivity
 		editableImage = (ImageView) findViewById(R.id.act_card_editor_iv_editable_image);
 		editableVoice = (LinearLayout) findViewById(R.id.act_card_editor_llyt_editable_voice);
 		editableVoiceText = (TextView) findViewById(R.id.act_card_editor_tv_editable_voice_play_text);
-		editableText = (RichEditText) findViewById(R.id.act_card_editor_ret_editable_text);
+		editableText = (TextView) findViewById(R.id.act_card_editor_ret_editable_text);
 	}
 
 	private void setupCardView()
@@ -316,6 +336,7 @@ public class CardEditorActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
+				Log.d(TAG, "back - finish");
 				finish();
 			}
 
@@ -327,6 +348,7 @@ public class CardEditorActivity extends BaseActivity
 			public void onClick(View v)
 			{
 				Log.d(TAG, "next");
+				startCardSender();
 			}
 
 		});
@@ -356,6 +378,7 @@ public class CardEditorActivity extends BaseActivity
 
 			});
 		}
+
 		editableImageFrame.setOnClickListener(new OnClickListener()
 		{
 
@@ -378,34 +401,26 @@ public class CardEditorActivity extends BaseActivity
 			}
 
 		});
-		editableTextFrame.setOnClickListener(new OnClickListener()
+		OnClickListener textEditorListener = new OnClickListener()
 		{
-
 			@Override
 			public void onClick(View v)
 			{
 				Log.d(TAG, "EDIT TEXT");
-				startRichTextEditor();
+				startTextEditor();
 			}
-
-		});
+		};
+		editableTextFrame.setOnClickListener(textEditorListener);
+		editableText.setOnClickListener(textEditorListener);
+		editableTextTip.setOnClickListener(textEditorListener);
 		editableSignatureFrame.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
 				Log.d(TAG, "EDIT SIGNATURE");
+				startSignatureEditor();
 			}
-		});
-		editableText.setOnClickListener(new OnClickListener()
-		{
-
-			@Override
-			public void onClick(View v)
-			{
-				// do nothing
-			}
-
 		});
 	}
 
@@ -474,6 +489,23 @@ public class CardEditorActivity extends BaseActivity
 	private void onVoiceRecorderResult(int resultCode, Intent data)
 	{
 		Uri uri = data.getData();
+		String filePath = convertAudioContentUriToFilePath(uri);
+		String extName = filePath.substring(filePath.lastIndexOf(".") + 1);
+		File oldFile = new File(filePath);
+
+		filePath = filePath.substring(0, filePath.lastIndexOf("/"));
+		String newFileName = FileUtility.getRandomSpeechName(extName);
+		File newFile = new File(filePath, newFileName);
+		try
+		{
+			copyFile(oldFile, newFile);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		uri = Uri.fromFile(newFile);
 		userVoice = uri;
 		card.setSound(uri);
 		setVoiceMessageText(uri);
@@ -541,31 +573,50 @@ public class CardEditorActivity extends BaseActivity
 		}
 	}
 
-	private void startRichTextEditor()
+	private void startTextEditor()
 	{
-		Intent intent = new Intent(this, RichTextEditorActivity.class);
-		intent.putExtra(RichTextEditorActivity.EXTRA_KEY_TEXT_LIMIT, 60);
-		if (userTextSharedPrefName != null)
-		{
-			intent.putExtra(RichTextEditorActivity.EXTRA_KEY_SHARED_PREFERENCES_NAME,
-					userTextSharedPrefName);
-		}
+		Intent intent = new Intent(this, CardTextEditorActivity.class);
+		intent.putExtra(CardTextEditorActivity.EXTRA_KEY_TEXT_LIMIT, 60);
+		intent.putExtra(CardTextEditorActivity.EXTRA_KEY_TEXT_CONTENT, card.getMessage());
+		intent.putExtra(CardTextEditorActivity.EXTRA_KEY_TEXT_COLOR, card.getMessageTextColor());
+		intent.putExtra(CardTextEditorActivity.EXTRA_KEY_TEXT_SIZE_TYPE,
+				card.getMessageTextSizeType());
 		startActivityForResult(intent, REQ_EDIT_TEXT);
 	}
 
-	private void onRichTextEditorResult(int resultCode, Intent data)
+	private void onTextEditorResult(int resultCode, Intent data)
 	{
-		userTextSharedPrefName = data
-				.getStringExtra(RichTextEditorActivity.EXTRA_KEY_SHARED_PREFERENCES_NAME);
-		Log.d(TAG, "back from RichTextEditor: " + userTextSharedPrefName);
-		editableText.load(userTextSharedPrefName);
+		userTextContent = data.getStringExtra(CardTextEditorActivity.EXTRA_KEY_TEXT_CONTENT);
+		userTextSizeType = data.getIntExtra(CardTextEditorActivity.EXTRA_KEY_TEXT_SIZE_TYPE,
+				Card.DEFAULT_TEXT_SIZE_TYPE);
+		userTextColor = data.getIntExtra(CardTextEditorActivity.EXTRA_KEY_TEXT_COLOR,
+				Card.DEFAULT_TEXT_COLOR);
+
+		editableText.setText(userTextContent);
+		editableText.setTextSize(getTextSizeByType(userTextSizeType));
+		editableText.setTextColor(userTextColor);
 		editableText.setVisibility(View.VISIBLE);
 		if (editableText.getText().length() > 0)
 		{
 			editableTextTip.setVisibility(View.INVISIBLE);
 		}
+		else
+		{
+			editableTextTip.setVisibility(View.VISIBLE);
+		}
 
-		card.setMessage(Html.toHtml(editableText.getEditableText()));
+		card.setMessage(userTextContent, userTextSizeType, userTextColor);
+	}
+
+	private void startSignatureEditor()
+	{
+		Intent intent = new Intent(this, EditSignatureActivity.class);
+		startActivityForResult(intent, REQ_EDIT_SIGNATURE);
+	}
+
+	private void onSignatureEditorResult(int resultCode, Intent data)
+	{
+
 	}
 
 	@Override
@@ -590,7 +641,10 @@ public class CardEditorActivity extends BaseActivity
 			onVoiceRecorderResult(resultCode, data);
 			break;
 		case REQ_EDIT_TEXT:
-			onRichTextEditorResult(resultCode, data);
+			onTextEditorResult(resultCode, data);
+			break;
+		case REQ_EDIT_SIGNATURE:
+			onSignatureEditorResult(resultCode, data);
 			break;
 		}
 	}
@@ -607,7 +661,7 @@ public class CardEditorActivity extends BaseActivity
 		@Override
 		public void run()
 		{
-			String fileName = System.currentTimeMillis() + ".png";
+			String fileName = FileUtility.getRandomImageName("png");
 			File file = new File(getCacheDir(), fileName);
 			if (saveBitmapToFile(bitmap, file))
 			{
@@ -628,7 +682,7 @@ public class CardEditorActivity extends BaseActivity
 	 * @param file
 	 * @return true if save successfully
 	 */
-	private boolean saveBitmapToFile(Bitmap bitmap, File file)
+	private static boolean saveBitmapToFile(Bitmap bitmap, File file)
 	{
 		boolean result = false;
 		FileOutputStream out = null;
@@ -644,6 +698,64 @@ public class CardEditorActivity extends BaseActivity
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	private String convertAudioContentUriToFilePath(Uri contentUri)
+	{
+		String[] projection = { MediaStore.Images.Media.DATA };
+		Cursor cursor = this.getContentResolver().query(contentUri, projection, null, null, null);
+		if (cursor == null) return null;
+		int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+		cursor.moveToFirst();
+		String s = cursor.getString(column_index);
+		cursor.close();
+		return s;
+	}
+
+	private static void copyFile(File src, File dest) throws IOException
+	{
+		InputStream in = new FileInputStream(src);
+		OutputStream out = new FileOutputStream(dest);
+
+		byte[] buf = new byte[1024];
+		int len;
+
+		while ((len = in.read(buf)) > 0)
+		{
+			out.write(buf, 0, len);
+		}
+
+		in.close();
+		out.close();
+
+		Log.d(TAG, "Copy file successful.");
+	}
+
+	private static float getTextSizeByType(int type)
+	{
+		float size;
+		switch (type)
+		{
+		case Card.TEXT_SIZE_TYPE_SMALL:
+			size = TEXT_SIZE_SMALL;
+			break;
+		case Card.TEXT_SIZE_TYPE_LARGE:
+			size = TEXT_SIZE_LARGE;
+			break;
+		case Card.TEXT_SIZE_TYPE_NORMAL:
+		default:
+			size = TEXT_SIZE_NORMAL;
+			break;
+		}
+		return size;
+	}
+
+	private void startCardSender()
+	{
+		Intent intent = new Intent(this, CardSenderActivity.class);
+		intent.putExtra(CardSenderActivity.EXTRA_KEY_CARD_WITH_USER_DATA_FOR_SEND, card);
+		Log.d(TAG, "send card:: " + card);
+		startActivity(intent);
 	}
 
 }

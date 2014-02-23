@@ -1,10 +1,6 @@
 package eoc.studio.voicecard.mainmenu;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
-
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +11,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
-import eoc.studio.voicecard.TestMainActivity;
 import eoc.studio.voicecard.card.editor.CardCategorySelectorActivity;
 import eoc.studio.voicecard.mailbox.MailboxActivity;
 import eoc.studio.voicecard.manager.HttpManager;
@@ -40,17 +39,16 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 	private Context context;
 
 	private String recommendName;
-	
-	private String PREFS_FILENAME = "MAIN_MENU_SETTING";  
+
+	private String PREFS_FILENAME = "MAIN_MENU_SETTING";
 	SharedPreferences configPreferences;
-	
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 
 		context = getApplicationContext();
-		configPreferences = getSharedPreferences(PREFS_FILENAME, 0); 
+		configPreferences = getSharedPreferences(PREFS_FILENAME, 0);
 		initLayout();
 		updateNewMailBoxCount();
 		updateAdvertisementInfo();
@@ -67,7 +65,6 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		if (recommendBitmapUrl != null && recommendName != null)
 		{
 			HttpManager httpManager = new HttpManager();
-
 			httpManager.getBitmapFromWeb(context, recommendBitmapUrl,
 					new ImageLoader.ImageListener()
 					{
@@ -91,21 +88,18 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 						@Override
 						public void onErrorResponse(VolleyError e)
 						{
-
 							Log.e(TAG, "getBitmapFromWeb() error:" + e.getMessage());
 						}
 					});
 		}
-
 	}
 
 	private void updateNewMailBoxCount()
 	{
-		
-		int mailboxUnReadCount = configPreferences.getInt("mailboxUnReadCount", 0);
-		Log.d(TAG, "updateNewMailBoxCount mailboxUnReadCount:"+mailboxUnReadCount);
-		if (mailboxUnReadCount != 0) mailbox.update(mailboxUnReadCount);
 
+		int mailboxUnReadCount = configPreferences.getInt("mailboxUnReadCount", 0);
+		Log.d(TAG, "updateNewMailBoxCount mailboxUnReadCount:" + mailboxUnReadCount);
+		if (mailboxUnReadCount != 0) mailbox.update(mailboxUnReadCount);
 	}
 
 	@Override
@@ -133,17 +127,17 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		switch (calendar.get(Calendar.DAY_OF_WEEK))
 		{
 		case Calendar.MONDAY:
-			return "�P���@�U�l��s��";
+			return "星期一猴子穿新衣";
 		case Calendar.TUESDAY:
-			return "�P���G�U�l�{�l�j";
+			return "星期二猴子肚子餓";
 		case Calendar.WEDNESDAY:
-			return "�P���T�U�l�h���s";
+			return "星期三猴子去爬山";
 		case Calendar.THURSDAY:
-			return "�P���|�U�l�h�Ҹ�";
+			return "星期四猴子去考試";
 		case Calendar.FRIDAY:
-			return "�P�����U�l�h���R";
+			return "星期五猴子去跳舞";
 		case Calendar.SATURDAY:
-			return "�P�����U�l�h�椻";
+			return "星期六猴子去斗六";
 		case Calendar.SUNDAY:
 		default:
 			return null;

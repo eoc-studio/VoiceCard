@@ -15,15 +15,15 @@ public class FakeData
 	private static List<Card> initFakeData()
 	{
 		List<Card> list = new ArrayList<Card>();
-		list.add(new Card(0, CardCategory.BIRTHDAY, "­¸¤ûµL¼Ä¥Õ¤é¹Ú", R.drawable.card02,
+		list.add(new Card(0, CardCategory.BIRTHDAY, "é£›ç‰›ç„¡æ•µç™½æ—¥å¤¢", R.drawable.card02,
 				R.drawable.card02_open, 0, 0, 0, Color.DKGRAY));
-		list.add(new Card(1, CardCategory.BIRTHDAY, "¥|§ó¥b©]¤£ºÎÄ±", R.drawable.card07,
+		list.add(new Card(1, CardCategory.BIRTHDAY, "å››æ›´åŠå¤œä¸ç¡è¦º", R.drawable.card07,
 				R.drawable.card07_open, 0, 0, 0, Color.WHITE));
-		list.add(new Card(2, CardCategory.BIRTHDAY, "Âù«÷¥_¥b²y¤§§Ú·R§A", R.drawable.card08,
+		list.add(new Card(2, CardCategory.BIRTHDAY, "é›™æ‹¼åŒ—åŠçƒ", R.drawable.card08,
 				R.drawable.card08_open, 0, 0, 0, Color.DKGRAY));
-		list.add(new Card(3, CardCategory.BIRTHDAY, "¸t½Ï¬y¬P¾ğ", R.drawable.card11,
+		list.add(new Card(3, CardCategory.BIRTHDAY, "è–èª•æµæ˜Ÿæ¨¹", R.drawable.card11,
 				R.drawable.card11_open, 0, 0, 0, Color.GREEN));
-		list.add(new Card(4, CardCategory.BIRTHDAY, "¥À¿Ë¸`¶P¥d", R.drawable.card14,
+		list.add(new Card(4, CardCategory.BIRTHDAY, "æ¯è¦ªç¯€è³€å¡", R.drawable.card14,
 				R.drawable.card14_open, 0, 0, 0, Color.MAGENTA));
 		return list;
 	}

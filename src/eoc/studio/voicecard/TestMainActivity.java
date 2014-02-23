@@ -12,7 +12,6 @@ import eoc.studio.voicecard.mailbox.MailboxActivity;
 import eoc.studio.voicecard.mainloading.MainLoadingActivity;
 import eoc.studio.voicecard.mainmenu.MainMenuActivity;
 import eoc.studio.voicecard.manufacture.EditSignatureActivity;
-import eoc.studio.voicecard.richtexteditor.RichTextEditorActivity;
 import eoc.studio.voicecard.recommend.RecommendActivity;
 import eoc.studio.voicecard.volley.test.JsonTestActivity;
 
@@ -77,15 +76,6 @@ public class TestMainActivity extends BaseActivity
 			public void onClick(View v)
 			{
 				Intent intent = new Intent(TestMainActivity.this, CalendarViewTest.class);
-				startActivity(intent);
-			}
-		});
-		findViewById(R.id.test_rich_text_editor).setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				Intent intent = new Intent(TestMainActivity.this, RichTextEditorActivity.class);
 				startActivity(intent);
 			}
 		});

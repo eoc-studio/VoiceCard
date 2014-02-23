@@ -38,6 +38,21 @@
     <!-- About Friend Info -->
     <string name="not_install">not install</string>
 
+    <!-- Card Category -->
+    <string name="mothers_day">Mother\'s Day</string>
+    <string name="birthday">Birthday</string>
+    <string name="valentines_day">Valentine\'s Day</string>
+    <string name="xmas">Xmas</string>
+    <string name="halloween">Halloween</string>
+    <string name="thanks_note">Thanks Note</string>
+
+    <!-- Card Editor -->
+    <string name="insert_image">Insert image</string>
+    <string name="insert_voice">Record voice</string>
+    <string name="insert_text">Insert text</string>
+    <string name="insert_signature">Insert signature</string>
+    <string name="play_voice_message">Play message %s</string>
+
     <!-- view_recommend_listview_item -->
     <string name="detail_info">Detail information</string>
 
