@@ -120,9 +120,12 @@ public class FriendsAdapterView extends BaseAdapter
 	}
 	
 	public void loadImagefromPosition(int startPostion, int endPosition) {
-        DownlaodImageThread downlaodImageThread = new DownlaodImageThread(friends.subList(startPostion, endPosition),
-                startPostion, endPosition);
-        downlaodImageThread.start();
+		if (startPostion > 0 && endPosition > friends.size())
+		{
+			DownlaodImageThread downlaodImageThread = new DownlaodImageThread(friends.subList(
+					startPostion, endPosition), startPostion, endPosition);
+			downlaodImageThread.start();
+		}
 	}
 	
     private Handler showImgHandler = new Handler() {

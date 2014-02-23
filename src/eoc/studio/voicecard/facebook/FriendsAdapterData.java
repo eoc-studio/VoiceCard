@@ -149,7 +149,7 @@ public class FriendsAdapterData {
     public Cursor getSelectedFriend() throws SQLException {
         if (db.isOpen()) {
             Cursor cursor = db.query(true, DATABASE_TABLE, new String[] { KEY_FRIEND_ID, KEY_FRIEND_NAME,
-                    KEY_FRIEND_BIRTHDAY }, KEY_SELECT_STATE + "=" + SELECT, null, null, null, null, null);
+                    KEY_FRIEND_BIRTHDAY, KEY_FRIEND_IMG_LINK }, KEY_SELECT_STATE + "=" + SELECT, null, null, null, null, null);
             return cursor;
         } else {
             return null;

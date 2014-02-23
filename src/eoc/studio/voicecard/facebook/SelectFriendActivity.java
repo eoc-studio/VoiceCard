@@ -124,7 +124,7 @@ public class SelectFriendActivity extends BaseActivity {
     }
     
     private void confirmAction() {
-        String friendId, friendName, firendBirthday;
+        String friendId, friendName, firendBirthday, friendImgLink;
         ArrayList<FriendInfo> selectedFriendList = new ArrayList<FriendInfo>();
         
         Cursor cursor = friendsAdapterData.getSelectedFriend();
@@ -134,7 +134,8 @@ public class SelectFriendActivity extends BaseActivity {
                 friendId = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_ID));
                 friendName = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_NAME));
                 firendBirthday = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_BIRTHDAY));
-                selectedFriendList.add(new FriendInfo(friendId, friendName, firendBirthday, "", null, 0, 0));
+                friendImgLink = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_IMG_LINK));
+                selectedFriendList.add(new FriendInfo(friendId, friendName, firendBirthday, friendImgLink, null, 0, 0));
             }
         }
         cursor.close();
