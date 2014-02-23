@@ -1,7 +1,7 @@
 package eoc.studio.voicecard.mainloading;
 
 import eoc.studio.voicecard.R;
-import eoc.studio.voicecard.facebook.FacebookManager.BundleParams;
+import eoc.studio.voicecard.facebook.JSONTag;
 import eoc.studio.voicecard.facebook.Permissions;
 import eoc.studio.voicecard.mailbox.MailboxActivity;
 import eoc.studio.voicecard.mailbox.MailsAdapterData;
@@ -370,16 +370,16 @@ public class MainLoadingActivity extends Activity
 							{
 								try
 								{
-									facebookUserID = userJSON.getString(BundleParams.ID);
-									Log.d(TAG, "id:" + userJSON.getString(BundleParams.ID));
-									Log.d(TAG, "email:" + userJSON.getString(BundleParams.EMAIL));
-									Log.d(TAG, "name:" + userJSON.getString(BundleParams.NAME));
-									Log.d(TAG, "gender:" + userJSON.getString(BundleParams.GENDER));
+									facebookUserID = userJSON.getString(JSONTag.ID);
+									Log.d(TAG, "id:" + userJSON.getString(JSONTag.ID));
+									Log.d(TAG, "email:" + userJSON.getString(JSONTag.EMAIL));
+									Log.d(TAG, "name:" + userJSON.getString(JSONTag.NAME));
+									Log.d(TAG, "gender:" + userJSON.getString(JSONTag.GENDER));
 									Log.d(TAG,
-											"birthday:" + userJSON.getString(BundleParams.BIRTHDAY));
-									Log.d(TAG, "link:" + userJSON.getString(BundleParams.LINK));
-									Log.d(TAG, "timezone:" + userJSON.getInt(BundleParams.TIMEZONE));
-									Log.d(TAG, "locale:" + userJSON.getString(BundleParams.LOCALE));
+											"birthday:" + userJSON.getString(JSONTag.BIRTHDAY));
+									Log.d(TAG, "link:" + userJSON.getString(JSONTag.LINK));
+									Log.d(TAG, "timezone:" + userJSON.getInt(JSONTag.TIMEZONE));
+									Log.d(TAG, "locale:" + userJSON.getString(JSONTag.LOCALE));
 								}
 								catch (Exception e)
 								{
@@ -398,22 +398,26 @@ public class MainLoadingActivity extends Activity
 								GsonFacebookUser gsonFacebookUser = null;
 								try
 								{
-									gsonFacebookUser = new GsonFacebookUser(
-											facebookUserID,
-											userJSON.getString(BundleParams.BIRTHDAY),
-											"this is dummy picture link",
-											getStringJsonObjectByCheck(userJSON,
-													BundleParams.LOCALE),
-											getStringJsonObjectByCheck(userJSON, BundleParams.LINK),
-											getHomeTown(userJSON),
-											getStringJsonObjectByCheck(userJSON,
-													BundleParams.TIMEZONE),
-											"this is dummy title",
-											getStringJsonObjectByCheck(userJSON, BundleParams.EMAIL),
-											getStringJsonObjectByCheck(userJSON, BundleParams.NAME),
-											getStringJsonObjectByCheck(userJSON,
-													BundleParams.GENDER), getEducation(userJSON),
-											getWork(userJSON), "this is dummy mobile");
+									gsonFacebookUser = new GsonFacebookUser(facebookUserID,
+											userJSON.getString(JSONTag.BIRTHDAY),
+											"this is dummy picture link", userJSON
+													.getString(JSONTag.LOCALE), userJSON
+													.getString(JSONTag.LINK), userJSON
+													.getJSONObject(JSONTag.HOMETOWN)
+													.getString(JSONTag.NAME), userJSON
+													.getString(JSONTag.TIMEZONE),
+											"this is dummy title", userJSON
+													.getString(JSONTag.EMAIL), userJSON
+													.getString(JSONTag.NAME), userJSON
+													.getString(JSONTag.GENDER), userJSON
+													.getJSONArray(JSONTag.EDUCATION)
+													.getJSONObject(0).getJSONObject("school")
+													.getString(JSONTag.NAME), userJSON
+													.getJSONArray(JSONTag.WORK)
+													.getJSONObject(0).getJSONObject("employer")
+													.getString(JSONTag.NAME),
+											"this is dummy mobile");
+
 								}
 								catch (JSONException e)
 								{

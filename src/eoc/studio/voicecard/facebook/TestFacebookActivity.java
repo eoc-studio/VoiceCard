@@ -58,12 +58,6 @@ public class TestFacebookActivity extends BaseActivity
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.d(TAG, "requestCode is " + requestCode);
-		Log.d(TAG, "resultCode is " + resultCode);
-		Log.d(TAG, "data is " + data);
-		if (data != null) {
-		    Log.d(TAG, "bundle is " + data.getExtras().toString());
-		}
 		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
         switch (requestCode) {
         case FriendInfo.GET_FRIEND_REQUEST_CODE:
@@ -121,7 +115,7 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {
-                    facebookManager.publishTimeline(owerId, NAME, PICTURE, CAPTION, DESCRIPTION, LINK);
+                    facebookManager.getPublishedPermission(new Publish(owerId, NAME, PICTURE, CAPTION, DESCRIPTION, LINK));
                 }
             }
         });
@@ -133,7 +127,7 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {
-                    facebookManager.publishTimeline(testId, NAME, PICTURE, CAPTION, DESCRIPTION, LINK);
+                    facebookManager.getPublishedPermission(new Publish(testId, NAME, PICTURE, CAPTION, DESCRIPTION, LINK));
                 }
             }
         });

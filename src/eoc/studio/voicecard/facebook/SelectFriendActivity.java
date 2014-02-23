@@ -185,8 +185,8 @@ public class SelectFriendActivity extends BaseActivity {
 
             for (int i = 0; i < users.size(); i++) {
                 try {
-                    friendImgLink = users.get(i).getInnerJSONObject().getJSONObject(FacebookManager.JSONTag.PICTURE)
-                            .getJSONObject(FacebookManager.JSONTag.DATA).getString(FacebookManager.JSONTag.URL);
+                    friendImgLink = users.get(i).getInnerJSONObject().getJSONObject(JSONTag.PICTURE)
+                            .getJSONObject(JSONTag.DATA).getString(JSONTag.URL);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
