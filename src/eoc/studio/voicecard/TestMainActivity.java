@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import eoc.studio.voicecard.animation.TestAnimationActivity;
-//import eoc.studio.voicecard.calendarview.CalendarViewTest;
+import eoc.studio.voicecard.calendarview.MainCalendarView;
 import eoc.studio.voicecard.contact.ContactActivity;
 import eoc.studio.voicecard.facebook.TestFacebookActivity;
 import eoc.studio.voicecard.mailbox.MailboxActivity;
@@ -30,7 +30,6 @@ public class TestMainActivity extends BaseActivity
 				startActivity(intent);
 			}
 		});
-
 		findViewById(R.id.test_signature).setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -40,7 +39,6 @@ public class TestMainActivity extends BaseActivity
 				startActivity(intent);
 			}
 		});
-
 		findViewById(R.id.test_facebook).setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -50,13 +48,11 @@ public class TestMainActivity extends BaseActivity
 				startActivity(intent);
 			}
 		});
-		
 		findViewById(R.id.test_web_api).setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-
 				Intent intent = new Intent(TestMainActivity.this, JsonTestActivity.class);
 				startActivity(intent);
 			}
@@ -75,8 +71,8 @@ public class TestMainActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
-//				Intent intent = new Intent(TestMainActivity.this, CalendarViewTest.class);
-//				startActivity(intent);
+				Intent intent = new Intent(TestMainActivity.this, MainCalendarView.class);
+				startActivity(intent);
 			}
 		});
 		findViewById(R.id.test_main_menu).setOnClickListener(new OnClickListener()
@@ -93,28 +89,28 @@ public class TestMainActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
-
 				Intent intent = new Intent(TestMainActivity.this, RecommendActivity.class);
 				startActivity(intent);
 			}
 		});
-		findViewById(R.id.test_mailbox).setOnClickListener(new OnClickListener() 
-        {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TestMainActivity.this, MailboxActivity.class);
-                startActivity(intent);
-            }
-        });
-		findViewById(R.id.test_mainloading).setOnClickListener(new OnClickListener() 
-        {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TestMainActivity.this, MainLoadingActivity.class);
-                startActivity(intent);
-            }
-        });
-		
+		findViewById(R.id.test_mailbox).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Intent intent = new Intent(TestMainActivity.this, MailboxActivity.class);
+				startActivity(intent);
+			}
+		});
+		findViewById(R.id.test_mainloading).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Intent intent = new Intent(TestMainActivity.this, MainLoadingActivity.class);
+				startActivity(intent);
+			}
+		});
 		super.onCreate(savedInstanceState);
 	}
 }
