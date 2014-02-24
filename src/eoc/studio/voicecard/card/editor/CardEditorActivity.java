@@ -43,58 +43,107 @@ public class CardEditorActivity extends BaseActivity
 	private static final String TAG = "CardEditor";
 
 	private static final int REQ_PICK_IMAGE = 1;
+
 	private static final int REQ_CROP_IMAGE = 2;
+
 	private static final int REQ_RECORD_VOICE = 3;
+
 	private static final int REQ_EDIT_TEXT = 4;
+
 	private static final int REQ_EDIT_SIGNATURE = 5;
 
 	private static final String EXTRA_KEY_USER_IMAGE = "user_image";
+
 	private static final String EXTRA_KEY_USER_IMAGE_BITMAP = "user_image_bitmap";
+
 	private static final String EXTRA_KEY_USER_VOICE = "user_voice";
+
 	private static final String EXTRA_KEY_USER_VOICE_DURATION = "user_voice_duration";
+
 	private static final String EXTRA_KEY_USER_TEXT_CONTENT = "user_text_content";
+
 	private static final String EXTRA_KEY_USER_TEXT_SIZE_TYPE = "user_text_size_type";
+
 	private static final String EXTRA_KEY_USER_TEXT_COLOR = "user_text_color";
 
+	// @bruce add for sign uri info
+	private static final String EXTRA_KEY_USER_SIGN_HANDWRITHING = "user_sign_handwriting";
+
+	private static final String EXTRA_KEY_USER_SIGN_POSITION_INFO = "user_sign_position_info";
+
+	private static final String EXTRA_KEY_USER_SIGN_DRAFT_IMAGE = "user_sign_draft_image";
+
 	private static final float TEXT_SIZE_NORMAL = 12.8f;
+
 	private static final float TEXT_SIZE_SMALL = TEXT_SIZE_NORMAL * 0.8f;
+
 	private static final float TEXT_SIZE_LARGE = TEXT_SIZE_NORMAL * 1.2f;
 
 	private ImageView back;
+
 	private ImageView next;
+
 	private ImageView innerPage;
 
 	private LinearLayout landscapeMenuOpenerWrapper;
+
 	private ImageView landscapeMenuOpener;
+
 	private RelativeLayout landscapeMenuModeScreenMask;
 
 	private FrameLayout editableImageFrame;
+
 	private FrameLayout editableVoiceFrame;
+
 	private FrameLayout editableTextFrame;
+
 	private FrameLayout editableSignatureFrame;
 
 	private TextView editableImageTip;
+
 	private TextView editableVoiceTip;
+
 	private TextView editableTextTip;
+
 	private TextView editableSignatureTip;
 
 	private ImageView editableImage;
+
 	private LinearLayout editableVoice;
+
 	private TextView editableVoiceText;
+
 	private TextView editableText;
 
 	private Card card;
+
 	private Uri userImage;
+
 	private Bitmap userImageBitmap;
+
 	private Uri userVoice;
+
 	private String userVoiceDuration;
+
 	private String userTextContent;
+
 	private int userTextSizeType;
+
 	private int userTextColor;
+
+	// @bruce add for sign uri info
+	private Uri userSignHandwritingUri;
+
+	private Uri userSignPositionInfoUri;
+
+	private Uri userSignDraftImageUri;
+
+	private ImageView editableSignImage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+
 		if (savedInstanceState != null)
 		{
 			Log.d(TAG, "from savedInstanceState");
@@ -114,6 +163,7 @@ public class CardEditorActivity extends BaseActivity
 	@Override
 	public void onConfigurationChanged(Configuration newConfig)
 	{
+
 		super.onConfigurationChanged(newConfig);
 
 		if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -129,6 +179,7 @@ public class CardEditorActivity extends BaseActivity
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState)
 	{
+
 		saveUserData(savedInstanceState);
 		super.onSaveInstanceState(savedInstanceState);
 	}
@@ -136,23 +187,27 @@ public class CardEditorActivity extends BaseActivity
 	@Override
 	protected void onDestroy()
 	{
+
 		super.onDestroy();
 	}
 
 	@Override
 	protected void onPause()
 	{
+
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume()
 	{
+
 		super.onResume();
 	}
 
 	private void setupUserData()
 	{
+
 		if (userImage != null)
 		{
 			editableImage.setImageBitmap(userImageBitmap);
@@ -178,10 +233,26 @@ public class CardEditorActivity extends BaseActivity
 				editableTextTip.setVisibility(View.VISIBLE);
 			}
 		}
+
+		if (userSignDraftImageUri != null)
+		{
+
+			editableSignatureTip.setVisibility(View.INVISIBLE);
+		}
+		else
+		{
+			editableSignatureTip.setVisibility(View.VISIBLE);
+		}
+		
+		if (userSignDraftImageUri != null && getBitmapFromUri(userSignDraftImageUri)!=null)
+		{
+			editableSignImage.setImageBitmap(getBitmapFromUri(userSignDraftImageUri));
+		}
 	}
 
 	private void restoreUserData(Bundle savedInstanceState)
 	{
+
 		card = getEmptyCardFromSavedInstanceState(savedInstanceState);
 		userImage = savedInstanceState.getParcelable(EXTRA_KEY_USER_IMAGE);
 		userImageBitmap = savedInstanceState.getParcelable(EXTRA_KEY_USER_IMAGE_BITMAP);
@@ -190,6 +261,12 @@ public class CardEditorActivity extends BaseActivity
 		userTextContent = savedInstanceState.getString(EXTRA_KEY_USER_TEXT_CONTENT);
 		userTextSizeType = savedInstanceState.getInt(EXTRA_KEY_USER_TEXT_SIZE_TYPE);
 		userTextColor = savedInstanceState.getInt(EXTRA_KEY_USER_TEXT_COLOR);
+
+		userSignHandwritingUri = savedInstanceState.getParcelable(EXTRA_KEY_USER_SIGN_HANDWRITHING);
+		userSignPositionInfoUri = savedInstanceState
+				.getParcelable(EXTRA_KEY_USER_SIGN_POSITION_INFO);
+		userSignDraftImageUri = savedInstanceState.getParcelable(EXTRA_KEY_USER_SIGN_DRAFT_IMAGE);
+
 		Log.d(TAG, "restore user data -- IMAGE URI: " + userImage);
 		Log.d(TAG, "restore user data -- IMAGE BITMAP: " + userImageBitmap);
 		Log.d(TAG, "restore user data -- VOICE URI: " + userVoice);
@@ -197,13 +274,19 @@ public class CardEditorActivity extends BaseActivity
 		Log.d(TAG, "restore user data -- TEXT CONTENT: " + userTextContent);
 		Log.d(TAG, "restore user data -- TEXT SIZE TYPE: " + userTextSizeType);
 		Log.d(TAG, "restore user data -- TEXT COLOR: " + userTextColor);
+		Log.d(TAG, "restore user data -- userSignHandwritingUri: " + userSignHandwritingUri);
+		Log.d(TAG, "restore user data -- userSignPositionInfoUri: " + userSignPositionInfoUri);
+		Log.d(TAG, "restore user data -- userSignDraftImageUri: " + userSignDraftImageUri);
+
 		card.setImage(userImage);
 		card.setSound(userVoice);
 		card.setMessage(userTextContent, userTextSizeType, userTextColor);
+
 	}
 
 	private void saveUserData(Bundle savedInstanceState)
 	{
+
 		savedInstanceState.putInt(EXTRA_KEY_CARD_ID, card.getId());
 		if (userImage != null)
 		{
@@ -234,22 +317,47 @@ public class CardEditorActivity extends BaseActivity
 			Log.d(TAG, "save user data --TEXT SIZE TYPE: " + userTextSizeType);
 			Log.d(TAG, "save user data --TEXT COLOR: " + userTextColor);
 		}
+
+		if (userSignHandwritingUri != null)
+		{
+			savedInstanceState.putParcelable(EXTRA_KEY_USER_SIGN_HANDWRITHING,
+					userSignHandwritingUri);
+			Log.d(TAG, "save user data -- userSignHandwritingUri: " + userSignHandwritingUri);
+		}
+
+		if (userSignPositionInfoUri != null)
+		{
+			savedInstanceState.putParcelable(EXTRA_KEY_USER_SIGN_POSITION_INFO,
+					userSignPositionInfoUri);
+			Log.d(TAG, "save user data -- userSignPositionInfoUri: " + userSignPositionInfoUri);
+		}
+
+		if (userSignDraftImageUri != null)
+		{
+			savedInstanceState
+					.putParcelable(EXTRA_KEY_USER_SIGN_DRAFT_IMAGE, userSignDraftImageUri);
+			Log.d(TAG, "save user data -- userSignDraftImageUri: " + userSignDraftImageUri);
+		}
+
 	}
 
 	private Card getEmptyCardFromIntent(Intent intent)
 	{
+
 		int cardId = intent.getIntExtra(EXTRA_KEY_CARD_ID, -1);
 		return getCardById(cardId);
 	}
 
 	private Card getEmptyCardFromSavedInstanceState(Bundle savedInstanceState)
 	{
+
 		int cardId = savedInstanceState.getInt(EXTRA_KEY_CARD_ID, -1);
 		return getCardById(cardId);
 	}
 
 	private Card getCardById(int id)
 	{
+
 		Card card;
 		if (id != -1)
 		{
@@ -267,6 +375,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private void initLayout()
 	{
+
 		setContentView(R.layout.activity_card_editor);
 		findViews();
 		setListener();
@@ -274,6 +383,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private void findViews()
 	{
+
 		back = (ImageView) findViewById(R.id.act_card_editor_iv_back);
 		next = (ImageView) findViewById(R.id.act_card_editor_iv_next);
 		innerPage = (ImageView) findViewById(R.id.act_card_editor_iv_card_inner_page);
@@ -299,16 +409,20 @@ public class CardEditorActivity extends BaseActivity
 		editableVoice = (LinearLayout) findViewById(R.id.act_card_editor_llyt_editable_voice);
 		editableVoiceText = (TextView) findViewById(R.id.act_card_editor_tv_editable_voice_play_text);
 		editableText = (TextView) findViewById(R.id.act_card_editor_ret_editable_text);
+
+		editableSignImage = (ImageView) findViewById(R.id.act_card_editor_iv_editable_signature_image);
 	}
 
 	private void setupCardView()
 	{
+
 		innerPage.setImageResource(card.getImage3dOpenResId());
 		setCardColor();
 	}
 
 	private void setCardColor()
 	{
+
 		int color = card.getTextColor();
 		Resources res = getResources();
 		int dashGap = res.getDimensionPixelSize(R.dimen.dash_border_stroke_dash_gap);
@@ -330,12 +444,14 @@ public class CardEditorActivity extends BaseActivity
 
 	private void setListener()
 	{
+
 		back.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
 			public void onClick(View v)
 			{
+
 				Log.d(TAG, "back - finish");
 				finish();
 			}
@@ -347,6 +463,7 @@ public class CardEditorActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
+
 				Log.d(TAG, "next");
 				startCardSender();
 			}
@@ -360,6 +477,7 @@ public class CardEditorActivity extends BaseActivity
 				@Override
 				public void onClick(View v)
 				{
+
 					Log.d(TAG, "landscape menu opener clicked");
 					openLandscapeMenu();
 				}
@@ -371,6 +489,7 @@ public class CardEditorActivity extends BaseActivity
 				@Override
 				public boolean onTouch(View v, MotionEvent event)
 				{
+
 					Log.d(TAG, "landscape menu mode screen mask touched");
 					closeLandscapeMenu();
 					return true;
@@ -385,6 +504,7 @@ public class CardEditorActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
+
 				Log.d(TAG, "EDIT IMAGE");
 				startImagePicker();
 			}
@@ -396,6 +516,7 @@ public class CardEditorActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
+
 				Log.d(TAG, "EDIT VOICE");
 				startVoiceRecorder();
 			}
@@ -406,6 +527,7 @@ public class CardEditorActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
+
 				Log.d(TAG, "EDIT TEXT");
 				startTextEditor();
 			}
@@ -418,6 +540,7 @@ public class CardEditorActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
+
 				Log.d(TAG, "EDIT SIGNATURE");
 				startSignatureEditor();
 			}
@@ -426,18 +549,21 @@ public class CardEditorActivity extends BaseActivity
 
 	private void openLandscapeMenu()
 	{
+
 		landscapeMenuOpenerWrapper.setVisibility(View.INVISIBLE);
 		landscapeMenuModeScreenMask.setVisibility(View.VISIBLE);
 	}
 
 	private void closeLandscapeMenu()
 	{
+
 		landscapeMenuOpenerWrapper.setVisibility(View.VISIBLE);
 		landscapeMenuModeScreenMask.setVisibility(View.INVISIBLE);
 	}
 
 	private void startImagePicker()
 	{
+
 		Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
 		photoPickerIntent.setType("image/*");
 		startActivityForResult(photoPickerIntent, REQ_PICK_IMAGE);
@@ -445,6 +571,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private void onImagePickerResult(int resultCode, Intent data)
 	{
+
 		Uri photoUri = data.getData();
 		if (photoUri != null)
 		{
@@ -454,6 +581,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private void startImageCropper(Uri photoUri)
 	{
+
 		int w = editableImage.getWidth();
 		int h = editableImage.getHeight();
 		Intent intent = new Intent("com.android.camera.action.CROP");
@@ -469,6 +597,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private void onImageCropperResult(int resultCode, Intent data)
 	{
+
 		Bundle extras = data.getExtras();
 		if (extras != null)
 		{
@@ -481,6 +610,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private void startVoiceRecorder()
 	{
+
 		// Intent intent = new Intent(this, AudioRecorderActivity.class);
 		Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
 		startActivityForResult(intent, REQ_RECORD_VOICE);
@@ -488,6 +618,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private void onVoiceRecorderResult(int resultCode, Intent data)
 	{
+
 		Uri uri = data.getData();
 		String filePath = convertAudioContentUriToFilePath(uri);
 		String extName = filePath.substring(filePath.lastIndexOf(".") + 1);
@@ -513,6 +644,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private void setVoiceMessageText(Uri uri)
 	{
+
 		MediaPlayer mp = new MediaPlayer();
 		try
 		{
@@ -530,6 +662,7 @@ public class CardEditorActivity extends BaseActivity
 						@Override
 						public void run()
 						{
+
 							int duration = mp.getDuration();
 							int min = duration / 1000 / 60;
 							int sec = duration / 1000 % 60;
@@ -544,6 +677,7 @@ public class CardEditorActivity extends BaseActivity
 								@Override
 								public void run()
 								{
+
 									Log.d(TAG, "Release MediaPlayer");
 									mp.release();
 								}
@@ -575,6 +709,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private void startTextEditor()
 	{
+
 		Intent intent = new Intent(this, CardTextEditorActivity.class);
 		intent.putExtra(CardTextEditorActivity.EXTRA_KEY_TEXT_LIMIT, 60);
 		intent.putExtra(CardTextEditorActivity.EXTRA_KEY_TEXT_CONTENT, card.getMessage());
@@ -586,6 +721,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private void onTextEditorResult(int resultCode, Intent data)
 	{
+
 		userTextContent = data.getStringExtra(CardTextEditorActivity.EXTRA_KEY_TEXT_CONTENT);
 		userTextSizeType = data.getIntExtra(CardTextEditorActivity.EXTRA_KEY_TEXT_SIZE_TYPE,
 				Card.DEFAULT_TEXT_SIZE_TYPE);
@@ -610,18 +746,37 @@ public class CardEditorActivity extends BaseActivity
 
 	private void startSignatureEditor()
 	{
+
 		Intent intent = new Intent(this, EditSignatureActivity.class);
+		intent.putExtra(EXTRA_KEY_USER_SIGN_HANDWRITHING, userSignHandwritingUri);
+		intent.putExtra(EXTRA_KEY_USER_SIGN_POSITION_INFO, userSignPositionInfoUri);
+		intent.putExtra(EXTRA_KEY_USER_SIGN_DRAFT_IMAGE, userSignDraftImageUri);
+
 		startActivityForResult(intent, REQ_EDIT_SIGNATURE);
 	}
 
 	private void onSignatureEditorResult(int resultCode, Intent data)
 	{
 
+		userSignHandwritingUri = data.getParcelableExtra(EXTRA_KEY_USER_SIGN_HANDWRITHING);
+		userSignPositionInfoUri = data.getParcelableExtra(EXTRA_KEY_USER_SIGN_POSITION_INFO);
+		userSignDraftImageUri = data.getParcelableExtra(EXTRA_KEY_USER_SIGN_DRAFT_IMAGE);
+
+		if (userSignDraftImageUri != null)
+		{
+			editableSignImage.setImageBitmap(getBitmapFromUri(userSignDraftImageUri));
+		}
+
+		Log.d(TAG, "onSignatureEditorResult, userSignHandwritingUri: " + userSignHandwritingUri);
+		Log.d(TAG, "onSignatureEditorResult, userSignPositionInfoUri: " + userSignPositionInfoUri);
+		Log.d(TAG, "onSignatureEditorResult, useSignDraftImageUri:" + userSignDraftImageUri);
+
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (data == null)
@@ -655,12 +810,14 @@ public class CardEditorActivity extends BaseActivity
 
 		public SaveCardImageThread(Bitmap bitmap)
 		{
+
 			this.bitmap = bitmap;
 		}
 
 		@Override
 		public void run()
 		{
+
 			String fileName = FileUtility.getRandomImageName("png");
 			File file = new File(getCacheDir(), fileName);
 			if (saveBitmapToFile(bitmap, file))
@@ -684,6 +841,7 @@ public class CardEditorActivity extends BaseActivity
 	 */
 	private static boolean saveBitmapToFile(Bitmap bitmap, File file)
 	{
+
 		boolean result = false;
 		FileOutputStream out = null;
 		try
@@ -702,6 +860,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private String convertAudioContentUriToFilePath(Uri contentUri)
 	{
+
 		String[] projection = { MediaStore.Images.Media.DATA };
 		Cursor cursor = this.getContentResolver().query(contentUri, projection, null, null, null);
 		if (cursor == null) return null;
@@ -714,6 +873,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private static void copyFile(File src, File dest) throws IOException
 	{
+
 		InputStream in = new FileInputStream(src);
 		OutputStream out = new FileOutputStream(dest);
 
@@ -733,6 +893,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private static float getTextSizeByType(int type)
 	{
+
 		float size;
 		switch (type)
 		{
@@ -752,10 +913,28 @@ public class CardEditorActivity extends BaseActivity
 
 	private void startCardSender()
 	{
+
 		Intent intent = new Intent(this, CardSenderActivity.class);
 		intent.putExtra(CardSenderActivity.EXTRA_KEY_CARD_WITH_USER_DATA_FOR_SEND, card);
 		Log.d(TAG, "send card:: " + card);
 		startActivity(intent);
+	}
+
+	private Bitmap getBitmapFromUri(Uri uri)
+	{
+
+		try
+		{
+			Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+			return bitmap;
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getMessage());
+			Log.e(TAG, "uri：" + uri);
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

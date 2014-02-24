@@ -3,6 +3,7 @@ package eoc.studio.voicecard.mainloading;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.facebook.JSONTag;
 import eoc.studio.voicecard.facebook.Permissions;
+import eoc.studio.voicecard.facebook.FacebookManager.BundleTag;
 import eoc.studio.voicecard.mailbox.MailboxActivity;
 import eoc.studio.voicecard.mailbox.MailsAdapterData;
 import eoc.studio.voicecard.mainmenu.MainMenuActivity;
@@ -355,6 +356,7 @@ public class MainLoadingActivity extends Activity
 								{
 									facebookUserID = userJSON.getString(JSONTag.ID);
 									Log.d(TAG, "id:" + userJSON.getString(JSONTag.ID));
+									Log.d(TAG, "picture link:" + userJSON.getJSONObject(JSONTag.PICTURE).getJSONObject("data").getString("url")); 
 									Log.d(TAG, "email:" + userJSON.getString(JSONTag.EMAIL));
 									Log.d(TAG, "name:" + userJSON.getString(JSONTag.NAME));
 									Log.d(TAG, "gender:" + userJSON.getString(JSONTag.GENDER));
@@ -383,7 +385,7 @@ public class MainLoadingActivity extends Activity
 
 									gsonFacebookUser = new GsonFacebookUser(facebookUserID,
 											userJSON.getString(JSONTag.BIRTHDAY),
-											"this is dummy picture link",
+											getPictureLink(userJSON),
 											getStringJsonObjectByCheck(userJSON, JSONTag.LOCALE),
 											getStringJsonObjectByCheck(userJSON, JSONTag.LINK),
 											getHomeTown(userJSON), getStringJsonObjectByCheck(
@@ -510,6 +512,17 @@ public class MainLoadingActivity extends Activity
 
 				});
 
+	            StringBuilder queryString = new StringBuilder().append(JSONTag.NAME).append(", ")
+	                    .append(JSONTag.BIRTHDAY).append(", ").append(JSONTag.PICTURE).append(", ")
+	                    .append(JSONTag.EMAIL).append(", ").append(JSONTag.EDUCATION).append(", ")
+	                    .append(JSONTag.WORK).append(", ").append(JSONTag.GENDER).append(", ")
+	                    .append(JSONTag.LINK).append(", ").append(JSONTag.HOMETOWN).append(", ")
+	                    .append(JSONTag.TIMEZONE).append(", ").append(JSONTag.LOCALE);
+	            Bundle requestParams = getMe.getParameters();		
+	            requestParams.putString(BundleTag.FIELDS, queryString.toString());
+	            getMe.setParameters(requestParams);
+				
+				
 				getMe.executeAsync();
 			}
 			else
@@ -664,6 +677,20 @@ public class MainLoadingActivity extends Activity
 			return "";
 		}
 	}
+	
+	private String getPictureLink(JSONObject obj){
+		try
+		{
+			return obj.getJSONObject(JSONTag.PICTURE).getJSONObject("data").getString("url");
+		}
+		catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
 
 	private String getEducation(JSONObject obj)
 	{

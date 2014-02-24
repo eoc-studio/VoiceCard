@@ -176,7 +176,7 @@ public class RecommendActivity extends Activity implements OnClickListener
 		Log.e(TAG,
 				"FileUtility.getRandomSpeechName(\"mp3\"):"
 						+ FileUtility.getRandomSpeechName("mp3"));
-		Log.e(TAG, "FileUtility.getRandomSignName(\"jpg\"):" + FileUtility.getRandomSignName("jpg"));
+//		Log.e(TAG, "FileUtility.getRandomSignName(\"jpg\"):" + FileUtility.getRandomSignName("jpg"));
 	}
 
 	private void getRecommenInfoFromServer()

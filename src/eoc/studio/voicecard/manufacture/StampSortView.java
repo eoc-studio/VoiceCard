@@ -34,6 +34,7 @@ import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -218,7 +219,7 @@ public class StampSortView extends AbsoluteLayout implements
 	}
 
 	/** Called by activity's onResume() method to load the images **/
-	public void loadImages(Context context)
+	public void loadImages(Context context,Uri loadUri)
 	{
 
 		/*
@@ -228,14 +229,18 @@ public class StampSortView extends AbsoluteLayout implements
         // get seals from json in file
 		
 		
-		String root = Environment.getExternalStorageDirectory().toString();
+/*		String root = Environment.getExternalStorageDirectory().toString();
 		File tempDir = new File(root + "/VoiceCard_seals");
 
 		File pathDir = new File(tempDir.toString());
 		pathDir.mkdirs();
 
 		String fname = "seal.json";
-		File file = new File(tempDir + "/" + fname);
+		File file = new File(tempDir + "/" + fname);*/
+		
+		
+		File file = new File(loadUri.getPath());
+
 		
 		FileInputStream fIn;
 		String json = ""; // Holds the text
@@ -411,9 +416,9 @@ public class StampSortView extends AbsoluteLayout implements
 //		invalidate();
 //	}
 	
-	public void saveImageInfoToGson()
+	public Uri saveImageInfoToGson()
 	{
-
+		Uri uriOfJsonPath;
 		Log.e(TAG, "saveImageInfoToGson()");
 		ArrayList<StampGson> sealList = new ArrayList<StampGson>();
 		int size = mImages.size();
@@ -446,7 +451,10 @@ public class StampSortView extends AbsoluteLayout implements
 
 		String fname = "seal.json";
 		File file = new File(tempDir + "/" + fname);
-
+		
+		
+		uriOfJsonPath = Uri.fromFile(file); 
+		
 		if (file.exists()) file.delete();
 		try
 		{
@@ -469,12 +477,16 @@ public class StampSortView extends AbsoluteLayout implements
 			catch (IOException e)
 			{
 				e.printStackTrace();
+				return null;
 			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			return null;
 		}
+		
+		return uriOfJsonPath;
 	}
 	
 	

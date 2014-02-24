@@ -90,7 +90,8 @@ public class FileUtility
 		Bitmap screenshot = Bitmap.createBitmap(layout.getWidth(), layout.getHeight(),
 				Bitmap.Config.ARGB_8888);
 
-		Canvas c = new Canvas(clearBitmapBackgroudColor(screenshot,Color.TRANSPARENT,Color.GRAY));
+//		Canvas c = new Canvas(clearBitmapBackgroudColor(screenshot,Color.TRANSPARENT,Color.GRAY));
+		Canvas c = new Canvas(clearBitmapBackgroudColor(screenshot,Color.TRANSPARENT,Color.TRANSPARENT));
 		
 //		c.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
 //		Canvas c = new Canvas(screenshot);
@@ -163,6 +164,55 @@ public class FileUtility
 
 	}
 	
+	public static void saveTwoLayoutToFile(View layoutButtom,View layoutUp, String savePath, String saveFileName)
+	{
+
+		// Without it the view will have a dimension of 0,0 and the bitmap
+		// will be null
+		layoutButtom.setDrawingCacheEnabled(true);
+		layoutUp.setDrawingCacheEnabled(true);
+		Bitmap screenshotButtom = Bitmap.createBitmap(layoutButtom.getWidth(), layoutButtom.getHeight(),
+				Bitmap.Config.ARGB_8888);
+		
+		Bitmap screenshotUp = Bitmap.createBitmap(layoutUp.getWidth(), layoutUp.getHeight(),
+				Bitmap.Config.ARGB_8888);
+		
+		
+		Canvas cv = new Canvas(screenshotButtom);
+		layoutButtom.draw(cv);
+		layoutUp.draw(cv);
+/*		cv.drawBitmap(screenshotUp, 0, 0, null);*/
+		cv.save( Canvas.ALL_SAVE_FLAG );
+		cv.restore();//存儲
+
+		// clear drawing cache
+		layoutButtom.setDrawingCacheEnabled(false);
+		layoutUp.setDrawingCacheEnabled(false);
+
+		File pathDir = new File(savePath);
+		pathDir.mkdirs();
+
+		String fileName = saveFileName;
+		File file = new File(pathDir, fileName);
+
+		if (file.exists()) file.delete();
+
+		try
+		{
+			FileOutputStream out = new FileOutputStream(file);
+			screenshotButtom.compress(Bitmap.CompressFormat.PNG, 100, out);
+			out.flush();
+			out.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+	
+	
+	
 	public static String getRandomImageName(String filenameExtension) {
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
@@ -177,12 +227,28 @@ public class FileUtility
         return sdf.format(date) + "_Speech_"+random.nextInt(65535)+"."+filenameExtension;
     }
 	
-	public static String getRandomSignName(String filenameExtension) {
+	public static String getRandomSignPositionName(String filenameExtension) {
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         Random random = new Random();
-        return sdf.format(date) + "_Sign_"+random.nextInt(65535)+"."+filenameExtension;
+        return sdf.format(date) + "_SignPosition"+random.nextInt(65535)+"."+filenameExtension;
     }
+	
+	public static String getRandomSignHandWritingName(String filenameExtension) {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        Random random = new Random();
+        return sdf.format(date) + "_SignWriting_"+random.nextInt(65535)+"."+filenameExtension;
+    }
+	
+	public static String getRandomSignCompletedName(String filenameExtension) {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        Random random = new Random();
+        return sdf.format(date) + "_SignCompleted_"+random.nextInt(65535)+"."+filenameExtension;
+    }
+	
+	
 	
 	
 }

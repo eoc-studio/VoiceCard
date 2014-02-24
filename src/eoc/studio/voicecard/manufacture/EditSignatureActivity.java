@@ -10,12 +10,14 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
@@ -28,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.GridView;
@@ -64,7 +67,7 @@ public class EditSignatureActivity extends Activity
 
 	RadioGroup paintSizeRadioGroup = null;
 
-	ToggleButton eraserToggleButton = null;
+	ImageButton eraserToggleButton = null;
 
 	ImageView chooseColorImageView = null;
 
@@ -74,6 +77,10 @@ public class EditSignatureActivity extends Activity
 
 	StampAdapter stampAdapter = null;
 
+	
+	private ImageButton returnImageButton;
+	private ImageButton okButtonImageButton;
+	
 	private ArrayList<StampItem> gridStampArray = null;
 
 	private static final int MODE_WRITING = 1;
@@ -88,7 +95,18 @@ public class EditSignatureActivity extends Activity
 
 	private static final String DRAFT_FOLDER_NAME = "VoiceCard_images";
 
-	private static final String DRAFT_IMAGE_NAME = "signatureDraft.jpg";
+	private static final String DRAFT_IMAGE_NAME = "signatureHandwritingDraft.jpg";
+	private static final String DRAFT_COMPLETED_IMAGE_NAME = "signatureDraft.jpg";
+	
+	private static final String EXTRA_KEY_USER_SIGN_HANDWRITHING = "user_sign_handwriting";
+	private static final String EXTRA_KEY_USER_SIGN_POSITION_INFO = "user_sign_position_info";
+	private static final String EXTRA_KEY_USER_SIGN_DRAFT_IMAGE = "user_sign_draft_image";
+	
+	private Uri signPositonDraftUri;
+	
+	private Uri signHandWritingDraftUri;
+	
+	private Uri signCompletedDraftUri;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -99,9 +117,21 @@ public class EditSignatureActivity extends Activity
 		context = getApplicationContext();
 
 		initializeAllView();
-
+		getConfigFromIntent();
 	}
 
+	private void getConfigFromIntent()
+	{
+		Intent intent = getIntent();
+		signHandWritingDraftUri = intent.getParcelableExtra(EXTRA_KEY_USER_SIGN_HANDWRITHING);
+		signPositonDraftUri = intent.getParcelableExtra(EXTRA_KEY_USER_SIGN_POSITION_INFO);
+		signCompletedDraftUri = intent.getParcelableExtra(EXTRA_KEY_USER_SIGN_DRAFT_IMAGE);
+
+		Log.d(TAG, "getConfigFromIntent signHandWritingDraftUri:"+signHandWritingDraftUri);
+		Log.d(TAG, "getConfigFromIntent signPositonDraftUri:"+signPositonDraftUri);
+		Log.d(TAG, "getConfigFromIntent signCompletedDraftUri:"+signCompletedDraftUri);
+	}
+	
 	@Override
 	protected void onResume()
 	{
@@ -111,8 +141,15 @@ public class EditSignatureActivity extends Activity
 
 		try
 		{
-			stampSorterView.loadImages(context);
-			loadHandWrtingViewFromFile();
+			if (signPositonDraftUri != null)
+			{
+				stampSorterView.loadImages(context, signPositonDraftUri);
+			}
+
+			if (signHandWritingDraftUri != null)
+			{
+				loadHandWrtingViewFromFile(signHandWritingDraftUri);
+			}
 			
 		}
 		catch (Exception e)
@@ -124,13 +161,13 @@ public class EditSignatureActivity extends Activity
 
 	}
 
-	public void loadHandWrtingViewFromFile()
+	public void loadHandWrtingViewFromFile(Uri loadUri)
 	{
 
-		String root = Environment.getExternalStorageDirectory().toString();
-		File tempDir = new File(root + "/" + DRAFT_FOLDER_NAME);
-
-		File imagefile = new File(tempDir, DRAFT_IMAGE_NAME);
+//		String root = Environment.getExternalStorageDirectory().toString();
+//		File tempDir = new File(root + "/" + DRAFT_FOLDER_NAME);
+//		File imagefile = new File(tempDir, DRAFT_IMAGE_NAME);
+		File imagefile = new File(loadUri.getPath());
 		FileInputStream fis = null;
 		try
 		{
@@ -164,19 +201,6 @@ public class EditSignatureActivity extends Activity
 
 		super.onPause();
 		Log.d(TAG, "EditSignatureActivity: onPause()");
-		String root = Environment.getExternalStorageDirectory().toString();
-		File tempDir = new File(root + "/" + DRAFT_FOLDER_NAME);
-
-		FileUtility.saveLayoutToFile(context, (View) handWritingView, tempDir.toString(),
-				DRAFT_IMAGE_NAME);
-		/*
-		 * tempDraftBitmap =
-		 * handWritingView.new1Bitmap.copy(handWritingView.new1Bitmap
-		 * .getConfig(), true);
-		 */
-
-		// try to save seal info to gson
-		stampSorterView.saveImageInfoToGson();
 
 	}
 
@@ -190,12 +214,73 @@ public class EditSignatureActivity extends Activity
 		initPaintSizeButton();
 		initEraserToggleButton();
 		initChooseColorImageView();
+		InitReturnButton();
+		InitOkButton();
 	}
 
+	public void InitOkButton()
+	{
+		okButtonImageButton = (ImageButton) findViewById(R.id.act_edit_signature_ib_button_ok);
+
+		okButtonImageButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				String root = Environment.getExternalStorageDirectory().toString();
+				File tempDir = new File(root + "/" + DRAFT_FOLDER_NAME,DRAFT_IMAGE_NAME);
+				FileUtility.saveLayoutToFile(context, (View) handWritingView,tempDir.getParent(),
+						DRAFT_IMAGE_NAME);				
+				signHandWritingDraftUri = Uri.fromFile(tempDir);
+				
+				
+				// try to save seal info to gson
+				signPositonDraftUri = stampSorterView.saveImageInfoToGson();
+				
+				
+				sketchpadLayout.removeAllViews(); 
+				addViewByOrder(handWritingView, stampSorterView);
+				
+				File tempDir2 = new File(root + "/" + DRAFT_FOLDER_NAME,DRAFT_COMPLETED_IMAGE_NAME);
+//				FileUtility.saveLayoutToFileWithoutScan((View)sketchpadLayout,tempDir2.getParent(),DRAFT_COMPLETED_IMAGE_NAME);
+				FileUtility.saveTwoLayoutToFile(handWritingView, stampSorterView, tempDir2.getParent(), DRAFT_COMPLETED_IMAGE_NAME);
+				signCompletedDraftUri =  Uri.fromFile(tempDir2);
+				
+				
+				Intent intent = new Intent();
+				Log.d(TAG, "send signHandWritingDraftUri:"+signHandWritingDraftUri);
+				Log.d(TAG, "send signPositonDraftUri:"+signPositonDraftUri);
+				Log.d(TAG, "send signCompletedDraftUri:"+signCompletedDraftUri);
+				intent.putExtra(EXTRA_KEY_USER_SIGN_HANDWRITHING, signHandWritingDraftUri); 
+				intent.putExtra(EXTRA_KEY_USER_SIGN_POSITION_INFO, signPositonDraftUri); 
+				intent.putExtra(EXTRA_KEY_USER_SIGN_DRAFT_IMAGE, signCompletedDraftUri); 
+				
+				setResult(RESULT_OK, intent);
+				finish();
+			}
+		});
+	}
+	
+	public void InitReturnButton()
+	{
+		returnImageButton = (ImageButton) findViewById(R.id.act_edit_signature_ib_button_return);
+		returnImageButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+		});
+
+	}
 	public void initSketchLayout()
 	{
 
 		handWritingView = new HandWritingView(this);
+		handWritingView.disableEraser(); // turn off Eraser function
+		
 		stampSorterView = new StampSortView(this);
 
 		sketchpadLayout = (RelativeLayout) findViewById(R.id.act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud);
@@ -220,7 +305,7 @@ public class EditSignatureActivity extends Activity
 
 		changeModeButton = (ImageButton) findViewById(R.id.act_edit_signature_ib_mode);
 		changeModeButton.setOnClickListener(new ChangeModeClickListenr());
-		changeModeButton.setBackgroundResource(R.drawable.draw_mode);
+		changeModeButton.setBackgroundResource(R.drawable.icon_editor_draw);
 	}
 
 	public void initGridStampView()
@@ -261,7 +346,7 @@ public class EditSignatureActivity extends Activity
 				break;
 			case DragEvent.ACTION_DRAG_ENTERED:
 				Log.e(TAG, "ACTION_DRAG_ENTERED");
-				trashImageView.setBackgroundResource(R.drawable.trash_here_effect);
+				trashImageView.setBackgroundResource(R.drawable.trash2);
 				break;
 			case DragEvent.ACTION_DRAG_EXITED:
 				trashImageView.setBackgroundResource(R.drawable.trash);
@@ -378,7 +463,7 @@ public class EditSignatureActivity extends Activity
 				addViewByOrder(handWritingView, stampSorterView);
 
 				uiMode = MODE_DRAG;
-				changeModeButton.setBackgroundResource(R.drawable.drag_mode);
+				changeModeButton.setBackgroundResource(R.drawable.icon_editor_drag);
 				Log.e(TAG, "change to MODE_DRAG");
 			}
 			else
@@ -397,21 +482,22 @@ public class EditSignatureActivity extends Activity
 				});
 				addViewByOrder(stampSorterView, handWritingView);
 				uiMode = MODE_WRITING;
-				changeModeButton.setBackgroundResource(R.drawable.draw_mode);
+				changeModeButton.setBackgroundResource(R.drawable.icon_editor_draw);
 				Log.e(TAG, "change to MODE_WRITING");
 			}
 
 		}
 
-		private void addViewByOrder(View view1, View view2)
-		{
-
-			sketchpadLayout.addView(view1);
-			sketchpadLayout.addView(view2);
-		}
 
 	}
 
+	private void addViewByOrder(View view1, View view2)
+	{
+
+		sketchpadLayout.addView(view1);
+		sketchpadLayout.addView(view2);
+	}
+	
 	public void initChooseColorImageView()
 	{
 
@@ -484,9 +570,18 @@ public class EditSignatureActivity extends Activity
 	public void initEraserToggleButton()
 	{
 
-		eraserToggleButton = (ToggleButton) findViewById(R.id.act_edit_signature_tb_eraser);
+		eraserToggleButton = (ImageButton) findViewById(R.id.act_edit_signature_tb_eraser);
 
-		eraserToggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener()
+		eraserToggleButton.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View v)
+			{
+				handWritingView.clear();
+			}
+		});
+		
+		//Bruce origin eraser function
+/*		eraserToggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener()
 		{
 			@Override
 			public void onCheckedChanged(CompoundButton toggleButton, boolean isChecked)
@@ -507,7 +602,7 @@ public class EditSignatureActivity extends Activity
 							Toast.LENGTH_SHORT).show();
 				}
 			}
-		});
+		});*/
 	}
 
 	public void initPaintSizeButton()

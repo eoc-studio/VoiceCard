@@ -47,18 +47,18 @@ public class FacebookManager
 	private Bundle inviteBundle;
 	private int managerState;
 	
-	static class BundleTag
+	public static class BundleTag
 	{
-	    static final String CAPTION = "caption";
-	    static final String DESCRIPTION = "description";
-	    static final String FIELDS = "fields";
-	    static final String IMAGE = "image";
-	    static final String LINK = "link";
-	    static final String MESSAGE = "message";
-	    static final String NAME = "name";
-	    static final String PICTURE = "picture";
-	    static final String SOURCE = "source";  
-	    static final String TO = "to";
+		public static final String CAPTION = "caption";
+	    public static final String DESCRIPTION = "description";
+	    public static final String FIELDS = "fields";
+	    public static final String IMAGE = "image";
+	    public static final String LINK = "link";
+	    public static final String MESSAGE = "message";
+	    public static final String NAME = "name";
+	    public static final String PICTURE = "picture";
+	    public static final String SOURCE = "source";  
+	    public static final String TO = "to"; 
 	}
 	
 	static class ManagerState
