@@ -65,7 +65,7 @@ public class FacebookManager
 	{
 	    public static final int NORMAL = -1;
 	    public static final int LOGIN = 0;
-	    public static final int GET_FRIEDN = 1;
+	    public static final int GET_FRIEND = 1;
 	    public static final int INVITE = 2;
 	    public static final int PUBLISH = 3;
 	}
@@ -119,7 +119,8 @@ public class FacebookManager
         }
     }
     
-    public Handler dialogHandler = new Handler() {
+    public Handler dialogHandler = new Handler()
+    {
         @Override  
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -166,7 +167,7 @@ public class FacebookManager
                 }
             }
 	        break;
-	    case ManagerState.GET_FRIEDN:
+	    case ManagerState.GET_FRIEND:
 	        break;
 	    case ManagerState.INVITE:
 	        if (state.equals(SessionState.OPENED)) {
@@ -293,7 +294,7 @@ public class FacebookManager
 	public void getFriendList(Request.GraphUserListCallback callback)
 	{
 	    Log.d(TAG, "getFriendList");
-	    managerState = ManagerState.GET_FRIEDN;
+	    managerState = ManagerState.GET_FRIEND;
 	    dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
 		Session session = Session.getActiveSession();
 		if (session.isOpened())

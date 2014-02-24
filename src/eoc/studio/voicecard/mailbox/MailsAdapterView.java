@@ -12,6 +12,7 @@ import eoc.studio.voicecard.utils.WebImageUtility;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -98,9 +99,10 @@ public class MailsAdapterView extends BaseAdapter {
         //itemImg
         byte[] img = mails.get(position).getImg();
         if (img != null) {
-            viewTag.itemImg.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
+            viewTag.itemImg.setBackgroundDrawable(new BitmapDrawable(context.getResources(), BitmapFactory
+                    .decodeByteArray(img, 0, img.length)));
         } else {
-            viewTag.itemImg.setImageDrawable(context.getResources().getDrawable(R.drawable.user_reflect));
+            viewTag.itemImg.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.user_reflect));
         }
         //subject
         viewTag.subject.setText(mails.get(position).getSubject());
@@ -189,20 +191,21 @@ public class MailsAdapterView extends BaseAdapter {
             if (msg.what < mails.size()) {
                 Log.d(TAG, "showImgHandler === msg.what === " + msg.what);
                 if (mails.get(msg.what).getImg() == null) {
-                    Log.d(TAG, "friends is null");
+                    Log.d(TAG, "mails is null");
                     if (showMails.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
                         viewTag = (ViewTag) showMails.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
                     } else {
-                        Log.d(TAG, "friends.get(msg.what) is null");
+                        Log.d(TAG, "mails.get(msg.what) is null");
                     }
                 } else {
-                    Log.d(TAG, "friends not null");
+                    Log.d(TAG, "mails not null");
                     if (showMails.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
                         viewTag = (ViewTag) showMails.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
                         byte[] img = mails.get(msg.what).getImg();
-                        viewTag.itemImg.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
+                        viewTag.itemImg.setBackgroundDrawable(new BitmapDrawable(context.getResources(), BitmapFactory
+                                .decodeByteArray(img, 0, img.length)));
                     } else {
-                        Log.d(TAG, "friends.get(msg.what) not null but findView is null");
+                        Log.d(TAG, "mails.get(msg.what) not null but findView is null");
                     }
                 }
             }

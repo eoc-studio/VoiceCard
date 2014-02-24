@@ -16,13 +16,16 @@ public class WebImageUtility {
         if (imgLink != null) {
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(imgLink);
-            HttpResponse httpResponse;
+            HttpResponse httpResponse = null;
             try {
                 httpResponse = httpClient.execute(httpGet);
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
                 return null;
             } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }

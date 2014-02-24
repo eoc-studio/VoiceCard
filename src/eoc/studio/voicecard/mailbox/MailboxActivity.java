@@ -58,8 +58,6 @@ public class MailboxActivity extends BaseActivity
 		findViews();
 		mailsAdapterData = new MailsAdapterData(MailboxActivity.this); 
 		mailsAdapterData.open();
-		CreateFakeDbThread createFakeDbThread = new CreateFakeDbThread();
-		createFakeDbThread.start();
 	}
 
 	@Override
@@ -68,6 +66,9 @@ public class MailboxActivity extends BaseActivity
 
 		super.onResume();
 		showMailInfo(0);
+		
+        LoadDbThread loadDbThread = new LoadDbThread();
+        loadDbThread.start();
 	}
 
 	@Override
@@ -147,144 +148,8 @@ public class MailboxActivity extends BaseActivity
 		showMails.setOnScrollListener(listScrollListener);
 	}
 
-	// private void createFakeDb()
-	// {
-	//
-	// if (mailsAdapterData != null)
-	// {
-	// mailsAdapterData
-	// .create("0",
-	// "123456",
-	// "John",
-	// "fb_links",
-	// "Wang",
-	// "Test",
-	// "Test123",
-	// "15",
-	// "blue",
-	// "http://www.luxurylife.com.tw/images/item_tiny/rosendahl_kaycollection_dog_title_tiny.jpg",
-	// null, "http://speech", "http://sign", "2014/02/13", 1);
-	//
-	// mailsAdapterData
-	// .create("0",
-	// "123456",
-	// "John",
-	// "fb_links",
-	// "Wang",
-	// "Test",
-	// "Test123",
-	// "15",
-	// "blue",
-	// "http://i1.squidoocdn.com/resize/squidoo_images/60/lens18720752_1318951596camille_cat.jpg",
-	// null, "http://speech", "http://sign", "2014/02/14", 1);
-	//
-	// mailsAdapterData.create("0", "123456", "John", "fb_links", "Wang",
-	// "Test", "Test123",
-	// "15", "blue",
-	// "http://www.pavi.com.tw/work/ecard/ecard_ite_2012_xmas_small.jpg", null,
-	// "http://speech", "http://sign", "2014/02/12", 0);
-	//
-	// mailsAdapterData
-	// .create("0",
-	// "123456",
-	// "John",
-	// "fb_links",
-	// "Wang",
-	// "Test",
-	// "Test123",
-	// "15",
-	// "blue",
-	// "http://www.luxurylife.com.tw/images/item_tiny/rosendahl_kaycollection_dog_title_tiny.jpg",
-	// null, "http://speech", "http://sign", "2014/02/11", 1);
-	//
-	// mailsAdapterData
-	// .create("0",
-	// "123456",
-	// "John",
-	// "fb_links",
-	// "Wang",
-	// "Test",
-	// "Test123",
-	// "15",
-	// "blue",
-	// "http://i1.squidoocdn.com/resize/squidoo_images/60/lens18720752_1318951596camille_cat.jpg",
-	// null, "http://speech", "http://sign", "2014/02/13", 1);
-	//
-	// mailsAdapterData.create("0", "123456", "John", "fb_links", "Wang",
-	// "Test", "Test123",
-	// "15", "blue",
-	// "http://www.pavi.com.tw/work/ecard/ecard_ite_2012_xmas_small.jpg", null,
-	// "http://speech", "http://sign", "2014/02/14", 0);
-	//
-	// mailsAdapterData
-	// .create("0",
-	// "123456",
-	// "John",
-	// "fb_links",
-	// "Wang",
-	// "Test",
-	// "Test123",
-	// "15",
-	// "blue",
-	// "http://www.luxurylife.com.tw/images/item_tiny/rosendahl_kaycollection_dog_title_tiny.jpg",
-	// null, "http://speech", "http://sign", "2014/03/14", 1);
-	//
-	// mailsAdapterData
-	// .create("0",
-	// "123456",
-	// "John",
-	// "fb_links",
-	// "Wang",
-	// "Test",
-	// "Test123",
-	// "15",
-	// "blue",
-	// "http://i1.squidoocdn.com/resize/squidoo_images/60/lens18720752_1318951596camille_cat.jpg",
-	// null, "http://speech", "http://sign", "2014/04/14", 1);
-	//
-	// mailsAdapterData.create("0", "123456", "John", "fb_links", "Wang",
-	// "Test", "Test123",
-	// "15", "blue",
-	// "http://www.pavi.com.tw/work/ecard/ecard_ite_2012_xmas_small.jpg", null,
-	// "http://speech", "http://sign", "2014/02/14", 0);
-	//
-	// mailsAdapterData
-	// .create("0",
-	// "123456",
-	// "John",
-	// "fb_links",
-	// "Wang",
-	// "Test",
-	// "Test123",
-	// "15",
-	// "blue",
-	// "http://www.luxurylife.com.tw/images/item_tiny/rosendahl_kaycollection_dog_title_tiny.jpg",
-	// null, "http://speech", "http://sign", "2014/05/14", 1);
-	//
-	// mailsAdapterData
-	// .create("0",
-	// "123456",
-	// "John",
-	// "fb_links",
-	// "Wang",
-	// "Test",
-	// "Test123",
-	// "15",
-	// "blue",
-	// "http://i1.squidoocdn.com/resize/squidoo_images/60/lens18720752_1318951596camille_cat.jpg",
-	// null, "http://speech", "http://sign", "2014/06/14", 1);
-	//
-	// mailsAdapterData.create("0", "123456", "John", "fb_links", "Wang",
-	// "Test", "Test123",
-	// "15", "blue",
-	// "http://www.pavi.com.tw/work/ecard/ecard_ite_2012_xmas_small.jpg", null,
-	// "http://speech", "http://sign", "2014/07/14", 0);
-	// }
-	// }
-
 	private boolean loadDb()
 	{
-
 		mails = new ArrayList<Mail>();
 
 		String rowId, sendId, sendFrom, sendFromName, sendTo, subject, body, fontSize, fontColor, imgLink, speech, sign, sendTime;
@@ -314,7 +179,7 @@ public class MailboxActivity extends BaseActivity
 					fontColor = cursor.getString(cursor
 							.getColumnIndex(MailsAdapterData.KEY_FONT_COLOR));
 					imgLink = cursor
-							.getString(cursor.getColumnIndex(MailsAdapterData.KEY_IMG_LINK));
+							.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SEND_FROM_LINK));
 					img = cursor.getBlob(cursor.getColumnIndex(MailsAdapterData.KEY_IMG));
 					speech = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SPEECH));
 					sign = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SIGN));
@@ -427,10 +292,6 @@ public class MailboxActivity extends BaseActivity
 
 			switch (msg.what)
 			{
-			case ListUtility.CREATE_DB_COMPLETE:
-				LoadDbThread loadDbThread = new LoadDbThread();
-				loadDbThread.start();
-				break;
 			case ListUtility.LOAD_DB_COMPLETE:
 				updateView(false);
 				break;
@@ -513,17 +374,6 @@ public class MailboxActivity extends BaseActivity
 			}
 		}
 	};
-
-	private class CreateFakeDbThread extends Thread
-	{
-		@Override
-		public void run()
-		{
-
-			// createFakeDb();
-			uiHandler.sendEmptyMessage(ListUtility.CREATE_DB_COMPLETE);
-		}
-	}
 
 	private class LoadDbThread extends Thread
 	{
