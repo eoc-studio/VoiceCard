@@ -90,7 +90,7 @@ public class DataProcess
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public static String eventDateFormat(final int year, final int month, final int day)
+	protected static String eventDateFormat(final int year, final int month, final int day)
 	{
 		String getNewEventDate = String.valueOf(numberFormat(year))
 				+ String.valueOf(numberFormat(month)) + String.valueOf(numberFormat(day));
@@ -98,10 +98,16 @@ public class DataProcess
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public static String getDataMilliSeconds(final String date)
+	protected static String getDataMilliSeconds(final String date)
+	{
+		return getDataMilliSeconds(date, "yyyyMMddHHmm");
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public static String getDataMilliSeconds(final String date, final String format)
 	{
 		if (date == null) return "";
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+		SimpleDateFormat formatter = new SimpleDateFormat(format);
 		formatter.setLenient(false);
 		Date oldDate = null;
 		try

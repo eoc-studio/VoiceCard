@@ -1,8 +1,19 @@
 package eoc.studio.voicecard.calendarview;
 
+import java.util.ArrayList;
+
+import com.facebook.Session;
+
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.facebook.FacebookManager;
+import eoc.studio.voicecard.facebook.FriendInfo;
+import eoc.studio.voicecard.facebook.SelectFriendActivity;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -10,6 +21,8 @@ import android.widget.Button;
 
 public class MainCalendarView extends FragmentActivity implements OnClickListener
 {
+	private static String TAG = "MainCalendarView";
+	private static Context mContext;
 	private static Button btnBack, btnAddFacebookFriendsBirthday, btnBackMainMenu;
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,6 +32,7 @@ public class MainCalendarView extends FragmentActivity implements OnClickListene
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main_calendar_view);
+		mContext = this;
 		findView();
 		buttonFunction();
 	}
@@ -52,6 +66,7 @@ public class MainCalendarView extends FragmentActivity implements OnClickListene
 			break;
 		case R.id.btnAddFacebookFriends:
 		{
+			addFacebookFriends();
 			System.out.println("*****************btnAddFacebookFriends");
 		}
 			break;
@@ -61,6 +76,56 @@ public class MainCalendarView extends FragmentActivity implements OnClickListene
 		}
 			break;
 		}
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+		switch (requestCode)
+		{
+		case FriendInfo.GET_FRIEND_REQUEST_CODE:
+			if (data != null)
+			{
+				Bundle bundle = data.getExtras();
+				if (bundle != null)
+				{
+					ArrayList<FriendInfo> friendList = bundle
+							.getParcelableArrayList(FriendInfo.GET_FRIEND);
+					if (friendList != null)
+					{
+						for (int i = 0; i < friendList.size(); i++)
+						{
+							if (friendList.get(i).getFriendBirthday() != null
+									&& !friendList.get(i).getFriendBirthday().equals("null"))
+							{
+								String getNewFormatOfBirthday = DataProcess.formatDate(DataProcess
+										.getDataMilliSeconds(friendList.get(i).getFriendBirthday(),
+												"MM/dd/yyyy"), "yyyyMMdd");
+								DataProcess.addEvent(mContext, friendList.get(i).getFriendName()
+										+ "'s Birthday", getNewFormatOfBirthday);
+								//
+								Log.d(TAG, "ID is " + friendList.get(i).getFriendId());
+								Log.d(TAG, "Name is " + friendList.get(i).getFriendName());
+								Log.d(TAG, "Birthday is " + friendList.get(i).getFriendBirthday());
+								Log.d(TAG, "ImgLink is " + friendList.get(i).getFriendImgLink());
+							}
+						}
+					}
+				}
+			}
+			break;
+		}
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	private static void addFacebookFriends()
+	{
+		FacebookManager facebookManager = new FacebookManager(mContext, null);
+		Intent intent = new Intent(MainCalendarView.mContext, SelectFriendActivity.class);
+		((Activity) mContext).startActivityForResult(intent, FriendInfo.GET_FRIEND_REQUEST_CODE);
 	}
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
