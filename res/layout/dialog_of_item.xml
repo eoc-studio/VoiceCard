@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#E1CCA4" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="30dip"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout1"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/notepaper" />
+
+    <EditText
+        android:id="@+id/edit_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/background"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="99dp"
+        android:ems="10"
+        android:textSize="20sp" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/yes_btn"
+        android:layout_width="100dip"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/edit_text_view"
+        android:layout_below="@+id/background"
+        android:background="@drawable/btn_sure_selector" />
+
+    <Button
+        android:id="@+id/cancel_btn"
+        android:layout_width="100dip"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/yes_btn"
+        android:layout_alignBottom="@+id/yes_btn"
+        android:layout_alignRight="@+id/edit_text_view"
+        android:background="@drawable/btn_return_selector" />
+
+</RelativeLayout>

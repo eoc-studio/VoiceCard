@@ -21,8 +21,10 @@
 
     <!-- About MemorialDay -->
     <string name="current_month_placeholder">1970-January</string>
-    <string name="previous_month_placeholder">&lt;&lt;</string>
-    <string name="next_month_placeholder">&gt;&gt;</string>
+    <string name="cancelBtn">Cancel</string>
+    <string name="yesBtn">Yes</string>
+    <string name="delete_confirm_title">Delete Event ?</string>
+    <string name="delete_confirm_message">Are you sure delete </string>
 
     <!-- MailBoxIconView -->
     <string name="mail">Inbox</string>

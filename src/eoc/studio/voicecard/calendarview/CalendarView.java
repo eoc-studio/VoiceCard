@@ -4,7 +4,11 @@ import java.util.Locale;
 
 import eoc.studio.voicecard.R;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -17,17 +21,21 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-public class CalendarView extends Fragment
+public class CalendarView extends Fragment implements OnTouchListener, OnClickListener
 {
-	private final Locale locale;
+	private static Context mContext;
+	private static Locale locale;
 	private ViewSwitcher calendarSwitcher;
-	private TextView currentMonth;
-	private CalendarAdapter calendarAdapter;
+	private static TextView currentMonth;
+	private static CalendarAdapter calendarAdapter;
+	private GestureDetector swipeDetector;
+	private static GridView calendarGrid;
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public CalendarView()
@@ -37,36 +45,64 @@ public class CalendarView extends Fragment
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	@Override
+	public void onResume()
+	{
+		super.onResume();
+		mContext = getActivity();
+		updateCurrentMonth();
+		// getNewView();
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		DateProcess.mCalendar.setTimeInMillis(System.currentTimeMillis());
+		calendarAdapter = null;
+		SystemClock.sleep(200);
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		final RelativeLayout calendarLayout = (RelativeLayout) inflater.inflate(R.layout.calendar,
-				null);
-		final GestureDetector swipeDetector = new GestureDetector(getActivity(), new SwipeGesture(
-				getActivity()));
-		final GridView calendarGrid = (GridView) calendarLayout.findViewById(R.id.calendar_grid);
+		mContext = getActivity();
+		final RelativeLayout calendarLayout = (RelativeLayout) inflater.inflate(
+				R.layout.calendar_view, null);
+		calendarGrid = (GridView) calendarLayout.findViewById(R.id.calendar_grid);
+		final Button nextMonth = (Button) calendarLayout.findViewById(R.id.next_month);
+		final Button prevMonth = (Button) calendarLayout.findViewById(R.id.previous_month);
+		swipeDetector = new GestureDetector(getActivity(), new SwipeGesture(getActivity()));
 		calendarSwitcher = (ViewSwitcher) calendarLayout.findViewById(R.id.calendar_switcher);
 		currentMonth = (TextView) calendarLayout.findViewById(R.id.current_month);
-		calendarAdapter = new CalendarAdapter(getActivity(), DateProcess.mCalendar);
-		updateCurrentMonth();
-		final TextView nextMonth = (TextView) calendarLayout.findViewById(R.id.next_month);
-		nextMonth.setOnClickListener(new NextMonthClickListener());
-		final TextView prevMonth = (TextView) calendarLayout.findViewById(R.id.previous_month);
-		prevMonth.setOnClickListener(new PreviousMonthClickListener());
+		//
+		nextMonth.setOnClickListener(this);
+		prevMonth.setOnClickListener(this);
+		getNewView();
 		calendarGrid.setOnItemClickListener(new DayItemClickListener());
-		calendarGrid.setAdapter(calendarAdapter);
-		calendarGrid.setOnTouchListener(new OnTouchListener()
-		{
-			@Override
-			public boolean onTouch(View v, MotionEvent event)
-			{
-				return swipeDetector.onTouchEvent(event);
-			}
-		});
+		calendarGrid.setOnTouchListener(this);
 		return calendarLayout;
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	protected void updateCurrentMonth()
+	protected static void getNewView()
+	{
+		calendarAdapter = new CalendarAdapter(mContext, DateProcess.mCalendar);
+		updateCurrentMonth();
+		calendarGrid.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		calendarGrid.setAdapter(calendarAdapter);
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public boolean onTouch(View v, MotionEvent event)
+	{
+		return swipeDetector.onTouchEvent(event);
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	protected static void updateCurrentMonth()
 	{
 		calendarAdapter.refreshDays();
 		currentMonth.setText(DateProcess.getYear() + "-"
@@ -79,7 +115,13 @@ public class CalendarView extends Fragment
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 		{
-			calendarAdapter.setSelected(position);
+			Intent SetCalendarMainView = new Intent();
+			SetCalendarMainView.setClass(getActivity(), SetCalendarMainView.class);
+			Bundle bundle = new Bundle();
+			bundle.putString(DataProcess.EVENT_DATE, calendarAdapter.setSelected(position));
+			SetCalendarMainView.putExtras(bundle);
+			getActivity().startActivity(SetCalendarMainView);
+			getActivity().overridePendingTransition(0, 0);
 		}
 	}
 
@@ -104,22 +146,36 @@ public class CalendarView extends Fragment
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	private final class NextMonthClickListener implements OnClickListener
+	@Override
+	public void onClick(View view)
 	{
-		@Override
-		public void onClick(View v)
+		switch (view.getId())
+		{
+		case R.id.next_month:
 		{
 			onNextMonth();
 		}
-	}
-
-	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	private final class PreviousMonthClickListener implements OnClickListener
-	{
-		@Override
-		public void onClick(View v)
+			break;
+		case R.id.previous_month:
 		{
 			onPreviousMonth();
+		}
+			break;
+		case R.id.btnBack:
+		{
+			System.out.println("*****************btnBack");
+		}
+			break;
+		case R.id.btnAddFacebookFriends:
+		{
+			System.out.println("*****************btnAddFacebookFriends");
+		}
+			break;
+		case R.id.btnBackMainMenu:
+		{
+			System.out.println("*****************btnBackMainMenu");
+		}
+			break;
 		}
 	}
 

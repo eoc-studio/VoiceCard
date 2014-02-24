@@ -16,8 +16,9 @@
     </uses-permission>
     <uses-permission android:name="android.permission.READ_CONTACTS" >
     </uses-permission>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> 
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -53,7 +54,12 @@
             android:name="eoc.studio.voicecard.manufacture.EditSignatureActivity"
             android:screenOrientation="portrait" />
         <activity android:name="eoc.studio.voicecard.contact.ContactActivity" />
-        <activity android:name="eoc.studio.voicecard.calendarview.CalendarViewTest" />
+        <activity
+            android:name="eoc.studio.voicecard.calendarview.MainCalendarView"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="eoc.studio.voicecard.calendarview.SetCalendarMainView"
+            android:screenOrientation="portrait" />
         <activity
             android:name="eoc.studio.voicecard.mainmenu.MainMenuActivity"
             android:screenOrientation="portrait" />
@@ -72,7 +78,7 @@
         <activity
             android:name="eoc.studio.voicecard.card.editor.CardTextEditorActivity"
             android:screenOrientation="portrait" />
-         <activity
+        <activity
             android:name="eoc.studio.voicecard.card.editor.CardSenderActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -84,10 +90,9 @@
         <activity
             android:name="eoc.studio.voicecard.mailbox.MailboxActivity"
             android:screenOrientation="portrait" />
-		<activity
-				android:name="eoc.studio.voicecard.mainloading.MainLoadingActivity"
-				android:screenOrientation="portrait" />
-        
+        <activity
+            android:name="eoc.studio.voicecard.mainloading.MainLoadingActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -1,56 +1,180 @@
 package eoc.studio.voicecard.calendarview;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.graphics.Color;
 import android.net.Uri;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Calendars;
+import android.provider.CalendarContract.Events;
 
 public class CalendarIntentHelper
 {
-	public static ArrayList<String> nameOfEvent = new ArrayList<String>();
-	public static ArrayList<String> startDates = new ArrayList<String>();
-	public static ArrayList<String> endDates = new ArrayList<String>();
-	public static ArrayList<String> descriptions = new ArrayList<String>();
 	private static Map<String, String> item;
 	private static ArrayList<Map<String, String>> data;
-	public static final String EVENT_ID = "calendar_id", EVENT_TITLE = "title",
-			EVENT_DESCRIPTION = "description", EVENT_DT_START = "dtstart", EVENT_DT_END = "dtend",
-			EVENT_LOCTION = "eventLocation";
+	// ////////
+	private static final String CALENDAR_NAME = "VoiceCard";
+	private static final int CALENDAR_ID_INDEX = 0, CALENDAR_ACCOUNT_NAME_INDEX = 1,
+			CALENDAR_DISPLAY_NAME_INDEX = 2, CALENDAR_OWNER_ACCOUNT_INDEX = 3;
+	public static final String[] CALENDAR_PROJECTION = new String[] { Calendars._ID,
+			Calendars.ACCOUNT_NAME, Calendars.CALENDAR_DISPLAY_NAME, Calendars.OWNER_ACCOUNT };
+	private static final int EVENT_ID_INDEX = 0, EVENT_TITLE_INDEX = 1,
+			EVENTE_DESCRIPTION_INDEX = 2, EVENT_DTSTART_INDEX = 3, EVENT_DTEND_INDEX = 4,
+			EVENT_EVENT_LOCATION_INDEX = 4;
+	public static final String[] EVENT_PROJECTION = new String[] { Events._ID, Events.TITLE,
+			Events.DESCRIPTION, Events.DTSTART, Events.DTEND, Events.EVENT_LOCATION };
+	//
+	public static final String EVENT_TYPE_YEARLY = "FREQ=YEARLY;WKST=SU";
+	private static final boolean GET_SINGLE_DATA = true;
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public static ArrayList<Map<String, String>> readCalendarEvent(Context context, String eventDate)
+	protected static void addVoiceCardCalendar(Context context)
 	{
-		data = new ArrayList<Map<String, String>>();
-		Cursor cursor = null;
+		if (getVoiceCardCalendar(context) == 0)
+		{
+			initCalendars(context);
+		}
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	protected static long getVoiceCardCalendar(Context context)
+	{
+		long calID = 0;
+		Cursor cur = null;
 		String where = null, selection[] = null;
-		where = "dtstart =? ";
-		selection = new String[] { String.valueOf(getDatamilliSeconds((eventDate + "0800"))) };
 		try
 		{
-			cursor = context.getContentResolver().query(
-					Uri.parse("content://com.android.calendar/events"),
-					new String[] { EVENT_ID, EVENT_TITLE, EVENT_DESCRIPTION, EVENT_DT_START,
-							EVENT_DT_END, EVENT_LOCTION }, where, selection, null);
+			where = CALENDAR_PROJECTION[CALENDAR_DISPLAY_NAME_INDEX] + " =? ";
+			selection = new String[] { CALENDAR_NAME };
+			cur = context.getContentResolver().query(Calendars.CONTENT_URI, CALENDAR_PROJECTION,
+					where, selection, null);
+			if (cur != null && cur.getCount() > 0)
+			{
+				while (cur.moveToNext())
+				{
+					calID = cur.getLong(CALENDAR_ID_INDEX);
+				}
+			}
+		}
+		catch (SQLException e)
+		{
+			System.out.println("[CalendarIntentHelper][getVoiceCardCalendar]SQLException:" + e);
+		}
+		catch (Exception ex)
+		{
+			System.out.println("[CalendarIntentHelper][getVoiceCardCalendar]Exception:" + ex);
+		}
+		if (cur != null && !cur.isClosed())
+		{
+			cur.close();
+		}
+		return calID;
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	private static void initCalendars(Context activity)
+	{
+		TimeZone timeZone = TimeZone.getDefault();
+		ContentValues value = new ContentValues();
+		value.put(Calendars.OWNER_ACCOUNT, CALENDAR_NAME);
+		value.put(Calendars.NAME, CALENDAR_NAME);
+		value.put(Calendars.ACCOUNT_NAME, CALENDAR_NAME);
+		value.put(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL);
+		value.put(Calendars.CALENDAR_DISPLAY_NAME, CALENDAR_NAME);
+		value.put(Calendars.VISIBLE, 1);
+		value.put(Calendars.CALENDAR_COLOR, Color.RED);
+		value.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
+		value.put(Calendars.SYNC_EVENTS, 1);
+		value.put(Calendars.CALENDAR_TIME_ZONE, timeZone.getID());
+		value.put(Calendars.OWNER_ACCOUNT, CALENDAR_NAME);
+		value.put(Calendars.CAN_ORGANIZER_RESPOND, 0);
+		Uri calendarUri = Calendars.CONTENT_URI;
+		calendarUri = calendarUri.buildUpon()
+				.appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+				.appendQueryParameter(Calendars.ACCOUNT_NAME, CALENDAR_NAME)
+				.appendQueryParameter(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
+				.build();
+		activity.getContentResolver().insert(calendarUri, value);
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public static boolean haveEvent(final Context context, final String eventDate)
+	{
+		ArrayList<Map<String, String>> getEvent = CalendarIntentHelper.readCalendarEvent(context,
+				eventDate + DataProcess.DEFAULT_EVENT_TIME, GET_SINGLE_DATA);
+		if (getEvent != null && !getEvent.isEmpty())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public static ArrayList<Map<String, String>> readCalendarEvent(final Context context,
+			final String eventDate)
+	{
+		return CalendarIntentHelper.readCalendarEvent(context, eventDate, !GET_SINGLE_DATA);
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public static ArrayList<Map<String, String>> readCalendarEvent(final Context context,
+			final String eventDate, final boolean getSingleData)
+	{
+		String getDataMilliSeconds = DataProcess.getDataMilliSeconds(eventDate);
+		data = new ArrayList<Map<String, String>>();
+		Cursor cursor = null;
+		// String where = null, selection[] = null;
+		// where = EVENT_PROJECTION[EVENT_DTSTART_INDEX] + " =? ";
+		// selection = new String[] { getDataMilliSeconds };
+		try
+		{
+			cursor = context.getContentResolver().query(Events.CONTENT_URI, EVENT_PROJECTION, null,
+					null, null);
 			if (cursor != null && cursor.getCount() > 0)
 			{
 				while (cursor.moveToNext())
 				{
-					item = new HashMap<String, String>();
-					item.put(EVENT_TITLE, (cursor.getString(1) != null) ? cursor.getString(1) : "");
-					item.put(EVENT_DESCRIPTION, (cursor.getString(2) != null) ? cursor.getString(2)
-							: "");
-					item.put(EVENT_DT_START, (cursor.getString(3) != null) ? cursor.getString(3)
-							: "");
-					item.put(EVENT_DT_END, (cursor.getString(4) != null) ? cursor.getString(4) : "");
-					data.add(item);
+					if (DataProcess.formatDate(cursor.getString(EVENT_DTSTART_INDEX), "MMdd")
+							.equals(DataProcess.formatDate(getDataMilliSeconds, "MMdd")))
+					{
+						item = new HashMap<String, String>();
+						item.put(
+								EVENT_PROJECTION[EVENT_ID_INDEX],
+								(cursor.getString(EVENT_ID_INDEX) != null) ? cursor
+										.getString(EVENT_ID_INDEX) : "");
+						item.put(
+								EVENT_PROJECTION[EVENT_TITLE_INDEX],
+								(cursor.getString(EVENT_TITLE_INDEX) != null) ? cursor
+										.getString(EVENT_TITLE_INDEX) : "");
+						item.put(
+								EVENT_PROJECTION[EVENTE_DESCRIPTION_INDEX],
+								(cursor.getString(EVENTE_DESCRIPTION_INDEX) != null) ? cursor
+										.getString(EVENTE_DESCRIPTION_INDEX) : "");
+						item.put(
+								EVENT_PROJECTION[EVENT_DTSTART_INDEX],
+								(cursor.getString(EVENT_DTSTART_INDEX) != null) ? cursor
+										.getString(EVENT_DTSTART_INDEX) : "");
+						item.put(
+								EVENT_PROJECTION[EVENT_EVENT_LOCATION_INDEX],
+								(cursor.getString(EVENT_EVENT_LOCATION_INDEX) != null) ? cursor
+										.getString(EVENT_EVENT_LOCATION_INDEX) : "");
+						data.add(item);
+						//
+						if (getSingleData)
+						{
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -67,51 +191,6 @@ public class CalendarIntentHelper
 			cursor.close();
 		}
 		return data;
-	}
-
-	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public static boolean haveEvent(Context context, String eventDate)
-	{
-		ArrayList<Map<String, String>> getEvent = CalendarIntentHelper.readCalendarEvent(context,
-				eventDate);
-		if (getEvent != null && !getEvent.isEmpty())
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public static long getDatamilliSeconds(String date)
-	{
-		if (date == null) return 0;
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-		formatter.setLenient(false);
-		Date oldDate = null;
-		try
-		{
-			oldDate = formatter.parse(date);
-		}
-		catch (ParseException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (oldDate == null) { return 0; }
-		return oldDate.getTime();
-	}
-
-	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	private static String formatDate(String milliSeconds)
-	{
-		if (milliSeconds == null) return "";
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(Long.parseLong(milliSeconds));
-		return formatter.format(calendar.getTime());
 	}
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

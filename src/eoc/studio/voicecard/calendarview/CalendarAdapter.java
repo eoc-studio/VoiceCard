@@ -5,14 +5,13 @@ import java.util.Calendar;
 
 import eoc.studio.voicecard.R;
 import android.content.Context;
-import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 public class CalendarAdapter extends BaseAdapter
 {
@@ -23,6 +22,7 @@ public class CalendarAdapter extends BaseAdapter
 	private static int mSelected = -1;
 	private final LayoutInflater inflater;
 	private CalendarItem[] days;
+	private static Thread dataThread = null;
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public CalendarAdapter(Context context, Calendar monthCalendar)
@@ -39,7 +39,8 @@ public class CalendarAdapter extends BaseAdapter
 	@Override
 	public int getCount()
 	{
-		return days.length;
+		if (days != null) { return days.length; }
+		return 0;
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,89 +108,101 @@ public class CalendarAdapter extends BaseAdapter
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public final void setSelected(int position)
+	protected final String setSelected(int position)
 	{
 		mSelected = position;
 		notifyDataSetChanged();
 		if (mSelected == position)
 		{
-			System.out.println("@position=================================" + position);
 			final CalendarItem item = days[position];
 			if (item != null)
 			{
-				System.out.println("@id==============================="
-						+ String.valueOf(days[position].id));
-				System.out.println("@year=============================" + days[position].year);
-				System.out.println("@month============================" + days[position].month);
-				System.out.println("@day==============================" + days[position].day);
-				System.out.println("@text=============================" + days[position].text);
-				System.out.println("@event=============================" + days[position].event);
-				Calendar beginTime = Calendar.getInstance();
-				beginTime.set(days[position].year, days[position].year, days[position].year, 0, 1);
+				String getNewEventDate = (DataProcess.eventDateFormat(days[position].year,
+						(days[position].month + 1), days[position].day))
+						+ DataProcess.DEFAULT_EVENT_TIME;
+				return getNewEventDate;
 			}
 		}
+		return "";
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public final void refreshDays()
+	protected final void refreshDays()
 	{
-		DateProcess.getPreviousMonthdata();
-		DateProcess.getNextMonthdata();
-		final int year = calendar.get(Calendar.YEAR);
-		final int month = calendar.get(Calendar.MONTH);
-		final int firstDayOfMonthPosition = calendar.get(Calendar.DAY_OF_WEEK);
-		final int lastDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-		final int lastMonthPosition;
-		//
-		final int getPY = DateProcess.getPreviousYear();
-		final int getPM = DateProcess.getPreviousMonth();
-		final int getPMAM = DateProcess.getPreviousMonthActualMaximum();
-		//
-		final int getNY = DateProcess.getNextYear();
-		final int getNM = DateProcess.getNextMonth();
-		final CalendarItem[] days = new CalendarItem[42];
-		DecimalFormat df2 = (DecimalFormat) DecimalFormat.getInstance();
-		df2.applyPattern("00");
-		if (firstDayOfMonthPosition == FIRST_DAY_OF_WEEK)
+		dataThread = new Thread(new Runnable()
 		{
-			lastMonthPosition = 7;
-		}
-		else
-		{
-			lastMonthPosition = firstDayOfMonthPosition - FIRST_DAY_OF_WEEK + 7;
-		}
-		int getNextMonthOfDay = 1;
-		int getLastMonthOfDay = lastMonthPosition;
-		for (int position = 7; position < days.length; position++)
-		{
-			if (position < lastMonthPosition)
+			@Override
+			public void run()
 			{
-				int getPreviousDay = getPMAM - (--getLastMonthOfDay);
-				String eventDate = String.valueOf(getPY) + String.valueOf(df2.format(getPM + 1))
-						+ String.valueOf(df2.format(getPreviousDay));
-				days[position] = new CalendarItem(getPY, getPM, getPreviousDay,
-						CalendarIntentHelper.haveEvent(mContext, eventDate));
+				DateProcess.getPreviousMonthdata();
+				DateProcess.getNextMonthdata();
+				final int year = calendar.get(Calendar.YEAR);
+				final int month = calendar.get(Calendar.MONTH);
+				final int firstDayOfMonthPosition = calendar.get(Calendar.DAY_OF_WEEK);
+				final int lastDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+				final int lastMonthPosition;
+				//
+				final int getPY = DateProcess.getPreviousYear();
+				final int getPM = DateProcess.getPreviousMonth();
+				final int getPMAM = DateProcess.getPreviousMonthActualMaximum();
+				//
+				final int getNY = DateProcess.getNextYear();
+				final int getNM = DateProcess.getNextMonth();
+				final CalendarItem[] getNewdays = new CalendarItem[42];
+				DecimalFormat df2 = (DecimalFormat) DecimalFormat.getInstance();
+				df2.applyPattern("00");
+				if (firstDayOfMonthPosition == FIRST_DAY_OF_WEEK)
+				{
+					lastMonthPosition = 7;
+				}
+				else
+				{
+					lastMonthPosition = firstDayOfMonthPosition - FIRST_DAY_OF_WEEK + 7;
+				}
+				int getNextMonthOfDay = 1;
+				int getLastMonthOfDay = firstDayOfMonthPosition - FIRST_DAY_OF_WEEK;
+				for (int position = 7; position < getNewdays.length; position++)
+				{
+					if (position < lastMonthPosition)
+					{
+						int getPreviousDay = getPMAM - (--getLastMonthOfDay);
+						String eventDate = DataProcess.eventDateFormat(getPY, (getPM + 1),
+								getPreviousDay);
+						getNewdays[position] = new CalendarItem(getPY, getPM, getPreviousDay,
+								CalendarIntentHelper.haveEvent(mContext, eventDate));
+					}
+					else if (position < (lastDayOfMonth + lastMonthPosition))
+					{
+						int getDay = (position - lastMonthPosition + 1);
+						String eventDate = DataProcess.eventDateFormat(year, (month + 1), getDay);
+						getNewdays[position] = new CalendarItem(year, month, getDay,
+								CalendarIntentHelper.haveEvent(mContext, eventDate));
+					}
+					else
+					{
+						int getNextDay = getNextMonthOfDay++;
+						String eventDate = DataProcess.eventDateFormat(getNY, (getNM + 1),
+								getNextDay);
+						getNewdays[position] = new CalendarItem(getNY, getNM, getNextDay,
+								CalendarIntentHelper.haveEvent(mContext, eventDate));
+					}
+				}
+				days = getNewdays;
+				Message status = sendNotifyDataSetChanged.obtainMessage();
+				sendNotifyDataSetChanged.sendMessage(status);
 			}
-			else if (position < (lastDayOfMonth + lastMonthPosition))
-			{
-				int getDay = (position - lastMonthPosition + 1);
-				String eventDate = String.valueOf(year) + String.valueOf(df2.format(month + 1))
-						+ String.valueOf(df2.format(getDay));
-				days[position] = new CalendarItem(year, month, getDay,
-						CalendarIntentHelper.haveEvent(mContext, eventDate));
-			}
-			else
-			{
-				int getNextDay = getNextMonthOfDay++;
-				String eventDate = String.valueOf(getNY) + String.valueOf(df2.format(getNM + 1))
-						+ String.valueOf(df2.format(getNextDay));
-				days[position] = new CalendarItem(getNY, getNM, getNextDay,
-						CalendarIntentHelper.haveEvent(mContext, eventDate));
-			}
-		}
-		this.days = days;
-		notifyDataSetChanged();
+		});
+		dataThread.start();
 	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////
+	Handler sendNotifyDataSetChanged = new Handler()
+	{
+		public void handleMessage(Message msg)
+		{
+			notifyDataSetChanged();
+		}
+	};
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	private static class CalendarItem
