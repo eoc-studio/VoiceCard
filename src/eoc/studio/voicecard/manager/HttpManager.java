@@ -643,4 +643,16 @@ public class HttpManager
 		reader.close();
 		return sb.toString();
 	}
+
+	public static String getFacebookID()
+	{
+	
+		return facebookID;
+	}
+
+	public static void setFacebookID(String facebookID)
+	{
+	
+		HttpManager.facebookID = facebookID;
+	}
 }

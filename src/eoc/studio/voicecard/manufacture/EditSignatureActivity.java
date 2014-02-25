@@ -163,7 +163,7 @@ public class EditSignatureActivity extends Activity
 
 	public void loadHandWrtingViewFromFile(Uri loadUri)
 	{
-
+		Log.d(TAG, "EditSignatureActivity: onResume() loadUri: "+loadUri);
 //		String root = Environment.getExternalStorageDirectory().toString();
 //		File tempDir = new File(root + "/" + DRAFT_FOLDER_NAME);
 //		File imagefile = new File(tempDir, DRAFT_IMAGE_NAME);
@@ -227,23 +227,28 @@ public class EditSignatureActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
+				Log.d(TAG, "okButtonImageButton getCacheDir().getPath():"+getFilesDir().getPath());
+				
+				String handWritingFileName=FileUtility.getRandomSignHandWritingName("jpg");
+				
 				String root = Environment.getExternalStorageDirectory().toString();
-				File tempDir = new File(root + "/" + DRAFT_FOLDER_NAME,DRAFT_IMAGE_NAME);
-				FileUtility.saveLayoutToFile(context, (View) handWritingView,tempDir.getParent(),
-						DRAFT_IMAGE_NAME);				
+				File tempDir = new File(getCacheDir().getPath() + "/",handWritingFileName);
+				FileUtility.saveLayoutToFile(context, (View) handWritingView,getCacheDir().getPath(),
+						handWritingFileName);				
 				signHandWritingDraftUri = Uri.fromFile(tempDir);
 				
 				
 				// try to save seal info to gson
-				signPositonDraftUri = stampSorterView.saveImageInfoToGson();
+				signPositonDraftUri = stampSorterView.saveImageInfoToGson(getCacheDir().getPath(),FileUtility.getRandomSignPositionName("json"));
 				
 				
 				sketchpadLayout.removeAllViews(); 
 				addViewByOrder(handWritingView, stampSorterView);
 				
-				File tempDir2 = new File(root + "/" + DRAFT_FOLDER_NAME,DRAFT_COMPLETED_IMAGE_NAME);
+				String handCompletedFileName=FileUtility.getRandomSignCompletedName("jpg");
+				File tempDir2 = new File(getCacheDir().getPath() + "/",handCompletedFileName);
 //				FileUtility.saveLayoutToFileWithoutScan((View)sketchpadLayout,tempDir2.getParent(),DRAFT_COMPLETED_IMAGE_NAME);
-				FileUtility.saveTwoLayoutToFile(handWritingView, stampSorterView, tempDir2.getParent(), DRAFT_COMPLETED_IMAGE_NAME);
+				FileUtility.saveTwoLayoutToFile(handWritingView, stampSorterView, tempDir2.getParent(),handCompletedFileName );
 				signCompletedDraftUri =  Uri.fromFile(tempDir2);
 				
 				

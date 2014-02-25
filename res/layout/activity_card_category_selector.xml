@@ -69,6 +69,7 @@
             android:background="@color/white" />
 
         <eoc.studio.voicecard.menu.OpenDraft
+            android:id="@+id/act_card_category_iv_menu_open_draft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

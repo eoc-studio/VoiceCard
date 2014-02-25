@@ -101,7 +101,7 @@ public class FileUtility
 		layout.setDrawingCacheEnabled(false);
 
 		File pathDir = new File(savePath);
-		pathDir.mkdirs();
+		if(!pathDir.exists())pathDir.mkdirs();
 
 		String fileName = saveFileName;
 		File file = new File(pathDir, fileName);
@@ -113,12 +113,12 @@ public class FileUtility
 			out.flush();
 			out.close();
 
-			Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-
-			mediaScannerIntent.setData(Uri.parse("file://" + pathDir + "/" + fileName));
-			context.sendBroadcast(mediaScannerIntent);
-
-			Toast.makeText(context, "Your image is saved to sdcard", Toast.LENGTH_LONG).show();
+//			Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//
+//			mediaScannerIntent.setData(Uri.parse("file://" + pathDir + "/" + fileName));
+//			context.sendBroadcast(mediaScannerIntent);
+//
+//			Toast.makeText(context, "Your image is saved to sdcard", Toast.LENGTH_LONG).show();
 
 		}
 		catch (Exception e)
@@ -246,7 +246,7 @@ public class FileUtility
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         Random random = new Random();
         return sdf.format(date) + "_SignCompleted_"+random.nextInt(65535)+"."+filenameExtension;
-    }
+    } 
 	
 	
 	

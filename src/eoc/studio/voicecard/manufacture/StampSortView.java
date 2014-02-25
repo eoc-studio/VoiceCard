@@ -416,7 +416,7 @@ public class StampSortView extends AbsoluteLayout implements
 //		invalidate();
 //	}
 	
-	public Uri saveImageInfoToGson()
+	public Uri saveImageInfoToGson(String savePath,String saveFileName)
 	{
 		Uri uriOfJsonPath;
 		Log.e(TAG, "saveImageInfoToGson()");
@@ -443,14 +443,11 @@ public class StampSortView extends AbsoluteLayout implements
 		final Gson gson = builder.create();
 		final String json = gson.toJson(sealList);
 
-		String root = Environment.getExternalStorageDirectory().toString();
-		File tempDir = new File(root + "/VoiceCard_seals");
-
-		File pathDir = new File(tempDir.toString());
+		File pathDir = new File(savePath);
 		pathDir.mkdirs();
 
-		String fname = "seal.json";
-		File file = new File(tempDir + "/" + fname);
+		String fileName = saveFileName;
+		File file = new File(savePath + "/" + fileName);
 		
 		
 		uriOfJsonPath = Uri.fromFile(file); 

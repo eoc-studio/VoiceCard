@@ -17,6 +17,8 @@ import com.android.volley.toolbox.ImageLoader;
 
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.TestMainActivity;
+import eoc.studio.voicecard.calendarview.MainCalendarView;
 import eoc.studio.voicecard.card.editor.CardCategorySelectorActivity;
 import eoc.studio.voicecard.mailbox.MailboxActivity;
 import eoc.studio.voicecard.manager.HttpManager;
@@ -235,6 +237,8 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 	private void onMemorialDayEditorClicked()
 	{
 		Log.d(TAG, "go to memorial day editor");
+		Intent intent = new Intent(this, MainCalendarView.class);
+		startActivity(intent);
 	}
 
 	private void onNewsEditorClicked()

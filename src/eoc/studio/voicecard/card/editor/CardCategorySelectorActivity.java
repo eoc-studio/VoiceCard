@@ -1,11 +1,13 @@
 package eoc.studio.voicecard.card.editor;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -15,22 +17,34 @@ import android.widget.TextView;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.CardCategory;
+import eoc.studio.voicecard.card.CardDraft;
+import eoc.studio.voicecard.menu.OpenDraft;
+import eoc.studio.voicecard.card.editor.CardEditorActivity;
 
 public class CardCategorySelectorActivity extends BaseActivity implements OnItemClickListener
 {
 	private static final String TAG = "CardCategorySelector";
+
 	private GridView categories;
+
+	private CardDraftManager cardDraftManager;
+
+	private OpenDraft openDraft;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+
+		initCardDraftManager();
 		initLayout();
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "onCreate");
 	}
 
 	@Override
 	protected void onDestroy()
 	{
+
 		// TODO Auto-generated method stub
 		super.onDestroy();
 	}
@@ -38,6 +52,7 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 	@Override
 	protected void onPause()
 	{
+
 		// TODO Auto-generated method stub
 		super.onPause();
 	}
@@ -45,12 +60,22 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 	@Override
 	protected void onResume()
 	{
+
 		// TODO Auto-generated method stub
 		super.onResume();
 	}
 
+	private void initCardDraftManager()
+	{
+
+		Log.d(TAG, "initCardDraftManager()");
+		cardDraftManager = new CardDraftManager();
+		cardDraftManager.init(getApplicationContext());
+	}
+
 	private void initLayout()
 	{
+
 		setContentView(R.layout.activity_card_category_selector);
 		findViews();
 		initCategories();
@@ -59,22 +84,51 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 
 	private void initCategories()
 	{
+
 		categories.setAdapter(new CategoryAdapter());
 	}
 
 	private void findViews()
 	{
+
 		categories = (GridView) findViewById(R.id.act_card_category_selector_gv_categories);
+		openDraft = (OpenDraft) findViewById(R.id.act_card_category_iv_menu_open_draft);
 	}
 
 	private void setListener()
 	{
+
 		categories.setOnItemClickListener(this);
+		openDraft.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+
+				try
+				{
+					CardDraft cardDraft = cardDraftManager.openDraft();
+					Log.d(TAG, "openDraft - onClick()");
+					Intent intent = new Intent(CardCategorySelectorActivity.this,
+							CardEditorActivity.class);
+					intent.putExtra(CardEditorActivity.EXTRA_KEY_CARD_DRAFT, cardDraft);
+					intent.putExtra(CardEditorActivity.EXTRA_KEY_CARD_ID, cardDraft.getCardId());
+					startActivity(intent);
+				}
+				catch (Exception e)
+				{
+					Log.d(TAG, "openDraft - openDraft error:" + e.toString());
+				}
+			}
+
+		});
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int position, long id)
 	{
+
 		CardCategory category = (CardCategory) categories.getItemAtPosition(position);
 		Log.d(TAG, "clicked: " + category.name());
 
@@ -87,6 +141,7 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 		@Override
 		public int getCount()
 		{
+
 			return CardCategory.values().length - 1; // don't contain
 														// USER_FAVORITE
 		}
@@ -94,18 +149,21 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 		@Override
 		public CardCategory getItem(int position)
 		{
+
 			return CardCategory.values()[position];
 		}
 
 		@Override
 		public long getItemId(int position)
 		{
+
 			return position;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
+
 			ViewHolder holder;
 			if (convertView == null)
 			{
@@ -133,11 +191,13 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 	private class ViewHolder
 	{
 		ImageView image;
+
 		TextView name;
 	}
 
 	private void startCardSelector(CardCategory category)
 	{
+
 		Intent intent = new Intent(this, CardSelectorActivity.class);
 		intent.putExtra(CardSelectorActivity.EXTRA_KEY_CATEGORY, category);
 		startActivity(intent);

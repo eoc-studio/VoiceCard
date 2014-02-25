@@ -13,15 +13,15 @@ public class OpenDraft extends ImageView
 	{
 		super(context, attrs);
 		this.setImageResource(R.drawable.menu_open);
-		this.setOnClickListener(new OnClickListener()
+/*		this.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
 			public void onClick(View v)
 			{
-
+				
 			}
 
-		});
+		});*/
 	}
 }

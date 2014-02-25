@@ -32,7 +32,9 @@ public class Card implements Parcelable
 	private String message;
 	private int messageTextColor = DEFAULT_TEXT_COLOR;
 	private int messageTextSizeType = DEFAULT_TEXT_SIZE_TYPE;
-	private Uri signature;
+	private Uri signDraftImage;
+	private Uri signHandwriting; 
+	private Uri signPositionInfo;
 
 	public Card(int id, CardCategory category, String name, int image3dCoverResId,
 			int image3dOpenResId, int imageCoverResId, int imageInnerLeftResId,
@@ -66,7 +68,9 @@ public class Card implements Parcelable
 		this.message = card.message;
 		this.messageTextColor = card.messageTextColor;
 		this.messageTextSizeType = card.messageTextSizeType;
-		this.signature = card.signature;
+		this.signDraftImage = card.signDraftImage;
+		this.signHandwriting = card.signHandwriting;
+		this.signPositionInfo = card.signPositionInfo;
 	}
 
 	public int getId()
@@ -191,14 +195,14 @@ public class Card implements Parcelable
 		this.messageTextColor = color;
 	}
 
-	public Uri getSignature()
+	public Uri getSignDraftImage()
 	{
-		return signature;
-	}
+		return signDraftImage;
+	} 
 
-	public void setSignature(Uri signature)
+	public void setSignDraftImage(Uri signature)
 	{
-		this.signature = signature;
+		this.signDraftImage = signature;
 	}
 
 	public int getTextColor()
@@ -214,6 +218,7 @@ public class Card implements Parcelable
 	@Override
 	public String toString()
 	{
+
 		return "Card [id=" + id + ", category=" + category + ", name=" + name
 				+ ", image3dCoverResId=" + image3dCoverResId + ", image3dOpenResId="
 				+ image3dOpenResId + ", imageCoverResId=" + imageCoverResId
@@ -221,7 +226,8 @@ public class Card implements Parcelable
 				+ imageInnerRightResId + ", textColor=" + textColor + ", sound=" + sound
 				+ ", image=" + image + ", message=" + message + ", messageTextColor="
 				+ messageTextColor + ", messageTextSizeType=" + messageTextSizeType
-				+ ", signature=" + signature + "]";
+				+ ", signDraftImage=" + signDraftImage + ", signHandwriting=" + signHandwriting
+				+ ", signPositionInfo=" + signPositionInfo + "]";
 	}
 
 	public int describeContents()
@@ -246,7 +252,9 @@ public class Card implements Parcelable
 		out.writeString(message);
 		out.writeInt(messageTextColor);
 		out.writeInt(messageTextSizeType);
-		out.writeParcelable(signature, flags);
+		out.writeParcelable(signDraftImage, flags); 
+		out.writeParcelable(signHandwriting, flags);
+		out.writeParcelable(signPositionInfo, flags);
 	}
 
 	public static final Parcelable.Creator<Card> CREATOR = new Parcelable.Creator<Card>()
@@ -280,6 +288,32 @@ public class Card implements Parcelable
 		message = in.readString();
 		messageTextColor = in.readInt();
 		messageTextSizeType = in.readInt();
-		signature = in.readParcelable(uriClazzLoader);
+		signDraftImage = in.readParcelable(uriClazzLoader);
+		signHandwriting = in.readParcelable(uriClazzLoader);
+		signPositionInfo = in.readParcelable(uriClazzLoader);		
+	}
+
+	public Uri getSignHandwriting()
+	{
+	
+		return signHandwriting;
+	}
+
+	public void setSignHandwriting(Uri signHandwriting)
+	{
+	
+		this.signHandwriting = signHandwriting;
+	}
+
+	public Uri getSignPositionInfo()
+	{
+	
+		return signPositionInfo;
+	}
+
+	public void setSignPositionInfo(Uri signPositionInfo)
+	{
+	
+		this.signPositionInfo = signPositionInfo;
 	}
 }

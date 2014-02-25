@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+
+import com.facebook.Session.NewPermissionsRequest;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -32,14 +35,15 @@ import android.widget.TextView;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.Card;
+import eoc.studio.voicecard.card.CardDraft;
 import eoc.studio.voicecard.card.FakeData;
 import eoc.studio.voicecard.manufacture.EditSignatureActivity;
+import eoc.studio.voicecard.menu.OpenDraft;
+import eoc.studio.voicecard.menu.SaveDraft;
 import eoc.studio.voicecard.utils.FileUtility;
 
 public class CardEditorActivity extends BaseActivity
 {
-	public static final String EXTRA_KEY_CARD_ID = "card_id";
-
 	private static final String TAG = "CardEditor";
 
 	private static final int REQ_PICK_IMAGE = 1;
@@ -51,6 +55,10 @@ public class CardEditorActivity extends BaseActivity
 	private static final int REQ_EDIT_TEXT = 4;
 
 	private static final int REQ_EDIT_SIGNATURE = 5;
+
+	public static final String EXTRA_KEY_CARD_ID = "card_id";
+
+	public static final String EXTRA_KEY_CARD_DRAFT = "card_draft";
 
 	private static final String EXTRA_KEY_USER_IMAGE = "user_image";
 
@@ -66,7 +74,6 @@ public class CardEditorActivity extends BaseActivity
 
 	private static final String EXTRA_KEY_USER_TEXT_COLOR = "user_text_color";
 
-	// @bruce add for sign uri info
 	private static final String EXTRA_KEY_USER_SIGN_HANDWRITHING = "user_sign_handwriting";
 
 	private static final String EXTRA_KEY_USER_SIGN_POSITION_INFO = "user_sign_position_info";
@@ -131,7 +138,6 @@ public class CardEditorActivity extends BaseActivity
 
 	private int userTextColor;
 
-	// @bruce add for sign uri info
 	private Uri userSignHandwritingUri;
 
 	private Uri userSignPositionInfoUri;
@@ -139,6 +145,12 @@ public class CardEditorActivity extends BaseActivity
 	private Uri userSignDraftImageUri;
 
 	private ImageView editableSignImage;
+
+	private SaveDraft saveDraft;
+
+	private OpenDraft openDraft;
+
+	private CardDraftManager cardDraftManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -151,13 +163,46 @@ public class CardEditorActivity extends BaseActivity
 		}
 		else
 		{
-			Log.d(TAG, "from intent");
-			card = getEmptyCardFromIntent(getIntent());
+
+			if (getIntent().getParcelableExtra(EXTRA_KEY_CARD_DRAFT) != null)
+			{
+				Log.d(TAG, "from intent have card draft");
+				CardDraft cardDraft = getIntent().getParcelableExtra(EXTRA_KEY_CARD_DRAFT);
+				card = getCardById(cardDraft.getCardId());
+				updateFromCradDraft(cardDraft);
+				saveCradInformation();
+			}
+			else
+			{
+				Log.d(TAG, "from intent");
+				card = getEmptyCardFromIntent(getIntent());
+			}
 		}
+		initCardDraftManager();
 		initLayout();
 		setupCardView();
 		setupUserData();
+
 		super.onCreate(savedInstanceState);
+	}
+
+	private void saveCradInformation()
+	{
+
+		card.setImage(userImage);
+		card.setSound(userVoice);
+		card.setMessage(userTextContent, userTextSizeType, userTextColor);
+		card.setSignDraftImage(userSignDraftImageUri);
+		card.setSignHandwriting(userSignPositionInfoUri);
+		card.setSignPositionInfo(userSignDraftImageUri);
+	}
+
+	private void initCardDraftManager()
+	{
+
+		Log.d(TAG, "initCardDraftManager()");
+		cardDraftManager = new CardDraftManager();
+		cardDraftManager.init(getApplicationContext());
 	}
 
 	@Override
@@ -208,46 +253,8 @@ public class CardEditorActivity extends BaseActivity
 	private void setupUserData()
 	{
 
-		if (userImage != null)
-		{
-			editableImage.setImageBitmap(userImageBitmap);
-		}
-		if (userVoice != null)
-		{
-			editableVoice.setVisibility(View.VISIBLE);
-			editableVoiceText.setText(userVoiceDuration);
-		}
-		if (userTextContent != null)
-		{
-			editableText.setText(userTextContent);
-			editableText.setTextSize(getTextSizeByType(userTextSizeType));
-			editableText.setTextColor(userTextColor);
-			editableText.setVisibility(View.VISIBLE);
+		updateAllRegion();
 
-			if (editableText.getText().length() > 0)
-			{
-				editableTextTip.setVisibility(View.INVISIBLE);
-			}
-			else
-			{
-				editableTextTip.setVisibility(View.VISIBLE);
-			}
-		}
-
-		if (userSignDraftImageUri != null)
-		{
-
-			editableSignatureTip.setVisibility(View.INVISIBLE);
-		}
-		else
-		{
-			editableSignatureTip.setVisibility(View.VISIBLE);
-		}
-		
-		if (userSignDraftImageUri != null && getBitmapFromUri(userSignDraftImageUri)!=null)
-		{
-			editableSignImage.setImageBitmap(getBitmapFromUri(userSignDraftImageUri));
-		}
 	}
 
 	private void restoreUserData(Bundle savedInstanceState)
@@ -274,14 +281,11 @@ public class CardEditorActivity extends BaseActivity
 		Log.d(TAG, "restore user data -- TEXT CONTENT: " + userTextContent);
 		Log.d(TAG, "restore user data -- TEXT SIZE TYPE: " + userTextSizeType);
 		Log.d(TAG, "restore user data -- TEXT COLOR: " + userTextColor);
-		Log.d(TAG, "restore user data -- userSignHandwritingUri: " + userSignHandwritingUri);
-		Log.d(TAG, "restore user data -- userSignPositionInfoUri: " + userSignPositionInfoUri);
-		Log.d(TAG, "restore user data -- userSignDraftImageUri: " + userSignDraftImageUri);
+		Log.d(TAG, "restore user data -- SIGN HANDWRITHING: " + userSignHandwritingUri);
+		Log.d(TAG, "restore user data -- SIGN POSITION: " + userSignPositionInfoUri);
+		Log.d(TAG, "restore user data -- SIGN IAMGE: " + userSignDraftImageUri);
 
-		card.setImage(userImage);
-		card.setSound(userVoice);
-		card.setMessage(userTextContent, userTextSizeType, userTextColor);
-
+		saveCradInformation();
 	}
 
 	private void saveUserData(Bundle savedInstanceState)
@@ -322,21 +326,21 @@ public class CardEditorActivity extends BaseActivity
 		{
 			savedInstanceState.putParcelable(EXTRA_KEY_USER_SIGN_HANDWRITHING,
 					userSignHandwritingUri);
-			Log.d(TAG, "save user data -- userSignHandwritingUri: " + userSignHandwritingUri);
+			Log.d(TAG, "save user data -- SIGN HANDWRITHING: " + userSignHandwritingUri);
 		}
 
 		if (userSignPositionInfoUri != null)
 		{
 			savedInstanceState.putParcelable(EXTRA_KEY_USER_SIGN_POSITION_INFO,
 					userSignPositionInfoUri);
-			Log.d(TAG, "save user data -- userSignPositionInfoUri: " + userSignPositionInfoUri);
+			Log.d(TAG, "save user data -- SIGN POSITION: " + userSignPositionInfoUri);
 		}
 
 		if (userSignDraftImageUri != null)
 		{
 			savedInstanceState
 					.putParcelable(EXTRA_KEY_USER_SIGN_DRAFT_IMAGE, userSignDraftImageUri);
-			Log.d(TAG, "save user data -- userSignDraftImageUri: " + userSignDraftImageUri);
+			Log.d(TAG, "save user data -- SIGN IAMGE: " + userSignDraftImageUri);
 		}
 
 	}
@@ -411,6 +415,10 @@ public class CardEditorActivity extends BaseActivity
 		editableText = (TextView) findViewById(R.id.act_card_editor_ret_editable_text);
 
 		editableSignImage = (ImageView) findViewById(R.id.act_card_editor_iv_editable_signature_image);
+
+		saveDraft = (SaveDraft) findViewById(R.id.act_card_editor_iv_menu_save_draft);
+		openDraft = (OpenDraft) findViewById(R.id.act_card_editor_iv_menu_open_draft);
+
 	}
 
 	private void setupCardView()
@@ -545,6 +553,125 @@ public class CardEditorActivity extends BaseActivity
 				startSignatureEditor();
 			}
 		});
+		saveDraft.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+
+				Log.d(TAG, "saveDraft - onClick()");
+				cardDraftManager.saveDraft(new CardDraft(card.getId(), userVoice,
+						userVoiceDuration, userImage, userTextContent, userTextColor,
+						userTextSizeType, userSignHandwritingUri, userSignPositionInfoUri,
+						userSignDraftImageUri));
+			}
+
+		});
+
+		openDraft.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+
+				Log.d(TAG, "openDraft - onClick()");
+				try
+				{
+					CardDraft cardDraft = cardDraftManager.openDraft();
+
+					updateFromCradDraft(cardDraft);
+					updateAllRegion();
+					saveCradInformation();
+
+					Log.d(TAG, "openDraft - onClick() user data -- IMAGE URI: " + userImage);
+					Log.d(TAG, "openDraft - onClick() user data -- IMAGE BITMAP: " + userImageBitmap);
+					Log.d(TAG, "openDraft - onClick() user data -- VOICE URI: " + userVoice);
+					Log.d(TAG, "openDraft - onClick() user data -- VOICE DURATION: "
+							+ userVoiceDuration);
+					Log.d(TAG, "openDraft - onClick() user data -- TEXT CONTENT: " + userTextContent);
+					Log.d(TAG, "openDraft - onClick() user data -- TEXT SIZE TYPE: " + userTextSizeType);
+					Log.d(TAG, "openDraft - onClick() user data -- TEXT COLOR: " + userTextColor);
+					Log.d(TAG, "openDraft - onClick() user data -- SIGN HANDWRITHING: "
+							+ userSignHandwritingUri);
+					Log.d(TAG, "openDraft - onClick() user data -- SIGN POSITION: "
+							+ userSignPositionInfoUri);
+					Log.d(TAG, "openDraft - onClick() user data -- SIGN IAMGE: "
+							+ userSignDraftImageUri);
+				}
+				catch (Exception e)
+				{
+					Log.d(TAG, "openDraft - openDraft error:"+  e.toString());
+				}
+
+			}
+
+		});
+	}
+
+	private void updateFromCradDraft(CardDraft cardDraft)
+	{
+
+		userImage = cardDraft.getImageUri();
+		userVoice = cardDraft.getSoundUri();
+		userVoiceDuration = cardDraft.getSoundDuration();
+		userTextContent = cardDraft.getMessage();
+		userTextSizeType = cardDraft.getMessageTextSizeType();
+		userTextColor = cardDraft.getMessageTextColor();
+		userSignHandwritingUri = cardDraft.getSignHandwritingUri();
+		userSignPositionInfoUri = cardDraft.getSignPositionInfoUri();
+		userSignDraftImageUri = cardDraft.getSignDraftImageUri();
+	}
+
+	private void updateAllRegion()
+	{
+
+		updateImageRegion();
+		updateVoiceRegion();
+		updateTextRegion();
+		updateSignRegion();
+	}
+
+	private void updateImageRegion()
+	{
+
+		if (userImage != null && Bitmap.createBitmap(getBitmapFromUri(userImage)) != null)
+		{
+			userImageBitmap = Bitmap.createBitmap(getBitmapFromUri(userImage));
+			editableImage.setImageBitmap(userImageBitmap);
+		}
+	}
+
+	private void updateVoiceRegion()
+	{
+
+		if (userVoice != null)
+		{
+			editableVoiceText.setText(userVoiceDuration);
+			editableVoice.setVisibility(View.VISIBLE);
+		}
+	}
+
+	private void updateTextRegion()
+	{
+
+		if (userTextContent != null)
+		{
+			editableText.setText(userTextContent);
+			editableText.setTextSize(getTextSizeByType(userTextSizeType));
+			editableText.setTextColor(userTextColor);
+			editableText.setVisibility(View.VISIBLE);
+		}
+
+		if (editableText.getText().length() > 0)
+		{
+			editableTextTip.setVisibility(View.INVISIBLE);
+		}
+		else
+		{
+			editableTextTip.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private void openLandscapeMenu()
@@ -620,7 +747,10 @@ public class CardEditorActivity extends BaseActivity
 	{
 
 		Uri uri = data.getData();
-		String filePath = convertAudioContentUriToFilePath(uri);
+		Log.e(TAG, "onVoiceRecorderResult()  uri: " + uri);
+		String filePath = uri.getPath();
+
+		Log.e(TAG, "onVoiceRecorderResult()  filePath:" + filePath);
 		String extName = filePath.substring(filePath.lastIndexOf(".") + 1);
 		File oldFile = new File(filePath);
 
@@ -637,6 +767,7 @@ public class CardEditorActivity extends BaseActivity
 		}
 
 		uri = Uri.fromFile(newFile);
+		Log.e(TAG, "onVoiceRecorderResult()  last uri:" + uri);
 		userVoice = uri;
 		card.setSound(uri);
 		setVoiceMessageText(uri);
@@ -668,8 +799,7 @@ public class CardEditorActivity extends BaseActivity
 							int sec = duration / 1000 % 60;
 							userVoiceDuration = getString(R.string.play_voice_message, min + ":"
 									+ String.format("%02d", sec));
-							editableVoiceText.setText(userVoiceDuration);
-							editableVoice.setVisibility(View.VISIBLE);
+							updateVoiceRegion();
 							Log.d(TAG, "userVoiceDuration: " + userVoiceDuration);
 
 							new Thread("ReleasePlayer")
@@ -683,6 +813,7 @@ public class CardEditorActivity extends BaseActivity
 								}
 							}.start();
 						}
+
 					});
 				}
 
@@ -728,18 +859,7 @@ public class CardEditorActivity extends BaseActivity
 		userTextColor = data.getIntExtra(CardTextEditorActivity.EXTRA_KEY_TEXT_COLOR,
 				Card.DEFAULT_TEXT_COLOR);
 
-		editableText.setText(userTextContent);
-		editableText.setTextSize(getTextSizeByType(userTextSizeType));
-		editableText.setTextColor(userTextColor);
-		editableText.setVisibility(View.VISIBLE);
-		if (editableText.getText().length() > 0)
-		{
-			editableTextTip.setVisibility(View.INVISIBLE);
-		}
-		else
-		{
-			editableTextTip.setVisibility(View.VISIBLE);
-		}
+		updateTextRegion();
 
 		card.setMessage(userTextContent, userTextSizeType, userTextColor);
 	}
@@ -764,6 +884,9 @@ public class CardEditorActivity extends BaseActivity
 
 		if (userSignDraftImageUri != null)
 		{
+
+			Log.d(TAG, "onSignatureEditorResult, getBitmapFromUri(userSignDraftImageUri): "
+					+ getBitmapFromUri(userSignDraftImageUri));
 			editableSignImage.setImageBitmap(getBitmapFromUri(userSignDraftImageUri));
 		}
 
@@ -771,6 +894,26 @@ public class CardEditorActivity extends BaseActivity
 		Log.d(TAG, "onSignatureEditorResult, userSignPositionInfoUri: " + userSignPositionInfoUri);
 		Log.d(TAG, "onSignatureEditorResult, useSignDraftImageUri:" + userSignDraftImageUri);
 
+		updateSignRegion();
+
+		card.setSignHandwriting(userSignHandwritingUri);
+		card.setSignPositionInfo(userSignPositionInfoUri);
+		card.setSignDraftImage(userSignDraftImageUri);
+
+	}
+
+	private void updateSignRegion()
+	{
+
+		if (userSignDraftImageUri != null && getBitmapFromUri(userSignDraftImageUri) != null)
+		{
+			editableSignatureTip.setVisibility(View.INVISIBLE);
+			editableSignImage.setImageBitmap(getBitmapFromUri(userSignDraftImageUri));
+		}
+		else
+		{
+			editableSignatureTip.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
@@ -858,18 +1001,21 @@ public class CardEditorActivity extends BaseActivity
 		return result;
 	}
 
-	private String convertAudioContentUriToFilePath(Uri contentUri)
-	{
-
-		String[] projection = { MediaStore.Images.Media.DATA };
-		Cursor cursor = this.getContentResolver().query(contentUri, projection, null, null, null);
-		if (cursor == null) return null;
-		int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-		cursor.moveToFirst();
-		String s = cursor.getString(column_index);
-		cursor.close();
-		return s;
-	}
+	// private String convertAudioContentUriToFilePath(Uri contentUri)
+	// {
+	//
+	// String[] projection = {
+	// MediaStore.Audio.Media.DATA,MediaStore.Images.Media.DATA };
+	// Cursor cursor = this.getContentResolver().query(contentUri, projection,
+	// null, null, null);
+	// if (cursor == null) return null;
+	// int column_index =
+	// cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+	// cursor.moveToFirst();
+	// String s = cursor.getString(column_index);
+	// cursor.close();
+	// return s;
+	// }
 
 	private static void copyFile(File src, File dest) throws IOException
 	{

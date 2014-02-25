@@ -13,7 +13,7 @@ public class SaveDraft extends ImageView
 	{
 		super(context, attrs);
 		this.setImageResource(R.drawable.menu_save);
-		this.setOnClickListener(new OnClickListener()
+/*		this.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
@@ -22,7 +22,7 @@ public class SaveDraft extends ImageView
 
 			}
 
-		});
+		});*/
 
 	}
 
