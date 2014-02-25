@@ -1,6 +1,8 @@
 package eoc.studio.voicecard.mainmenu;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +19,9 @@ import com.android.volley.toolbox.ImageLoader;
 
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
-import eoc.studio.voicecard.TestMainActivity;
 import eoc.studio.voicecard.calendarview.MainCalendarView;
+import eoc.studio.voicecard.calendarview.CalendarIntentHelper;
+import eoc.studio.voicecard.calendarview.DataProcess;
 import eoc.studio.voicecard.card.editor.CardCategorySelectorActivity;
 import eoc.studio.voicecard.mailbox.MailboxActivity;
 import eoc.studio.voicecard.manager.HttpManager;
@@ -119,30 +122,52 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		{
 			memorialDayNotification.setDate(now);
 			String event = getMemorialEvent(now);
+			Log.d(TAG, "setMemorialDayNotification - event: " + event);
 			memorialDayNotification.setEvent(event);
 		}
 	}
 
 	private String getMemorialEvent(Calendar calendar)
 	{
-		// TODO get event from Ryan
-		switch (calendar.get(Calendar.DAY_OF_WEEK))
+		ArrayList<Map<String, String>> event = CalendarIntentHelper
+
+		.readCalendarEvent(this,
+
+		(DataProcess.formatDate(String.valueOf(System.currentTimeMillis()),
+
+		"yyyyMMdd") + DataProcess.DEFAULT_EVENT_TIME));
+
+		if (event != null && !event.isEmpty())
+
 		{
-		case Calendar.MONDAY:
-			return "星期一猴子穿新衣";
-		case Calendar.TUESDAY:
-			return "星期二猴子肚子餓";
-		case Calendar.WEDNESDAY:
-			return "星期三猴子去爬山";
-		case Calendar.THURSDAY:
-			return "星期四猴子去考試";
-		case Calendar.FRIDAY:
-			return "星期五猴子去跳舞";
-		case Calendar.SATURDAY:
-			return "星期六猴子去斗六";
-		case Calendar.SUNDAY:
-		default:
+
+			StringBuilder builder = new StringBuilder();
+			for (int i = 0; i < event.size(); i++)
+
+			{
+
+				builder.append(event
+
+				.get(i)
+
+				.get(CalendarIntentHelper.EVENT_PROJECTION[CalendarIntentHelper.EVENT_TITLE_INDEX]));
+
+				builder.append("\n");
+
+			}
+			builder.deleteCharAt(builder.length() - 1);
+			return builder.toString();
+		}
+
+		else
+
+		{
+
+			// String title = "NO EVENT";
+
+			// System.out.println(title);
 			return null;
+
 		}
 	}
 

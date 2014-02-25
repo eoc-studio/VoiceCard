@@ -399,22 +399,22 @@ public class CardEditorActivity extends BaseActivity
 			landscapeMenuModeScreenMask = (RelativeLayout) findViewById(R.id.act_card_editor_landscape_rlyt_menu_mode_screen_mask);
 		}
 
-		editableImageFrame = (FrameLayout) findViewById(R.id.act_card_editor_flyt_editable_image_frame);
-		editableVoiceFrame = (FrameLayout) findViewById(R.id.act_card_editor_flyt_editable_voice_frame);
-		editableTextFrame = (FrameLayout) findViewById(R.id.act_card_editor_flyt_editable_text_frame);
-		editableSignatureFrame = (FrameLayout) findViewById(R.id.act_card_editor_flyt_editable_signature_frame);
+		editableImageFrame = (FrameLayout) findViewById(R.id.glb_card_flyt_editable_image_frame);
+		editableVoiceFrame = (FrameLayout) findViewById(R.id.glb_card_flyt_editable_voice_frame);
+		editableTextFrame = (FrameLayout) findViewById(R.id.glb_card_flyt_editable_text_frame);
+		editableSignatureFrame = (FrameLayout) findViewById(R.id.glb_card_flyt_editable_signature_frame);
 
-		editableImageTip = (TextView) findViewById(R.id.act_card_editor_tv_editable_image_tip);
-		editableVoiceTip = (TextView) findViewById(R.id.act_card_editor_tv_editable_voice_tip);
-		editableTextTip = (TextView) findViewById(R.id.act_card_editor_tv_editable_text_tip);
-		editableSignatureTip = (TextView) findViewById(R.id.act_card_editor_tv_editable_signature_tip);
+		editableImageTip = (TextView) findViewById(R.id.glb_card_tv_editable_image_tip);
+		editableVoiceTip = (TextView) findViewById(R.id.glb_card_tv_editable_voice_tip);
+		editableTextTip = (TextView) findViewById(R.id.glb_card_tv_editable_text_tip);
+		editableSignatureTip = (TextView) findViewById(R.id.glb_card_tv_editable_signature_tip);
 
-		editableImage = (ImageView) findViewById(R.id.act_card_editor_iv_editable_image);
-		editableVoice = (LinearLayout) findViewById(R.id.act_card_editor_llyt_editable_voice);
-		editableVoiceText = (TextView) findViewById(R.id.act_card_editor_tv_editable_voice_play_text);
-		editableText = (TextView) findViewById(R.id.act_card_editor_ret_editable_text);
+		editableImage = (ImageView) findViewById(R.id.glb_card_iv_editable_image);
+		editableVoice = (LinearLayout) findViewById(R.id.glb_card_llyt_editable_voice);
+		editableVoiceText = (TextView) findViewById(R.id.glb_card_tv_editable_voice_play_text);
+		editableText = (TextView) findViewById(R.id.glb_card_ret_editable_text);
 
-		editableSignImage = (ImageView) findViewById(R.id.act_card_editor_iv_editable_signature_image);
+		editableSignImage = (ImageView) findViewById(R.id.glb_card_iv_editable_signature_image);
 
 		saveDraft = (SaveDraft) findViewById(R.id.act_card_editor_iv_menu_save_draft);
 		openDraft = (OpenDraft) findViewById(R.id.act_card_editor_iv_menu_open_draft);

@@ -61,6 +61,10 @@ public class FlipView extends RelativeLayout
 		public void onOpened();
 
 		public void onClosed();
+
+		public void onStartOpening();
+
+		public void onStartClosing();
 	}
 
 	public FlipView(Context context, int width, int height, float rotationBegin, float rotationEnd,
@@ -231,5 +235,16 @@ public class FlipView extends RelativeLayout
 			}
 		});
 		animation1.start();
+		if (mFlipListener != null)
+		{
+			if (isOpening)
+			{
+				mFlipListener.onStartOpening();
+			}
+			else
+			{
+				mFlipListener.onStartClosing();
+			}
+		}
 	}
 }

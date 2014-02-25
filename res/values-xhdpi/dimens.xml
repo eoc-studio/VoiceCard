@@ -55,4 +55,8 @@
 	<dimen name="glb_mailbox_list_item_new_icon_height">20dp</dimen>
 	<dimen name="glb_mailbox_list_item_new_icon_marginRight">10dp</dimen>
 	
+	<!-- Card -->
+    <dimen name="card_open_width">417dip</dimen>
+    <dimen name="card_height">250dip</dimen>
+    <dimen name="card_page_width">208.5dip</dimen>
 </resources>

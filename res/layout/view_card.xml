@@ -5,7 +5,7 @@
 		android:layout_height="match_parent">
 
 		<FrameLayout
-				android:id="@+id/act_card_editor_flyt_editable_image_frame"
+				android:id="@+id/glb_card_flyt_editable_image_frame"
 				android:layout_width="175dip"
 				android:layout_height="131dip"
 				android:layout_marginLeft="20dip"
@@ -13,20 +13,20 @@
 				android:background="@drawable/dash_border">
 
 				<TextView
-						android:id="@+id/act_card_editor_tv_editable_image_tip"
+						android:id="@+id/glb_card_tv_editable_image_tip"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_gravity="center"
 						android:text="@string/insert_image" />
 
 				<ImageView
-						android:id="@+id/act_card_editor_iv_editable_image"
+						android:id="@+id/glb_card_iv_editable_image"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent" />
 		</FrameLayout>
 
 		<FrameLayout
-				android:id="@+id/act_card_editor_flyt_editable_voice_frame"
+				android:id="@+id/glb_card_flyt_editable_voice_frame"
 				android:layout_width="175dip"
 				android:layout_height="70dip"
 				android:layout_alignParentBottom="true"
@@ -35,14 +35,14 @@
 				android:background="@drawable/dash_border">
 
 				<TextView
-						android:id="@+id/act_card_editor_tv_editable_voice_tip"
+						android:id="@+id/glb_card_tv_editable_voice_tip"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_gravity="center"
 						android:text="@string/insert_voice" />
 
 				<LinearLayout
-						android:id="@+id/act_card_editor_llyt_editable_voice"
+						android:id="@+id/glb_card_llyt_editable_voice"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_gravity="center"
@@ -51,14 +51,14 @@
 						android:visibility="invisible">
 
 						<ImageView
-								android:id="@+id/act_card_editor_iv_editable_voice_play_icon"
+								android:id="@+id/glb_card_iv_editable_voice_play_icon"
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
 								android:layout_marginRight="10dip"
 								android:src="@drawable/icon_play" />
 
 						<TextView
-								android:id="@+id/act_card_editor_tv_editable_voice_play_text"
+								android:id="@+id/glb_card_tv_editable_voice_play_text"
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
 								android:layout_marginRight="10dip"
@@ -68,7 +68,7 @@
 		</FrameLayout>
 
 		<FrameLayout
-				android:id="@+id/act_card_editor_flyt_editable_text_frame"
+				android:id="@+id/glb_card_flyt_editable_text_frame"
 				android:layout_width="175dip"
 				android:layout_height="115dip"
 				android:layout_alignParentRight="true"
@@ -78,14 +78,14 @@
 				android:background="@drawable/dash_border">
 
 				<TextView
-						android:id="@+id/act_card_editor_tv_editable_text_tip"
+						android:id="@+id/glb_card_tv_editable_text_tip"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_gravity="center"
 						android:text="@string/insert_text" />
 
 				<TextView
-						android:id="@+id/act_card_editor_ret_editable_text"
+						android:id="@+id/glb_card_ret_editable_text"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
 						android:background="@android:color/transparent"
@@ -95,7 +95,7 @@
 		</FrameLayout>
 
 		<FrameLayout
-				android:id="@+id/act_card_editor_flyt_editable_signature_frame"
+				android:id="@+id/glb_card_flyt_editable_signature_frame"
 				android:layout_width="175dip"
 				android:layout_height="87dip"
 				android:layout_alignParentBottom="true"
@@ -105,14 +105,14 @@
 				android:background="@drawable/dash_border">
 
 				<TextView
-						android:id="@+id/act_card_editor_tv_editable_signature_tip"
+						android:id="@+id/glb_card_tv_editable_signature_tip"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_gravity="center"
 						android:text="@string/insert_signature" />
 
 				<ImageView
-						android:id="@+id/act_card_editor_iv_editable_signature_image"
+						android:id="@+id/glb_card_iv_editable_signature_image"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
 						android:layout_gravity="right|bottom" />

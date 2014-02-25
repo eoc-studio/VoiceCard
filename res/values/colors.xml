@@ -60,6 +60,8 @@
 		<!-- About Mailbox item -->
 		<color name="mail_box_list_item_subject_text_color">#693837</color>
 		<color name="mail_box_list_item_date_text_color">#D0A3A2</color>
+		
+		<color name="mail_sender_receiver_counter">#f77f0c</color>
 </resources>
 
 
