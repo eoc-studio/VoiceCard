@@ -21,6 +21,7 @@ public class DataProcess
 	public static final String DEFAULT_EVENT_TIME = "0800";
 	private static final int EVENT_ALARM_12_HOURS = 60 * 12;
 	private static String eventDateValue = "";
+	private static final int isAllDay = 1;
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	protected static void addEvent(final Context context, final String title, String date)
@@ -32,7 +33,7 @@ public class DataProcess
 		values.put(Events.CALENDAR_ID, CalendarIntentHelper.getVoiceCardCalendar(context));
 		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
 		values.put(Events.TITLE, title);
-		values.put(Events.ALL_DAY, true);
+		values.put(Events.ALL_DAY, isAllDay);
 		values.put(Events.DTSTART, getDataMilliSeconds(date));
 		values.put(Events.DTEND, getDataMilliSeconds(date));
 		values.put(Events.DESCRIPTION, "VoiceCard Note");
@@ -137,6 +138,22 @@ public class DataProcess
 		{
 			return "";
 		}
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public static String checkFacebookBirthdayFormats(final String date)
+	{
+		String formats = "";
+		if (date.length() > 5)
+		{
+			return DataProcess.getDataMilliSeconds(date, "MM/dd/yyyy");
+		}
+		else if (date.length() == 5) 
+		{
+			return DataProcess.getDataMilliSeconds(date + "/1970",
+				"MM/dd/yyyy"); 
+		}
+		return formats;
 	}
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
