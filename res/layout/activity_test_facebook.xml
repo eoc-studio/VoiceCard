@@ -11,6 +11,12 @@
         android:orientation="vertical" >
 
         <Button
+            android:id="@+id/getUserProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/get_user_profile" />
+        
+        <Button
             android:id="@+id/getFriendList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

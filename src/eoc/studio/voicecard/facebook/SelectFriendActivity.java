@@ -49,15 +49,16 @@ public class SelectFriendActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_friend);
-        facebookManager = new FacebookManager(SelectFriendActivity.this, savedInstanceState);
+        Log.d(TAG, "onCreate");
+        facebookManager = FacebookManager.getInstance(SelectFriendActivity.this);
         friendsAdapterData = new FriendsAdapterData(SelectFriendActivity.this);
         findViews();
+        getFriendsfromWeb();
     }
     
     @Override
     public void onResume() {
         super.onResume();
-        getFriendsfromWeb();
     }
     
     @Override
@@ -157,8 +158,10 @@ public class SelectFriendActivity extends BaseActivity {
     }
     
     private void getFriendsfromWeb() {
-        if (facebookManager != null) 
-            facebookManager.getFriendList(new RequestGraphUserListCallback());
+        if (facebookManager != null)
+        {
+            facebookManager.getFriendList(SelectFriendActivity.this, new RequestGraphUserListCallback());
+        }
     }
     
     private void getFriendsImgfromDB() {

@@ -20,6 +20,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.facebook.FacebookException;
 import com.facebook.LoggingBehavior;
@@ -44,8 +45,14 @@ public class FacebookManager
 	private Session.StatusCallback statusCallback = null;
 	private ProgressDialog progressDialog;
 	private Publish publish;
-	private Bundle inviteBundle;
+	private Bundle inviteBundle = null;
 	private int managerState;
+	private int actionType;
+	private FacebookListener facebookListener;
+	private Request.GraphUserListCallback friendListCallback;
+	private Request.GraphUserCallback userCallback;
+	
+	private volatile static FacebookManager facebookManager;
 	
 	public static class BundleTag
 	{
@@ -65,60 +72,22 @@ public class FacebookManager
 	{
 	    public static final int NORMAL = -1;
 	    public static final int LOGIN = 0;
-	    public static final int GET_FRIEND = 1;
-	    public static final int INVITE = 2;
-	    public static final int PUBLISH = 3;
+	    public static final int GET_USER_PROFILE = 1;
+	    public static final int GET_FRIEND = 2;
+	    public static final int INVITE = 3;
+	    public static final int REQUEST_PUBLISH_PERMISSION = 4;
+	    public static final int PUBLISH = 5;
+	    public static final int UPLOAD = 6;
+	    public static final int LOGOUT = 7;
 	}
-		
+			
 	private class SessionStatusCallback implements Session.StatusCallback {        
         @Override
         public void call(Session session, SessionState state, Exception exception) {
             handleManagerState(session, state, exception);
         }
     }
-    
-    private class RequestGraphUserCallback implements Request.GraphUserCallback
-    {
-        @Override
-        public void onCompleted(GraphUser user, Response response)
-        {
-            if (user != null) {
-                JSONObject userJSON = user.getInnerJSONObject();
-                if(userJSON != null) {
-                    try {
-                        Log.d(TAG, "id is " + userJSON.getString(JSONTag.ID));
-                        Log.d(TAG, "email is " + userJSON.getString(JSONTag.EMAIL));
-                        Log.d(TAG, "name is " + userJSON.getString(JSONTag.NAME));
-                        Log.d(TAG, "gender is " + userJSON.getString(JSONTag.GENDER));
-                        Log.d(TAG, "birthday is " + userJSON.getString(JSONTag.BIRTHDAY));
-                        Log.d(TAG, "link is " + userJSON.getString(JSONTag.LINK));
-                        Log.d(TAG, "timezone is " + userJSON.getInt(JSONTag.TIMEZONE));
-                        Log.d(TAG, "locale is " + userJSON.getString(JSONTag.LOCALE));
-                        Log.d(TAG, "img is "
-                                + userJSON.getJSONObject(JSONTag.PICTURE).getJSONObject(JSONTag.DATA).getString(JSONTag.URL));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    
-                    try {
-                        Log.d(TAG, "hometown is "
-                                + userJSON.getJSONObject(JSONTag.HOMETOWN).getString(JSONTag.NAME));
-
-                        Log.d(TAG, "work is "
-                                + userJSON.getJSONArray(JSONTag.WORK).getJSONObject(0).getJSONObject(JSONTag.EMPLOYER)
-                                        .getString(JSONTag.NAME));
-                        
-                        Log.d(TAG, "education is "
-                                + userJSON.getJSONArray(JSONTag.EDUCATION).getJSONObject(0).getJSONObject(JSONTag.SCHOOL)
-                                        .getString(JSONTag.NAME));
-                    } catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
-    
+        
     public Handler dialogHandler = new Handler()
     {
         @Override  
@@ -138,13 +107,26 @@ public class FacebookManager
         }
     };
 
-	public FacebookManager(Context context, Bundle savedInstanceState)
+	private FacebookManager(Context context)
 	{
 		this.context = context;
 		statusCallback = new SessionStatusCallback();
-		managerState = ManagerState.LOGIN;
 		printHashKey("eoc.studio.voicecard");
-		initSession(savedInstanceState);
+	}
+	
+	public static FacebookManager getInstance(Context context)
+	{
+	    if (facebookManager == null)
+	    {
+	        synchronized(FacebookManager.class)
+	        {
+	            if (facebookManager == null)
+	            {
+	                facebookManager = new FacebookManager(context);
+	            }
+	        }
+	    }
+	    return facebookManager;
 	}
 	
 	public void handleManagerState(Session session, SessionState state, Exception exception) {
@@ -157,33 +139,34 @@ public class FacebookManager
 	    case ManagerState.LOGIN:
             if (exception == null) 
             {
-                getUserProfile(new RequestGraphUserCallback());
-            } 
+                if (isLogin())
+                    facebookListener.onSuccess();
+            }
             else 
             {
-                if (exception.getMessage().equals(USER_CANCELED_LOGIN)) 
-                {
-                    ((TestFacebookActivity) context).finish();
-                }
+                facebookListener.onError(exception.getMessage());
             }
+	        break;
+	    case ManagerState.GET_USER_PROFILE:
 	        break;
 	    case ManagerState.GET_FRIEND:
 	        break;
 	    case ManagerState.INVITE:
-	        if (state.equals(SessionState.OPENED)) {
-	            openInviteDialog(context, inviteBundle);
-	        }
+	        break;
+	    case ManagerState.REQUEST_PUBLISH_PERMISSION:
+            if (exception == null) 
+            {
+                if (isLogin())
+                    facebookListener.onSuccess();
+            }
+            else 
+            {
+                facebookListener.onError(exception.getMessage());
+            }
 	        break;
 	    case ManagerState.PUBLISH:
-	        if (exception != null) // user cancel publish permission
-	        {
-	           // the state is OPENED
-	        }
-	        else if (state.equals(SessionState.OPENED_TOKEN_UPDATED) || state.equals(SessionState.OPENED)) 
-                // user accept publish permission then show dialog
-            {
-                publishTimeline();
-            }
+	        break;
+	    case ManagerState.UPLOAD:
 	        break;
 	    }
 	}
@@ -192,23 +175,19 @@ public class FacebookManager
         return statusCallback;
     }
 
-	private void initSession(Bundle savedInstanceState)
+	public void login(Context context, FacebookListener facebookListener)
 	{
+	    this.context = context;
+	    this.facebookListener = facebookListener;
+	    managerState = ManagerState.LOGIN;
 		Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
 
 		Session session = Session.getActiveSession();
 		if (session == null)
 		{
-			if (savedInstanceState != null)
-			{
-				session = Session.restoreSession(context, null, statusCallback, savedInstanceState);
-			}
-			else
-			{
-				session = new Session(context);
-			}
+			session = new Session(context);
 			Log.d(TAG, "session state is " + session.getState());
-			openSession(session);
+			requestReadPermission(session);
 		}
 		else
 		{
@@ -217,14 +196,46 @@ public class FacebookManager
             if (session.getState().equals(SessionState.CLOSED_LOGIN_FAILED)
                     || session.getState().equals(SessionState.CLOSED)) {
                 session = new Session(context);
-                openSession(session);
+                requestReadPermission(session);
             }
 		}
 		Log.d(TAG, "session permission is " + session.getPermissions());
 		session.addCallback(statusCallback);
 	}
 	
-	private void openSession(Session session)
+	public boolean isLogin()
+    {
+        Session session = Session.getActiveSession();
+        if (session == null)
+        {
+            return false;
+        } 
+        else
+        {
+            if (session.isOpened())
+            {
+                return true;
+            } 
+            else 
+            {
+                return false;
+            }
+        }
+    }
+	
+	private void checkLoginfromPublish() {
+	    Log.d(TAG, "checkLoginfromPublish ");
+        if (isLogin())
+        {
+            checkPublishPermission();
+        } 
+        else 
+        {
+            login(context, new LoginListener());
+        }
+	}
+	
+	public void requestReadPermission(Session session)
 	{
         session.openForRead(new Session.OpenRequest((Activity) context).setCallback(statusCallback)
                 .setPermissions(
@@ -255,84 +266,129 @@ public class FacebookManager
 		}
 	}
 
-	public void getUserProfile(Request.GraphUserCallback callback)
+	public void getUserProfile(Context context, Request.GraphUserCallback callback)
 	{
-		Session session = Session.getActiveSession();
-		Log.d(TAG, "access token is " + session.getAccessToken());
-		Log.d(TAG, "session permission is " + session.getPermissions());
-		if (session.isOpened())
-		{
-			Request meRequest = Request.newMeRequest(session, callback);
-			Bundle requestParams = meRequest.getParameters();			// if not set field, will get all info(no phone number)
-            StringBuilder queryString = new StringBuilder().append(JSONTag.NAME).append(", ")
-                    .append(JSONTag.BIRTHDAY).append(", ").append(JSONTag.PICTURE).append(", ")
-                    .append(JSONTag.EMAIL).append(", ").append(JSONTag.EDUCATION).append(", ")
-                    .append(JSONTag.WORK).append(", ").append(JSONTag.GENDER).append(", ")
-                    .append(JSONTag.LINK).append(", ").append(JSONTag.HOMETOWN).append(", ")
-                    .append(JSONTag.TIMEZONE).append(", ").append(JSONTag.LOCALE);
-            requestParams.putString(BundleTag.FIELDS, queryString.toString());
-			meRequest.setParameters(requestParams);
-			meRequest.executeAsync();
-//			RequestBatch rb = new RequestBatch();
-//			rb.add(meRequest);
-//			rb.addCallback(new RequestBatch.Callback() {
-//
-//                @Override
-//                public void onBatchCompleted(RequestBatch batch) {
-//                       
-//                }
-//			});
-//			rb.setTimeout(300);
-//			rb.executeAsync();
-		}
-		else
-		{
-			Log.d(TAG, "getUserProfile session is closed");
-		}
-	}
-
-	public void getFriendList(Request.GraphUserListCallback callback)
-	{
-	    Log.d(TAG, "getFriendList");
-	    managerState = ManagerState.GET_FRIEND;
-	    dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
-		Session session = Session.getActiveSession();
-		if (session.isOpened())
-		{
-			Request myFriendsRequest = Request.newMyFriendsRequest(session, callback);
-			Bundle requestParams = myFriendsRequest.getParameters();
-            StringBuilder queryString = new StringBuilder().append(JSONTag.NAME).append(", ")
-                    .append(JSONTag.BIRTHDAY).append(", ").append(JSONTag.PICTURE);
-			requestParams.putString(BundleTag.FIELDS, queryString.toString());
-			myFriendsRequest.setParameters(requestParams);
-			myFriendsRequest.executeAsync();
-		}
-		else
-		{
-			Log.d(TAG, "getFriendList session is closed");
-			dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
-		}
-	}
-	
-	public void getPublishedPermission(Publish publish)
-	{
-	    managerState = ManagerState.PUBLISH;
-	    this.publish = publish;
-	    Session session = Session.getActiveSession();
-        if (session.isOpened()) {
-            if(!session.getPermissions().contains(Permissions.PUBLISH_STREAM)) {
-                session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
-                        (Activity) context, Permissions.PUBLISH_PERMISSION));
-            } else {
-                publishTimeline();
-            }
-        } else {
-            initSession(null);
+	    Log.d(TAG, "getUserProfile");
+	    actionType = ManagerState.GET_USER_PROFILE;
+	    userCallback = callback;
+	    this.context = context;
+	    
+        if (isLogin())
+        {
+            sendUserInfoRequest();
+        } 
+        else 
+        {
+            login(context, new LoginListener());
         }
 	}
-		
-	public void publishTimeline()
+	
+	private void sendUserInfoRequest() {
+	    Log.d(TAG, "sendUserInfoRequest");
+	    dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
+        Session session = Session.getActiveSession();
+        Log.d(TAG, "access token is " + session.getAccessToken());
+        if (session.isOpened()) {
+            Request meRequest = Request.newMeRequest(session, userCallback);
+            Bundle requestParams = meRequest.getParameters(); // if not set field, will get all info(no phone number)
+            StringBuilder queryString = new StringBuilder().append(JSONTag.NAME).append(", ").append(JSONTag.BIRTHDAY)
+                    .append(", ").append(JSONTag.PICTURE).append(", ").append(JSONTag.EMAIL).append(", ")
+                    .append(JSONTag.EDUCATION).append(", ").append(JSONTag.WORK).append(", ").append(JSONTag.GENDER)
+                    .append(", ").append(JSONTag.LINK).append(", ").append(JSONTag.HOMETOWN).append(", ")
+                    .append(JSONTag.TIMEZONE).append(", ").append(JSONTag.LOCALE);
+            requestParams.putString(BundleTag.FIELDS, queryString.toString());
+            meRequest.setParameters(requestParams);
+            meRequest.executeAsync();
+//	          RequestBatch rb = new RequestBatch();
+//	          rb.add(meRequest);
+//	          rb.addCallback(new RequestBatch.Callback() {
+            //
+//	                @Override
+//	                public void onBatchCompleted(RequestBatch batch) {
+//	                       
+//	                }
+//	          });
+//	          rb.setTimeout(300);
+//	          rb.executeAsync();
+        } else {
+            Log.d(TAG, "getUserProfile session is closed");
+            dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
+        }
+	}
+
+	public void getFriendList(Context context, Request.GraphUserListCallback callback)
 	{
+	    Log.d(TAG, "getFriendList");
+	    this.context = context;
+	    managerState = ManagerState.GET_FRIEND;
+	    actionType = ManagerState.GET_FRIEND;
+	    friendListCallback = callback;
+		
+        if (isLogin())
+        {
+            sendFriendListRequest();
+        } 
+        else 
+        {
+            login(context, new LoginListener());
+        }
+        
+	}
+	
+	private void sendFriendListRequest() {
+	    Log.d(TAG, "sendFriendListRequest");
+	    dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
+	    Session session = Session.getActiveSession();
+	    
+	    if (session.isOpened())
+        {
+            Request myFriendsRequest = Request.newMyFriendsRequest(session, friendListCallback);
+            Bundle requestParams = myFriendsRequest.getParameters();
+            StringBuilder queryString = new StringBuilder().append(JSONTag.NAME).append(", ")
+                    .append(JSONTag.BIRTHDAY).append(", ").append(JSONTag.PICTURE);
+            requestParams.putString(BundleTag.FIELDS, queryString.toString());
+            myFriendsRequest.setParameters(requestParams);
+            myFriendsRequest.executeAsync();
+        }
+        else
+        {
+            Log.d(TAG, "getFriendList session is closed");
+            dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
+        }
+	}
+	
+	public boolean hasPublishPermission()
+	{
+	    Session session = Session.getActiveSession();
+	    if (!session.getPermissions().contains(Permissions.PUBLISH_STREAM))
+	    {
+            return false;
+	    } else {
+	        return true;
+	    }
+	}
+	
+	public void getPublishPermission(Context context, FacebookListener facebookListener) {
+	    Log.d(TAG, "getPublishPermission ");
+        this.context = context;
+        this.facebookListener = facebookListener;
+	    managerState = ManagerState.REQUEST_PUBLISH_PERMISSION;
+	    Session session = Session.getActiveSession();
+        session.requestNewPublishPermissions(new Session.NewPermissionsRequest((Activity) context,
+                Permissions.PUBLISH_PERMISSION));
+	}
+		
+	public void publishTimeline(Context context, Publish publish)
+	{
+        this.context = context;
+        this.publish = publish;
+        managerState = ManagerState.PUBLISH;
+        actionType = ManagerState.PUBLISH;
+        
+        checkLoginfromPublish();
+	}
+	
+	private void openPublishDialog() {
         Bundle params = new Bundle();
         params.putString(BundleTag.NAME, publish.getName());
         params.putString(BundleTag.PICTURE, publish.getImgLink());
@@ -343,22 +399,19 @@ public class FacebookManager
         
         try {
             WebDialog feedDialog = (new WebDialog.FeedDialogBuilder(context, Session.getActiveSession(), params))
-                    .setOnCompleteListener(new OnCompleteListener() {
-                        @Override
-                        public void onComplete(Bundle values, FacebookException error) {
-                            Log.d(TAG, "publish values are " + values);
-                            Log.d(TAG, "publish error is " + error);
-                        }
-                    }).build();
+                    .setOnCompleteListener(new PublishListener()).build();
             feedDialog.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
 	}
 	
-	public void inviteFriend(String to, String message)
+	public void inviteFriend(Context context, String to, String message)
 	{
+	    Log.d(TAG, "inviteFriend ");
 	    managerState = ManagerState.INVITE;
+	    actionType = ManagerState.INVITE;
+	    this.context = context;
 		//100000133232978, 1118054263
 		Bundle params = new Bundle();
 		// params.putString(BundleTag.LINK,"https://play.google.com/store/apps/details?id=com.facebook.android.friendsmash");
@@ -368,40 +421,166 @@ public class FacebookManager
 			params.putString(BundleTag.MESSAGE, context.getResources().getString(R.string.invite_message));
 		}
 		params.putString(BundleTag.TO, to);
-		openInviteDialog(context, params);
 		inviteBundle = params;
+		
+//		checkLoginfromPublish();
+		
+        if (isLogin())
+        {
+            openInviteDialog();
+        } 
+        else 
+        {
+            login(context, new LoginListener());
+        }
 	}
 	
-	private void openInviteDialog(Context context, Bundle params)
+	private void openInviteDialog()
 	{
         Session session = Session.getActiveSession();
-        if (session.isOpened())
-        {
-            final WebDialog requestsDialog = new WebDialog.RequestsDialogBuilder(context, Session.getActiveSession(),
-                    params).setOnCompleteListener(new WebDialog.OnCompleteListener()
-                    {
-                        @Override
-                        public void onComplete(Bundle values, FacebookException error)
-                        {
-                            Log.d(TAG, "values is " + values);
-                        }
-                    }).build();
-            Window dialogWindow = requestsDialog.getWindow();
-            dialogWindow.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            requestsDialog.show();
-        } else {
-            initSession(null);
+        if (session.isOpened()) {
+            if (inviteBundle != null && context != null) {
+                final WebDialog requestsDialog = new WebDialog.RequestsDialogBuilder(context,
+                        Session.getActiveSession(), inviteBundle).setOnCompleteListener(new InviteListener()).build();
+                Window dialogWindow = requestsDialog.getWindow();
+                dialogWindow.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                requestsDialog.show();
+            } else {
+
+            }
         }
 	}
 	
 	public void logout()
     {
+	    actionType = ManagerState.LOGOUT;
         Session session = Session.getActiveSession();
         if (session != null && !session.isClosed())
         {
             session.closeAndClearTokenInformation();
             session.removeCallback(statusCallback);
         }
+        
+        // when logout need to clear db's img for another user to login
+    }
+	
+    private void showToast(String msg) {
+        if (context != null) {
+            Toast.makeText(context, context.getResources().getString(R.string.errorIs, msg), Toast.LENGTH_SHORT).show();
+        }
+    }
+	
+    private void checkPublishPermission() {
+        Log.d(TAG, "checkPublishPermission ");
+        if (hasPublishPermission())
+        {
+            switch (actionType) {
+            case ManagerState.PUBLISH:
+                openPublishDialog();
+                break;
+            case ManagerState.INVITE:
+                openInviteDialog();
+                break;
+            case ManagerState.UPLOAD:
+                break;
+            }
+        } else {
+            getPublishPermission(context, new RequestPublishPermissionListener());
+        }
+    }
+    
+    private class LoginListener implements FacebookListener
+    {
+        @Override
+        public void onSuccess() 
+        {
+            Log.d(TAG, "Login onSucess ");
+            switch (actionType) {
+            case ManagerState.GET_USER_PROFILE:
+                sendUserInfoRequest();
+                break;
+            case ManagerState.GET_FRIEND:
+                sendFriendListRequest();
+                break;
+            case ManagerState.INVITE:
+                openInviteDialog();
+                break;
+            case ManagerState.PUBLISH:
+            case ManagerState.UPLOAD:
+                checkPublishPermission();
+                break;
+            }
+        }
+
+        @Override
+        public void onError(String errorMsg) 
+        {
+            Log.d(TAG, "Login onError ");
+            showToast(errorMsg);
+        }
+    }
+    
+    private class RequestPublishPermissionListener implements FacebookListener
+    {
+        @Override
+        public void onSuccess() 
+        {
+            Log.d(TAG, "Request onSucess ");
+            switch (actionType) {
+            case ManagerState.PUBLISH:
+                openPublishDialog();
+                break;
+            case ManagerState.INVITE:
+                openInviteDialog();
+                break;
+            case ManagerState.UPLOAD:
+                break;
+            }
+        }
+
+        @Override
+        public void onError(String errorMsg) 
+        {
+            Log.d(TAG, "Request onError ");
+            showToast(errorMsg);
+        } 
+    }
+    
+    private class PublishListener implements OnCompleteListener
+    {
+        @Override
+        public void onComplete(Bundle values, FacebookException error) {
+            if (error != null) {
+                Log.d(TAG, "Publish had error is " + error.getMessage());
+                if (error.getMessage() == null) {
+                    if (context != null) {
+                        showToast(context.getResources().getString(R.string.cancelPublish));
+                    }
+                } else {
+                    showToast(error.getMessage());
+                }
+            } else {
+                Log.d(TAG, "Publish no error ");
+            }
+        }
+    }
+    
+    private class InviteListener implements OnCompleteListener
+    {
+
+        @Override
+        public void onComplete(Bundle values, FacebookException error) {
+            if (error != null) {
+                Log.d(TAG, "Invite had error is " + error.getMessage());
+                if (error.getMessage() == null) {
+                    
+                } else {
+                    showToast(error.getMessage());
+                }
+            } else {
+                Log.d(TAG, "Invite no error ");
+            }
+        }        
     }
 }

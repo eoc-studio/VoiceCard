@@ -66,6 +66,10 @@
     <string name="mailbox_errorMsg">沒有項目</string>
     
     <!-- Main Loading -->
-	<string name="main_loading">讀取中...</string>		
+	<string name="main_loading">讀取中...</string>
+	
+	<!-- About Facebook Manager -->
+	<string name="errorIs">錯誤是 %s </string>
+	<string name="cancelPublish">取消發佈</string>
 
 </resources>

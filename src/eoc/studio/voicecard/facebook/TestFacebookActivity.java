@@ -2,6 +2,8 @@ package eoc.studio.voicecard.facebook;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
+import com.facebook.model.GraphUser;
 
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.utils.ListUtility;
 
 public class TestFacebookActivity extends BaseActivity
 {
@@ -24,14 +30,13 @@ public class TestFacebookActivity extends BaseActivity
 	private static final String LINK = "http://upload.wikimedia.org/wikipedia/commons/2/26/YellowLabradorLooking_new.jpg";
 	private FacebookManager facebookManager;
 	private String owerId = "100007720118618";
-	private String testId = "100007720118618";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_test_facebook);
-		facebookManager = new FacebookManager(this, savedInstanceState);
+		facebookManager = FacebookManager.getInstance(TestFacebookActivity.this);
 		findViews();
 	}
 
@@ -82,11 +87,22 @@ public class TestFacebookActivity extends BaseActivity
 	}
 
     private void findViews() {
+        Button getUserProfile = (Button) findViewById(R.id.getUserProfile);
         Button getFriendList = (Button) findViewById(R.id.getFriendList);
         Button inviteFriend = (Button) findViewById(R.id.inviteFriend);
         Button publishMe = (Button) findViewById(R.id.publishMe);
         Button publishFriend = (Button) findViewById(R.id.publishFriend);
         Button logout = (Button) findViewById(R.id.logout);
+        
+        getUserProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (facebookManager != null)
+                {
+                    facebookManager.getUserProfile(TestFacebookActivity.this, new RequestGraphUserCallback());
+                }
+            }
+        });
 
         getFriendList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +119,7 @@ public class TestFacebookActivity extends BaseActivity
 			{
 				if (facebookManager != null)
 				{
-					facebookManager.inviteFriend(testId, null);
+					facebookManager.inviteFriend(TestFacebookActivity.this, owerId, null);
 				}
 			}
 		});
@@ -115,7 +131,8 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {
-                    facebookManager.getPublishedPermission(new Publish(owerId, NAME, PICTURE, CAPTION, DESCRIPTION, LINK));
+                    facebookManager.publishTimeline(TestFacebookActivity.this, new Publish(owerId, NAME, PICTURE,
+                            CAPTION, DESCRIPTION, LINK));
                 }
             }
         });
@@ -127,7 +144,8 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {
-                    facebookManager.getPublishedPermission(new Publish(testId, NAME, PICTURE, CAPTION, DESCRIPTION, LINK));
+                    facebookManager.publishTimeline(TestFacebookActivity.this, new Publish(owerId, NAME, PICTURE,
+                            CAPTION, DESCRIPTION, LINK));
                 }
             }
         });
@@ -145,4 +163,19 @@ public class TestFacebookActivity extends BaseActivity
             }
         });
 	}
+    
+    private class RequestGraphUserCallback implements Request.GraphUserCallback
+    {
+        @Override
+        public void onCompleted(GraphUser user, Response response)
+        {
+            if (user != null) {
+                JSONObject userJSON = user.getInnerJSONObject();
+                if(userJSON != null) {
+                    UserInfo userInfo = new UserInfo(userJSON);
+                }
+            }
+            facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
+        }
+    }
 }
