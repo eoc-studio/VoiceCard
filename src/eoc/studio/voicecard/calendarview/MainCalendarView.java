@@ -2,10 +2,7 @@ package eoc.studio.voicecard.calendarview;
 
 import java.util.ArrayList;
 
-import com.facebook.Session;
-
 import eoc.studio.voicecard.R;
-import eoc.studio.voicecard.facebook.FacebookManager;
 import eoc.studio.voicecard.facebook.FriendInfo;
 import eoc.studio.voicecard.facebook.SelectFriendActivity;
 import android.app.Activity;
