@@ -19,20 +19,20 @@ public class CalendarIntentHelper
 {
 	private static Map<String, String> item;
 	private static ArrayList<Map<String, String>> data;
-	// ////////
+	private static final boolean GET_SINGLE_DATA = true;
+	//
+	protected static final String EVENT_TYPE_YEARLY = "FREQ=YEARLY;WKST=SU";
+	//
 	private static final String CALENDAR_NAME = "VoiceCard";
 	private static final int CALENDAR_ID_INDEX = 0, CALENDAR_ACCOUNT_NAME_INDEX = 1,
 			CALENDAR_DISPLAY_NAME_INDEX = 2, CALENDAR_OWNER_ACCOUNT_INDEX = 3;
 	public static final String[] CALENDAR_PROJECTION = new String[] { Calendars._ID,
 			Calendars.ACCOUNT_NAME, Calendars.CALENDAR_DISPLAY_NAME, Calendars.OWNER_ACCOUNT };
-	private static final int EVENT_ID_INDEX = 0, EVENT_TITLE_INDEX = 1,
+	public static final int EVENT_ID_INDEX = 0, EVENT_TITLE_INDEX = 1,
 			EVENTE_DESCRIPTION_INDEX = 2, EVENT_DTSTART_INDEX = 3, EVENT_DTEND_INDEX = 4,
 			EVENT_EVENT_LOCATION_INDEX = 4;
 	public static final String[] EVENT_PROJECTION = new String[] { Events._ID, Events.TITLE,
 			Events.DESCRIPTION, Events.DTSTART, Events.DTEND, Events.EVENT_LOCATION };
-	//
-	public static final String EVENT_TYPE_YEARLY = "FREQ=YEARLY;WKST=SU";
-	private static final boolean GET_SINGLE_DATA = true;
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	protected static void addVoiceCardCalendar(Context context)
