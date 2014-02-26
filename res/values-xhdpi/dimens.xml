@@ -59,4 +59,5 @@
     <dimen name="card_open_width">417dip</dimen>
     <dimen name="card_height">250dip</dimen>
     <dimen name="card_page_width">208.5dip</dimen>
+    <dimen name="view_card_height">400dip</dimen>
 </resources>

@@ -36,12 +36,18 @@ public class FlipView extends RelativeLayout
 	private int pageHeight;
 	private long flipDuration = DEFAULT_FLIP_DURATION_MS;
 	private float pivotY;
-	private float rotationBegin = DEFAULT_ROTATE_BEGIN;
-	private float rotationEnd = DEFAULT_ROTATE_END;
-	private final float[] ROTATE_FRONT_DEGREE1 = { rotationBegin, -90f };
-	private final float[] ROTATE_FRONT_DEGREE2 = { 90f, rotationEnd };
-	private final float[] ROTATE_BACK_DEGREE1 = { rotationEnd, 90f };
-	private final float[] ROTATE_BACK_DEGREE2 = { -90f, rotationBegin };
+	private final float[] ROTATE_FRONT_DEGREE1 = { DEFAULT_ROTATE_BEGIN, -90f };
+	private final float[] ROTATE_FRONT_DEGREE2 = { 90f, DEFAULT_ROTATE_END };
+	private final float[] ROTATE_BACK_DEGREE1 = { DEFAULT_ROTATE_END, 90f };
+	private final float[] ROTATE_BACK_DEGREE2 = { -90f, DEFAULT_ROTATE_BEGIN };
+	
+	private void changeRotateDegree(float begin, float end) {
+		ROTATE_FRONT_DEGREE1[0] = begin;
+		ROTATE_FRONT_DEGREE2[1] = end;
+		ROTATE_BACK_DEGREE1[0] = end;
+		ROTATE_BACK_DEGREE2[1] = begin;
+	}
+	
 	private final OnTouchListener touchListener = new OnTouchListener()
 	{
 		@Override
@@ -71,8 +77,7 @@ public class FlipView extends RelativeLayout
 			float pivotY)
 	{
 		super(context);
-		this.rotationBegin = rotationBegin;
-		this.rotationEnd = rotationEnd;
+		changeRotateDegree(rotationBegin, rotationEnd);
 		this.pivotY = pivotY;
 		LayoutParams params = new LayoutParams(width, height);
 		setLayoutParams(params);

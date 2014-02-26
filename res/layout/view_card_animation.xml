@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/glb_card_animation_hsv_root"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/view_card_height" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dip"
+        android:gravity="center" >
+
+        <ImageView
+            android:id="@+id/glb_card_animation_iv_card_open_shadow"
+            android:layout_width="@dimen/card_open_width"
+            android:layout_height="@dimen/card_height"
+            android:layout_marginLeft="20dip"
+            android:layout_marginRight="20dip"
+            android:layout_marginTop="58dip"
+            android:scaleType="fitXY"
+            android:src="@drawable/card08_open" />
+
+        <ImageView
+            android:id="@+id/glb_card_animation_iv_card_close_shadow"
+            android:layout_width="@dimen/card_page_width"
+            android:layout_height="@dimen/card_height"
+            android:layout_alignRight="@id/glb_card_animation_iv_card_open_shadow"
+            android:layout_alignTop="@id/glb_card_animation_iv_card_open_shadow"
+            android:scaleType="fitXY" />
+
+        <FrameLayout
+            android:id="@+id/glb_card_animation_flyt_card_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dip"
+            android:layout_marginRight="20dip" >
+        </FrameLayout>
+    </RelativeLayout>
+
+</HorizontalScrollView>

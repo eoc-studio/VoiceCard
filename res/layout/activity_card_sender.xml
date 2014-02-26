@@ -36,13 +36,16 @@
         android:src="@drawable/handwrite_03" />
 
     <FrameLayout
-        android:id="@+id/act_card_sender_flyt_card"
+        android:id="@+id/act_card_sender_flyt_card_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/act_card_sender_iv_receiver_chooser"
         android:layout_below="@id/act_card_sender_iv_tip"
-        android:layout_centerHorizontal="true" />
-
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-100dip">
+        <include layout="@layout/view_card_animation" />
+    </FrameLayout>
+    
     <ImageView
         android:id="@+id/act_card_sender_iv_receiver_chooser"
         android:layout_width="wrap_content"

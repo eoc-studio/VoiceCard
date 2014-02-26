@@ -36,15 +36,15 @@ public class TestAnimationActivity extends BaseActivity
 	private void initLayout()
 	{
 		setContentView(R.layout.activity_test_animation);
-		flipViewWrapper = (FrameLayout) findViewById(R.id.card);
+		flipViewWrapper = (FrameLayout) findViewById(R.id.glb_card_animation_flyt_card_wrapper);
 
 		// Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
 		// R.drawable.card08_cover);
 		// cardPageWidth = bitmap.getWidth();
 		// cardPageHeight = bitmap.getHeight();
-		scrollView = (HorizontalScrollView) findViewById(R.id.act_test_animation_hsv_root);
-		shadowOpen = (ImageView) findViewById(R.id.act_test_animation_iv_card_open_shadow);
-		shadowClose = (ImageView) findViewById(R.id.act_test_animation_iv_card_close_shadow);
+		scrollView = (HorizontalScrollView) findViewById(R.id.glb_card_animation_hsv_root);
+		shadowOpen = (ImageView) findViewById(R.id.glb_card_animation_iv_card_open_shadow);
+		shadowClose = (ImageView) findViewById(R.id.glb_card_animation_iv_card_close_shadow);
 		cardPageWidth = (int) (getResources().getDimensionPixelSize(R.dimen.card_open_width) / 2.f * 0.955f);
 		cardPageHeight = (int) (getResources().getDimensionPixelSize(R.dimen.card_height) * 1.42f);
 
@@ -61,8 +61,8 @@ public class TestAnimationActivity extends BaseActivity
 		shadowOpen.setVisibility(View.INVISIBLE);
 		shadowClose.setVisibility(View.VISIBLE);
 
-		flipView = new FlipView(this, cardPageWidth * 2, cardPageHeight, -12f, 0f,
-				cardPageWidth / 2);
+		flipView = new FlipView(this, cardPageWidth * 2, cardPageHeight, -10f, 0f,
+				cardPageWidth * 0.5f);
 		flipViewWrapper.addView(flipView);
 
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
