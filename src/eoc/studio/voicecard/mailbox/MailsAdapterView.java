@@ -87,38 +87,40 @@ public class MailsAdapterView extends BaseAdapter {
         convertView.setId(ListUtility.BASE_INDEX + position);
         
         //checkIcon
-        int checkState = mails.get(position).getCheckState();
-        Log.d(TAG, "checkState is " + checkState);
-        
-        if (checkState == CHECKED) {
-            viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_checkbox_check));
-        } else {
-            viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_checkbox));
+        if (position < mails.size()) {
+            int checkState = mails.get(position).getCheckState();
+            Log.d(TAG, "checkState is " + checkState);
+
+            if (checkState == CHECKED) {
+                viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_checkbox_check));
+            } else {
+                viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_checkbox));
+            }
+
+            //itemImg
+            byte[] img = mails.get(position).getImg();
+            if (img != null) {
+                viewTag.itemImg.setBackgroundDrawable(new BitmapDrawable(context.getResources(), BitmapFactory
+                        .decodeByteArray(img, 0, img.length)));
+            } else {
+                viewTag.itemImg.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.user_reflect));
+            }
+            //subject
+            viewTag.subject.setText(mails.get(position).getSubject());
+
+            //sendTime
+            viewTag.sendTime.setText(mails.get(position).sendTime());
+
+            //newIcon
+            int newState = mails.get(position).getNewState();
+            if (newState == MailsAdapterData.NEW) {
+                viewTag.newIcon.setVisibility(View.VISIBLE);
+            } else {
+                viewTag.newIcon.setVisibility(View.INVISIBLE);
+            }
+
+            setUIEvent(position, convertView, parent);
         }
-                
-        //itemImg
-        byte[] img = mails.get(position).getImg();
-        if (img != null) {
-            viewTag.itemImg.setBackgroundDrawable(new BitmapDrawable(context.getResources(), BitmapFactory
-                    .decodeByteArray(img, 0, img.length)));
-        } else {
-            viewTag.itemImg.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.user_reflect));
-        }
-        //subject
-        viewTag.subject.setText(mails.get(position).getSubject());
-        
-        //sendTime
-        viewTag.sendTime.setText(mails.get(position).sendTime());
-        
-        //newIcon
-        int newState = mails.get(position).getNewState();
-        if(newState == MailsAdapterData.NEW) {
-            viewTag.newIcon.setVisibility(View.VISIBLE);
-        } else {
-            viewTag.newIcon.setVisibility(View.INVISIBLE);
-        }
-        
-        setUIEvent(position, convertView, parent);
         
         return convertView;
     }

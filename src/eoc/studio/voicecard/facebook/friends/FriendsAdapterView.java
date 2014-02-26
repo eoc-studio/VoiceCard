@@ -80,29 +80,29 @@ public class FriendsAdapterView extends BaseAdapter
         }
         convertView.setId(ListUtility.BASE_INDEX + position);
         
-		viewTag.name.setText(friends.get(position).getFriendName());
-		
-		if (friends.get(position).getInstallState() == FriendsAdapterData.NOTINSTALL) {
-		    viewTag.notInstall.setVisibility(View.VISIBLE);
-		} else {
-		    viewTag.notInstall.setVisibility(View.INVISIBLE);
-		}
-		
-		if (friends.get(position).getSelectedState() == FriendsAdapterData.SELECT) {
-		    viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(
-                    R.drawable.icon_checkbox_check));
-		} else {
-		    viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(
-                    R.drawable.icon_checkbox));
-		}
-		
-		// set header
-		byte[] img = friends.get(position).getFriendImg();
-		if (img != null) {
-		    viewTag.header.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
-		} else {
-		    viewTag.header.setImageDrawable(context.getResources().getDrawable(R.drawable.dummy));
-		}
+        if (position < friends.size()) {
+            viewTag.name.setText(friends.get(position).getFriendName());
+
+            if (friends.get(position).getInstallState() == FriendsAdapterData.NOTINSTALL) {
+                viewTag.notInstall.setVisibility(View.VISIBLE);
+            } else {
+                viewTag.notInstall.setVisibility(View.INVISIBLE);
+            }
+
+            if (friends.get(position).getSelectedState() == FriendsAdapterData.SELECT) {
+                viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_checkbox_check));
+            } else {
+                viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_checkbox));
+            }
+
+            // set header
+            byte[] img = friends.get(position).getFriendImg();
+            if (img != null) {
+                viewTag.header.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
+            } else {
+                viewTag.header.setImageDrawable(context.getResources().getDrawable(R.drawable.dummy));
+            }
+        }
 		
 		return convertView;
 	}
