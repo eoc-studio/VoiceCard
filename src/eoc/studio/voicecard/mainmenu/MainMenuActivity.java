@@ -55,7 +55,6 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		context = getApplicationContext();
 		configPreferences = getSharedPreferences(PREFS_FILENAME, 0);
 		initLayout();
-		updateNewMailBoxCount();
 		updateAdvertisementInfo();
 
 		super.onCreate(savedInstanceState);
@@ -104,12 +103,13 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 
 		int mailboxUnReadCount = configPreferences.getInt("mailboxUnReadCount", 0);
 		Log.d(TAG, "updateNewMailBoxCount mailboxUnReadCount:" + mailboxUnReadCount);
-		if (mailboxUnReadCount != 0) mailbox.update(mailboxUnReadCount);
+		mailbox.update(mailboxUnReadCount);
 	}
 
 	@Override
 	protected void onResume()
 	{
+		updateNewMailBoxCount();
 		setMemorialDayNotification();
 		super.onResume();
 	}

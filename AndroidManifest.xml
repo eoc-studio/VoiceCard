@@ -93,6 +93,10 @@
         <activity
             android:name="eoc.studio.voicecard.mainloading.MainLoadingActivity"
             android:screenOrientation="portrait" />
+
+		<activity
+				android:name="eoc.studio.voicecard.volley.test.PostCardTestActivity"
+				android:screenOrientation="portrait" />
     </application>
 
 </manifest>

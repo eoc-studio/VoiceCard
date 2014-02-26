@@ -13,6 +13,12 @@ public class GsonSend
 	@SerializedName("send_from")
 	private String sendFrom;
 
+	@SerializedName("send_from_name")
+	private String sendFromName;
+	
+	@SerializedName("send_from_link")
+	private String sendFromLink;
+	
 	@SerializedName("send_to")
 	private String sendTo;
 
@@ -206,6 +212,30 @@ public class GsonSend
 		result.append("}");
 
 		return result.toString();
+	}
+
+	public String getSendFromLink()
+	{
+	
+		return sendFromLink;
+	}
+
+	public void setSendFromLink(String sendFromLink)
+	{
+	
+		this.sendFromLink = sendFromLink;
+	}
+
+	public String getSendFromName()
+	{
+	
+		return sendFromName;
+	}
+
+	public void setSendFromName(String sendFromName)
+	{
+	
+		this.sendFromName = sendFromName;
 	}
 
 }

@@ -15,6 +15,7 @@ import eoc.studio.voicecard.manager.GsonSend;
 import eoc.studio.voicecard.manager.HttpManager;
 import eoc.studio.voicecard.manager.LoginListener;
 import eoc.studio.voicecard.manager.MailCountListener;
+import eoc.studio.voicecard.manager.NotifyMailReadListener;
 import eoc.studio.voicecard.progresswheel.ProgressWheel;
 
 import java.io.File;
@@ -146,8 +147,6 @@ public class MainLoadingActivity extends Activity
 		startProgressWheel();
 		initMailDataBase();
 		getRecommendInfo();
-		File dbFile = getDatabasePath("mails.db");
-		Log.i(TAG, "dbFile.getAbsolutePath()" + dbFile.getAbsolutePath());
 	}
 
 	@Override
@@ -356,7 +355,10 @@ public class MainLoadingActivity extends Activity
 								{
 									facebookUserID = userJSON.getString(JSONTag.ID);
 									Log.d(TAG, "id:" + userJSON.getString(JSONTag.ID));
-									Log.d(TAG, "picture link:" + userJSON.getJSONObject(JSONTag.PICTURE).getJSONObject("data").getString("url")); 
+									Log.d(TAG,
+											"picture link:"
+													+ userJSON.getJSONObject(JSONTag.PICTURE)
+															.getJSONObject("data").getString("url"));
 									Log.d(TAG, "email:" + userJSON.getString(JSONTag.EMAIL));
 									Log.d(TAG, "name:" + userJSON.getString(JSONTag.NAME));
 									Log.d(TAG, "gender:" + userJSON.getString(JSONTag.GENDER));
@@ -385,8 +387,8 @@ public class MainLoadingActivity extends Activity
 
 									gsonFacebookUser = new GsonFacebookUser(facebookUserID,
 											userJSON.getString(JSONTag.BIRTHDAY),
-											getPictureLink(userJSON),
-											getStringJsonObjectByCheck(userJSON, JSONTag.LOCALE),
+											getPictureLink(userJSON), getStringJsonObjectByCheck(
+													userJSON, JSONTag.LOCALE),
 											getStringJsonObjectByCheck(userJSON, JSONTag.LINK),
 											getHomeTown(userJSON), getStringJsonObjectByCheck(
 													userJSON, JSONTag.TIMEZONE),
@@ -460,16 +462,16 @@ public class MainLoadingActivity extends Activity
 															mailsAdapterData.create(
 																	mail.getSendID(),
 																	mail.getSendFrom(),
-																	mail.getSendFrom(), // replace
-																						// this
-																						// col
-																						// with
-																						// sendfromName
-																	"fb_links_dummy",// replace
-																						// this
-																						// col
-																						// with
-																						// sendfromLink
+																	mail.getSendFromName(), // replace
+																	// this
+																	// col
+																	// with
+																	// sendfromName
+																	mail.getSendFromLink(),// replace
+																							// this
+																							// col
+																							// with
+																							// sendfromLink
 																	mail.getSendTo(),
 																	mail.getSubject(),
 																	mail.getBody(),
@@ -480,6 +482,29 @@ public class MainLoadingActivity extends Activity
 																	mail.getSign(),
 																	mail.getSend_time(), 1);
 														}
+
+													}
+
+													if (isSuccess)
+													{
+														// notify server mails
+														// already got from user
+														httpManager.notifyMailsRead(context,
+																new NotifyMailReadListener()
+																{
+																	@Override
+																	public void onResult(
+																			Boolean isSuccess,
+																			String information)
+																	{
+
+																		Log.e(TAG,
+																				"httpManager.notifyMailsRead() isSuccess:"
+																						+ isSuccess
+																						+ ",information:"
+																						+ information);
+																	}
+																});
 
 													}
 
@@ -512,17 +537,16 @@ public class MainLoadingActivity extends Activity
 
 				});
 
-	            StringBuilder queryString = new StringBuilder().append(JSONTag.NAME).append(", ")
-	                    .append(JSONTag.BIRTHDAY).append(", ").append(JSONTag.PICTURE).append(", ")
-	                    .append(JSONTag.EMAIL).append(", ").append(JSONTag.EDUCATION).append(", ")
-	                    .append(JSONTag.WORK).append(", ").append(JSONTag.GENDER).append(", ")
-	                    .append(JSONTag.LINK).append(", ").append(JSONTag.HOMETOWN).append(", ")
-	                    .append(JSONTag.TIMEZONE).append(", ").append(JSONTag.LOCALE);
-	            Bundle requestParams = getMe.getParameters();		
-	            requestParams.putString(BundleTag.FIELDS, queryString.toString());
-	            getMe.setParameters(requestParams);
-				
-				
+				StringBuilder queryString = new StringBuilder().append(JSONTag.NAME).append(", ")
+						.append(JSONTag.BIRTHDAY).append(", ").append(JSONTag.PICTURE).append(", ")
+						.append(JSONTag.EMAIL).append(", ").append(JSONTag.EDUCATION).append(", ")
+						.append(JSONTag.WORK).append(", ").append(JSONTag.GENDER).append(", ")
+						.append(JSONTag.LINK).append(", ").append(JSONTag.HOMETOWN).append(", ")
+						.append(JSONTag.TIMEZONE).append(", ").append(JSONTag.LOCALE);
+				Bundle requestParams = getMe.getParameters();
+				requestParams.putString(BundleTag.FIELDS, queryString.toString());
+				getMe.setParameters(requestParams);
+
 				getMe.executeAsync();
 			}
 			else
@@ -646,7 +670,7 @@ public class MainLoadingActivity extends Activity
 			return "";
 		}
 	}
-	
+
 	private String getHomeTown(JSONObject obj)
 	{
 
@@ -677,8 +701,10 @@ public class MainLoadingActivity extends Activity
 			return "";
 		}
 	}
-	
-	private String getPictureLink(JSONObject obj){
+
+	private String getPictureLink(JSONObject obj)
+	{
+
 		try
 		{
 			return obj.getJSONObject(JSONTag.PICTURE).getJSONObject("data").getString("url");
@@ -690,7 +716,6 @@ public class MainLoadingActivity extends Activity
 			return "";
 		}
 	}
-	
 
 	private String getEducation(JSONObject obj)
 	{

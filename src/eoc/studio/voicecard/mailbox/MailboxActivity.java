@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -77,6 +78,8 @@ public class MailboxActivity extends BaseActivity
 
 		super.onPause();
 
+		updateUnReadCount();
+
 		if (mailAdapterView != null)
 		{
 			mailAdapterView.setPause(true);
@@ -86,6 +89,15 @@ public class MailboxActivity extends BaseActivity
 			}
 			mailAdapterView.clearData();
 		}
+	}
+
+	private void updateUnReadCount()
+	{
+
+		String PREFS_FILENAME = "MAIN_MENU_SETTING";
+		SharedPreferences configPreferences = getSharedPreferences(PREFS_FILENAME, 0);
+		Log.d(TAG, "updateUnReadCount() mailsAdapterData.getLocalUnReadMailCount(): "+mailsAdapterData.getLocalUnReadMailCount());
+		configPreferences.edit().putInt("mailboxUnReadCount", mailsAdapterData.getLocalUnReadMailCount()).commit();
 	}
 
 	@Override

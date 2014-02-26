@@ -14,6 +14,7 @@ import eoc.studio.voicecard.mainmenu.MainMenuActivity;
 import eoc.studio.voicecard.manufacture.EditSignatureActivity;
 import eoc.studio.voicecard.recommend.RecommendActivity;
 import eoc.studio.voicecard.volley.test.JsonTestActivity;
+import eoc.studio.voicecard.volley.test.PostCardTestActivity;
 
 public class TestMainActivity extends BaseActivity
 {
@@ -111,6 +112,17 @@ public class TestMainActivity extends BaseActivity
 				startActivity(intent);
 			}
 		});
+		
+		findViewById(R.id.test_post_card).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Intent intent = new Intent(TestMainActivity.this, PostCardTestActivity.class);
+				startActivity(intent);
+			}
+		});
+		
 		super.onCreate(savedInstanceState);
 	}
 }

@@ -35,9 +35,9 @@ public class CardDraftManager
 
 	private String owner = "noOwner";
 
-	CardDraftManager()
+	public CardDraftManager()
 	{
-
+		
 	}
 
 	public static CardDraftManager getInstance()
@@ -56,6 +56,9 @@ public class CardDraftManager
 		this.context = context.getApplicationContext();
 	}
 
+	public void resetOwner(){
+		owner = "noOwner";
+	}
 	public void saveDraft(CardDraft cardDraft)
 	{
 

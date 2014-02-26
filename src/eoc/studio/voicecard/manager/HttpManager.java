@@ -15,6 +15,7 @@ import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
@@ -94,6 +95,28 @@ public class HttpManager
 				+ deviceIMEI + ",hash_auth:" + hash_auth + ",mobile="+mobile);
 	}
 
+	public void getFacebookUserInformation(Context context,GetFacebookInfoListener getFacebookInfoListener){
+	
+		String uriGetFacebookUserInfo = String.format(
+				"http://www.charliefind.com/api.php?op=facebook&auth=%1$s&id=%2$s", hash_auth,
+				facebookID);
+		
+		Log.e(TAG, "getFacebookUserInformation uriGetFacebookUserInfo:" + uriGetFacebookUserInfo);
+
+		
+		java.lang.reflect.Type typeSend = new com.google.gson.reflect.TypeToken<ArrayList<GsonFacebookUser>>()
+		{
+		}.getType();
+
+		GsonListRequest<ArrayList<GsonFacebookUser>> getFacebookUserInfoGsonRequset = new GsonListRequest<ArrayList<GsonFacebookUser>>(
+				Method.GET, uriGetFacebookUserInfo, typeSend,
+				createGetFacebookUserInfoGsonReqSuccessListener(getFacebookInfoListener), createFacebookUserInfoGsonReqErrorListener());
+		getFacebookUserInfoGsonRequset.setTag("getFacebookUserInformation");
+		VolleySingleton.getInstance(context).getRequestQueue().add(getFacebookUserInfoGsonRequset);		
+	}
+	
+	
+	
 	public void facebookLogin(Context context, GsonFacebookUser user,
 			final LoginListener loginListener)
 	{
@@ -168,7 +191,7 @@ public class HttpManager
 	}
 
 	public void postMail(Context context, String sendTo, Uri imageUri, Uri speechUri,
-			Uri editTextUri, Uri signatureUri, String fontSize, String fontColor, String cardName,
+			String editTextMessage, Uri signatureUri, String fontSize, String fontColor, String cardName,
 			final PostMailListener postMailListener) throws Exception
 	{
 
@@ -177,9 +200,9 @@ public class HttpManager
 		isPostSignatureOk = false;
 		isPostMailOk = false;
 		isPostMailErrored = false;
-		File imageFile = new File(imageUri.toString());
+		File imageFile = new File(imageUri.getPath());
 
-		Log.e(TAG, "postMail imageUri.toString():" + imageUri.toString());
+		Log.e(TAG, "postMail imageUri.getPath():" + imageUri.getPath());
 		Log.e(TAG, "postMail imageFile.getName():" + imageFile.getName());
 		String uriUploadImagefile = String.format(
 				"http://www.charliefind.com/api.php?op=upload&auth=%1$s&id=%2$s", hash_auth,
@@ -221,9 +244,9 @@ public class HttpManager
 		imageFileResuest.setTag("postMail");
 		VolleySingleton.getInstance(context).getRequestQueue().add(imageFileResuest);
 
-		File speechFile = new File(speechUri.toString());
+		File speechFile = new File(speechUri.getPath());
 
-		Log.e(TAG, "postMail speechUri.toString():" + speechUri.toString());
+		Log.e(TAG, "postMail speechUri.getPath():" + speechUri.getPath());
 		Log.e(TAG, "postMail speechFile.getName():" + speechFile.getName());
 		String uriUploadSpeechfile = String.format(
 				"http://www.charliefind.com/api.php?op=upload&auth=%1$s&id=%2$s", hash_auth,
@@ -264,9 +287,9 @@ public class HttpManager
 		speechFileResuest.setTag("postMail");
 		VolleySingleton.getInstance(context).getRequestQueue().add(speechFileResuest);
 
-		File signatureFile = new File(signatureUri.toString());
+		File signatureFile = new File(signatureUri.getPath());
 
-		Log.e(TAG, "postMail signatureUri.toString():" + signatureUri.toString());
+		Log.e(TAG, "postMail signatureUri.getPath():" + signatureUri.getPath());
 		Log.e(TAG, "postMail signatureFile.getName():" + signatureFile.getName());
 		String uriUploadSignaturefile = String.format(
 				"http://www.charliefind.com/api.php?op=upload&auth=%1$s&id=%2$s", hash_auth,
@@ -307,7 +330,7 @@ public class HttpManager
 		signatureFileResuest.setTag("postMail");
 		VolleySingleton.getInstance(context).getRequestQueue().add(signatureFileResuest);
 
-		String editTextBody = getStringFromFile(editTextUri.toString());
+		String editTextBody = editTextMessage;
 
 		String uriMailPost = String.format("http://www.charliefind.com/api.php?op=mailbox_post");
 
@@ -315,9 +338,9 @@ public class HttpManager
 
 		paramsFacebookMailPost.put("send_from", facebookID);
 		paramsFacebookMailPost.put("send_to", sendTo);
-		paramsFacebookMailPost.put("subject", "這是測試");
-		paramsFacebookMailPost.put("font_size", "12154");
-		paramsFacebookMailPost.put("font_color", "ff101010");
+		paramsFacebookMailPost.put("subject", editTextBody);
+		paramsFacebookMailPost.put("font_size", fontSize);
+		paramsFacebookMailPost.put("font_color", fontColor);
 		paramsFacebookMailPost.put("body", editTextBody);
 		paramsFacebookMailPost.put("img", imageFile.getName());
 		paramsFacebookMailPost.put("speech", speechFile.getName());
@@ -600,7 +623,37 @@ public class HttpManager
 		};
 	}
 	
+	private Response.Listener<ArrayList<GsonFacebookUser>> createGetFacebookUserInfoGsonReqSuccessListener(
+			final GetFacebookInfoListener getFacebookInfoListener)
+	{
+
+		return new Response.Listener<ArrayList<GsonFacebookUser>>()
+		{
+			@Override
+			public void onResponse(ArrayList<GsonFacebookUser> response)
+			{
+
+				Log.e(TAG, "GetFacebookUserInfoGsonReqSuccessListener response: " + response.toString());
+
+				if (getFacebookInfoListener != null) getFacebookInfoListener.onResult(true, response);
+			}
+		};
+	}
 	
+	private Response.ErrorListener createFacebookUserInfoGsonReqErrorListener()
+	{
+
+		return new Response.ErrorListener()
+		{
+			@Override
+			public void onErrorResponse(VolleyError error)
+			{
+
+				Log.e(TAG, "FacebookUserInfoGsonReqErrorListener error: " + error.toString());
+			}
+		};
+
+	}
 	
 	private Response.ErrorListener createGetRecommendGsonReqErrorListener()
 	{
