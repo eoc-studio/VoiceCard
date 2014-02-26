@@ -1,11 +1,15 @@
 package eoc.studio.voicecard.facebook;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import org.json.JSONObject;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +22,11 @@ import com.facebook.model.GraphUser;
 
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.facebook.enetities.FriendInfo;
+import eoc.studio.voicecard.facebook.enetities.Photo;
+import eoc.studio.voicecard.facebook.enetities.Publish;
+import eoc.studio.voicecard.facebook.enetities.UserInfo;
+import eoc.studio.voicecard.facebook.friends.SelectFriendActivity;
 import eoc.studio.voicecard.utils.ListUtility;
 
 public class TestFacebookActivity extends BaseActivity
@@ -30,6 +39,7 @@ public class TestFacebookActivity extends BaseActivity
 	private static final String LINK = "http://upload.wikimedia.org/wikipedia/commons/2/26/YellowLabradorLooking_new.jpg";
 	private FacebookManager facebookManager;
 	private String owerId = "100007720118618";
+	private String[] testIdList = {"100007811983123", "100007720118618"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -93,6 +103,7 @@ public class TestFacebookActivity extends BaseActivity
         Button publishMe = (Button) findViewById(R.id.publishMe);
         Button publishFriend = (Button) findViewById(R.id.publishFriend);
         Button logout = (Button) findViewById(R.id.logout);
+        Button upload = (Button) findViewById(R.id.upload);
         
         getUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +173,18 @@ public class TestFacebookActivity extends BaseActivity
                 }
             }
         });
+		
+		upload.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (facebookManager != null)
+                {
+                    facebookManager.upload(new Photo(NAME, getPhoto()));
+                }
+            }
+        });
 	}
     
     private class RequestGraphUserCallback implements Request.GraphUserCallback
@@ -177,5 +200,14 @@ public class TestFacebookActivity extends BaseActivity
             }
             facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
         }
+    }
+    
+    private byte[] getPhoto() {
+        Drawable drawable = getResources().getDrawable(R.drawable.dog);
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+        return stream.toByteArray();
     }
 }

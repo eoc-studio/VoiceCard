@@ -3,8 +3,8 @@ package eoc.studio.voicecard.calendarview;
 import java.util.ArrayList;
 
 import eoc.studio.voicecard.R;
-import eoc.studio.voicecard.facebook.FriendInfo;
-import eoc.studio.voicecard.facebook.SelectFriendActivity;
+import eoc.studio.voicecard.facebook.enetities.FriendInfo;
+import eoc.studio.voicecard.facebook.friends.SelectFriendActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

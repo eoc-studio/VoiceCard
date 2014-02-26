@@ -1,6 +1,8 @@
-package eoc.studio.voicecard.facebook;
+package eoc.studio.voicecard.facebook.enetities;
 
 import org.json.JSONObject;
+
+import eoc.studio.voicecard.facebook.utils.JSONTag;
 
 public class UserInfo 
 {

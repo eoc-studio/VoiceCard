@@ -1,4 +1,4 @@
-package eoc.studio.voicecard.facebook;
+package eoc.studio.voicecard.facebook.friends;
 
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.facebook.enetities.FriendInfo;
 import eoc.studio.voicecard.utils.ListUtility;
 import eoc.studio.voicecard.utils.WebImageUtility;
 

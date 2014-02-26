@@ -14,6 +14,7 @@
     <string name="publish_me">Publish to timeline</string>
     <string name="publish_friend">Publish to friend</string>
     <string name="fb_logout">Logout</string>
+    <string name="upload">Upload</string>
 
     <!-- About Contact -->
     <string name="file_process_loading">Loading</string>

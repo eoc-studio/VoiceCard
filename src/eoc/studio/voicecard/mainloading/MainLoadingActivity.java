@@ -1,9 +1,9 @@
 package eoc.studio.voicecard.mainloading;
 
 import eoc.studio.voicecard.R;
-import eoc.studio.voicecard.facebook.JSONTag;
-import eoc.studio.voicecard.facebook.Permissions;
-import eoc.studio.voicecard.facebook.FacebookManager.BundleTag;
+import eoc.studio.voicecard.facebook.utils.BundleTag;
+import eoc.studio.voicecard.facebook.utils.JSONTag;
+import eoc.studio.voicecard.facebook.utils.Permissions;
 import eoc.studio.voicecard.mailbox.MailboxActivity;
 import eoc.studio.voicecard.mailbox.MailsAdapterData;
 import eoc.studio.voicecard.mainmenu.MainMenuActivity;

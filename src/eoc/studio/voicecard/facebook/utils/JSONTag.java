@@ -1,4 +1,4 @@
-package eoc.studio.voicecard.facebook;
+package eoc.studio.voicecard.facebook.utils;
 
 public class JSONTag
 {

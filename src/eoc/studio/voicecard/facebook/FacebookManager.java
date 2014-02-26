@@ -4,8 +4,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -16,6 +14,7 @@ import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Window;
@@ -23,29 +22,35 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.facebook.FacebookException;
+import com.facebook.HttpMethod;
 import com.facebook.LoggingBehavior;
 import com.facebook.Request;
+import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.Settings;
-import com.facebook.model.GraphUser;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.facebook.enetities.Photo;
+import eoc.studio.voicecard.facebook.enetities.Publish;
+import eoc.studio.voicecard.facebook.utils.BundleTag;
+import eoc.studio.voicecard.facebook.utils.FacebookListener;
+import eoc.studio.voicecard.facebook.utils.JSONTag;
+import eoc.studio.voicecard.facebook.utils.Permissions;
 import eoc.studio.voicecard.utils.ListUtility;
 
 public class FacebookManager
 {
 	private static final String TAG = "FacebookManager";
-	private static final String USER_CANCELED_LOGIN = "User canceled login";
-	private static final String USER_CANCELED_LOG_IN = "User canceled log in";
 	private Context context;
 	private Session.StatusCallback statusCallback = null;
 	private ProgressDialog progressDialog;
 	private Publish publish;
 	private Bundle inviteBundle = null;
+	private Photo photo;
 	private int managerState;
 	private int actionType;
 	private FacebookListener facebookListener;
@@ -53,20 +58,6 @@ public class FacebookManager
 	private Request.GraphUserCallback userCallback;
 	
 	private volatile static FacebookManager facebookManager;
-	
-	public static class BundleTag
-	{
-		public static final String CAPTION = "caption";
-	    public static final String DESCRIPTION = "description";
-	    public static final String FIELDS = "fields";
-	    public static final String IMAGE = "image";
-	    public static final String LINK = "link";
-	    public static final String MESSAGE = "message";
-	    public static final String NAME = "name";
-	    public static final String PICTURE = "picture";
-	    public static final String SOURCE = "source";  
-	    public static final String TO = "to"; 
-	}
 	
 	static class ManagerState
 	{
@@ -137,22 +128,6 @@ public class FacebookManager
         
 	    switch (managerState) {
 	    case ManagerState.LOGIN:
-            if (exception == null) 
-            {
-                if (isLogin())
-                    facebookListener.onSuccess();
-            }
-            else 
-            {
-                facebookListener.onError(exception.getMessage());
-            }
-	        break;
-	    case ManagerState.GET_USER_PROFILE:
-	        break;
-	    case ManagerState.GET_FRIEND:
-	        break;
-	    case ManagerState.INVITE:
-	        break;
 	    case ManagerState.REQUEST_PUBLISH_PERMISSION:
             if (exception == null) 
             {
@@ -164,8 +139,10 @@ public class FacebookManager
                 facebookListener.onError(exception.getMessage());
             }
 	        break;
+	    case ManagerState.GET_USER_PROFILE:
+	    case ManagerState.GET_FRIEND:
+	    case ManagerState.INVITE:
 	    case ManagerState.PUBLISH:
-	        break;
 	    case ManagerState.UPLOAD:
 	        break;
 	    }
@@ -332,7 +309,6 @@ public class FacebookManager
         {
             login(context, new LoginListener());
         }
-        
 	}
 	
 	private void sendFriendListRequest() {
@@ -406,13 +382,34 @@ public class FacebookManager
         }
 	}
 	
+    public void upload(Photo photo) {
+        this.photo = photo;
+        managerState = ManagerState.UPLOAD;
+        actionType = ManagerState.UPLOAD;
+
+        if (isLogin())
+        {
+            uploadImpl();
+        } 
+        else 
+        {
+            login(context, new LoginListener());
+        }
+    }
+    
+    private void uploadImpl() {
+        Session session = Session.getActiveSession();
+        Request request = new Request(session, "me/photos", photo.getBundle(), HttpMethod.POST, new UploadCallback());
+        RequestAsyncTask task = new RequestAsyncTask(request);
+        task.execute();
+    }
+	
 	public void inviteFriend(Context context, String to, String message)
 	{
-	    Log.d(TAG, "inviteFriend ");
+	    Log.d(TAG, "inviteFriend invite only specific friend");
 	    managerState = ManagerState.INVITE;
 	    actionType = ManagerState.INVITE;
 	    this.context = context;
-		//100000133232978, 1118054263
 		Bundle params = new Bundle();
 		// params.putString(BundleTag.LINK,"https://play.google.com/store/apps/details?id=com.facebook.android.friendsmash");
 		if (message != null) {
@@ -423,8 +420,6 @@ public class FacebookManager
 		params.putString(BundleTag.TO, to);
 		inviteBundle = params;
 		
-//		checkLoginfromPublish();
-		
         if (isLogin())
         {
             openInviteDialog();
@@ -434,6 +429,31 @@ public class FacebookManager
             login(context, new LoginListener());
         }
 	}
+	
+    public void inviteFriend(Context context, String[] suggestedFriends, String message) {
+        Log.d(TAG, "inviteFriend invite several specific friends");
+        managerState = ManagerState.INVITE;
+        actionType = ManagerState.INVITE;
+        this.context = context;
+        Bundle params = new Bundle();
+
+        if (message != null) {
+            params.putString(BundleTag.MESSAGE, message);
+        } else {
+            params.putString(BundleTag.MESSAGE, context.getResources().getString(R.string.invite_message));
+        }
+        params.putString(BundleTag.SUGGESTIONS, TextUtils.join(",", suggestedFriends));
+        inviteBundle = params;
+        
+        if (isLogin())
+        {
+            openInviteDialog();
+        } 
+        else 
+        {
+            login(context, new LoginListener());
+        }
+    }
 	
 	private void openInviteDialog()
 	{
@@ -507,8 +527,9 @@ public class FacebookManager
                 openInviteDialog();
                 break;
             case ManagerState.PUBLISH:
-            case ManagerState.UPLOAD:
                 checkPublishPermission();
+            case ManagerState.UPLOAD:
+                uploadImpl();
                 break;
             }
         }
@@ -582,5 +603,13 @@ public class FacebookManager
                 Log.d(TAG, "Invite no error ");
             }
         }        
+    }
+    
+    private class UploadCallback implements Request.Callback {
+
+        @Override
+        public void onCompleted(Response response) {
+            
+        }
     }
 }

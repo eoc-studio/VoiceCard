@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import eoc.studio.voicecard.R;
-import eoc.studio.voicecard.facebook.FriendInfo;
+import eoc.studio.voicecard.facebook.enetities.FriendInfo;
 import eoc.studio.voicecard.utils.ListUtility;
 import eoc.studio.voicecard.utils.WebImageUtility;
 

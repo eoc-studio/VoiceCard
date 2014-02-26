@@ -51,6 +51,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/fb_logout" />
+        
+        <Button
+            android:id="@+id/upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/upload" />
     </LinearLayout>
 
 </LinearLayout>

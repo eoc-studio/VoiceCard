@@ -1,4 +1,4 @@
-package eoc.studio.voicecard.facebook;
+package eoc.studio.voicecard.facebook.friends;
 
 import android.content.ContentValues;
 import android.content.Context;

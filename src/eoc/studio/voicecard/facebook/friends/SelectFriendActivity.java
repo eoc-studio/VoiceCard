@@ -1,4 +1,4 @@
-package eoc.studio.voicecard.facebook;
+package eoc.studio.voicecard.facebook.friends;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.facebook.FacebookManager;
+import eoc.studio.voicecard.facebook.enetities.FriendInfo;
+import eoc.studio.voicecard.facebook.utils.JSONTag;
 import eoc.studio.voicecard.utils.ListUtility;
 
 public class SelectFriendActivity extends BaseActivity {
