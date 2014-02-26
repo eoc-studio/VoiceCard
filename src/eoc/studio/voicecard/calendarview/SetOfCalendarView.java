@@ -33,6 +33,10 @@ public class SetOfCalendarView extends Fragment implements OnTouchListener
 	private static ArrayList<Map<String, String>> mData;
 	private static GridView calendarGrid;
 	private static RelativeLayout hideView;
+	private static final int DEFAULT_SCROOL_SITE = 0;
+	private static final int DEFAULT_SCROOL_BUFF = 100;
+	private static final int DEFAULT_NOITE_WIDTH = 435;
+	private static final int ONE_PAGE = 1, THREE_PAGE = 3;
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public SetOfCalendarView()
@@ -91,54 +95,47 @@ public class SetOfCalendarView extends Fragment implements OnTouchListener
 			moveEnd = event.getX();
 			if (moveStart > moveEnd)
 			{
-				new Handler().postDelayed((new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						if (getPages >= (mData.size() - 1)) { return; }
-						++getPages;
-						if (getPages == 1)
-						{
-							horizontalScrollView.smoothScrollTo(435, 0);
-						}
-						else if (getPages < 3)
-						{
-							horizontalScrollView.smoothScrollTo((435 * (getPages)) + 100, 0);
-						}
-						else
-						{
-							horizontalScrollView.smoothScrollTo((535 * getPages) - 100, 0);
-						}
-					}
-				}), 5);
+				if (getPages >= (mData.size() - 1)) { return true; }
+				smoothScrollView((++getPages));
 			}
 			else
 			{
-				new Handler().postDelayed((new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						if (getPages < 1) { return; }
-						--getPages;
-						if (getPages == 0)
-						{
-							horizontalScrollView.smoothScrollTo(0, 0);
-						}
-						else if (getPages < 3)
-						{
-							horizontalScrollView.smoothScrollTo((435 * (getPages)) + 100, 0);
-						}
-						else
-						{
-							horizontalScrollView.smoothScrollTo((535 * getPages) - 100, 0);
-						}
-					}
-				}), 5);
+				if (getPages < 1) { return false; }
+				smoothScrollView((--getPages));
 			}
 		}
 		return true;
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	private static void smoothScrollView(final int getPage)
+	{
+		new Handler().postDelayed((new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if (getPage == DEFAULT_SCROOL_SITE)
+				{
+					horizontalScrollView.smoothScrollTo(DEFAULT_SCROOL_SITE, DEFAULT_SCROOL_SITE);
+				}
+				else if (getPage == ONE_PAGE)
+				{
+					horizontalScrollView.smoothScrollTo(DEFAULT_NOITE_WIDTH, DEFAULT_SCROOL_SITE);
+				}
+				else if (getPage < THREE_PAGE)
+				{
+					horizontalScrollView.smoothScrollTo((DEFAULT_NOITE_WIDTH * (getPage))
+							+ DEFAULT_SCROOL_BUFF, DEFAULT_SCROOL_SITE);
+				}
+				else
+				{
+					horizontalScrollView.smoothScrollTo(
+							((DEFAULT_NOITE_WIDTH + DEFAULT_SCROOL_BUFF) * getPage)
+									- DEFAULT_SCROOL_BUFF, DEFAULT_SCROOL_SITE);
+				}
+			}
+		}), 5);
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
