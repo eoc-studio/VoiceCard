@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/act_select_friend_et_search_bar"
-            android:src="@drawable/search_btn" />
+            android:src="@drawable/icon_magnifier" />
     </RelativeLayout>
 
     <LinearLayout
