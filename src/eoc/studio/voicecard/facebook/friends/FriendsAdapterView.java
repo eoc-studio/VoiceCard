@@ -112,6 +112,14 @@ public class FriendsAdapterView extends BaseAdapter
 	    notifyDataSetChanged();
 	}
 	
+	public void changeSelectedState(int position, int selectedState) {
+	    for (FriendInfo friendInfo : friends) {
+	        friendInfo.setSelecedState(FriendsAdapterData.UNSELECT);
+	    }
+        friends.get(position).setSelecedState(selectedState);
+        notifyDataSetChanged();
+    }
+	
 	public void setPause(boolean isPause) {
 	    this.isPause = isPause;
 	}
@@ -121,7 +129,7 @@ public class FriendsAdapterView extends BaseAdapter
 	}
 	
 	public void loadImagefromPosition(int startPostion, int endPosition) {
-		if (startPostion > 0 && endPosition > friends.size())
+		if (startPostion > 0 && endPosition < friends.size())
 		{
 			DownlaodImageThread downlaodImageThread = new DownlaodImageThread(friends.subList(
 					startPostion, endPosition), startPostion, endPosition);

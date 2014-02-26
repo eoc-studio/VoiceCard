@@ -15,4 +15,6 @@ public class BundleTag
     public static final String PRIVACY = "privacy";
     public static final String PLACE = "place";
     public static final String SUGGESTIONS = "suggestions";
+    
+    public static final String SELECTED_OPTION = "selected_option";
 }

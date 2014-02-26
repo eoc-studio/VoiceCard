@@ -29,6 +29,7 @@ import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.facebook.FacebookManager;
 import eoc.studio.voicecard.facebook.enetities.FriendInfo;
+import eoc.studio.voicecard.facebook.utils.BundleTag;
 import eoc.studio.voicecard.facebook.utils.JSONTag;
 import eoc.studio.voicecard.utils.ListUtility;
 
@@ -42,6 +43,8 @@ public class SelectFriendActivity extends BaseActivity {
     private int firstVisiblePosition = 0;
     private int currentListSize = 0;
     private int lastVisiblePosition = 0;
+    private boolean isSingleOption = false;
+    private String lastSelectedId = ""; // for single option
     
     //Views
     private ListView showFriends;
@@ -56,6 +59,7 @@ public class SelectFriendActivity extends BaseActivity {
         facebookManager = FacebookManager.getInstance(SelectFriendActivity.this);
         friendsAdapterData = new FriendsAdapterData(SelectFriendActivity.this);
         findViews();
+        getBundle();
         getFriendsfromWeb();
     }
     
@@ -125,6 +129,14 @@ public class SelectFriendActivity extends BaseActivity {
                 searchAction();
             }
         });
+    }
+    
+    private void getBundle() {
+        Bundle option = this.getIntent().getExtras();
+        
+        if (option != null) {
+            isSingleOption = option.getBoolean(BundleTag.SELECTED_OPTION);
+        }
     }
     
     private void confirmAction() {
@@ -328,27 +340,45 @@ public class SelectFriendActivity extends BaseActivity {
     private class UserListClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            int state = 0;
             if (friendsAdapterData != null) {
+                ImageView selectIcon = (ImageView) view.findViewById(R.id.glb_selectfriend_list_item_check_icon);
+                int state = 0;
                 state = friendsAdapterData.getSelectedState(((FriendInfo) friendsAdapterView.getItem(position))
                         .getFriendId());
-                ImageView selectIcon = (ImageView) view.findViewById(R.id.glb_selectfriend_list_item_check_icon);
                 Log.d(TAG, "state is === " + state);
-                
+
                 if (state == FriendsAdapterData.UNSELECT) {
-                    friendsAdapterData.updateSelectedState(
-                            ((FriendInfo) friendsAdapterView.getItem(position)).getFriendId(),
-                            FriendsAdapterData.SELECT);
                     selectIcon.setImageDrawable(SelectFriendActivity.this.getResources().getDrawable(
                             R.drawable.icon_checkbox_check));
-                    friendsAdapterView.updateSelectedState(position, FriendsAdapterData.SELECT);
+                    
+                    if (!isSingleOption) {
+                        friendsAdapterData.updateSelectedState(
+                                ((FriendInfo) friendsAdapterView.getItem(position)).getFriendId(),
+                                FriendsAdapterData.SELECT);
+                        friendsAdapterView.updateSelectedState(position, FriendsAdapterData.SELECT);
+                    } else {    // single option
+                        friendsAdapterView.changeSelectedState(position, FriendsAdapterData.SELECT);
+                        
+                        friendsAdapterData.updateSelectedState(
+                                ((FriendInfo) friendsAdapterView.getItem(position)).getFriendId(),
+                                FriendsAdapterData.SELECT);
+                        
+                        if (!lastSelectedId.equals("")) {
+                            friendsAdapterData.updateSelectedState(lastSelectedId, FriendsAdapterData.UNSELECT);
+                        }
+                        lastSelectedId = ((FriendInfo) friendsAdapterView.getItem(position)).getFriendId();
+                    }
                 } else {
-                    friendsAdapterData.updateSelectedState(
-                            ((FriendInfo) friendsAdapterView.getItem(position)).getFriendId(),
-                            FriendsAdapterData.UNSELECT);
-                    selectIcon.setImageDrawable(SelectFriendActivity.this.getResources().getDrawable(
-                            R.drawable.icon_checkbox));
-                    friendsAdapterView.updateSelectedState(position, FriendsAdapterData.UNSELECT);
+                    if (!isSingleOption) {
+                        selectIcon.setImageDrawable(SelectFriendActivity.this.getResources().getDrawable(
+                                R.drawable.icon_checkbox));
+                        friendsAdapterData.updateSelectedState(
+                                ((FriendInfo) friendsAdapterView.getItem(position)).getFriendId(),
+                                FriendsAdapterData.UNSELECT);
+                        friendsAdapterView.updateSelectedState(position, FriendsAdapterData.UNSELECT);
+                    } else {    // single option
+                        
+                    }
                 }
             }
         }
