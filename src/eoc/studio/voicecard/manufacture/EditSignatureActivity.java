@@ -53,35 +53,51 @@ public class EditSignatureActivity extends Activity
 {
 	private final static String TAG = "EditSignatureActivity";
 
-	Boolean isDebug = true;
+	private Boolean isDebug = true;
 
-	Context context = null;
+	private Context context = null;
 
-	HandWritingView handWritingView = null;
+	private HandWritingView handWritingView = null;
 
-	StampSortView stampSorterView = null;
+	private StampSortView stampSorterView = null;
 
-	ImageButton changeModeButton = null;
+	private ImageButton changeModeButton = null;
 
-	RelativeLayout sketchpadLayout = null;
+	private RelativeLayout sketchpadLayout = null;
 
-	RadioGroup paintSizeRadioGroup = null;
+	private RadioGroup paintSizeRadioGroup = null;
 
-	ImageButton eraserToggleButton = null;
+	private ImageButton eraserToggleButton = null;
 
-	ImageView chooseColorImageView = null;
+	private ImageView chooseColorImageView = null;
 
-	ImageView trashImageView = null;
+	private ImageView trashImageView = null;
 
-	GridView gridStampView = null;
+	private ImageView arrowLeftImageView = null;
 
-	StampAdapter stampAdapter = null;
+	private ImageView arrowRightImageView = null;
 
-	
+	private GridView gridStampView = null;
+
+	private StampAdapter stampAdapter = null;
+
 	private ImageButton returnImageButton;
+
 	private ImageButton okButtonImageButton;
-	
+
 	private ArrayList<StampItem> gridStampArray = null;
+
+	private ArrayList<StampItem> gridStampArrayIndex1 = null;
+
+	private ArrayList<StampItem> gridStampArrayIndex2 = null;
+
+	private ArrayList<StampItem> gridStampArrayIndex3 = null;
+
+	private StampAdapter stampAdapter1 = null;
+
+	private StampAdapter stampAdapter2 = null;
+
+	private StampAdapter stampAdapter3 = null;
 
 	private static final int MODE_WRITING = 1;
 
@@ -96,16 +112,21 @@ public class EditSignatureActivity extends Activity
 	private static final String DRAFT_FOLDER_NAME = "VoiceCard_images";
 
 	private static final String DRAFT_IMAGE_NAME = "signatureHandwritingDraft.jpg";
+
 	private static final String DRAFT_COMPLETED_IMAGE_NAME = "signatureDraft.jpg";
-	
+
 	private static final String EXTRA_KEY_USER_SIGN_HANDWRITHING = "user_sign_handwriting";
+
 	private static final String EXTRA_KEY_USER_SIGN_POSITION_INFO = "user_sign_position_info";
+
 	private static final String EXTRA_KEY_USER_SIGN_DRAFT_IMAGE = "user_sign_draft_image";
-	
+
+	private static int stampGridviewIndex = 1;
+
 	private Uri signPositonDraftUri;
-	
+
 	private Uri signHandWritingDraftUri;
-	
+
 	private Uri signCompletedDraftUri;
 
 	@Override
@@ -122,16 +143,17 @@ public class EditSignatureActivity extends Activity
 
 	private void getConfigFromIntent()
 	{
+
 		Intent intent = getIntent();
 		signHandWritingDraftUri = intent.getParcelableExtra(EXTRA_KEY_USER_SIGN_HANDWRITHING);
 		signPositonDraftUri = intent.getParcelableExtra(EXTRA_KEY_USER_SIGN_POSITION_INFO);
 		signCompletedDraftUri = intent.getParcelableExtra(EXTRA_KEY_USER_SIGN_DRAFT_IMAGE);
 
-		Log.d(TAG, "getConfigFromIntent signHandWritingDraftUri:"+signHandWritingDraftUri);
-		Log.d(TAG, "getConfigFromIntent signPositonDraftUri:"+signPositonDraftUri);
-		Log.d(TAG, "getConfigFromIntent signCompletedDraftUri:"+signCompletedDraftUri);
+		Log.d(TAG, "getConfigFromIntent signHandWritingDraftUri:" + signHandWritingDraftUri);
+		Log.d(TAG, "getConfigFromIntent signPositonDraftUri:" + signPositonDraftUri);
+		Log.d(TAG, "getConfigFromIntent signCompletedDraftUri:" + signCompletedDraftUri);
 	}
-	
+
 	@Override
 	protected void onResume()
 	{
@@ -150,23 +172,24 @@ public class EditSignatureActivity extends Activity
 			{
 				loadHandWrtingViewFromFile(signHandWritingDraftUri);
 			}
-			
+
 		}
 		catch (Exception e)
 		{
 			// TODO: handle exception
 		}
-		
+
 		handWritingView.setPenColor(Color.BLACK);
 
 	}
 
 	public void loadHandWrtingViewFromFile(Uri loadUri)
 	{
-		Log.d(TAG, "EditSignatureActivity: onResume() loadUri: "+loadUri);
-//		String root = Environment.getExternalStorageDirectory().toString();
-//		File tempDir = new File(root + "/" + DRAFT_FOLDER_NAME);
-//		File imagefile = new File(tempDir, DRAFT_IMAGE_NAME);
+
+		Log.d(TAG, "EditSignatureActivity: onResume() loadUri: " + loadUri);
+		// String root = Environment.getExternalStorageDirectory().toString();
+		// File tempDir = new File(root + "/" + DRAFT_FOLDER_NAME);
+		// File imagefile = new File(tempDir, DRAFT_IMAGE_NAME);
 		File imagefile = new File(loadUri.getPath());
 		FileInputStream fis = null;
 		try
@@ -210,6 +233,7 @@ public class EditSignatureActivity extends Activity
 		initSketchLayout();
 		initTrashImageView();
 		initChangeModeButton();
+		initArrowVIews();
 		initGridStampView();
 		initPaintSizeButton();
 		initEraserToggleButton();
@@ -218,8 +242,75 @@ public class EditSignatureActivity extends Activity
 		InitOkButton();
 	}
 
+	private void initArrowVIews()
+	{
+
+		stampGridviewIndex = 1;
+		arrowLeftImageView = (ImageView) findViewById(R.id.act_edit_signature_iv_arrow_left);
+		arrowRightImageView = (ImageView) findViewById(R.id.act_edit_signature_iv_arrow_right);
+
+		arrowLeftImageView.setVisibility(View.INVISIBLE);
+		arrowRightImageView.setVisibility(View.VISIBLE);
+
+		arrowLeftImageView.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+
+				if (stampGridviewIndex != 1) stampGridviewIndex--;
+
+				updateArrowView();
+
+			}
+		});
+
+		arrowRightImageView.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+
+				if (stampGridviewIndex != 3) stampGridviewIndex++;
+
+				updateArrowView();
+			}
+		});
+
+	}
+
+	private void updateArrowView()
+	{
+
+		if (stampGridviewIndex == 1)
+		{
+			arrowLeftImageView.setVisibility(View.INVISIBLE);
+			arrowRightImageView.setVisibility(View.VISIBLE);
+			gridStampView.setAdapter(stampAdapter1);
+			stampAdapter1.notifyDataSetChanged();
+
+		}
+		else if (stampGridviewIndex == 2)
+		{
+			arrowLeftImageView.setVisibility(View.VISIBLE);
+			arrowRightImageView.setVisibility(View.VISIBLE);
+			gridStampView.setAdapter(stampAdapter2);
+			stampAdapter2.notifyDataSetChanged();
+		}
+		else if (stampGridviewIndex == 3)
+		{
+			arrowLeftImageView.setVisibility(View.VISIBLE);
+			arrowRightImageView.setVisibility(View.INVISIBLE);
+			gridStampView.setAdapter(stampAdapter3);
+			stampAdapter2.notifyDataSetChanged();
+		}
+
+		gridStampView.invalidate();
+	}
+
 	public void InitOkButton()
 	{
+
 		okButtonImageButton = (ImageButton) findViewById(R.id.act_edit_signature_ib_button_ok);
 
 		okButtonImageButton.setOnClickListener(new OnClickListener()
@@ -227,65 +318,68 @@ public class EditSignatureActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				Log.d(TAG, "okButtonImageButton getCacheDir().getPath():"+getFilesDir().getPath());
-				
-				String handWritingFileName=FileUtility.getRandomSignHandWritingName("jpg");
-				
+
+				Log.d(TAG, "okButtonImageButton getCacheDir().getPath():" + getFilesDir().getPath());
+
+				String handWritingFileName = FileUtility.getRandomSignHandWritingName("jpg");
+
 				String root = Environment.getExternalStorageDirectory().toString();
-				File tempDir = new File(getCacheDir().getPath() + "/",handWritingFileName);
-				FileUtility.saveLayoutToFile(context, (View) handWritingView,getCacheDir().getPath(),
-						handWritingFileName);				
+				File tempDir = new File(getCacheDir().getPath() + "/", handWritingFileName);
+				FileUtility.saveLayoutToFile(context, (View) handWritingView, getCacheDir()
+						.getPath(), handWritingFileName);
 				signHandWritingDraftUri = Uri.fromFile(tempDir);
-				
-				
+
 				// try to save seal info to gson
-				signPositonDraftUri = stampSorterView.saveImageInfoToGson(getCacheDir().getPath(),FileUtility.getRandomSignPositionName("json"));
-				
-				
-				sketchpadLayout.removeAllViews(); 
+				signPositonDraftUri = stampSorterView.saveImageInfoToGson(getCacheDir().getPath(),
+						FileUtility.getRandomSignPositionName("json"));
+
+				sketchpadLayout.removeAllViews();
 				addViewByOrder(handWritingView, stampSorterView);
-				
-				String handCompletedFileName=FileUtility.getRandomSignCompletedName("jpg");
-				File tempDir2 = new File(getCacheDir().getPath() + "/",handCompletedFileName);
-//				FileUtility.saveLayoutToFileWithoutScan((View)sketchpadLayout,tempDir2.getParent(),DRAFT_COMPLETED_IMAGE_NAME);
-				FileUtility.saveTwoLayoutToFile(handWritingView, stampSorterView, tempDir2.getParent(),handCompletedFileName );
-				signCompletedDraftUri =  Uri.fromFile(tempDir2);
-				
-				
+
+				String handCompletedFileName = FileUtility.getRandomSignCompletedName("jpg");
+				File tempDir2 = new File(getCacheDir().getPath() + "/", handCompletedFileName);
+				// FileUtility.saveLayoutToFileWithoutScan((View)sketchpadLayout,tempDir2.getParent(),DRAFT_COMPLETED_IMAGE_NAME);
+				FileUtility.saveTwoLayoutToFile(handWritingView, stampSorterView,
+						tempDir2.getParent(), handCompletedFileName);
+				signCompletedDraftUri = Uri.fromFile(tempDir2);
+
 				Intent intent = new Intent();
-				Log.d(TAG, "send signHandWritingDraftUri:"+signHandWritingDraftUri);
-				Log.d(TAG, "send signPositonDraftUri:"+signPositonDraftUri);
-				Log.d(TAG, "send signCompletedDraftUri:"+signCompletedDraftUri);
-				intent.putExtra(EXTRA_KEY_USER_SIGN_HANDWRITHING, signHandWritingDraftUri); 
-				intent.putExtra(EXTRA_KEY_USER_SIGN_POSITION_INFO, signPositonDraftUri); 
-				intent.putExtra(EXTRA_KEY_USER_SIGN_DRAFT_IMAGE, signCompletedDraftUri); 
-				
+				Log.d(TAG, "send signHandWritingDraftUri:" + signHandWritingDraftUri);
+				Log.d(TAG, "send signPositonDraftUri:" + signPositonDraftUri);
+				Log.d(TAG, "send signCompletedDraftUri:" + signCompletedDraftUri);
+				intent.putExtra(EXTRA_KEY_USER_SIGN_HANDWRITHING, signHandWritingDraftUri);
+				intent.putExtra(EXTRA_KEY_USER_SIGN_POSITION_INFO, signPositonDraftUri);
+				intent.putExtra(EXTRA_KEY_USER_SIGN_DRAFT_IMAGE, signCompletedDraftUri);
+
 				setResult(RESULT_OK, intent);
 				finish();
 			}
 		});
 	}
-	
+
 	public void InitReturnButton()
 	{
+
 		returnImageButton = (ImageButton) findViewById(R.id.act_edit_signature_ib_button_return);
 		returnImageButton.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
+
 				setResult(RESULT_CANCELED);
 				finish();
 			}
 		});
 
 	}
+
 	public void initSketchLayout()
 	{
 
 		handWritingView = new HandWritingView(this);
 		handWritingView.disableEraser(); // turn off Eraser function
-		
+
 		stampSorterView = new StampSortView(this);
 
 		sketchpadLayout = (RelativeLayout) findViewById(R.id.act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud);
@@ -318,22 +412,69 @@ public class EditSignatureActivity extends Activity
 
 		gridStampView = (GridView) findViewById(R.id.act_edit_signature_gv_stamps);
 
-		gridStampArray = new ArrayList<StampItem>();
-		gridStampArray.add(new StampItem(R.drawable.stamp_01, "Heart"));
-		gridStampArray.add(new StampItem(R.drawable.stamp_02, "Cake"));
-		gridStampArray.add(new StampItem(R.drawable.stamp_03, "Slipper"));
-		gridStampArray.add(new StampItem(R.drawable.stamp_04, "Compass"));
-		gridStampArray.add(new StampItem(R.drawable.stamp_05, "BasketBall"));
-		gridStampArray.add(new StampItem(R.drawable.stamp_01, "Heart"));
-		gridStampArray.add(new StampItem(R.drawable.stamp_02, "Cake"));
-		gridStampArray.add(new StampItem(R.drawable.stamp_03, "Slipper"));
-		gridStampArray.add(new StampItem(R.drawable.stamp_04, "Compass"));
-		gridStampArray.add(new StampItem(R.drawable.stamp_05, "BasketBall"));
-		gridStampArray.add(new StampItem(R.drawable.stamp_01, "Heart"));
-		gridStampArray.add(new StampItem(R.drawable.stamp_02, "Cake"));
+		// gridStampArray = new ArrayList<StampItem>();
+		// gridStampArray.add(new StampItem(R.drawable.stamp_01, "Heart"));
+		// gridStampArray.add(new StampItem(R.drawable.stamp_02, "Cake"));
+		// gridStampArray.add(new StampItem(R.drawable.stamp_03, "Slipper"));
+		// gridStampArray.add(new StampItem(R.drawable.stamp_04, "Compass"));
+		// gridStampArray.add(new StampItem(R.drawable.stamp_05, "BasketBall"));
+		// gridStampArray.add(new StampItem(R.drawable.stamp_01, "Heart"));
+		// gridStampArray.add(new StampItem(R.drawable.stamp_02, "Cake"));
+		// gridStampArray.add(new StampItem(R.drawable.stamp_03, "Slipper"));
+		// gridStampArray.add(new StampItem(R.drawable.stamp_04, "Compass"));
+		// gridStampArray.add(new StampItem(R.drawable.stamp_05, "BasketBall"));
+		// gridStampArray.add(new StampItem(R.drawable.stamp_01, "Heart"));
+		// gridStampArray.add(new StampItem(R.drawable.stamp_02, "Cake"));
 
-		StampAdapter stampAdapter = new StampAdapter(this, R.layout.view_stamp_item, gridStampArray);
-		gridStampView.setAdapter(stampAdapter);
+		gridStampArrayIndex1 = new ArrayList<StampItem>();
+		gridStampArrayIndex1.add(new StampItem(R.drawable.stamp_01, ""));
+		gridStampArrayIndex1.add(new StampItem(R.drawable.stamp_02, ""));
+		gridStampArrayIndex1.add(new StampItem(R.drawable.stamp_03, ""));
+		gridStampArrayIndex1.add(new StampItem(R.drawable.stamp_04, ""));
+		gridStampArrayIndex1.add(new StampItem(R.drawable.stamp_05, ""));
+		gridStampArrayIndex1.add(new StampItem(R.drawable.stamp_06, ""));
+		gridStampArrayIndex1.add(new StampItem(R.drawable.stamp_07, ""));
+		gridStampArrayIndex1.add(new StampItem(R.drawable.stamp_08, ""));
+		gridStampArrayIndex1.add(new StampItem(R.drawable.stamp_09, ""));
+		gridStampArrayIndex1.add(new StampItem(R.drawable.stamp_10, ""));
+		gridStampArrayIndex1.add(new StampItem(R.drawable.stamp_11, ""));
+		gridStampArrayIndex1.add(new StampItem(R.drawable.stamp_12, ""));
+
+		gridStampArrayIndex2 = new ArrayList<StampItem>();
+		gridStampArrayIndex2.add(new StampItem(R.drawable.stamp_13, ""));
+		gridStampArrayIndex2.add(new StampItem(R.drawable.stamp_14, ""));
+		gridStampArrayIndex2.add(new StampItem(R.drawable.stamp_15, ""));
+		gridStampArrayIndex2.add(new StampItem(R.drawable.stamp_16, ""));
+		gridStampArrayIndex2.add(new StampItem(R.drawable.stamp_17, ""));
+		gridStampArrayIndex2.add(new StampItem(R.drawable.stamp_18, ""));
+		gridStampArrayIndex2.add(new StampItem(R.drawable.stamp_19, ""));
+		gridStampArrayIndex2.add(new StampItem(R.drawable.stamp_20, ""));
+		gridStampArrayIndex2.add(new StampItem(R.drawable.stamp_21, ""));
+		gridStampArrayIndex2.add(new StampItem(R.drawable.stamp_22, ""));
+		gridStampArrayIndex2.add(new StampItem(R.drawable.stamp_23, ""));
+		gridStampArrayIndex2.add(new StampItem(R.drawable.stamp_24, ""));
+
+		gridStampArrayIndex3 = new ArrayList<StampItem>();
+		gridStampArrayIndex3.add(new StampItem(R.drawable.stamp_25, ""));
+		gridStampArrayIndex3.add(new StampItem(R.drawable.stamp_26, ""));
+		gridStampArrayIndex3.add(new StampItem(R.drawable.stamp_27, ""));
+		gridStampArrayIndex3.add(new StampItem(R.drawable.stamp_28, ""));
+		gridStampArrayIndex3.add(new StampItem(R.drawable.stamp_29, ""));
+		gridStampArrayIndex3.add(new StampItem(R.drawable.stamp_30, ""));
+		gridStampArrayIndex3.add(new StampItem(R.drawable.stamp_31, ""));
+		gridStampArrayIndex3.add(new StampItem(R.drawable.stamp_32, ""));
+		gridStampArrayIndex3.add(new StampItem(R.drawable.stamp_33, ""));
+		gridStampArrayIndex3.add(new StampItem(R.drawable.stamp_34, ""));
+		gridStampArrayIndex3.add(new StampItem(R.drawable.stamp_35, ""));
+		gridStampArrayIndex3.add(new StampItem(R.drawable.stamp_36, ""));
+
+		stampAdapter1 = new StampAdapter(this, R.layout.view_stamp_item, gridStampArrayIndex1);
+
+		stampAdapter2 = new StampAdapter(this, R.layout.view_stamp_item, gridStampArrayIndex2);
+
+		stampAdapter3 = new StampAdapter(this, R.layout.view_stamp_item, gridStampArrayIndex3);
+
+		gridStampView.setAdapter(stampAdapter1);
 	}
 
 	class TrashDragListener implements OnDragListener
@@ -493,7 +634,6 @@ public class EditSignatureActivity extends Activity
 
 		}
 
-
 	}
 
 	private void addViewByOrder(View view1, View view2)
@@ -502,7 +642,7 @@ public class EditSignatureActivity extends Activity
 		sketchpadLayout.addView(view1);
 		sketchpadLayout.addView(view2);
 	}
-	
+
 	public void initChooseColorImageView()
 	{
 
@@ -581,33 +721,25 @@ public class EditSignatureActivity extends Activity
 		{
 			public void onClick(View v)
 			{
+
 				handWritingView.clear();
 			}
 		});
-		
-		//Bruce origin eraser function
-/*		eraserToggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener()
-		{
-			@Override
-			public void onCheckedChanged(CompoundButton toggleButton, boolean isChecked)
-			{
 
-				if (isChecked)
-				{
-					handWritingView.enableEraser();
-				}
-				else
-				{
-					handWritingView.disableEraser();
-				}
-
-				if (isDebug)
-				{
-					Toast.makeText(EditSignatureActivity.this, String.valueOf(isChecked),
-							Toast.LENGTH_SHORT).show();
-				}
-			}
-		});*/
+		// Bruce origin eraser function
+		/*
+		 * eraserToggleButton.setOnCheckedChangeListener(new
+		 * OnCheckedChangeListener() {
+		 * 
+		 * @Override public void onCheckedChanged(CompoundButton toggleButton,
+		 * boolean isChecked) {
+		 * 
+		 * if (isChecked) { handWritingView.enableEraser(); } else {
+		 * handWritingView.disableEraser(); }
+		 * 
+		 * if (isDebug) { Toast.makeText(EditSignatureActivity.this,
+		 * String.valueOf(isChecked), Toast.LENGTH_SHORT).show(); } } });
+		 */
 	}
 
 	public void initPaintSizeButton()
