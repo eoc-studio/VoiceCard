@@ -57,6 +57,15 @@ public class GsonRecommendAdapter extends ArrayAdapter<GsonRecommend> {
         
         holder.titleTextView.setText(entry.getName());
 		holder.promotionTextView.setText(entry.getPromotion());
+		
+		if(entry.getArrival().equals("N")){
+			holder.newImageView.setImageResource(android.R.color.transparent);
+		}
+		else if(entry.getArrival().equals("Y")){
+			holder.newImageView.setImageResource(R.drawable.icon_new);
+		}
+		
+		
 	
         return v;
     }
