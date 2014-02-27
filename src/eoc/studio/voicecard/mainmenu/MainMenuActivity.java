@@ -117,14 +117,14 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 	private void setMemorialDayNotification()
 	{
 		Calendar now = Calendar.getInstance();
-		Calendar old = memorialDayNotification.getDate();
-		if (old == null || (now.get(Calendar.DAY_OF_MONTH) != old.get(Calendar.DAY_OF_MONTH)))
-		{
+		//Calendar old = memorialDayNotification.getDate();
+		//if (old == null || (now.get(Calendar.DAY_OF_MONTH) != old.get(Calendar.DAY_OF_MONTH)))
+		//{
 			memorialDayNotification.setDate(now);
 			String event = getMemorialEvent(now);
 			Log.d(TAG, "setMemorialDayNotification - event: " + event);
 			memorialDayNotification.setEvent(event);
-		}
+		//}
 	}
 
 	private String getMemorialEvent(Calendar calendar)
