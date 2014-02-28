@@ -1,6 +1,7 @@
 package eoc.studio.voicecard.facebook.friends;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONException;
@@ -25,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.facebook.FacebookManager;
@@ -72,7 +74,10 @@ public class SelectFriendActivity extends BaseActivity {
     public void onPause() {
         super.onPause();
         if (friendList != null) {
-            friendList.clear();
+//            friendList.clear();
+            for(Iterator it = friendList.iterator(); it.hasNext();){
+                it.remove();
+            }
         }
         if (friendsAdapterView != null) {
             friendsAdapterView.setPause(true);
@@ -83,7 +88,7 @@ public class SelectFriendActivity extends BaseActivity {
             friendsAdapterData.delete();
             friendsAdapterData.close();
         }
-        
+        facebookManager.cancelRequest();
         facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
     }
     
@@ -151,6 +156,7 @@ public class SelectFriendActivity extends BaseActivity {
                 friendName = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_NAME));
                 firendBirthday = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_BIRTHDAY));
                 friendImgLink = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_IMG_LINK));
+                Log.d(TAG, "firendBirthday is " + firendBirthday);
                 selectedFriendList.add(new FriendInfo(friendId, friendName, firendBirthday, friendImgLink, null, 0, 0));
             }
         }
@@ -333,7 +339,14 @@ public class SelectFriendActivity extends BaseActivity {
     private class RequestGraphUserListCallback implements Request.GraphUserListCallback {
         @Override
         public void onCompleted(List<GraphUser> users, Response response) {
-            processUserListReponse(users);
+            if (response.getError() == null) {
+                processUserListReponse(users);
+            } else {
+                Toast.makeText(SelectFriendActivity.this,
+                        getResources().getString(R.string.errorIs, response.getError()), Toast.LENGTH_SHORT).show();
+                facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
+                finish();
+            }
         }
     }
 

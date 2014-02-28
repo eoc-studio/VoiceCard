@@ -26,6 +26,7 @@ import com.facebook.HttpMethod;
 import com.facebook.LoggingBehavior;
 import com.facebook.Request;
 import com.facebook.RequestAsyncTask;
+import com.facebook.RequestBatch;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -45,6 +46,7 @@ import eoc.studio.voicecard.utils.ListUtility;
 public class FacebookManager
 {
 	private static final String TAG = "FacebookManager";
+	private static final int TIME_OUT_INTERVAL = 300000;
 	private Context context;
 	private Session.StatusCallback statusCallback = null;
 	private ProgressDialog progressDialog;
@@ -56,6 +58,7 @@ public class FacebookManager
 	private FacebookListener facebookListener;
 	private Request.GraphUserListCallback friendListCallback;
 	private Request.GraphUserCallback userCallback;
+	private RequestAsyncTask requestAsyncTask;
 	
 	private volatile static FacebookManager facebookManager;
 	
@@ -266,6 +269,7 @@ public class FacebookManager
         Session session = Session.getActiveSession();
         Log.d(TAG, "access token is " + session.getAccessToken());
         if (session.isOpened()) {
+            RequestBatch rb = new RequestBatch();
             Request meRequest = Request.newMeRequest(session, userCallback);
             Bundle requestParams = meRequest.getParameters(); // if not set field, will get all info(no phone number)
             StringBuilder queryString = new StringBuilder().append(JSONTag.NAME).append(", ").append(JSONTag.BIRTHDAY)
@@ -275,18 +279,9 @@ public class FacebookManager
                     .append(JSONTag.TIMEZONE).append(", ").append(JSONTag.LOCALE);
             requestParams.putString(BundleTag.FIELDS, queryString.toString());
             meRequest.setParameters(requestParams);
-            meRequest.executeAsync();
-//	          RequestBatch rb = new RequestBatch();
-//	          rb.add(meRequest);
-//	          rb.addCallback(new RequestBatch.Callback() {
-            //
-//	                @Override
-//	                public void onBatchCompleted(RequestBatch batch) {
-//	                       
-//	                }
-//	          });
-//	          rb.setTimeout(300);
-//	          rb.executeAsync();
+            rb.add(meRequest);
+            rb.setTimeout(TIME_OUT_INTERVAL);
+            requestAsyncTask = rb.executeAsync();
         } else {
             Log.d(TAG, "getUserProfile session is closed");
             dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
@@ -318,13 +313,17 @@ public class FacebookManager
 	    
 	    if (session.isOpened())
         {
+	        RequestBatch rb = new RequestBatch();
             Request myFriendsRequest = Request.newMyFriendsRequest(session, friendListCallback);
             Bundle requestParams = myFriendsRequest.getParameters();
             StringBuilder queryString = new StringBuilder().append(JSONTag.NAME).append(", ")
                     .append(JSONTag.BIRTHDAY).append(", ").append(JSONTag.PICTURE);
             requestParams.putString(BundleTag.FIELDS, queryString.toString());
             myFriendsRequest.setParameters(requestParams);
-            myFriendsRequest.executeAsync();
+            
+            rb.add(myFriendsRequest);
+            rb.setTimeout(TIME_OUT_INTERVAL);
+            requestAsyncTask = rb.executeAsync();
         }
         else
         {
@@ -344,7 +343,7 @@ public class FacebookManager
 	    }
 	}
 	
-	public void getPublishPermission(Context context, FacebookListener facebookListener) {
+	private void getPublishPermission(Context context, FacebookListener facebookListener) {
 	    Log.d(TAG, "getPublishPermission ");
         this.context = context;
         this.facebookListener = facebookListener;
@@ -398,10 +397,12 @@ public class FacebookManager
     }
     
     private void uploadImpl() {
+        RequestBatch rb = new RequestBatch();
         Session session = Session.getActiveSession();
         Request request = new Request(session, "me/photos", photo.getBundle(), HttpMethod.POST, new UploadCallback());
-        RequestAsyncTask task = new RequestAsyncTask(request);
-        task.execute();
+        rb.add(request);
+        rb.setTimeout(TIME_OUT_INTERVAL);
+        requestAsyncTask = rb.executeAsync();
     }
 	
 	public void inviteFriend(Context context, String to, String message)
@@ -490,6 +491,13 @@ public class FacebookManager
             Toast.makeText(context, context.getResources().getString(R.string.errorIs, msg), Toast.LENGTH_SHORT).show();
         }
     }
+    
+    public boolean cancelRequest() {
+        if (requestAsyncTask != null) {
+            return requestAsyncTask.cancel(true);
+        }
+        return false;
+    }
 	
     private void checkPublishPermission() {
         Log.d(TAG, "checkPublishPermission ");
@@ -501,8 +509,6 @@ public class FacebookManager
                 break;
             case ManagerState.INVITE:
                 openInviteDialog();
-                break;
-            case ManagerState.UPLOAD:
                 break;
             }
         } else {
