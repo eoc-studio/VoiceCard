@@ -11,6 +11,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.SQLException;
 import android.net.Uri;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
@@ -18,57 +19,81 @@ import android.provider.CalendarContract.Reminders;
 public class DataProcess
 {
 	public static final String EVENT_DATE = "eventDate";
+	private static final String DEFAULT_YEAR = "1970";
+	private static final String DEFAULT_DURATION = "P1D";
 	public static final String DEFAULT_EVENT_TIME = "0800";
 	private static final int EVENT_ALARM_12_HOURS = 60 * 12;
+	private static final int IS_ALL_DAY = 1;
+	private static final int HAS_ALARM = 1;
 	private static String eventDateValue = "";
-	private static final int isAllDay = 1;
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	protected static void addEvent(final Context context, final String title, String date)
 	{
-		if (context == null) { return; }
-		if (title == null || title.equals("") || title.equals("null")) { return; }
-		if (date == null || date.equals("") || date.equals("null")) { return; }
-		date = date + DEFAULT_EVENT_TIME;
-		ContentResolver cr = context.getContentResolver();
-		ContentValues values = new ContentValues();
-		values.put(Events.CALENDAR_ID, CalendarIntentHelper.getVoiceCardCalendar(context));
-		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
-		values.put(Events.TITLE, title);
-		values.put(Events.ALL_DAY, isAllDay);
-		values.put(Events.DTSTART, getDataMilliSeconds(date));
-		values.put(Events.DTEND, getDataMilliSeconds(date));
-		values.put(Events.DESCRIPTION, "VoiceCard Note");
-		values.put(Events.RRULE, CalendarIntentHelper.EVENT_TYPE_YEARLY);
-		values.put(Events.HAS_ALARM, false);
-		Uri uri = cr.insert(Events.CONTENT_URI, values);
-		//
-		// add 12 hours reminder for the event
-		ContentValues reminders = new ContentValues();
-		reminders.put(Reminders.EVENT_ID, Long.parseLong(uri.getLastPathSegment()));
-		reminders.put(Reminders.METHOD, Reminders.METHOD_ALERT);
-		reminders.put(Reminders.MINUTES, EVENT_ALARM_12_HOURS);
-		cr.insert(Reminders.CONTENT_URI, reminders);
+		try
+		{
+			if (context == null) { return; }
+			if (title == null || title.equals("") || title.equals("null")) { return; }
+			if (date == null || date.equals("") || date.equals("null")) { return; }
+			date = date + DEFAULT_EVENT_TIME;
+			ContentResolver cr = context.getContentResolver();
+			ContentValues values = new ContentValues();
+			values.put(Events.CALENDAR_ID, CalendarIntentHelper.getVoiceCardCalendar(context));
+			values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
+			values.put(Events.TITLE, title);
+			values.put(Events.ALL_DAY, IS_ALL_DAY);
+			values.put(Events.DTSTART, getDataMilliSeconds(date));
+			values.put(Events.DURATION, DEFAULT_DURATION);
+			values.put(Events.DESCRIPTION, "VoiceCard Note");
+			values.put(Events.RRULE, CalendarIntentHelper.EVENT_TYPE_YEARLY);
+			values.put(Events.HAS_ALARM, HAS_ALARM);
+			Uri uri = cr.insert(Events.CONTENT_URI, values);
+			//
+			// add 12 hours reminder for the event
+			ContentValues reminders = new ContentValues();
+			reminders.put(Reminders.EVENT_ID, Long.parseLong(uri.getLastPathSegment()));
+			reminders.put(Reminders.METHOD, Reminders.METHOD_ALERT);
+			reminders.put(Reminders.MINUTES, EVENT_ALARM_12_HOURS);
+			cr.insert(Reminders.CONTENT_URI, reminders);
+		}
+		catch (SQLException e)
+		{
+			System.out.println("[DataProcess][addEvent]SQLException:" + e);
+		}
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	protected static void updataEvent(Context context, String title, String eventID)
 	{
-		if (context == null) { return; }
-		ContentResolver cr = context.getContentResolver();
-		ContentValues values = new ContentValues();
-		values.put(Events.TITLE, title);
-		Uri updataUri = ContentUris.withAppendedId(Events.CONTENT_URI, Long.valueOf(eventID));
-		cr.update(updataUri, values, null, null);
+		try
+		{
+			if (context == null) { return; }
+			ContentResolver cr = context.getContentResolver();
+			ContentValues values = new ContentValues();
+			values.put(Events.TITLE, title);
+			Uri updataUri = ContentUris.withAppendedId(Events.CONTENT_URI, Long.valueOf(eventID));
+			cr.update(updataUri, values, null, null);
+		}
+		catch (SQLException e)
+		{
+			System.out.println("[DataProcess][updataEvent]SQLException:" + e);
+		}
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	protected static void deleteEvent(Context context, String eventID)
 	{
-		if (context == null) { return; }
-		ContentResolver cr = context.getContentResolver();
-		Uri deleteUri = ContentUris.withAppendedId(Events.CONTENT_URI, Long.valueOf(eventID));
-		cr.delete(deleteUri, null, null);
+		try
+		{
+			if (context == null) { return; }
+			ContentResolver cr = context.getContentResolver();
+			Uri deleteUri = ContentUris.withAppendedId(Events.CONTENT_URI, Long.valueOf(eventID));
+			cr.delete(deleteUri, null, null);
+		}
+		catch (SQLException e)
+		{
+			System.out.println("[DataProcess][deleteEvent]SQLException:" + e);
+		}
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -150,8 +175,8 @@ public class DataProcess
 		{
 			return DataProcess.getDataMilliSeconds(date, "MM/dd/yyyy");
 		}
-		else if (date.length() == 5) { return DataProcess.getDataMilliSeconds(date + "/1970",
-				"MM/dd/yyyy"); }
+		else if (date.length() == 5) { return DataProcess.getDataMilliSeconds(date + "/"
+				+ DEFAULT_YEAR, "MM/dd/yyyy"); }
 		return formats;
 	}
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
