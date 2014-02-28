@@ -80,8 +80,8 @@ public class CalendarView extends Fragment implements OnTouchListener, OnClickLi
 		nextMonth.setOnClickListener(this);
 		prevMonth.setOnClickListener(this);
 		getNewView();
-		calendarGrid.setOnItemClickListener(new DayItemClickListener());
 		calendarGrid.setOnTouchListener(this);
+		calendarGrid.setOnItemClickListener(new DayItemClickListener());
 		return calendarLayout;
 	}
 
@@ -205,7 +205,7 @@ public class CalendarView extends Fragment implements OnTouchListener, OnClickLi
 			{
 				onPreviousMonth();
 			}
-			return false;
+			return true;
 		}
 	}
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

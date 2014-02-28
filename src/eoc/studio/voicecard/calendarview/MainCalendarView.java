@@ -27,9 +27,10 @@ public class MainCalendarView extends FragmentActivity implements OnClickListene
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		mContext = this;
+		CalendarIntentHelper.addVoiceCardCalendar(mContext);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main_calendar_view);
-		mContext = this;
 		findView();
 		buttonFunction();
 	}
@@ -92,11 +93,14 @@ public class MainCalendarView extends FragmentActivity implements OnClickListene
 							.getParcelableArrayList(FriendInfo.GET_FRIEND);
 					if (friendList != null)
 					{
+						int j = 1;
+						Log.d(TAG, "********Total Count" + friendList.size());
 						for (int i = 0; i < friendList.size(); i++)
 						{
 							if (friendList.get(i).getFriendBirthday() != null
 									&& !friendList.get(i).getFriendBirthday().equals("null"))
 							{
+								Log.d(TAG, "*****************add count " + j++);
 								Log.d(TAG, "ID is " + friendList.get(i).getFriendId());
 								Log.d(TAG, "Name is " + friendList.get(i).getFriendName());
 								Log.d(TAG, "Birthday is " + friendList.get(i).getFriendBirthday());

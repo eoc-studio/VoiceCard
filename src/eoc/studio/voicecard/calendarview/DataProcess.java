@@ -27,6 +27,8 @@ public class DataProcess
 	protected static void addEvent(final Context context, final String title, String date)
 	{
 		if (context == null) { return; }
+		if (title == null || title.equals("") || title.equals("null")) { return; }
+		if (date == null || date.equals("") || date.equals("null")) { return; }
 		date = date + DEFAULT_EVENT_TIME;
 		ContentResolver cr = context.getContentResolver();
 		ContentValues values = new ContentValues();
@@ -148,11 +150,8 @@ public class DataProcess
 		{
 			return DataProcess.getDataMilliSeconds(date, "MM/dd/yyyy");
 		}
-		else if (date.length() == 5) 
-		{
-			return DataProcess.getDataMilliSeconds(date + "/1970",
-				"MM/dd/yyyy"); 
-		}
+		else if (date.length() == 5) { return DataProcess.getDataMilliSeconds(date + "/1970",
+				"MM/dd/yyyy"); }
 		return formats;
 	}
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

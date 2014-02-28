@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -14,12 +15,13 @@ import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
+import android.provider.CalendarContract.Instances;
+import android.text.format.Time;
 
 public class CalendarIntentHelper
 {
 	private static Map<String, String> item;
 	private static ArrayList<Map<String, String>> data;
-	private static final boolean GET_SINGLE_DATA = true;
 	//
 	protected static final String EVENT_TYPE_YEARLY = "FREQ=YEARLY;WKST=SU";
 	//
@@ -30,9 +32,13 @@ public class CalendarIntentHelper
 			Calendars.ACCOUNT_NAME, Calendars.CALENDAR_DISPLAY_NAME, Calendars.OWNER_ACCOUNT };
 	public static final int EVENT_ID_INDEX = 0, EVENT_TITLE_INDEX = 1,
 			EVENTE_DESCRIPTION_INDEX = 2, EVENT_DTSTART_INDEX = 3, EVENT_DTEND_INDEX = 4,
-			EVENT_EVENT_LOCATION_INDEX = 4;
+			EVENT_LOCATION_INDEX = 4;
 	public static final String[] EVENT_PROJECTION = new String[] { Events._ID, Events.TITLE,
 			Events.DESCRIPTION, Events.DTSTART, Events.DTEND, Events.EVENT_LOCATION };
+	public static final String[] INSTANCES_PROJECTION = new String[] { Instances.EVENT_ID,
+			Instances.TITLE, Instances.START_DAY };
+	public static final int INSTANCES_ID_INDEX = 0, INSTANCES_TITLE_INDEX = 1,
+			INSTANCES_START_DAY_INDEX = 2;
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	protected static void addVoiceCardCalendar(Context context)
@@ -51,7 +57,7 @@ public class CalendarIntentHelper
 		String where = null, selection[] = null;
 		try
 		{
-			where = CALENDAR_PROJECTION[CALENDAR_DISPLAY_NAME_INDEX] + " =? ";
+			where = CALENDAR_PROJECTION[CALENDAR_DISPLAY_NAME_INDEX] + " = ?";
 			selection = new String[] { CALENDAR_NAME };
 			cur = context.getContentResolver().query(Calendars.CONTENT_URI, CALENDAR_PROJECTION,
 					where, selection, null);
@@ -107,74 +113,65 @@ public class CalendarIntentHelper
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public static boolean haveEvent(final Context context, final String eventDate)
 	{
-		ArrayList<Map<String, String>> getEvent = CalendarIntentHelper.readCalendarEvent(context,
-				eventDate + DataProcess.DEFAULT_EVENT_TIME, GET_SINGLE_DATA);
-		if (getEvent != null && !getEvent.isEmpty())
+		boolean haveEvents = false;
+		if (context != null && eventDate != null && !eventDate.equals(""))
 		{
-			return true;
+			Cursor cursor = null;
+			final String getDataMilliSeconds = DataProcess.getDataMilliSeconds(eventDate
+					+ DataProcess.DEFAULT_EVENT_TIME);
+			//
+			try
+			{
+				cursor = getCursor(context, getDataMilliSeconds);
+				if (cursor != null && cursor.getCount() > 0)
+				{
+					haveEvents = true;
+				}
+			}
+			catch (SQLException e)
+			{
+				System.out.println("[CalendarIntentHelper][haveEvent]SQLException:" + e);
+			}
+			catch (Exception ex)
+			{
+				System.out.println("[CalendarIntentHelper][haveEvent]Exception:" + ex);
+			}
+			if (cursor != null && !cursor.isClosed())
+			{
+				cursor.close();
+			}
 		}
-		else
-		{
-			return false;
-		}
+		return haveEvents;
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public static ArrayList<Map<String, String>> readCalendarEvent(final Context context,
 			final String eventDate)
 	{
-		return CalendarIntentHelper.readCalendarEvent(context, eventDate, !GET_SINGLE_DATA);
-	}
-
-	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public static ArrayList<Map<String, String>> readCalendarEvent(final Context context,
-			final String eventDate, final boolean getSingleData)
-	{
-		String getDataMilliSeconds = DataProcess.getDataMilliSeconds(eventDate);
 		data = new ArrayList<Map<String, String>>();
 		Cursor cursor = null;
-		// String where = null, selection[] = null;
-		// where = EVENT_PROJECTION[EVENT_DTSTART_INDEX] + " =? ";
-		// selection = new String[] { getDataMilliSeconds };
+		final String getDataMilliSeconds = DataProcess.getDataMilliSeconds(eventDate);
 		try
 		{
-			cursor = context.getContentResolver().query(Events.CONTENT_URI, EVENT_PROJECTION, null,
-					null, null);
+			cursor = getCursor(context, getDataMilliSeconds);
 			if (cursor != null && cursor.getCount() > 0)
 			{
 				while (cursor.moveToNext())
 				{
-					if (DataProcess.formatDate(cursor.getString(EVENT_DTSTART_INDEX), "MMdd")
-							.equals(DataProcess.formatDate(getDataMilliSeconds, "MMdd")))
-					{
-						item = new HashMap<String, String>();
-						item.put(
-								EVENT_PROJECTION[EVENT_ID_INDEX],
-								(cursor.getString(EVENT_ID_INDEX) != null) ? cursor
-										.getString(EVENT_ID_INDEX) : "");
-						item.put(
-								EVENT_PROJECTION[EVENT_TITLE_INDEX],
-								(cursor.getString(EVENT_TITLE_INDEX) != null) ? cursor
-										.getString(EVENT_TITLE_INDEX) : "");
-						item.put(
-								EVENT_PROJECTION[EVENTE_DESCRIPTION_INDEX],
-								(cursor.getString(EVENTE_DESCRIPTION_INDEX) != null) ? cursor
-										.getString(EVENTE_DESCRIPTION_INDEX) : "");
-						item.put(
-								EVENT_PROJECTION[EVENT_DTSTART_INDEX],
-								(cursor.getString(EVENT_DTSTART_INDEX) != null) ? cursor
-										.getString(EVENT_DTSTART_INDEX) : "");
-						item.put(
-								EVENT_PROJECTION[EVENT_EVENT_LOCATION_INDEX],
-								(cursor.getString(EVENT_EVENT_LOCATION_INDEX) != null) ? cursor
-										.getString(EVENT_EVENT_LOCATION_INDEX) : "");
-						data.add(item);
-						//
-						if (getSingleData)
-						{
-							break;
-						}
-					}
+					item = new HashMap<String, String>();
+					item.put(
+							INSTANCES_PROJECTION[INSTANCES_ID_INDEX],
+							(cursor.getString(INSTANCES_ID_INDEX) != null) ? cursor
+									.getString(INSTANCES_ID_INDEX) : "");
+					item.put(
+							INSTANCES_PROJECTION[INSTANCES_TITLE_INDEX],
+							(cursor.getString(INSTANCES_TITLE_INDEX) != null) ? cursor
+									.getString(INSTANCES_TITLE_INDEX) : "");
+					item.put(
+							INSTANCES_PROJECTION[INSTANCES_START_DAY_INDEX],
+							(cursor.getString(INSTANCES_START_DAY_INDEX) != null) ? cursor
+									.getString(INSTANCES_START_DAY_INDEX) : "");
+					data.add(item);
 				}
 			}
 		}
@@ -191,6 +188,31 @@ public class CalendarIntentHelper
 			cursor.close();
 		}
 		return data;
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	private static Cursor getCursor(final Context context, final String getDataMilliSeconds)
+	{
+		Cursor cursor = null;
+		String selection[] = null;
+		final String where = INSTANCES_PROJECTION[INSTANCES_START_DAY_INDEX] + " = ?";
+		//
+		selection = new String[] { String.valueOf(Time.getJulianDay(
+				Long.valueOf(getDataMilliSeconds), 0)) };
+		cursor = context.getContentResolver().query(getInstancesUri(getDataMilliSeconds),
+				INSTANCES_PROJECTION, where, selection, null);
+		return cursor;
+	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	private static Uri getInstancesUri(final String getDataMilliSeconds)
+	{
+		final Uri.Builder builder = Instances.CONTENT_URI.buildUpon();
+		// StartDate
+		ContentUris.appendId(builder, Long.valueOf(getDataMilliSeconds));
+		// EndDate
+		ContentUris.appendId(builder, Long.valueOf(getDataMilliSeconds));
+		return builder.build();
 	}
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

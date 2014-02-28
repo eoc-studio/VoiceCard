@@ -48,7 +48,6 @@ public class SetOfCalendarView extends Fragment implements OnTouchListener
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		mContext = getActivity();
-		CalendarIntentHelper.addVoiceCardCalendar(mContext);
 		final RelativeLayout calendarLayout = (RelativeLayout) inflater.inflate(
 				R.layout.set_of_calendar, null);
 		hideView = (RelativeLayout) calendarLayout.findViewById(R.id.hideView);
@@ -64,6 +63,7 @@ public class SetOfCalendarView extends Fragment implements OnTouchListener
 	protected static void getNewView()
 	{
 		mData = getEventData();
+		if (mData == null) { return; }
 		calendarAdapter = new SetOfCalendarAdapter(mContext, mData);
 		if (mData.size() == 1)
 		{

@@ -18,19 +18,19 @@ import android.widget.TextView;
 public class SetOfCalendarAdapter extends BaseAdapter
 {
 	private static Context mContext;
-	private final ArrayList<Map<String, String>> mData;
+	private ArrayList<Map<String, String>> mData = null;
 	private static int mSelected = -1;
 	private final LayoutInflater inflater;
-	private static final int EVENT_ID_INDEX = 0, EVENT_TITLE_INDEX = 1,
-			EVENTE_DESCRIPTION_INDEX = 2, EVENT_DTSTART_INDEX = 3, EVENT_DTEND_INDEX = 4,
-			EVENT_EVENT_LOCATION_INDEX = 4;
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public SetOfCalendarAdapter(Context context, ArrayList<Map<String, String>> data)
 	{
 		mContext = context;
 		mSelected = -1;
-		mData = new ArrayList<Map<String, String>>(data);
+		if (data != null)
+		{
+			mData = new ArrayList<Map<String, String>>(data);
+		}
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -72,13 +72,15 @@ public class SetOfCalendarAdapter extends BaseAdapter
 			@Override
 			public void onClick(View view)
 			{
-				ShowDialog.showSetValueDialog(
-						mContext,
-						mData.get(position).get(
-								CalendarIntentHelper.EVENT_PROJECTION[EVENT_ID_INDEX]), DataProcess
-								.formatDate(DataProcess.getDataMilliSeconds(DataProcess
-										.getSelectedEventDate()), "yyyyMMdd"), mData.get(position)
-								.get(CalendarIntentHelper.EVENT_PROJECTION[EVENT_TITLE_INDEX]));
+				ShowDialog
+						.showSetValueDialog(
+								mContext,
+								mData.get(position)
+										.get(CalendarIntentHelper.INSTANCES_PROJECTION[CalendarIntentHelper.INSTANCES_ID_INDEX]),
+								DataProcess.formatDate(DataProcess.getDataMilliSeconds(DataProcess
+										.getSelectedEventDate()), "yyyyMMdd"),
+								mData.get(position)
+										.get(CalendarIntentHelper.INSTANCES_PROJECTION[CalendarIntentHelper.INSTANCES_TITLE_INDEX]));
 			}
 		});
 		delView.setOnClickListener(new OnClickListener()
@@ -87,19 +89,21 @@ public class SetOfCalendarAdapter extends BaseAdapter
 			public void onClick(View view)
 			{
 				confirmDialog(
-						mData.get(position).get(
-								CalendarIntentHelper.EVENT_PROJECTION[EVENT_ID_INDEX]),
-						mData.get(position).get(
-								CalendarIntentHelper.EVENT_PROJECTION[EVENT_TITLE_INDEX]));
+						mData.get(position)
+								.get(CalendarIntentHelper.INSTANCES_PROJECTION[CalendarIntentHelper.INSTANCES_ID_INDEX]),
+						mData.get(position)
+								.get(CalendarIntentHelper.INSTANCES_PROJECTION[CalendarIntentHelper.INSTANCES_TITLE_INDEX]));
 			}
 		});
-		titleTextView.setText(mData.get(position).get(
-				CalendarIntentHelper.EVENT_PROJECTION[EVENT_TITLE_INDEX]));
+		titleTextView
+				.setText(mData
+						.get(position)
+						.get(CalendarIntentHelper.INSTANCES_PROJECTION[CalendarIntentHelper.INSTANCES_TITLE_INDEX]));
 		return view;
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public final void confirmDialog(final String eventId, final String title)
+	protected final void confirmDialog(final String eventId, final String title)
 	{
 		new AlertDialog.Builder(mContext)
 				.setTitle(mContext.getResources().getString(R.string.delete_confirm_title))
@@ -121,34 +125,15 @@ public class SetOfCalendarAdapter extends BaseAdapter
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public final String setSelected(int position)
+	protected final String setSelected(int position)
 	{
 		mSelected = position;
 		notifyDataSetChanged();
-		if (mSelected == position)
-		{
-			if (mData != null && !mData.get(position).isEmpty())
-			{
-				System.out.println("@id============================="
-						+ mData.get(position).get(
-								CalendarIntentHelper.EVENT_PROJECTION[EVENT_ID_INDEX]));
-				System.out.println("@title============================="
-						+ mData.get(position).get(
-								CalendarIntentHelper.EVENT_PROJECTION[EVENT_TITLE_INDEX]));
-				System.out.println("@description============================"
-						+ mData.get(position).get(
-								CalendarIntentHelper.EVENT_PROJECTION[EVENTE_DESCRIPTION_INDEX]));
-				System.out.println("@dtstrt=============================="
-						+ mData.get(position).get(
-								CalendarIntentHelper.EVENT_PROJECTION[EVENT_DTSTART_INDEX]));
-				return "";
-			}
-		}
 		return "";
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public final void refreshDays()
+	protected final void refreshDays()
 	{
 		notifyDataSetChanged();
 	}
