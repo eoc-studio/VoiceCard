@@ -2,7 +2,9 @@ package eoc.studio.voicecard.facebook;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -73,6 +75,7 @@ public class FacebookManager
 	    public static final int PUBLISH = 5;
 	    public static final int UPLOAD = 6;
 	    public static final int LOGOUT = 7;
+	    public static final int PUBLISH_USER_FEED = 8;
 	}
 			
 	private class SessionStatusCallback implements Session.StatusCallback {        
@@ -147,6 +150,7 @@ public class FacebookManager
 	    case ManagerState.INVITE:
 	    case ManagerState.PUBLISH:
 	    case ManagerState.UPLOAD:
+	    case ManagerState.PUBLISH_USER_FEED:
 	        break;
 	    }
 	}
@@ -352,6 +356,26 @@ public class FacebookManager
         session.requestNewPublishPermissions(new Session.NewPermissionsRequest((Activity) context,
                 Permissions.PUBLISH_PERMISSION));
 	}
+	
+    private void checkPublishPermission() {
+        Log.d(TAG, "checkPublishPermission ");
+        if (hasPublishPermission())
+        {
+            switch (actionType) {
+            case ManagerState.PUBLISH:
+                openPublishDialog();
+                break;
+            case ManagerState.INVITE:
+                openInviteDialog();
+                break;
+            case ManagerState.PUBLISH_USER_FEED:
+                publishUserFeedImpl();
+                break;
+            }
+        } else {
+            getPublishPermission(context, new RequestPublishPermissionListener());
+        }
+    }
 		
 	public void publishTimeline(Context context, Publish publish)
 	{
@@ -404,6 +428,57 @@ public class FacebookManager
         rb.setTimeout(TIME_OUT_INTERVAL);
         requestAsyncTask = rb.executeAsync();
     }
+    
+    public void publishUserFeed(Context context, Publish publish) {
+        this.context = context;
+        this.publish = publish;
+        managerState = ManagerState.PUBLISH_USER_FEED;
+        actionType = ManagerState.PUBLISH_USER_FEED;
+        
+        checkLoginfromPublish();
+    }
+    
+    private void publishUserFeedImpl() {
+        RequestBatch rb = new RequestBatch();
+        Bundle params = new Bundle();
+        params.putString(BundleTag.NAME, publish.getName());
+        if (publish.getImgLink() != null) {
+            params.putString(BundleTag.PICTURE, publish.getImgLink());
+        }
+        params.putString(BundleTag.TO, publish.getId());
+        params.putString(BundleTag.CAPTION, publish.getCaption());
+        params.putString(BundleTag.DESCRIPTION, publish.getDescription());
+        if (publish.getLink() != null) {
+            params.putString(BundleTag.LINK, publish.getLink());
+        }
+        Request request = new Request(Session.getActiveSession(), "me/feed", params, HttpMethod.POST, new PublishUserFeed());
+        rb.add(request);
+        rb.setTimeout(TIME_OUT_INTERVAL);
+        requestAsyncTask = rb.executeAsync();
+    }
+    
+    public void inviteFriend(Context context, String message) {
+        Log.d(TAG, "inviteFriend invite all friend");
+        managerState = ManagerState.INVITE;
+        actionType = ManagerState.INVITE;
+        this.context = context;
+        Bundle params = new Bundle();
+        if (message != null) {
+            params.putString(BundleTag.MESSAGE, message);
+        } else {
+            params.putString(BundleTag.MESSAGE, context.getResources().getString(R.string.invite_message));
+        }
+        inviteBundle = params;
+        
+        if (isLogin())
+        {
+            openInviteDialog();
+        } 
+        else 
+        {
+            login(context, new LoginListener());
+        }
+    }
 	
 	public void inviteFriend(Context context, String to, String message)
 	{
@@ -412,7 +487,6 @@ public class FacebookManager
 	    actionType = ManagerState.INVITE;
 	    this.context = context;
 		Bundle params = new Bundle();
-		// params.putString(BundleTag.LINK,"https://play.google.com/store/apps/details?id=com.facebook.android.friendsmash");
 		if (message != null) {
 			params.putString(BundleTag.MESSAGE, message);
 		} else {
@@ -498,24 +572,30 @@ public class FacebookManager
         }
         return false;
     }
-	
-    private void checkPublishPermission() {
-        Log.d(TAG, "checkPublishPermission ");
-        if (hasPublishPermission())
-        {
-            switch (actionType) {
-            case ManagerState.PUBLISH:
-                openPublishDialog();
-                break;
-            case ManagerState.INVITE:
-                openInviteDialog();
-                break;
-            }
-        } else {
-            getPublishPermission(context, new RequestPublishPermissionListener());
-        }
-    }
     
+    private List<String> fetchInvitedFriends(Bundle values)
+    {
+        List<String> friends = new ArrayList<String>();
+
+        int size = values.size();
+        int numOfFriends = size - 1;
+        if (numOfFriends > 0)
+        {
+            for (int i = 0; i < numOfFriends; i++)
+            {
+                String key = String.format("to[%d]", i);
+                String friendId = values.getString(key);
+                Log.d(TAG, "friendId === " + friendId);
+                if (friendId != null)
+                {
+                    friends.add(friendId);
+                }
+            }
+        }
+
+        return friends;
+    }
+	    
     private class LoginListener implements FacebookListener
     {
         @Override
@@ -533,9 +613,9 @@ public class FacebookManager
                 openInviteDialog();
                 break;
             case ManagerState.PUBLISH:
-                checkPublishPermission();
             case ManagerState.UPLOAD:
-                uploadImpl();
+            case ManagerState.PUBLISH_USER_FEED:
+                checkPublishPermission();
                 break;
             }
         }
@@ -562,6 +642,10 @@ public class FacebookManager
                 openInviteDialog();
                 break;
             case ManagerState.UPLOAD:
+                uploadImpl();
+                break;
+            case ManagerState.PUBLISH_USER_FEED:
+                publishUserFeedImpl();
                 break;
             }
         }
@@ -607,6 +691,8 @@ public class FacebookManager
                 }
             } else {
                 Log.d(TAG, "Invite no error ");
+                Log.d(TAG, "values " + values) ;
+                List<String> invitedFriends = fetchInvitedFriends(values);
             }
         }        
     }
@@ -615,7 +701,15 @@ public class FacebookManager
 
         @Override
         public void onCompleted(Response response) {
-            
+            Log.d(TAG, "Upload response is " + response.getError());
         }
+    }
+    
+    private class PublishUserFeed implements Request.Callback {
+
+        @Override
+        public void onCompleted(Response response) {
+            Log.d(TAG, "PublishUserFeed response is " + response.getError());
+        }       
     }
 }

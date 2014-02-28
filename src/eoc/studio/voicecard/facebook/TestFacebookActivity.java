@@ -36,7 +36,7 @@ public class TestFacebookActivity extends BaseActivity
 	private static final String PICTURE = "http://upload.wikimedia.org/wikipedia/commons/2/26/YellowLabradorLooking_new.jpg";
 	private static final String CAPTION = "CAPTION";
 	private static final String DESCRIPTION = "DESCRIPTION";
-	private static final String LINK = "http://upload.wikimedia.org/wikipedia/commons/2/26/YellowLabradorLooking_new.jpg";
+	private static final String LINK = "http://www.charliefind.com/";
 	private FacebookManager facebookManager;
 	private String owerId = "100007720118618";
 	private String[] testIdList = {"100007811983123", "100007720118618"};
@@ -104,6 +104,7 @@ public class TestFacebookActivity extends BaseActivity
         Button publishFriend = (Button) findViewById(R.id.publishFriend);
         Button logout = (Button) findViewById(R.id.logout);
         Button upload = (Button) findViewById(R.id.upload);
+        Button publishUserNoDialog = (Button) findViewById(R.id.publishUserFeed);
         
         getUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +131,7 @@ public class TestFacebookActivity extends BaseActivity
 			{
 				if (facebookManager != null)
 				{
-					facebookManager.inviteFriend(TestFacebookActivity.this, owerId, null);
+					facebookManager.inviteFriend(TestFacebookActivity.this, null);
 				}
 			}
 		});
@@ -182,6 +183,19 @@ public class TestFacebookActivity extends BaseActivity
                 if (facebookManager != null)
                 {
                     facebookManager.upload(new Photo(NAME, getPhoto()));
+                }
+            }
+        });
+		
+		publishUserNoDialog.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (facebookManager != null)
+                {
+                    facebookManager.publishUserFeed(TestFacebookActivity.this, new Publish(owerId, NAME, null, CAPTION,
+                            DESCRIPTION, LINK));
                 }
             }
         });
