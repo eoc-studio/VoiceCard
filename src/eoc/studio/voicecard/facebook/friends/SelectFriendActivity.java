@@ -74,10 +74,7 @@ public class SelectFriendActivity extends BaseActivity {
     public void onPause() {
         super.onPause();
         if (friendList != null) {
-//            friendList.clear();
-            for(Iterator it = friendList.iterator(); it.hasNext();){
-                it.remove();
-            }
+            friendList.clear();
         }
         if (friendsAdapterView != null) {
             friendsAdapterView.setPause(true);
