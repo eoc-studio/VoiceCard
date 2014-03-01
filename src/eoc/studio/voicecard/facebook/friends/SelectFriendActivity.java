@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -41,7 +42,7 @@ public class SelectFriendActivity extends BaseActivity {
     private FriendsAdapterView friendsAdapterView;
     private FriendsAdapterData friendsAdapterData;
     
-    private List<FriendInfo> friendList;
+//    private List<FriendInfo> friendList;
     private int firstVisiblePosition = 0;
     private int currentListSize = 0;
     private int lastVisiblePosition = 0;
@@ -73,12 +74,12 @@ public class SelectFriendActivity extends BaseActivity {
     @Override
     public void onPause() {
         super.onPause();
-        if (friendList != null) {
-            friendList.clear();
-        }
+//        if (friendList != null) {
+//            friendList.clear();
+//        }
         if (friendsAdapterView != null) {
             friendsAdapterView.setPause(true);
-            friendsAdapterView.clearList();
+//            friendsAdapterView.clearList();
         }
         
         if (friendsAdapterData != null) {
@@ -171,7 +172,7 @@ public class SelectFriendActivity extends BaseActivity {
     private void searchAction() {
         facebookManager.dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
         friendsAdapterView.setInterrupt(true);
-        friendList.clear();
+//        friendList.clear();
         LoadDbThread loadDbThread = new LoadDbThread(searchFriend.getText().toString());
         loadDbThread.start();
     }
@@ -200,11 +201,11 @@ public class SelectFriendActivity extends BaseActivity {
     }
     
     private void createDb(List<GraphUser> users) {
+        String friendId = "", friendName = "", firendBirthday = "", friendImgLink = "";
+        ArrayList<FriendInfo> friendList = new ArrayList<FriendInfo>();
         if (friendsAdapterData != null) {
             friendsAdapterData.open();
             currentListSize = users.size();
-            String friendId = "", friendName = "", firendBirthday = "", friendImgLink = "";
-            friendList = new ArrayList<FriendInfo>();
 
             for (int i = 0; i < users.size(); i++) {
                 try {
@@ -225,9 +226,16 @@ public class SelectFriendActivity extends BaseActivity {
             }
             Log.d(TAG, "Create Db finish() ");
         }
+        Message msg = new Message();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(FriendInfo.GET_FRIEND, friendList);
+        msg.what = ListUtility.CREATE_DB_COMPLETE;
+        msg.setData(bundle);
+        uiHandler.sendMessage(msg);
     }
     
-    private void updateView() {
+    private void updateView(Bundle bundle) {
+        ArrayList<FriendInfo> friendList = bundle.getParcelableArrayList(FriendInfo.GET_FRIEND);
         if (friendList.size() > 0) {
             friendsAdapterView = new FriendsAdapterView(SelectFriendActivity.this, friendList, friendsAdapterData,
                     showFriends);
@@ -245,11 +253,11 @@ public class SelectFriendActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
             case ListUtility.CREATE_DB_COMPLETE:
-                updateView();
+                updateView(msg.getData());
                 break;
             case ListUtility.SEARCH_COMPLETE:
-                friendsAdapterView.clearList();
-                updateView();
+//                friendsAdapterView.clearList();
+                updateView(msg.getData());
                 break;
             }
         }
@@ -299,7 +307,6 @@ public class SelectFriendActivity extends BaseActivity {
         @Override
         public void run() {
             createDb(users);
-            uiHandler.sendEmptyMessage(ListUtility.CREATE_DB_COMPLETE);
         }
     }
     
@@ -310,7 +317,7 @@ public class SelectFriendActivity extends BaseActivity {
         }
         @Override
         public void run() {
-            friendList = new ArrayList<FriendInfo>();
+            List<FriendInfo> friendList = new ArrayList<FriendInfo>();
             String friendId = "", friendName = "", firendBirthday = "", friendImgLink = "";
             byte[] friendImg = null;
             int selectState = 0;
@@ -329,7 +336,12 @@ public class SelectFriendActivity extends BaseActivity {
                 }
             }
             cursor.close();
-            uiHandler.sendEmptyMessage(ListUtility.SEARCH_COMPLETE);
+            Message msg = new Message();
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList(FriendInfo.GET_FRIEND, (ArrayList<? extends Parcelable>) friendList);
+            msg.what = ListUtility.SEARCH_COMPLETE;
+            msg.setData(bundle);
+            uiHandler.sendMessage(msg);
         }
     }
         
