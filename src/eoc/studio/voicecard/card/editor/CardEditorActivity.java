@@ -6,14 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
-
-import com.facebook.Session.NewPermissionsRequest;
 
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.GradientDrawable;
@@ -21,6 +17,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -34,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.audio.AudioRecorderActivity;
 import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.card.CardDraft;
 import eoc.studio.voicecard.card.FakeData;
@@ -586,12 +584,15 @@ public class CardEditorActivity extends BaseActivity
 					saveCradInformation();
 
 					Log.d(TAG, "openDraft - onClick() user data -- IMAGE URI: " + userImage);
-					Log.d(TAG, "openDraft - onClick() user data -- IMAGE BITMAP: " + userImageBitmap);
+					Log.d(TAG, "openDraft - onClick() user data -- IMAGE BITMAP: "
+							+ userImageBitmap);
 					Log.d(TAG, "openDraft - onClick() user data -- VOICE URI: " + userVoice);
 					Log.d(TAG, "openDraft - onClick() user data -- VOICE DURATION: "
 							+ userVoiceDuration);
-					Log.d(TAG, "openDraft - onClick() user data -- TEXT CONTENT: " + userTextContent);
-					Log.d(TAG, "openDraft - onClick() user data -- TEXT SIZE TYPE: " + userTextSizeType);
+					Log.d(TAG, "openDraft - onClick() user data -- TEXT CONTENT: "
+							+ userTextContent);
+					Log.d(TAG, "openDraft - onClick() user data -- TEXT SIZE TYPE: "
+							+ userTextSizeType);
 					Log.d(TAG, "openDraft - onClick() user data -- TEXT COLOR: " + userTextColor);
 					Log.d(TAG, "openDraft - onClick() user data -- SIGN HANDWRITHING: "
 							+ userSignHandwritingUri);
@@ -602,7 +603,7 @@ public class CardEditorActivity extends BaseActivity
 				}
 				catch (Exception e)
 				{
-					Log.d(TAG, "openDraft - openDraft error:"+  e.toString());
+					Log.d(TAG, "openDraft - openDraft error:" + e.toString());
 				}
 
 			}
@@ -737,105 +738,34 @@ public class CardEditorActivity extends BaseActivity
 
 	private void startVoiceRecorder()
 	{
-
-		// Intent intent = new Intent(this, AudioRecorderActivity.class);
-		Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+		File extDir = Environment.getExternalStorageDirectory();
+		String fileName = FileUtility.getRandomSpeechName("3gp");
+		String filePath = extDir.getAbsolutePath() + "/" + fileName;
+		Log.d(TAG, "startVoiceRecorder - filePath: " + filePath);
+		
+		Intent intent = new Intent(this, AudioRecorderActivity.class);
+		intent.putExtra(AudioRecorderActivity.EXTRA_KEY_FILEPATH, filePath);
 		startActivityForResult(intent, REQ_RECORD_VOICE);
 	}
 
 	private void onVoiceRecorderResult(int resultCode, Intent data)
 	{
 
-		Uri uri = data.getData();
-		Log.e(TAG, "onVoiceRecorderResult()  uri: " + uri);
-		String filePath = uri.getPath();
+		String filePath = data.getStringExtra(AudioRecorderActivity.EXTRA_KEY_FILEPATH);
+		userVoice = Uri.fromFile(new File(filePath));
 
-		Log.e(TAG, "onVoiceRecorderResult()  filePath:" + filePath);
-		String extName = filePath.substring(filePath.lastIndexOf(".") + 1);
-		File oldFile = new File(filePath);
+		int duration = data.getIntExtra(AudioRecorderActivity.EXTRA_KEY_DURATION_MILLISECOND, 0);
+		int min = duration / 1000 / 60;
+		int sec = duration / 1000 % 60;
+		userVoiceDuration = getString(R.string.play_voice_message, min + ":"
+				+ String.format("%02d", sec));
 
-		filePath = filePath.substring(0, filePath.lastIndexOf("/"));
-		String newFileName = FileUtility.getRandomSpeechName(extName);
-		File newFile = new File(filePath, newFileName);
-		try
-		{
-			copyFile(oldFile, newFile);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		Log.d(TAG, "onVoiceRecorderResult - filePath: " + filePath);
+		Log.d(TAG, "onVoiceRecorderResult - duration: " + duration + " = " + min + "m" + sec + "s");
+		
+		updateVoiceRegion();
 
-		uri = Uri.fromFile(newFile);
-		Log.e(TAG, "onVoiceRecorderResult()  last uri:" + uri);
-		userVoice = uri;
-		card.setSound(uri);
-		setVoiceMessageText(uri);
-	}
-
-	private void setVoiceMessageText(Uri uri)
-	{
-
-		MediaPlayer mp = new MediaPlayer();
-		try
-		{
-			mp.setDataSource(this, uri);
-			mp.setOnPreparedListener(new OnPreparedListener()
-			{
-
-				@Override
-				public void onPrepared(final MediaPlayer mp)
-				{
-
-					runOnUiThread(new Runnable()
-					{
-
-						@Override
-						public void run()
-						{
-
-							int duration = mp.getDuration();
-							int min = duration / 1000 / 60;
-							int sec = duration / 1000 % 60;
-							userVoiceDuration = getString(R.string.play_voice_message, min + ":"
-									+ String.format("%02d", sec));
-							updateVoiceRegion();
-							Log.d(TAG, "userVoiceDuration: " + userVoiceDuration);
-
-							new Thread("ReleasePlayer")
-							{
-								@Override
-								public void run()
-								{
-
-									Log.d(TAG, "Release MediaPlayer");
-									mp.release();
-								}
-							}.start();
-						}
-
-					});
-				}
-
-			});
-			mp.prepareAsync();
-		}
-		catch (IllegalArgumentException e)
-		{
-			e.printStackTrace();
-		}
-		catch (SecurityException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IllegalStateException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		card.setSound(userVoice);
 	}
 
 	private void startTextEditor()
@@ -999,42 +929,6 @@ public class CardEditorActivity extends BaseActivity
 			e.printStackTrace();
 		}
 		return result;
-	}
-
-	// private String convertAudioContentUriToFilePath(Uri contentUri)
-	// {
-	//
-	// String[] projection = {
-	// MediaStore.Audio.Media.DATA,MediaStore.Images.Media.DATA };
-	// Cursor cursor = this.getContentResolver().query(contentUri, projection,
-	// null, null, null);
-	// if (cursor == null) return null;
-	// int column_index =
-	// cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-	// cursor.moveToFirst();
-	// String s = cursor.getString(column_index);
-	// cursor.close();
-	// return s;
-	// }
-
-	private static void copyFile(File src, File dest) throws IOException
-	{
-
-		InputStream in = new FileInputStream(src);
-		OutputStream out = new FileOutputStream(dest);
-
-		byte[] buf = new byte[1024];
-		int len;
-
-		while ((len = in.read(buf)) > 0)
-		{
-			out.write(buf, 0, len);
-		}
-
-		in.close();
-		out.close();
-
-		Log.d(TAG, "Copy file successful.");
 	}
 
 	private static float getTextSizeByType(int type)

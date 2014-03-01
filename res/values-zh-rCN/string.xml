@@ -59,4 +59,12 @@
 	<!-- Main Loading -->
 	<string name="main_loading">讀取中...</string>		
 	
+	<!-- Audio Recorder -->
+    <string name="start_recording">開始錄音</string>
+    <string name="open_file">開啟存檔</string>
+    <string name="pause">暫停</string>
+    <string name="stop_recording">停止錄音</string>
+    <string name="play">試聽</string>
+    <string name="save">儲存錄音</string>
+    <string name="delete">刪除</string>
 </resources>

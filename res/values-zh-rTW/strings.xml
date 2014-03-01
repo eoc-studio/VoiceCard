@@ -54,7 +54,7 @@
     <string name="insert_signature">手寫簽名</string>
     <string name="play_voice_message">播放留言 %s</string>
 
-    <!-- RichTextEditor -->
+    <!-- TextEditor -->
     <string name="text_limit">/%s字</string>
 
     <!-- view_recommend_listview_item -->
@@ -72,4 +72,12 @@
 	<string name="errorIs">錯誤是 %s </string>
 	<string name="cancelPublish">取消發佈</string>
 
+	<!-- Audio Recorder -->
+    <string name="start_recording">開始錄音</string>
+    <string name="open_file">開啟存檔</string>
+    <string name="pause">暫停</string>
+    <string name="stop_recording">停止錄音</string>
+    <string name="play">試聽</string>
+    <string name="save">儲存錄音</string>
+    <string name="delete">刪除</string>
 </resources>

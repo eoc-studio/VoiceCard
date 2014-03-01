@@ -94,7 +94,12 @@
 				android:layout_height="wrap_content"
 				android:layout_below="@id/test_mainloading"
 				android:text="post card" />
-		
+		<Button 
+		    android:id="@+id/test_recording"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@id/test_post_card"
+		    android:text="Audio Recording Test"/>
         
     </RelativeLayout>
 

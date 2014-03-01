@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/rec_bg" >
+
+    <ImageView
+        android:id="@+id/act_audio_recorder_iv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dip"
+        android:layout_marginTop="20dip"
+        android:src="@drawable/title_record" />
+
+    <LinearLayout
+        android:id="@+id/act_audio_recorder_llyt_timer_wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/act_audio_recorder_iv_title"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/rec_time"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/act_audio_recorder_tv_current_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0:00"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/act_audio_recorder_tv_time_separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:text="@string/time_separator"
+            android:textColor="@color/audio_recorder_duration_max_color"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/act_audio_recorder_tv_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3:00"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/act_audio_recorder_tv_recording_sign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/act_audio_recorder_llyt_timer_wrapper"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dip"
+        android:drawableLeft="@drawable/icon_recording"
+        android:drawablePadding="5dip"
+        android:text="@string/rec_sign"
+        android:textColor="@color/red" />
+
+    <LinearLayout
+        android:id="@+id/act_audio_recorder_control_bars_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dip"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/act_audio_recorder_llyt_initial_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/act_audio_recorder_tv_record"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
+                android:drawableTop="@drawable/rec_record"
+                android:gravity="center"
+                android:text="@string/start_recording"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/act_audio_recorder_tv_open_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/rec_load"
+                android:gravity="center"
+                android:text="@string/open_file"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/act_audio_recorder_llyt_playing_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/act_audio_recorder_tv_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/rec_pause"
+                android:gravity="center"
+                android:text="@string/pause"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/act_audio_recorder_tv_resume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/rec_play"
+                android:gravity="center"
+                android:text="@string/play"
+                android:textColor="@color/white"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/act_audio_recorder_llyt_recording_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/act_audio_recorder_tv_stop_record"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/rec_unrecord"
+                android:gravity="center"
+                android:text="@string/stop_recording"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/act_audio_recorder_llyt_done_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/act_audio_recorder_tv_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
+                android:drawableTop="@drawable/rec_play"
+                android:gravity="center"
+                android:text="@string/play"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/act_audio_recorder_tv_save_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
+                android:drawableTop="@drawable/rec_save"
+                android:gravity="center"
+                android:text="@string/save"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/act_audio_recorder_tv_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/rec_del"
+                android:gravity="center"
+                android:text="@string/delete"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/act_audio_recorder_iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/btn_return_selector" />
+
+    <ImageView
+        android:id="@+id/act_audio_recorder_iv_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/btn_sure_selector" />
+
+</RelativeLayout>

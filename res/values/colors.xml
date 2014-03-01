@@ -62,6 +62,11 @@
 		<color name="mail_box_list_item_date_text_color">#D0A3A2</color>
 		
 		<color name="mail_sender_receiver_counter">#f77f0c</color>
+		
+		<color name="audio_recorder_duration_max_color">#f3d7a7</color>
+		<color name="audio_recorder_initial_time">#fbffff</color>
+		<color name="audio_recorder_done_time">#fbffff</color>
+		<color name="audio_recorder_recoding_time">#bdd65e</color>
 </resources>
 
 
