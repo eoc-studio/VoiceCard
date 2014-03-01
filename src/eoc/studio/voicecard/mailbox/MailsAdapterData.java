@@ -5,9 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import android.content.ContentValues;
@@ -16,7 +13,6 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -237,7 +233,6 @@ public class MailsAdapterData
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		db = dbHelper.openDataBase();

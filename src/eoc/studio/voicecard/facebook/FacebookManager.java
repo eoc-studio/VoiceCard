@@ -679,7 +679,6 @@ public class FacebookManager
     
     private class InviteListener implements OnCompleteListener
     {
-
         @Override
         public void onComplete(Bundle values, FacebookException error) {
             if (error != null) {
@@ -697,16 +696,16 @@ public class FacebookManager
         }        
     }
     
-    private class UploadCallback implements Request.Callback {
-
+    private class UploadCallback implements Request.Callback
+    {
         @Override
         public void onCompleted(Response response) {
             Log.d(TAG, "Upload response is " + response.getError());
         }
     }
     
-    private class PublishUserFeed implements Request.Callback {
-
+    private class PublishUserFeed implements Request.Callback
+    {
         @Override
         public void onCompleted(Response response) {
             Log.d(TAG, "PublishUserFeed response is " + response.getError());

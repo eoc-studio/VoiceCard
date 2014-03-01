@@ -8,17 +8,16 @@ public class FriendInfo implements Parcelable {
     public static final int GET_FRIEND_REQUEST_CODE = 0;
     private String friendId, friendName, friendBirthday, friendImgLink;
     byte[] friendImg;
-    int selectedState, installState;
+    int selectedState;
     
     public FriendInfo(String friendId, String friendName, String friendBirthday, String friendImgLink,
-            byte[] friendImg, int selectedState, int installState) {
+            byte[] friendImg, int selectedState) {
         this.friendId = friendId;
         this.friendName = friendName;
         this.friendBirthday = friendBirthday;
         this.friendImgLink = friendImgLink;
         this.friendImg = friendImg;
         this.selectedState = selectedState;
-        this.installState = installState;
     }
     
     public String getFriendId() {
@@ -53,10 +52,6 @@ public class FriendInfo implements Parcelable {
         return selectedState;
     }
     
-    public int getInstallState() {
-        return installState;
-    }
-    
     public FriendInfo(Parcel in) {
         super(); 
         readFromParcel(in);
@@ -85,7 +80,6 @@ public class FriendInfo implements Parcelable {
             in.readByteArray(friendImg);
         }
         selectedState = in.readInt();
-        installState = in.readInt();
     }
 
     @Override
@@ -103,6 +97,5 @@ public class FriendInfo implements Parcelable {
             dest.writeInt(friendImg.length); 
         dest.writeByteArray(friendImg); 
         dest.writeInt(selectedState);
-        dest.writeInt(installState);
     }
 }

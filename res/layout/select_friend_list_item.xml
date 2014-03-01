@@ -3,21 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/glb_selectfriend_list_item_not_install"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:drawableTop="@drawable/icon_warining"
-        android:text="@string/not_install"
-        android:visibility="invisible" />
-
     <ImageView
         android:id="@+id/glb_selectfriend_list_item_header"
         android:layout_width="@dimen/user_info_header_edge"
         android:layout_height="@dimen/user_info_header_edge"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/glb_selectfriend_list_item_not_install"
+        android:layout_marginLeft="@dimen/common_check_icon_margin"
         android:src="@drawable/dummy" />
 
     <TextView

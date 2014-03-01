@@ -70,8 +70,7 @@ public class FriendsAdapterView extends BaseAdapter
 	{
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.select_friend_list_item, null);
-            viewTag = new ViewTag((TextView) convertView.findViewById(R.id.glb_selectfriend_list_item_not_install),
-                    (ImageView) convertView.findViewById(R.id.glb_selectfriend_list_item_header),
+            viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.glb_selectfriend_list_item_header),
                     (TextView) convertView.findViewById(R.id.glb_selectfriend_list_item_name),
                     (ImageView) convertView.findViewById(R.id.glb_selectfriend_list_item_check_icon));
             convertView.setTag(viewTag);
@@ -82,12 +81,6 @@ public class FriendsAdapterView extends BaseAdapter
         
         if (position < friends.size()) {
             viewTag.name.setText(friends.get(position).getFriendName());
-
-            if (friends.get(position).getInstallState() == FriendsAdapterData.NOTINSTALL) {
-                viewTag.notInstall.setVisibility(View.VISIBLE);
-            } else {
-                viewTag.notInstall.setVisibility(View.INVISIBLE);
-            }
 
             if (friends.get(position).getSelectedState() == FriendsAdapterData.SELECT) {
                 viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_checkbox_check));
@@ -172,14 +165,12 @@ public class FriendsAdapterView extends BaseAdapter
 
 	class ViewTag
 	{
-	    TextView notInstall;
 	    ImageView header;
 		TextView name;
 		ImageView checkIcon;
 
-		public ViewTag(TextView notInstall, ImageView header, TextView name, ImageView checkIcon)
+		public ViewTag(ImageView header, TextView name, ImageView checkIcon)
 		{
-		    this.notInstall = notInstall;
 		    this.header = header;
 			this.name = name;
 			this.checkIcon = checkIcon;

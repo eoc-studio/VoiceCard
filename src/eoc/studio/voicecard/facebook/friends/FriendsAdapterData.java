@@ -13,7 +13,7 @@ public class FriendsAdapterData {
     private static final String DATABASE_TABLE = "friends";
     private static final String DATABASE_CREATE = "create table friends(" + "_id INTEGER PRIMARY KEY,"
             + "friend_id TEXT NOT NULL," + "friend_name TEXT," + "friend_birthday TEXT," + "friend_img_link TEXT,"
-            + "friend_img BLOB," + "select_state INTEGER," + "install_state INTEGER" + ");";
+            + "friend_img BLOB," + "select_state INTEGER" + ");";
 
     public static final String KEY_ROWID = "_id";
     public static final String KEY_FRIEND_ID = "friend_id";
@@ -22,12 +22,9 @@ public class FriendsAdapterData {
     public static final String KEY_FRIEND_IMG_LINK = "friend_img_link";
     public static final String KEY_FRIEND_IMG = "friend_img";
     public static final String KEY_SELECT_STATE = "select_state";
-    public static final String KEY_INSTALL_STATE = "install_state";
     
     public static final int UNSELECT = 0;
     public static final int SELECT = 1;
-    public static final int NOTINSTALL = 0;
-    public static final int INSTALL = 1;
 
     private Context context = null;
     private DatabaseHelper dbHelper;
@@ -70,13 +67,12 @@ public class FriendsAdapterData {
     /** Get all items from database*/
     public Cursor getAll() {
         return db.query(DATABASE_TABLE, new String[] { KEY_ROWID, KEY_FRIEND_ID, KEY_FRIEND_NAME, KEY_FRIEND_BIRTHDAY,
-                KEY_FRIEND_IMG_LINK, KEY_FRIEND_IMG, KEY_SELECT_STATE, KEY_INSTALL_STATE }, null, null, null, null,
+                KEY_FRIEND_IMG_LINK, KEY_FRIEND_IMG, KEY_SELECT_STATE }, null, null, null, null,
                 KEY_FRIEND_NAME);
     }
 
     /** Insert item to database */
-    public long create(String friendId, String name, String birthday, String imgLink, byte[] img, int selectState,
-            int installState) {
+    public long create(String friendId, String name, String birthday, String imgLink, byte[] img, int selectState) {
         ContentValues args = new ContentValues();
         args.put(KEY_FRIEND_ID, friendId);
         args.put(KEY_FRIEND_NAME, name);
@@ -84,7 +80,6 @@ public class FriendsAdapterData {
         args.put(KEY_FRIEND_IMG_LINK, imgLink);
         args.put(KEY_FRIEND_IMG, img);
         args.put(KEY_SELECT_STATE, selectState);
-        args.put(KEY_INSTALL_STATE, installState);
         return db.insert(DATABASE_TABLE, null, args);
     }
 
@@ -108,7 +103,7 @@ public class FriendsAdapterData {
     public Cursor get(String friendId) throws SQLException {
         if (db.isOpen()) {
             Cursor cursor = db.query(true, DATABASE_TABLE, new String[] { KEY_ROWID, KEY_FRIEND_ID, KEY_FRIEND_NAME,
-                    KEY_FRIEND_BIRTHDAY, KEY_FRIEND_IMG_LINK, KEY_FRIEND_IMG, KEY_SELECT_STATE, KEY_INSTALL_STATE }, KEY_FRIEND_ID + "="
+                    KEY_FRIEND_BIRTHDAY, KEY_FRIEND_IMG_LINK, KEY_FRIEND_IMG, KEY_SELECT_STATE}, KEY_FRIEND_ID + "="
                     + friendId, null, null, null, null, null);
             if (cursor != null) {
                 cursor.moveToFirst();
@@ -124,7 +119,7 @@ public class FriendsAdapterData {
             String where = KEY_FRIEND_NAME + " like ?";
             String[] selection = new String[] { selectionName + "%" };
             Cursor cursor = db.query(true, DATABASE_TABLE, new String[] { KEY_FRIEND_ID, KEY_FRIEND_NAME,
-                    KEY_FRIEND_BIRTHDAY, KEY_FRIEND_IMG_LINK, KEY_FRIEND_IMG, KEY_SELECT_STATE, KEY_INSTALL_STATE },
+                    KEY_FRIEND_BIRTHDAY, KEY_FRIEND_IMG_LINK, KEY_FRIEND_IMG, KEY_SELECT_STATE},
                     where, selection, null, null, null, null);
             return cursor;
         } else {
@@ -158,7 +153,7 @@ public class FriendsAdapterData {
     
     /** Update the database */
     public boolean update(String friendId, String name, String birthday, String imgLink, byte[] img,
-            int selectState, int installState) {
+            int selectState) {
         if (db.isOpen()) {
             ContentValues args = new ContentValues();
             args.put(KEY_FRIEND_NAME, name);
@@ -166,7 +161,6 @@ public class FriendsAdapterData {
             args.put(KEY_FRIEND_IMG_LINK, imgLink);
             args.put(KEY_FRIEND_IMG, img);
             args.put(KEY_SELECT_STATE, selectState);
-            args.put(KEY_INSTALL_STATE, installState);
             return db.update(DATABASE_TABLE, args, KEY_FRIEND_ID + "=" + friendId, null) > 0;
         } else {
             return false;

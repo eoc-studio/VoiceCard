@@ -157,7 +157,8 @@ public class SelectFriendActivity extends BaseActivity {
                 firendBirthday = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_BIRTHDAY));
                 friendImgLink = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_IMG_LINK));
                 Log.d(TAG, "firendBirthday is " + firendBirthday);
-                selectedFriendList.add(new FriendInfo(friendId, friendName, firendBirthday, friendImgLink, null, 0, 0));
+                selectedFriendList.add(new FriendInfo(friendId, friendName, firendBirthday, friendImgLink, null,
+                        FriendsAdapterData.UNSELECT));
             }
         }
         cursor.close();
@@ -220,10 +221,10 @@ public class SelectFriendActivity extends BaseActivity {
                 firendBirthday = users.get(i).getBirthday();
                 
                 friendsAdapterData.create(friendId, friendName, firendBirthday, friendImgLink, null,
-                        FriendsAdapterData.UNSELECT, FriendsAdapterData.NOTINSTALL);
+                        FriendsAdapterData.UNSELECT);
                 
                 friendList.add(new FriendInfo(friendId, friendName, firendBirthday, friendImgLink, null,
-                        FriendsAdapterData.UNSELECT, FriendsAdapterData.NOTINSTALL));
+                        FriendsAdapterData.UNSELECT));
             }
             Log.d(TAG, "Create Db finish() ");
         }
@@ -315,7 +316,7 @@ public class SelectFriendActivity extends BaseActivity {
             friendList = new ArrayList<FriendInfo>();
             String friendId = "", friendName = "", firendBirthday = "", friendImgLink = "";
             byte[] friendImg = null;
-            int selectState = 0, installState = 0;
+            int selectState = 0;
             Cursor cursor = friendsAdapterData.seachResult(keyword);
             if (cursor != null) {
                 Log.d(TAG, "cursor size is " + cursor.getCount());
@@ -326,9 +327,8 @@ public class SelectFriendActivity extends BaseActivity {
                     friendImgLink = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_IMG_LINK));
                     friendImg = cursor.getBlob(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_IMG));
                     selectState = cursor.getInt(cursor.getColumnIndex(FriendsAdapterData.KEY_SELECT_STATE));
-                    installState = cursor.getInt(cursor.getColumnIndex(FriendsAdapterData.KEY_INSTALL_STATE));
                     friendList.add(new FriendInfo(friendId, friendName, firendBirthday, friendImgLink, friendImg,
-                            selectState, installState));
+                            selectState));
                 }
             }
             cursor.close();
