@@ -13,6 +13,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -375,6 +376,10 @@ public class FacebookManager
         } else {
             getPublishPermission(context, new RequestPublishPermissionListener());
         }
+    }
+    
+    public void publishNews(String sendId, Uri fileUri) {
+        // call Bruce's API then will implement one callback to call method(publishTimeline) doing publish
     }
 		
 	public void publishTimeline(Context context, Publish publish)
