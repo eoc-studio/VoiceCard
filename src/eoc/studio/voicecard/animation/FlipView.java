@@ -29,6 +29,7 @@ public class FlipView extends RelativeLayout
 	private boolean isFlipping = false;
 	private boolean isOpened = false;
 	private boolean isLockAfterOpened = false;
+	private boolean isTouchFlipEnabled = true;
 	private FrameLayout frontPage;
 	private FrameLayout backPage;
 	private FrameLayout innerPage;
@@ -40,22 +41,26 @@ public class FlipView extends RelativeLayout
 	private final float[] ROTATE_FRONT_DEGREE2 = { 90f, DEFAULT_ROTATE_END };
 	private final float[] ROTATE_BACK_DEGREE1 = { DEFAULT_ROTATE_END, 90f };
 	private final float[] ROTATE_BACK_DEGREE2 = { -90f, DEFAULT_ROTATE_BEGIN };
-	
-	private void changeRotateDegree(float begin, float end) {
+
+	private void changeRotateDegree(float begin, float end)
+	{
 		ROTATE_FRONT_DEGREE1[0] = begin;
 		ROTATE_FRONT_DEGREE2[1] = end;
 		ROTATE_BACK_DEGREE1[0] = end;
 		ROTATE_BACK_DEGREE2[1] = begin;
 	}
-	
+
 	private final OnTouchListener touchListener = new OnTouchListener()
 	{
 		@Override
 		public boolean onTouch(View v, MotionEvent event)
 		{
-			if (!(isLockAfterOpened && isOpened))
+			if (isTouchFlipEnabled)
 			{
-				flip(frontPage, backPage);
+				if (!(isLockAfterOpened && isOpened))
+				{
+					flip(frontPage, backPage);
+				}
 			}
 			return false;
 		}
@@ -170,6 +175,18 @@ public class FlipView extends RelativeLayout
 	public void setFlipListener(FlipListener listener)
 	{
 		mFlipListener = listener;
+	}
+	
+	public void setTouchFlipEnabled(boolean enabled) {
+		isTouchFlipEnabled = enabled;
+	}
+
+	public void requestFlip()
+	{
+		if (!(isLockAfterOpened && isOpened))
+		{
+			flip(frontPage, backPage);
+		}
 	}
 
 	private void flip(final View front, final View back)

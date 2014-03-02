@@ -32,7 +32,7 @@ public class Card implements Parcelable
 	private int messageTextColor = DEFAULT_TEXT_COLOR;
 	private int messageTextSizeType = DEFAULT_TEXT_SIZE_TYPE;
 	private Uri signDraftImage;
-	private Uri signHandwriting; 
+	private Uri signHandwriting;
 	private Uri signPositionInfo;
 
 	public Card(int id, CardCategory category, String name, int image3dCoverResId,
@@ -217,7 +217,6 @@ public class Card implements Parcelable
 	@Override
 	public String toString()
 	{
-
 		return "Card [id=" + id + ", category=" + category + ", name=" + name
 				+ ", image3dCoverResId=" + image3dCoverResId + ", image3dOpenResId="
 				+ image3dOpenResId + ", imageCoverResId=" + imageCoverResId

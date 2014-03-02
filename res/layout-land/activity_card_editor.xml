@@ -31,24 +31,31 @@
             android:src="@drawable/icon_ar1_right" />
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/act_card_editor_iv_card_inner_page"
-        android:layout_width="@dimen/card_open_width"
-        android:layout_height="@dimen/card_height"
+    <RelativeLayout
+        android:id="@+id/act_card_editor_rlyt_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/act_card_editor_rlyt_header"
         android:layout_centerHorizontal="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/card02_open" />
+        android:gravity="center" >
 
-    <FrameLayout
-        android:id="@+id/act_card_editor_flyt_editables"
-        android:layout_width="@dimen/card_open_width"
-        android:layout_height="@dimen/card_height"
-        android:layout_below="@id/act_card_editor_rlyt_header"
-        android:layout_centerHorizontal="true" >
+        <ImageView
+            android:id="@+id/act_card_editor_iv_card_inner_page"
+            android:layout_width="@dimen/card_open_width"
+            android:layout_height="@dimen/card_height"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/card02_open" />
 
-        <include layout="@layout/view_card" />
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/act_card_editor_flyt_editables"
+            android:layout_width="@dimen/card_open_width"
+            android:layout_height="@dimen/card_height"
+            android:layout_centerHorizontal="true" >
+
+            <include layout="@layout/view_card" />
+        </FrameLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/act_card_editor_landscape_llyt_menu_opener_wrapper"
@@ -125,7 +132,7 @@
                 android:background="@color/white" />
 
             <eoc.studio.voicecard.menu.OpenDraft
-           	    android:id="@+id/act_card_editor_iv_menu_open_draft"
+                android:id="@+id/act_card_editor_iv_menu_open_draft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

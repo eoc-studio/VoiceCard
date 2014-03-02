@@ -35,17 +35,58 @@
         android:layout_marginTop="20dip"
         android:src="@drawable/handwrite_03" />
 
+    <View
+        android:id="@+id/act_card_sender_v_right_block"
+        android:layout_width="40dip"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/act_card_sender_iv_receiver_chooser"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/act_card_sender_iv_tip" />
+
     <FrameLayout
         android:id="@+id/act_card_sender_flyt_card_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/act_card_sender_iv_receiver_chooser"
+        android:layout_height="wrap_content"
         android:layout_below="@id/act_card_sender_iv_tip"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-100dip">
+        android:layout_marginTop="-100dip"
+        android:layout_toLeftOf="@id/act_card_sender_v_right_block" >
+
         <include layout="@layout/view_card_animation" />
+
+        <HorizontalScrollView
+            android:id="@+id/act_card_sender_hsv_card_scroll_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" >
+
+            <RelativeLayout
+                android:id="@+id/act_card_sender_rlyt_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center" >
+
+                <ImageView
+                    android:id="@+id/act_card_sender_iv_card_inner_page"
+                    android:layout_width="@dimen/card_open_width"
+                    android:layout_height="@dimen/card_height"
+                    android:layout_marginLeft="20dip"
+                    android:layout_marginRight="20dip"
+                    android:scaleType="fitXY" >
+                </ImageView>
+
+                <FrameLayout
+                    android:id="@+id/act_card_sender_flyt_editables"
+                    android:layout_width="@dimen/card_open_width"
+                    android:layout_height="@dimen/card_height"
+                    android:layout_marginLeft="20dip"
+                    android:layout_marginRight="20dip" >
+
+                    <include layout="@layout/view_card" />
+                </FrameLayout>
+            </RelativeLayout>
+        </HorizontalScrollView>
     </FrameLayout>
-    
+
     <ImageView
         android:id="@+id/act_card_sender_iv_receiver_chooser"
         android:layout_width="wrap_content"

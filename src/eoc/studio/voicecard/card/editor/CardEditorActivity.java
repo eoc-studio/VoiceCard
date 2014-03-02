@@ -1,23 +1,20 @@
 package eoc.studio.voicecard.card.editor;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.GradientDrawable;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -150,6 +147,11 @@ public class CardEditorActivity extends BaseActivity
 
 	private CardDraftManager cardDraftManager;
 
+	private String screenshotLeftFilePath;
+	private String screenshotRightFilePath;
+
+	private ProgressDialog progressDialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -168,7 +170,7 @@ public class CardEditorActivity extends BaseActivity
 				CardDraft cardDraft = getIntent().getParcelableExtra(EXTRA_KEY_CARD_DRAFT);
 				card = getCardById(cardDraft.getCardId());
 				updateFromCradDraft(cardDraft);
-				saveCradInformation();
+				saveCardInformation();
 			}
 			else
 			{
@@ -178,13 +180,11 @@ public class CardEditorActivity extends BaseActivity
 		}
 		initCardDraftManager();
 		initLayout();
-		setupCardView();
-		setupUserData();
 
 		super.onCreate(savedInstanceState);
 	}
 
-	private void saveCradInformation()
+	private void saveCardInformation()
 	{
 
 		card.setImage(userImage);
@@ -244,7 +244,8 @@ public class CardEditorActivity extends BaseActivity
 	@Override
 	protected void onResume()
 	{
-
+		setupCardView();
+		setupUserData();
 		super.onResume();
 	}
 
@@ -283,7 +284,7 @@ public class CardEditorActivity extends BaseActivity
 		Log.d(TAG, "restore user data -- SIGN POSITION: " + userSignPositionInfoUri);
 		Log.d(TAG, "restore user data -- SIGN IAMGE: " + userSignDraftImageUri);
 
-		saveCradInformation();
+		saveCardInformation();
 	}
 
 	private void saveUserData(Bundle savedInstanceState)
@@ -410,7 +411,7 @@ public class CardEditorActivity extends BaseActivity
 		editableImage = (ImageView) findViewById(R.id.glb_card_iv_editable_image);
 		editableVoice = (LinearLayout) findViewById(R.id.glb_card_llyt_editable_voice);
 		editableVoiceText = (TextView) findViewById(R.id.glb_card_tv_editable_voice_play_text);
-		editableText = (TextView) findViewById(R.id.glb_card_ret_editable_text);
+		editableText = (TextView) findViewById(R.id.glb_card_tv_editable_text);
 
 		editableSignImage = (ImageView) findViewById(R.id.glb_card_iv_editable_signature_image);
 
@@ -434,6 +435,16 @@ public class CardEditorActivity extends BaseActivity
 		int dashGap = res.getDimensionPixelSize(R.dimen.dash_border_stroke_dash_gap);
 		int dashWidth = res.getDimensionPixelSize(R.dimen.dash_border_stroke_dash_width);
 		int width = res.getDimensionPixelSize(R.dimen.dash_border_stroke_width);
+
+		GradientDrawable dashBorderBackground = ((GradientDrawable) editableImageFrame
+				.getBackground());
+		if (dashBorderBackground == null)
+		{
+			editableImageFrame.setBackgroundResource(R.drawable.dash_border);
+			editableVoiceFrame.setBackgroundResource(R.drawable.dash_border);
+			editableTextFrame.setBackgroundResource(R.drawable.dash_border);
+			editableSignatureFrame.setBackgroundResource(R.drawable.dash_border);
+		}
 		((GradientDrawable) editableImageFrame.getBackground()).setStroke(width, color, dashWidth,
 				dashGap);
 		((GradientDrawable) editableVoiceFrame.getBackground()).setStroke(width, color, dashWidth,
@@ -471,7 +482,10 @@ public class CardEditorActivity extends BaseActivity
 			{
 
 				Log.d(TAG, "next");
-				startCardSender();
+				progressDialog = ProgressDialog.show(CardEditorActivity.this,
+						getString(R.string.processing), getString(R.string.please_wait), true,
+						false);
+				startScreenshotThread();
 			}
 
 		});
@@ -581,7 +595,7 @@ public class CardEditorActivity extends BaseActivity
 
 					updateFromCradDraft(cardDraft);
 					updateAllRegion();
-					saveCradInformation();
+					saveCardInformation();
 
 					Log.d(TAG, "openDraft - onClick() user data -- IMAGE URI: " + userImage);
 					Log.d(TAG, "openDraft - onClick() user data -- IMAGE BITMAP: "
@@ -742,7 +756,7 @@ public class CardEditorActivity extends BaseActivity
 		String fileName = FileUtility.getRandomSpeechName("3gp");
 		String filePath = extDir.getAbsolutePath() + "/" + fileName;
 		Log.d(TAG, "startVoiceRecorder - filePath: " + filePath);
-		
+
 		Intent intent = new Intent(this, AudioRecorderActivity.class);
 		intent.putExtra(AudioRecorderActivity.EXTRA_KEY_FILEPATH, filePath);
 		startActivityForResult(intent, REQ_RECORD_VOICE);
@@ -757,12 +771,12 @@ public class CardEditorActivity extends BaseActivity
 		int duration = data.getIntExtra(AudioRecorderActivity.EXTRA_KEY_DURATION_MILLISECOND, 0);
 		int min = duration / 1000 / 60;
 		int sec = duration / 1000 % 60;
-		userVoiceDuration = getString(R.string.play_voice_message, min + ":"
-				+ String.format("%02d", sec));
+		userVoiceDuration = getString(R.string.play_voice_message,
+				min + ":" + String.format("%02d", sec));
 
 		Log.d(TAG, "onVoiceRecorderResult - filePath: " + filePath);
 		Log.d(TAG, "onVoiceRecorderResult - duration: " + duration + " = " + min + "m" + sec + "s");
-		
+
 		updateVoiceRegion();
 
 		card.setSound(userVoice);
@@ -931,7 +945,7 @@ public class CardEditorActivity extends BaseActivity
 		return result;
 	}
 
-	private static float getTextSizeByType(int type)
+	public static float getTextSizeByType(int type)
 	{
 
 		float size;
@@ -957,6 +971,13 @@ public class CardEditorActivity extends BaseActivity
 		Intent intent = new Intent(this, CardSenderActivity.class);
 		intent.putExtra(CardSenderActivity.EXTRA_KEY_CARD_WITH_USER_DATA_FOR_SEND, card);
 		Log.d(TAG, "send card:: " + card);
+		intent.putExtra(CardSenderActivity.EXTRA_KEY_CARD_LEFT_SCREENSHOT_FILEPATH,
+				screenshotLeftFilePath);
+		intent.putExtra(CardSenderActivity.EXTRA_KEY_CARD_RIGHT_SCREENSHOT_FILEPATH,
+				screenshotRightFilePath);
+		intent.putExtra(CardSenderActivity.EXTRA_KEY_CARD_VOICE_DURATION_TEXT, userVoiceDuration);
+		Log.d(TAG, "screenshot left:: " + screenshotLeftFilePath);
+		Log.d(TAG, "screenshot right:: " + screenshotRightFilePath);
 		startActivity(intent);
 	}
 
@@ -974,6 +995,61 @@ public class CardEditorActivity extends BaseActivity
 			Log.e(TAG, "uri：" + uri);
 			e.printStackTrace();
 			return null;
+		}
+	}
+
+	private void hideFrameBorderAndTips()
+	{
+		editableImageFrame.setBackgroundResource(0);
+		editableVoiceFrame.setBackgroundResource(0);
+		editableTextFrame.setBackgroundResource(0);
+		editableSignatureFrame.setBackgroundResource(0);
+		editableImageTip.setVisibility(View.GONE);
+		editableVoiceTip.setVisibility(View.GONE);
+		editableTextTip.setVisibility(View.GONE);
+		editableSignatureTip.setVisibility(View.GONE);
+	}
+
+	private void startScreenshotThread()
+	{
+		hideFrameBorderAndTips();
+		View wholeCard = findViewById(R.id.act_card_editor_rlyt_card);
+		wholeCard.setDrawingCacheEnabled(true);
+		Bitmap wholeScreenshot = wholeCard.getDrawingCache();
+		int pageWidth = wholeScreenshot.getWidth() / 2;
+		int pageHeight = wholeScreenshot.getHeight();
+		Bitmap left = Bitmap.createBitmap(wholeScreenshot, 0, 0, pageWidth, pageHeight);
+		Bitmap right = Bitmap.createBitmap(wholeScreenshot, pageWidth, 0, pageWidth, pageHeight);
+		wholeCard.setDrawingCacheEnabled(false);
+		new SaveScreenshotBitmapThread(left, right).start();
+	}
+
+	private class SaveScreenshotBitmapThread extends Thread
+	{
+		Bitmap left;
+		Bitmap right;
+
+		public SaveScreenshotBitmapThread(Bitmap left, Bitmap right)
+		{
+			this.left = left;
+			this.right = right;
+		}
+
+		@Override
+		public void run()
+		{
+			File dir = CardEditorActivity.this.getCacheDir();
+			long now = System.currentTimeMillis();
+			File leftFile = new File(dir, now + "_left.png");
+			File rightFile = new File(dir, now + "_right.png");
+			if (saveBitmapToFile(left, leftFile) && saveBitmapToFile(right, rightFile))
+			{
+				screenshotLeftFilePath = leftFile.getAbsolutePath();
+				screenshotRightFilePath = rightFile.getAbsolutePath();
+			}
+
+			startCardSender();
+			progressDialog.dismiss();
 		}
 	}
 
