@@ -1,6 +1,7 @@
 package eoc.studio.voicecard.mainloading;
 
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.card.database.CardDatabaseHelper;
 import eoc.studio.voicecard.facebook.utils.BundleTag;
 import eoc.studio.voicecard.facebook.utils.JSONTag;
 import eoc.studio.voicecard.facebook.utils.Permissions;
@@ -95,8 +96,10 @@ public class MainLoadingActivity extends Activity
 
 	private String facebookUserID = null;
 
-	MailsAdapterData mailsAdapterData;
+	private MailsAdapterData mailsAdapterData;
 
+	private CardDatabaseHelper cardDatabaseHelper;
+	
 	private int mailboxUnReadCount = 0;
 
 	private String recommendBitmapUrl;
@@ -147,6 +150,10 @@ public class MainLoadingActivity extends Activity
 		startProgressWheel();
 		initMailDataBase();
 		getRecommendInfo();
+		
+		cardDatabaseHelper = new CardDatabaseHelper(context);
+		cardDatabaseHelper.open();
+		
 	}
 
 	@Override

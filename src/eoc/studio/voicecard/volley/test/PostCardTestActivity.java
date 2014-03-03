@@ -26,6 +26,7 @@ import eoc.studio.voicecard.manager.GsonSend;
 import eoc.studio.voicecard.manager.HttpManager;
 import eoc.studio.voicecard.manager.MailCountListener;
 import eoc.studio.voicecard.manager.PostMailListener;
+import eoc.studio.voicecard.manager.UploadDiyListener;
 
 public class PostCardTestActivity extends Activity
 {
@@ -34,66 +35,114 @@ public class PostCardTestActivity extends Activity
 	private Context context;
 
 	private HttpManager httpManager = new HttpManager();
+
 	private CardDraftManager cardDraftManager;
+
 	private CardDraft cardDraft;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 
 		super.onCreate(savedInstanceState);
 		context = getApplicationContext();
-		 httpManager.init(context,"100007811983123"); // eoc fb 
-			cardDraftManager = new CardDraftManager();
-			cardDraftManager.init(getApplicationContext());	   
+		httpManager.init(context, "100007811983123"); // eoc fb
+		cardDraftManager = new CardDraftManager();
+		cardDraftManager.init(getApplicationContext());
 		try
 		{
-			
+
 			try
 			{
 				cardDraftManager.resetOwner();
-				cardDraft= cardDraftManager.openDraft();
+				cardDraft = cardDraftManager.openDraft();
 			}
 			catch (Exception e)
 			{
 				Toast.makeText(context, "open draft fail", Toast.LENGTH_LONG).show();
 			}
-			
-			httpManager.getFacebookUserInformation(context,
-			new GetFacebookInfoListener()
+
+			httpManager.getFacebookUserInformation(context, new GetFacebookInfoListener()
 			{
 				@Override
-				public void onResult(Boolean isSuccess,
-						ArrayList<GsonFacebookUser> facebookUserList)
+				public void onResult(Boolean isSuccess, ArrayList<GsonFacebookUser> facebookUserList)
 				{
-					
-					if(isSuccess){
-						if(facebookUserList!=null){
-							
-							Log.d(TAG, "onResume()facebookUserList.get(0).getLink(): "+facebookUserList.get(0).getLink());
-							
+
+					if (isSuccess)
+					{
+						if (facebookUserList != null)
+						{
+
+							Log.d(TAG, "onResume()facebookUserList.get(0).getLink(): "
+									+ facebookUserList.get(0).getLink());
+
 						}
 					}
 				}
-			});	
-			httpManager.postMail(context, "1118054263", // bruce
-					cardDraft.getImageUri(),
-					cardDraft.getSoundUri(),
-					cardDraft.getMessage(),
-					cardDraft.getSignDraftImageUri(), String.valueOf(cardDraft.getMessageTextSizeType()),
-					String.valueOf(cardDraft.getMessageTextColor()), "thisCardName", new PostMailListener()
+			});
+			// httpManager.postMail(context, "1118054263", // bruce
+			// cardDraft.getImageUri(),
+			// cardDraft.getSoundUri(),
+			// cardDraft.getMessage(),
+			// cardDraft.getSignDraftImageUri(),
+			// String.valueOf(cardDraft.getMessageTextSizeType()),
+			// String.valueOf(cardDraft.getMessageTextColor()), "thisCardName",
+			// new PostMailListener()
+			// {
+			//
+			// @Override
+			// public void onResult(Boolean isSuccess, String information)
+			// {
+			//
+			// Log.e(TAG, "httpManager.postMail() isSuccess:" + isSuccess
+			// + ",information:" + information);
+			//
+			// Toast.makeText(context, "httpManager.postMail() isSuccess:"+
+			// isSuccess, Toast.LENGTH_LONG).show();
+			// }
+			//
+			// });
+
+			ArrayList<String> sendToList = new ArrayList<String>();
+			sendToList.add("1118054263");// bruce
+			sendToList.add("1845302303");// john
+			sendToList.add("100003488626817");// Ryan
+			sendToList.add("1475871733");// Steven
+
+			httpManager.postMailByList(context, sendToList, cardDraft.getImageUri(),
+					cardDraft.getSoundUri(), cardDraft.getMessage(),
+					cardDraft.getSignDraftImageUri(),
+					String.valueOf(cardDraft.getMessageTextSizeType()),
+					String.valueOf(cardDraft.getMessageTextColor()), "thisCardName",
+					new PostMailListener()
 					{
 
 						@Override
 						public void onResult(Boolean isSuccess, String information)
 						{
 
-							Log.e(TAG, "httpManager.postMail() isSuccess:" + isSuccess
+							Log.e(TAG, "httpManager.postMailByList() isSuccess:" + isSuccess
 									+ ",information:" + information);
-							
-							Toast.makeText(context, "httpManager.postMail() isSuccess:"+ isSuccess, Toast.LENGTH_LONG).show();
+
+							Toast.makeText(context,
+									"httpManager.postMailByList() isSuccess:" + isSuccess,
+									Toast.LENGTH_LONG).show();
 						}
 
 					});
+
+			httpManager.uploadDIY(context, cardDraft.getImageUri(), new UploadDiyListener()
+			{
+
+				@Override
+				public void onResult(Boolean isSuccess, String URL)
+				{
+
+					Log.e(TAG, "httpManager.uploadDIY() isSuccess:" + isSuccess + ",URL:" + URL);
+
+				}
+
+			});
 
 		}
 		catch (Exception e)
