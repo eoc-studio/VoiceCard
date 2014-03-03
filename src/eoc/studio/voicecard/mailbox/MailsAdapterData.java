@@ -18,6 +18,7 @@ import android.util.Log;
 
 public class MailsAdapterData
 {
+    private static final String TAG = "MailsAdapterData";
 	private static final String DB_NAME = "mails.sqlite";
 
 	private static final String DB_PATH = "/data/data/eoc.studio.voicecard/databases/";
@@ -29,7 +30,7 @@ public class MailsAdapterData
 	private static final String DATABASE_TABLE = "mails";
 
 	private static final String DATABASE_CREATE = "create table mails("
-			+ "_id INTEGER PRIMARY KEY," + "send_id TEXT," + "send_from TEXT,"
+			+ "_id INTEGER PRIMARY KEY," + "card_id TEXT," + "owner_id TEXT," + "send_id TEXT," + "send_from TEXT,"
 			+ "send_from_name TEXT," + "send_from_link TEXT," + "send_to TEXT," + "subject TEXT,"
 			+ "body TEXT," + "font_size TEXT," + "font_color TEXT," + "img_link TEXT,"
 			+ "img BLOB," + "speech TEXT," + "sign TEXT," + "send_time TEXT," + "new_state INTEGER"
@@ -38,6 +39,10 @@ public class MailsAdapterData
 	public static final String ORDER_DESC = " desc";
 
 	public static final String KEY_ROW_ID = "_id";
+	
+	public static final String KEY_CARD_ID = "card_id";
+	
+	public static final String KEY_OWNER_ID = "owner_id";
 
 	public static final String KEY_SEND_ID = "send_id";
 
@@ -249,36 +254,37 @@ public class MailsAdapterData
 	public Cursor getAll()
 	{
 
-		return db.query(DATABASE_TABLE, new String[] { KEY_ROW_ID, KEY_SEND_ID, KEY_SEND_FROM,
-				KEY_SEND_FROM_NAME, KEY_SEND_FROM_LINK, KEY_SEND_TO, KEY_SUBJECT, KEY_BODY,
-				KEY_FONT_SIZE, KEY_FONT_COLOR, KEY_IMG_LINK, KEY_IMG, KEY_SPEECH, KEY_SIGN,
-				KEY_SEND_TIME, KEY_NEW_STATE }, null, null, null, null, KEY_SEND_TIME + ORDER_DESC);
-	}
+        return db.query(DATABASE_TABLE, new String[] { KEY_ROW_ID, KEY_CARD_ID, KEY_OWNER_ID, KEY_SEND_ID,
+                KEY_SEND_FROM, KEY_SEND_FROM_NAME, KEY_SEND_FROM_LINK, KEY_SEND_TO, KEY_SUBJECT, KEY_BODY,
+                KEY_FONT_SIZE, KEY_FONT_COLOR, KEY_IMG_LINK, KEY_IMG, KEY_SPEECH, KEY_SIGN, KEY_SEND_TIME,
+                KEY_NEW_STATE }, null, null, null, null, KEY_SEND_TIME + ORDER_DESC);
+    }
 
 	/** Insert item to database */
-	public long create(String sendId, String sendFrom, String sendFromName, String sendFromLink,
-			String sendTo, String subject, String body, String fontSize, String fontColor,
-			String img_link, byte[] img, String speech, String sign, String send_time, int newState)
-	{
+    public long create(String cardId, String ownerId, String sendId, String sendFrom, String sendFromName,
+            String sendFromLink, String sendTo, String subject, String body, String fontSize, String fontColor,
+            String img_link, byte[] img, String speech, String sign, String send_time, int newState) {
 
-		ContentValues args = new ContentValues();
-		args.put(KEY_SEND_ID, sendId);
-		args.put(KEY_SEND_FROM, sendFrom);
-		args.put(KEY_SEND_FROM_NAME, sendFromName);
-		args.put(KEY_SEND_FROM_LINK, sendFromLink);
-		args.put(KEY_SEND_TO, sendTo);
-		args.put(KEY_SUBJECT, subject);
-		args.put(KEY_BODY, body);
-		args.put(KEY_FONT_SIZE, fontSize);
-		args.put(KEY_FONT_COLOR, fontColor);
-		args.put(KEY_IMG_LINK, img_link);
-		args.put(KEY_IMG, img);
-		args.put(KEY_SPEECH, speech);
-		args.put(KEY_SIGN, sign);
-		args.put(KEY_SEND_TIME, send_time);
-		args.put(KEY_NEW_STATE, newState);
-		return db.insert(DATABASE_TABLE, null, args);
-	}
+        ContentValues args = new ContentValues();
+        args.put(KEY_CARD_ID, cardId);
+        args.put(KEY_OWNER_ID, ownerId);
+        args.put(KEY_SEND_ID, sendId);
+        args.put(KEY_SEND_FROM, sendFrom);
+        args.put(KEY_SEND_FROM_NAME, sendFromName);
+        args.put(KEY_SEND_FROM_LINK, sendFromLink);
+        args.put(KEY_SEND_TO, sendTo);
+        args.put(KEY_SUBJECT, subject);
+        args.put(KEY_BODY, body);
+        args.put(KEY_FONT_SIZE, fontSize);
+        args.put(KEY_FONT_COLOR, fontColor);
+        args.put(KEY_IMG_LINK, img_link);
+        args.put(KEY_IMG, img);
+        args.put(KEY_SPEECH, speech);
+        args.put(KEY_SIGN, sign);
+        args.put(KEY_SEND_TIME, send_time);
+        args.put(KEY_NEW_STATE, newState);
+        return db.insert(DATABASE_TABLE, null, args);
+    }
 
 	/** Delete one item from database */
 	public boolean delete(String rowId)
@@ -334,7 +340,7 @@ public class MailsAdapterData
 
 		if (db.isOpen())
 		{
-			Cursor cursor = db.query(true, DATABASE_TABLE, new String[] { KEY_ROW_ID, KEY_SEND_ID,
+			Cursor cursor = db.query(true, DATABASE_TABLE, new String[] { KEY_ROW_ID, KEY_CARD_ID, KEY_OWNER_ID, KEY_SEND_ID,
 					KEY_SEND_FROM, KEY_SEND_FROM_NAME, KEY_SEND_FROM_LINK, KEY_SEND_TO,
 					KEY_SUBJECT, KEY_BODY, KEY_FONT_SIZE, KEY_FONT_COLOR, KEY_IMG_LINK, KEY_IMG,
 					KEY_SPEECH, KEY_SIGN, KEY_SEND_TIME, KEY_NEW_STATE }, KEY_ROW_ID + "=" + rowId,
@@ -352,7 +358,7 @@ public class MailsAdapterData
 	}
 
 	/** Update the database */
-	public boolean update(String rowId, String sendId, String sendFrom, String sendFromName,
+	public boolean update(String rowId, String cardId, String ownerId, String sendId, String sendFrom, String sendFromName,
 			String sendFromLink, String sendTo, String subject, String body, String fontSize,
 			String fontColor, String img_link, byte[] img, String speech, String sign,
 			String send_time, int newState)
@@ -361,6 +367,8 @@ public class MailsAdapterData
 		if (db.isOpen())
 		{
 			ContentValues args = new ContentValues();
+			args.put(KEY_CARD_ID, cardId);
+			args.put(KEY_OWNER_ID, ownerId);
 			args.put(KEY_SEND_ID, sendId);
 			args.put(KEY_SEND_FROM, sendFrom);
 			args.put(KEY_SEND_FROM_NAME, sendFromName);
@@ -438,5 +446,21 @@ public class MailsAdapterData
 		{
 			return count;
 		}
+	}
+	
+	public void clearLastMailImgs(String ownerId) {
+	    if (db.isOpen())
+        {
+            Cursor cursor = db.query(true, DATABASE_TABLE, new String[] {KEY_IMG}, KEY_OWNER_ID + "=" + ownerId,
+                    null, null, null, null, null);
+            if (cursor != null)
+            {
+                cursor.moveToFirst();
+            }
+        }
+        else
+        {
+            Log.d(TAG, "To clear img error");
+        }
 	}
 }

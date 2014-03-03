@@ -1,15 +1,17 @@
 package eoc.studio.voicecard.mailbox;
 
 public class Mail {
-    private String rowId, sendId, sendFrom, sendFromName, sendTo, subject, body, fontSize, fontColor, imgLink, speech,
-            sign, sendTime;
+    private String rowId, cardId, ownerId, sendId, sendFrom, sendFromName, sendTo, subject, body, fontSize, fontColor,
+            imgLink, speech, sign, sendTime;
     private int checkState, newState;
     private byte[] img;
         
-    public Mail(String rowId, String sendId, String sendFrom, String sendFromName, String sendTo, String subject,
-            String body, String fontSize, String fontColor, String imgLink, byte[] img, String speech, String sign,
-            String sendTime, int checkState, int newState) {
+    public Mail(String rowId, String cardId, String ownerId, String sendId, String sendFrom, String sendFromName,
+            String sendTo, String subject, String body, String fontSize, String fontColor, String imgLink, byte[] img,
+            String speech, String sign, String sendTime, int checkState, int newState) {
         this.rowId = rowId;
+        this.cardId = cardId;
+        this.ownerId = ownerId;
         this.sendId = sendId;
         this.sendFrom = sendFrom;
         this.sendFromName = sendFromName;
@@ -31,19 +33,27 @@ public class Mail {
         return rowId;
     }
     
-    public String sendId() {
+    public String getCardId() {
+        return ownerId;
+    }
+    
+    public String getOwnerId() {
+        return cardId;
+    }
+    
+    public String getSendedId() {
         return sendId;
     }
     
-    public String sendFrom() {
+    public String getSendedFrom() {
         return sendFrom;
     }
     
-    public String sendFromName() {
+    public String getSendedFromName() {
         return sendFromName;
     }
     
-    public String sendTo() {
+    public String getSendedTo() {
         return sendTo;
     }
     
@@ -83,7 +93,7 @@ public class Mail {
         return sign;
     }
     
-    public String sendTime() {
+    public String getSendedTime() {
         return sendTime;
     }
     

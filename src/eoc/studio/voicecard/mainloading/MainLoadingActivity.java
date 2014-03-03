@@ -467,6 +467,8 @@ public class MainLoadingActivity extends Activity
 														if (mailsAdapterData != null)
 														{
 															mailsAdapterData.create(
+															        facebookUserID,
+															        "card_id",
 																	mail.getSendID(),
 																	mail.getSendFrom(),
 																	mail.getSendFromName(), // replace

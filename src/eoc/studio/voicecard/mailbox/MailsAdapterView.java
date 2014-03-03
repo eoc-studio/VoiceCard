@@ -106,10 +106,10 @@ public class MailsAdapterView extends BaseAdapter {
                 viewTag.itemImg.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.user_reflect));
             }
             //subject
-            viewTag.subject.setText(mails.get(position).sendFromName());
+            viewTag.subject.setText(mails.get(position).getSendedFromName());
 
             //sendTime
-            viewTag.sendTime.setText(mails.get(position).sendTime()); 
+            viewTag.sendTime.setText(mails.get(position).getSendedTime()); 
 
             //newIcon
             int newState = mails.get(position).getNewState();

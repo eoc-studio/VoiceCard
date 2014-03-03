@@ -44,6 +44,7 @@ import eoc.studio.voicecard.facebook.utils.BundleTag;
 import eoc.studio.voicecard.facebook.utils.FacebookListener;
 import eoc.studio.voicecard.facebook.utils.JSONTag;
 import eoc.studio.voicecard.facebook.utils.Permissions;
+import eoc.studio.voicecard.mailbox.MailsAdapterData;
 import eoc.studio.voicecard.utils.ListUtility;
 
 public class FacebookManager
@@ -563,6 +564,8 @@ public class FacebookManager
         }
         
         // when logout need to clear db's img for another user to login
+        MailsAdapterData mailsAdapterData = new MailsAdapterData(context); 
+        mailsAdapterData.open();
     }
 	
     private void showToast(String msg) {

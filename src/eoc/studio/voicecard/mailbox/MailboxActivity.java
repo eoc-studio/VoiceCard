@@ -164,7 +164,7 @@ public class MailboxActivity extends BaseActivity
 	{
 		mails = new ArrayList<Mail>();
 
-		String rowId, sendId, sendFrom, sendFromName, sendTo, subject, body, fontSize, fontColor, imgLink, speech, sign, sendTime;
+        String rowId, cardId, ownerId, sendId, sendFrom, sendFromName, sendTo, subject, body, fontSize, fontColor, imgLink, speech, sign, sendTime;
 		int checkState = 0, newState;
 		byte[] img;
 
@@ -178,6 +178,8 @@ public class MailboxActivity extends BaseActivity
 				while (cursor.moveToNext())
 				{
 					rowId = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_ROW_ID));
+					cardId = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_CARD_ID));
+					ownerId = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_OWNER_ID));
 					sendId = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SEND_ID));
 					sendFrom = cursor.getString(cursor
 							.getColumnIndex(MailsAdapterData.KEY_SEND_FROM));
@@ -199,7 +201,7 @@ public class MailboxActivity extends BaseActivity
 							.getColumnIndex(MailsAdapterData.KEY_SEND_TIME));
 					newState = cursor.getInt(cursor.getColumnIndex(MailsAdapterData.KEY_NEW_STATE));
 
-					mails.add(new Mail(rowId, sendId, sendFrom, sendFromName, sendTo, subject,
+					mails.add(new Mail(rowId, cardId, ownerId, sendId, sendFrom, sendFromName, sendTo, subject,
 							body, fontSize, fontColor, imgLink, img, speech, sign, sendTime,
 							checkState, newState));
 				}
