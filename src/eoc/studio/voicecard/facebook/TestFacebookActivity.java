@@ -1,6 +1,7 @@
 package eoc.studio.voicecard.facebook;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 
 import org.json.JSONObject;
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,11 +34,6 @@ import eoc.studio.voicecard.utils.ListUtility;
 public class TestFacebookActivity extends BaseActivity
 {
 	private static final String TAG = "TestFacebookActivity";
-	private static final String NAME = "Test";
-	private static final String PICTURE = "http://upload.wikimedia.org/wikipedia/commons/2/26/YellowLabradorLooking_new.jpg";
-	private static final String CAPTION = "CAPTION";
-	private static final String DESCRIPTION = "DESCRIPTION";
-	private static final String LINK = "http://www.charliefind.com/";
 	private FacebookManager facebookManager;
 	private String owerId = "100007720118618";
 	private String[] testIdList = {"100007811983123", "100007720118618"};
@@ -105,6 +102,7 @@ public class TestFacebookActivity extends BaseActivity
         Button logout = (Button) findViewById(R.id.logout);
         Button upload = (Button) findViewById(R.id.upload);
         Button publishUserNoDialog = (Button) findViewById(R.id.publishUserFeed);
+        Button publishNews = (Button) findViewById(R.id.publishNews);
         
         getUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,8 +141,9 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {
-                    facebookManager.publishTimeline(TestFacebookActivity.this, new Publish(owerId, NAME, PICTURE,
-                            CAPTION, DESCRIPTION, LINK));
+                    facebookManager.publishTimeline(TestFacebookActivity.this, new Publish(owerId,
+                            Publish.DEFAULT_NAME, Publish.DEFAULT_PICTURE, Publish.DEFAULT_CAPTION,
+                            Publish.DEFAULT_DESCRIPTION, Publish.DEFAULT_LINK));
                 }
             }
         });
@@ -156,8 +155,9 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {
-                    facebookManager.publishTimeline(TestFacebookActivity.this, new Publish(owerId, NAME, PICTURE,
-                            CAPTION, DESCRIPTION, LINK));
+                    facebookManager.publishTimeline(TestFacebookActivity.this, new Publish(owerId,
+                            Publish.DEFAULT_NAME, Publish.DEFAULT_PICTURE, Publish.DEFAULT_CAPTION,
+                            Publish.DEFAULT_DESCRIPTION, Publish.DEFAULT_LINK));
                 }
             }
         });
@@ -182,7 +182,7 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {
-                    facebookManager.upload(new Photo(NAME, getPhoto()));
+                    facebookManager.upload(new Photo(Publish.DEFAULT_NAME, getPhoto()));
                 }
             }
         });
@@ -194,8 +194,24 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {
-                    facebookManager.publishUserFeed(TestFacebookActivity.this, new Publish(owerId, NAME, null, CAPTION,
-                            DESCRIPTION, LINK));
+                    facebookManager.publishUserFeed(TestFacebookActivity.this, new Publish(owerId,
+                            Publish.DEFAULT_NAME, null, Publish.DEFAULT_CAPTION, Publish.DEFAULT_DESCRIPTION,
+                            Publish.DEFAULT_LINK));
+                }
+            }
+        });
+		
+		publishNews.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (facebookManager != null)
+                {
+                    File file = new File("/storage/sdcard1/Download/jordan.jpg");
+                    Uri fileUri = Uri.fromFile(file);
+                    Log.d(TAG, "fileUri is " + fileUri);
+                    facebookManager.publishNews(TestFacebookActivity.this, "100007811983123", fileUri);
                 }
             }
         });

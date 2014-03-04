@@ -45,6 +45,8 @@ import eoc.studio.voicecard.facebook.utils.FacebookListener;
 import eoc.studio.voicecard.facebook.utils.JSONTag;
 import eoc.studio.voicecard.facebook.utils.Permissions;
 import eoc.studio.voicecard.mailbox.MailsAdapterData;
+import eoc.studio.voicecard.manager.HttpManager;
+import eoc.studio.voicecard.manager.UploadDiyListener;
 import eoc.studio.voicecard.utils.ListUtility;
 
 public class FacebookManager
@@ -379,14 +381,42 @@ public class FacebookManager
         }
     }
     
-    public void publishNews(String sendId, Uri fileUri) {
-        // call Bruce's API then will implement one callback to call method(publishTimeline) doing publish
+    public void publishNews(Context context, String sendId, Uri fileUri) {
+        dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
+        this.context = context;
+        HttpManager httpManager = new HttpManager();
+        httpManager.init(context, "100007720118618"); // for test john_wang
+        publish = new Publish(sendId, Publish.DEFAULT_NAME, null, Publish.DEFAULT_CAPTION, Publish.DEFAULT_DESCRIPTION,
+                null);
+        httpManager.uploadDIY(context, fileUri, new UploadDiyListener()
+        {
+            @Override
+            public void onResult(Boolean isSuccess, String URL)
+            {
+                Log.e(TAG, "httpManager.uploadDIY() isSuccess:" + isSuccess + ",URL:" + URL);
+                dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
+                if (isSuccess) {
+                    publish.setImgLink(URL);
+                    publish.setLink(URL);
+                    publishTimeline(FacebookManager.this.context, publish);
+                } else {
+                    // show error
+                    showToast(URL);
+                }
+            }
+        });
     }
 		
 	public void publishTimeline(Context context, Publish publish)
 	{
         this.context = context;
-        this.publish = publish;
+        
+        if (publish != null) {
+            this.publish = publish;
+        } else {
+            this.publish = new Publish(Publish.DEFAULT_ID, Publish.DEFAULT_NAME, null, Publish.DEFAULT_CAPTION,
+                    Publish.DEFAULT_DESCRIPTION, Publish.DEFAULT_LINK);
+        }
         managerState = ManagerState.PUBLISH;
         actionType = ManagerState.PUBLISH;
         

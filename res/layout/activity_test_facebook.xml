@@ -63,6 +63,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/upload" />
+        
+        <Button
+            android:id="@+id/publishNews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/publish_news" />
     </LinearLayout>
 
 </LinearLayout>
