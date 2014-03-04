@@ -1,6 +1,7 @@
 package eoc.studio.voicecard.card.editor;
 
 import java.io.File;
+import java.io.IOException;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -25,6 +26,7 @@ import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.animation.FlipView;
 import eoc.studio.voicecard.animation.FlipView.FlipListener;
 import eoc.studio.voicecard.card.Card;
+import eoc.studio.voicecard.card.viewer.AudioMessageView;
 
 public class CardSenderActivity extends BaseActivity
 {
@@ -41,9 +43,8 @@ public class CardSenderActivity extends BaseActivity
 	private String voiceDurationText;
 
 	private View back;
-	private View receiverPicker;
-	private View send;
-	private TextView receiverCounter;
+	private ImageView sendFacebook;
+	private ImageView sendContact;
 
 	private View rightBlock; // a workaround in order to push
 								// cardWrapper to the middle at
@@ -58,12 +59,9 @@ public class CardSenderActivity extends BaseActivity
 	private HorizontalScrollView cardScrollView;
 	private ImageView cardInnerBackground;
 	private ImageView cardImageView;
-	private ImageView cardVoiceControl;
-	private TextView cardVoiceText;
+	private AudioMessageView cardVoice;
 	private TextView cardTextView;
 	private ImageView cardSignatureView;
-
-	private MediaPlayer mediaPlayer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -117,9 +115,8 @@ public class CardSenderActivity extends BaseActivity
 	private void findViews()
 	{
 		back = findViewById(R.id.act_card_sender_iv_back);
-		receiverPicker = findViewById(R.id.act_card_sender_iv_receiver_chooser);
-		send = findViewById(R.id.act_card_sender_iv_send);
-		receiverCounter = (TextView) findViewById(R.id.act_card_sender_tv_receiver_counter);
+		sendFacebook = (ImageView) findViewById(R.id.act_card_sender_iv_send_fb);
+		sendContact = (ImageView) findViewById(R.id.act_card_sender_iv_send_contact);
 
 		rightBlock = findViewById(R.id.act_card_sender_v_right_block);
 		cardWrapper = (FrameLayout) findViewById(R.id.act_card_sender_flyt_card_wrapper);
@@ -131,8 +128,7 @@ public class CardSenderActivity extends BaseActivity
 		cardScrollView = (HorizontalScrollView) findViewById(R.id.act_card_sender_hsv_card_scroll_view);
 		cardInnerBackground = (ImageView) findViewById(R.id.act_card_sender_iv_card_inner_page);
 		cardImageView = (ImageView) findViewById(R.id.glb_card_iv_editable_image);
-		cardVoiceControl = (ImageView) findViewById(R.id.glb_card_iv_editable_voice_play_icon);
-		cardVoiceText = (TextView) findViewById(R.id.glb_card_tv_editable_voice_play_text);
+		cardVoice = (AudioMessageView) findViewById(R.id.glb_card_amv_editable_voice);
 		cardTextView = (TextView) findViewById(R.id.glb_card_tv_editable_text);
 		cardSignatureView = (ImageView) findViewById(R.id.glb_card_iv_editable_signature_image);
 
@@ -147,15 +143,40 @@ public class CardSenderActivity extends BaseActivity
 	{
 		cardInnerBackground.setBackgroundResource(card.getImage3dOpenResId());
 		cardImageView.setImageURI(card.getImage());
-		cardVoiceText.setText(voiceDurationText);
 		cardTextView.setText(card.getMessage());
 		cardTextView.setTextColor(card.getMessageTextColor());
 		cardTextView
 				.setTextSize(CardEditorActivity.getTextSizeByType(card.getMessageTextSizeType()));
+		cardTextView.setVisibility(View.VISIBLE);
+
 		cardSignatureView.setImageURI(card.getSignDraftImage());
 
-		findViewById(R.id.glb_card_llyt_editable_voice).setVisibility(View.VISIBLE);
-		cardTextView.setVisibility(View.VISIBLE);
+		Uri source = card.getSound();
+		if (source != null)
+		{
+			cardVoice.setDurationText(voiceDurationText);
+			cardVoice.setVisibility(View.VISIBLE);
+			try
+			{
+				cardVoice.setPlayerSourcceAndPrepare(new MediaPlayer(), card.getSound(), false);
+			}
+			catch (IllegalArgumentException e)
+			{
+				e.printStackTrace();
+			}
+			catch (SecurityException e)
+			{
+				e.printStackTrace();
+			}
+			catch (IllegalStateException e)
+			{
+				e.printStackTrace();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void generateShadow()
@@ -221,6 +242,7 @@ public class CardSenderActivity extends BaseActivity
 						.getLayoutParams();
 				params.setMargins(0, 0, 0, 0);
 				cardWrapper.setLayoutParams(params);
+				cardWrapper.setPadding(0, 0, 0, 0);
 				cardScrollView.setVisibility(View.VISIBLE);
 				cardWrapper.bringToFront();
 				cardScrollView.bringToFront();
@@ -298,48 +320,37 @@ public class CardSenderActivity extends BaseActivity
 
 		});
 
-		receiverPicker.setOnClickListener(new OnClickListener()
+		sendFacebook.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
 			public void onClick(View v)
 			{
-				startReceiverPicker();
+				startFacebookSender();
 			}
 
 		});
 
-		send.setOnClickListener(new OnClickListener()
+		sendContact.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
 			public void onClick(View v)
 			{
-				sendCard();
+				sendContactSender();
 			}
 
 		});
 	}
 
-	private void startReceiverPicker()
+	private void startFacebookSender()
 	{
-		// TODO ask user: from contact or facebook
+		// TODO to John
 	}
 
-	private void onReceiverPickerResult()
+	private void sendContactSender()
 	{
-
+		// TODO to Ryan
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	private void sendCard()
-	{
-		// TODO call HttpManager postMail()
-	}
 }

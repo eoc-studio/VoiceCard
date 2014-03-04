@@ -32,6 +32,7 @@ import eoc.studio.voicecard.audio.AudioRecorderActivity;
 import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.card.CardDraft;
 import eoc.studio.voicecard.card.FakeData;
+import eoc.studio.voicecard.card.viewer.AudioMessageView;
 import eoc.studio.voicecard.manufacture.EditSignatureActivity;
 import eoc.studio.voicecard.menu.OpenDraft;
 import eoc.studio.voicecard.menu.SaveDraft;
@@ -111,9 +112,7 @@ public class CardEditorActivity extends BaseActivity
 
 	private ImageView editableImage;
 
-	private LinearLayout editableVoice;
-
-	private TextView editableVoiceText;
+	private AudioMessageView editableVoice;
 
 	private TextView editableText;
 
@@ -409,10 +408,8 @@ public class CardEditorActivity extends BaseActivity
 		editableSignatureTip = (TextView) findViewById(R.id.glb_card_tv_editable_signature_tip);
 
 		editableImage = (ImageView) findViewById(R.id.glb_card_iv_editable_image);
-		editableVoice = (LinearLayout) findViewById(R.id.glb_card_llyt_editable_voice);
-		editableVoiceText = (TextView) findViewById(R.id.glb_card_tv_editable_voice_play_text);
+		editableVoice = (AudioMessageView) findViewById(R.id.glb_card_amv_editable_voice);
 		editableText = (TextView) findViewById(R.id.glb_card_tv_editable_text);
-
 		editableSignImage = (ImageView) findViewById(R.id.glb_card_iv_editable_signature_image);
 
 		saveDraft = (SaveDraft) findViewById(R.id.act_card_editor_iv_menu_save_draft);
@@ -663,7 +660,7 @@ public class CardEditorActivity extends BaseActivity
 
 		if (userVoice != null)
 		{
-			editableVoiceText.setText(userVoiceDuration);
+			editableVoice.setDurationText(userVoiceDuration);
 			editableVoice.setVisibility(View.VISIBLE);
 		}
 	}
@@ -771,8 +768,7 @@ public class CardEditorActivity extends BaseActivity
 		int duration = data.getIntExtra(AudioRecorderActivity.EXTRA_KEY_DURATION_MILLISECOND, 0);
 		int min = duration / 1000 / 60;
 		int sec = duration / 1000 % 60;
-		userVoiceDuration = getString(R.string.play_voice_message,
-				min + ":" + String.format("%02d", sec));
+		userVoiceDuration = min + ":" + String.format("%02d", sec);
 
 		Log.d(TAG, "onVoiceRecorderResult - filePath: " + filePath);
 		Log.d(TAG, "onVoiceRecorderResult - duration: " + duration + " = " + min + "m" + sec + "s");

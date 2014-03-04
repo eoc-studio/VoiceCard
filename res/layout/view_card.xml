@@ -38,30 +38,13 @@
             android:layout_gravity="center"
             android:text="@string/insert_voice" />
 
-        <LinearLayout
-            android:id="@+id/glb_card_llyt_editable_voice"
+        <eoc.studio.voicecard.card.viewer.AudioMessageView
+            android:id="@+id/glb_card_amv_editable_voice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/voice_message_controller_background"
-            android:orientation="horizontal"
-            android:visibility="invisible" >
-
-            <ImageView
-                android:id="@+id/glb_card_iv_editable_voice_play_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dip"
-                android:src="@drawable/icon_play" />
-
-            <TextView
-                android:id="@+id/glb_card_tv_editable_voice_play_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dip"
-                android:text="@string/play_voice_message"
-                android:textColor="@color/white" />
-        </LinearLayout>
+            android:visibility="invisible" />
     </FrameLayout>
 
     <FrameLayout

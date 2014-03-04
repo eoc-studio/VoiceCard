@@ -2,7 +2,8 @@
 <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/glb_card_animation_hsv_root"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/view_card_height" >
+    android:layout_height="@dimen/view_card_height"
+    android:scrollbars="none" >"
 
     <RelativeLayout
         android:layout_width="match_parent"

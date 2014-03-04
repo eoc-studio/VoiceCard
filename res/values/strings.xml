@@ -56,7 +56,7 @@
     <string name="insert_voice">Record voice</string>
     <string name="insert_text">Insert text</string>
     <string name="insert_signature">Insert signature</string>
-    <string name="play_voice_message">Play message %s</string>
+    <string name="play_voice_message">Play message </string>
     <string name="processing">Processing</string>
     <string name="please_wait">Please wait</string>
 
