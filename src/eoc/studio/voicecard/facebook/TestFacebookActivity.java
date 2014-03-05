@@ -24,6 +24,7 @@ import com.facebook.model.GraphUser;
 
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.facebook.enetities.FriendInfo;
 import eoc.studio.voicecard.facebook.enetities.Photo;
 import eoc.studio.voicecard.facebook.enetities.Publish;
@@ -129,7 +130,19 @@ public class TestFacebookActivity extends BaseActivity
 			{
 				if (facebookManager != null)
 				{
-					facebookManager.inviteFriend(TestFacebookActivity.this, null);
+                    File imgfile = new File("/storage/sdcard1/Download/jordan.jpg");
+                    Uri imgUri = Uri.fromFile(imgfile);
+                    
+                    File signfile = new File("/storage/sdcard1/Download/jordan.jpg");
+                    Uri signUri = Uri.fromFile(signfile);
+                    
+                    Card card = new Card(0, null, "Voice Card", 0, 0, 0, 0, 0, 0);
+                    card.setImage(imgUri);
+                    card.setSound(imgUri);
+                    card.setMessage("Voice Card invite", 0, 0);
+                    card.setSignDraftImage(signUri);
+                    card.setName("Test");
+                    facebookManager.inviteFriend(TestFacebookActivity.this, null, card);
 				}
 			}
 		});

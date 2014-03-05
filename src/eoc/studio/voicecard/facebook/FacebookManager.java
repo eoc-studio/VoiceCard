@@ -38,6 +38,7 @@ import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.facebook.enetities.Photo;
 import eoc.studio.voicecard.facebook.enetities.Publish;
 import eoc.studio.voicecard.facebook.utils.BundleTag;
@@ -46,6 +47,7 @@ import eoc.studio.voicecard.facebook.utils.JSONTag;
 import eoc.studio.voicecard.facebook.utils.Permissions;
 import eoc.studio.voicecard.mailbox.MailsAdapterData;
 import eoc.studio.voicecard.manager.HttpManager;
+import eoc.studio.voicecard.manager.PostMailListener;
 import eoc.studio.voicecard.manager.UploadDiyListener;
 import eoc.studio.voicecard.utils.ListUtility;
 
@@ -65,6 +67,7 @@ public class FacebookManager
 	private Request.GraphUserListCallback friendListCallback;
 	private Request.GraphUserCallback userCallback;
 	private RequestAsyncTask requestAsyncTask;
+	private Card publishCard;
 	
 	private volatile static FacebookManager facebookManager;
 	
@@ -493,11 +496,12 @@ public class FacebookManager
         requestAsyncTask = rb.executeAsync();
     }
     
-    public void inviteFriend(Context context, String message) {
+    public void inviteFriend(Context context, String message, Card publishCard) {
         Log.d(TAG, "inviteFriend invite all friend");
         managerState = ManagerState.INVITE;
         actionType = ManagerState.INVITE;
         this.context = context;
+        this.publishCard = publishCard;
         Bundle params = new Bundle();
         if (message != null) {
             params.putString(BundleTag.MESSAGE, message);
@@ -611,9 +615,9 @@ public class FacebookManager
         return false;
     }
     
-    private List<String> fetchInvitedFriends(Bundle values)
+    private ArrayList<String> fetchInvitedFriends(Bundle values)
     {
-        List<String> friends = new ArrayList<String>();
+        ArrayList<String> friends = new ArrayList<String>();
 
         int size = values.size();
         int numOfFriends = size - 1;
@@ -632,6 +636,34 @@ public class FacebookManager
         }
 
         return friends;
+    }
+    
+    private void sendCardtoServer(ArrayList<String> friendList) {
+        if (friendList != null) {
+            HttpManager httpManager = new HttpManager();
+
+            try {
+                httpManager.postMailByList(context, friendList, publishCard.getImage(), publishCard.getSound(),
+                        publishCard.getMessage(), publishCard.getSignDraftImage(),
+                        String.valueOf(publishCard.getMessageTextSizeType()),
+                        String.valueOf(publishCard.getMessageTextColor()), "thisCardName", new PostMailListener() {
+
+                            @Override
+                            public void onResult(Boolean isSuccess, String information) {
+
+                                Log.e(TAG, "httpManager.postMailByList() isSuccess:" + isSuccess + ",information:"
+                                        + information);
+
+                                Toast.makeText(context, "httpManager.postMailByList() isSuccess:" + isSuccess,
+                                        Toast.LENGTH_LONG).show();
+                            }
+
+                        });
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 	    
     private class LoginListener implements FacebookListener
@@ -729,7 +761,7 @@ public class FacebookManager
             } else {
                 Log.d(TAG, "Invite no error ");
                 Log.d(TAG, "values " + values) ;
-                List<String> invitedFriends = fetchInvitedFriends(values);
+                sendCardtoServer(fetchInvitedFriends(values)); 
             }
         }        
     }
