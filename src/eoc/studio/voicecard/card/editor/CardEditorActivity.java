@@ -33,6 +33,7 @@ import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.card.CardDraft;
 import eoc.studio.voicecard.card.FakeData;
 import eoc.studio.voicecard.card.viewer.AudioMessageView;
+import eoc.studio.voicecard.card.database.CardDatabaseHelper;
 import eoc.studio.voicecard.manufacture.EditSignatureActivity;
 import eoc.studio.voicecard.menu.OpenDraft;
 import eoc.studio.voicecard.menu.SaveDraft;
@@ -151,10 +152,12 @@ public class CardEditorActivity extends BaseActivity
 
 	private ProgressDialog progressDialog;
 
+	private CardDatabaseHelper cardDatabaseHelper ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 
+		initCardDataBase();
 		if (savedInstanceState != null)
 		{
 			Log.d(TAG, "from savedInstanceState");
@@ -182,7 +185,15 @@ public class CardEditorActivity extends BaseActivity
 
 		super.onCreate(savedInstanceState);
 	}
+	
+	private void initCardDataBase()
+	{
 
+		cardDatabaseHelper = new CardDatabaseHelper(getApplicationContext());
+		cardDatabaseHelper.open();
+	}
+	
+	
 	private void saveCardInformation()
 	{
 
@@ -290,6 +301,7 @@ public class CardEditorActivity extends BaseActivity
 	{
 
 		savedInstanceState.putInt(EXTRA_KEY_CARD_ID, card.getId());
+		Log.d(TAG, "save user data -- card.getId(): " + card.getId());
 		if (userImage != null)
 		{
 			savedInstanceState.putParcelable(EXTRA_KEY_USER_IMAGE, userImage);
@@ -363,7 +375,9 @@ public class CardEditorActivity extends BaseActivity
 		Card card;
 		if (id != -1)
 		{
-			card = FakeData.getCard(id);
+//			card = FakeData.getCard(id);
+			Log.d(TAG, "getCardById id : " + id);
+			card = cardDatabaseHelper.getCardByCardID(id, cardDatabaseHelper.getSystemDPI(getApplicationContext()));
 			assert card != null;
 
 			Log.d(TAG, "EDIT : " + card.getName());
@@ -419,15 +433,18 @@ public class CardEditorActivity extends BaseActivity
 
 	private void setupCardView()
 	{
-
-		innerPage.setImageResource(card.getImage3dOpenResId());
-		setCardColor();
+		Bitmap img3dOpenBitmap = FileUtility.getBitmapFromPath(card.getImage3dOpenPath());
+		FileUtility.setImageViewWithBitmap(innerPage, img3dOpenBitmap);	
+		
+/*		innerPage.setImageResource(android.R.color.transparent);*/
+		setCardColor(); 
 	}
 
 	private void setCardColor()
 	{
 
 		int color = card.getTextColor();
+		Log.d(TAG, "setCardColor() card.getTextColor() "+card.getTextColor());
 		Resources res = getResources();
 		int dashGap = res.getDimensionPixelSize(R.dimen.dash_border_stroke_dash_gap);
 		int dashWidth = res.getDimensionPixelSize(R.dimen.dash_border_stroke_dash_width);

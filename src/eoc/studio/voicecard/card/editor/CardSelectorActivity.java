@@ -1,8 +1,12 @@
 package eoc.studio.voicecard.card.editor;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,15 +26,23 @@ import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.card.CardCategory;
 import eoc.studio.voicecard.card.FakeData;
+import eoc.studio.voicecard.card.database.CardAssistant;
+import eoc.studio.voicecard.card.database.CardDatabaseHelper;
+import eoc.studio.voicecard.card.database.CategoryAssistant;
 import eoc.studio.voicecard.menu.AddToFavorite;
+import eoc.studio.voicecard.utils.FileUtility;
 
 public class CardSelectorActivity extends BaseActivity
 {
+	private static final int INT_FAVORITE = -999;
+
 	public static final String EXTRA_KEY_CATEGORY = "category";
 
 	private static final String TAG = "CardSelector";
 
-	private CardCategory category;
+	// private CardCategory category;
+	private CategoryAssistant category;
+
 	private Card currentCenteredCard;
 
 	private Gallery list;
@@ -38,12 +50,26 @@ public class CardSelectorActivity extends BaseActivity
 	private TextView centerCardName;
 	private AddToFavorite addToFavorite;
 
+	private CardDatabaseHelper cardDatabaseHelper;
+
+	private Context context;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+
+		context = getApplicationContext();
 		getCategoryFromIntent();
+		initCardDataBase();
 		initLayout();
 		super.onCreate(savedInstanceState);
+	}
+
+	private void initCardDataBase()
+	{
+
+		cardDatabaseHelper = new CardDatabaseHelper(context);
+		cardDatabaseHelper.open();
 	}
 
 	@Override
@@ -69,10 +95,13 @@ public class CardSelectorActivity extends BaseActivity
 
 	private void getCategoryFromIntent()
 	{
+
 		Intent intent = getIntent();
-		category = (CardCategory) intent.getSerializableExtra(EXTRA_KEY_CATEGORY);
-		Log.d(TAG, "list card for category " + category.name());
-		Toast.makeText(this, "CATEGORY: " + category.name(), Toast.LENGTH_LONG).show();
+		category = (CategoryAssistant) intent.getParcelableExtra(EXTRA_KEY_CATEGORY);
+		Log.d(TAG,
+				"list card for category id: " + category.getCategoryID() + ",name: "
+						+ category.getCategoryName());
+		Toast.makeText(this, "CATEGORY: " + category.getCategoryName(), Toast.LENGTH_LONG).show();
 	}
 
 	private void initLayout()
@@ -147,23 +176,62 @@ public class CardSelectorActivity extends BaseActivity
 
 	private void initList()
 	{
+
 		// TODO get card list from Bruce
-		List<Card> cards = FakeData.getCardList(category);
+		List<Card> cards = getCartList(category);
+		// List<Card> cards = FakeData.getCardList(category);
 		Log.d(TAG, "get " + cards.size() + " cards from data provider");
 		CardAdapter adapter = new CardAdapter(cards);
 		list.setAdapter(adapter);
 	}
 
+	private List<Card> getCartList(CategoryAssistant category)
+	{
+
+		List<Card> cards = new ArrayList<Card>();
+		ArrayList<CardAssistant> cardAssistantList;
+		if (category.getCategoryID() == INT_FAVORITE)
+		{
+			cardAssistantList = cardDatabaseHelper.getEnabledFavoriteCardList(cardDatabaseHelper
+					.getSystemDPI(context));
+		}
+		else
+		{
+			cardAssistantList = cardDatabaseHelper.getEnabledCardListByCategory(category,
+					cardDatabaseHelper.getSystemDPI(context));
+		}
+
+		for (int index = 0; index < cardAssistantList.size(); index++)
+		{
+			cards.add(new Card(cardAssistantList.get(index).getCardID(), category,
+					cardAssistantList.get(index).getCardName(), cardAssistantList.get(index)
+							.getCloseLocalPath(), cardAssistantList.get(index).getOpenLocalPath(),
+					cardAssistantList.get(index).getCoverLocalPath(), cardAssistantList.get(index)
+							.getLeftLocalPath(), cardAssistantList.get(index).getRightLocalPath(),
+					cardAssistantList.get(index).getCardFontColor()));
+		}
+		return cards;
+
+	}
+
 	private void addToFavorite(Card card)
 	{
-		// TODO tell Bruce to add card to favorite
-		Log.d(TAG, "add " + card.getName() + " to favorite");
+
+		Log.d(TAG, "add " + card.getId() + " to favorite");
+		boolean isOK = cardDatabaseHelper.setFavoriteCardByCardID(card.getId());
+		if (isOK)
+		{
+			Log.d(TAG, "add " + card.getName() + " to favorite successful!");
+			Toast.makeText(context, "add " + card.getName() + " to favorite successful!", Toast.LENGTH_LONG).show();
+		}
 	}
 
 	private void startCardEditor(Card card)
 	{
 		Log.d(TAG, "start editor for " + card.getName());
 		Intent intent = new Intent(this, CardEditorActivity.class);
+
+		Log.d(TAG, "start editor card.getId(): " + card.getId());
 		intent.putExtra(CardEditorActivity.EXTRA_KEY_CARD_ID, card.getId());
 		startActivity(intent);
 	}
@@ -214,7 +282,11 @@ public class CardSelectorActivity extends BaseActivity
 				holder = (ViewHolder) convertView.getTag();
 			}
 			Card card = getItem(position);
-			holder.image.setImageResource(card.getImage3dCoverResId());
+
+			Bitmap img3dCoverBitmap = FileUtility.getBitmapFromPath(card.getImage3dCoverPath());
+
+			FileUtility.setImageViewWithBitmap(holder.image, img3dCoverBitmap);
+
 			return convertView;
 		}
 

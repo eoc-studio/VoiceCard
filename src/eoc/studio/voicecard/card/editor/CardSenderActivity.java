@@ -27,7 +27,7 @@ import eoc.studio.voicecard.animation.FlipView;
 import eoc.studio.voicecard.animation.FlipView.FlipListener;
 import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.card.viewer.AudioMessageView;
-
+import eoc.studio.voicecard.utils.FileUtility;
 public class CardSenderActivity extends BaseActivity
 {
 	public static final String EXTRA_KEY_CARD_WITH_USER_DATA_FOR_SEND = "card_with_user_data_for_send";
@@ -141,7 +141,13 @@ public class CardSenderActivity extends BaseActivity
 
 	private void initCardView()
 	{
-		cardInnerBackground.setBackgroundResource(card.getImage3dOpenResId());
+//		cardInnerBackground.setBackgroundResource(card.getImage3dOpenResId());
+		
+		
+		Bitmap img3dOpenBitmap = FileUtility.getBitmapFromPath(card.getImage3dOpenPath());
+		
+		FileUtility.setImageViewBackgroundWithBitmap(cardInnerBackground, img3dOpenBitmap);
+	
 		cardImageView.setImageURI(card.getImage());
 		cardTextView.setText(card.getMessage());
 		cardTextView.setTextColor(card.getMessageTextColor());
@@ -181,14 +187,18 @@ public class CardSenderActivity extends BaseActivity
 
 	private void generateShadow()
 	{
-		Bitmap bmp = BitmapFactory.decodeResource(getResources(), card.getImage3dOpenResId());
+//		Bitmap bmp = BitmapFactory.decodeResource(getResources(), card.getImage3dOpenResId());
+		Bitmap bmp = FileUtility.getBitmapFromPath(card.getImage3dOpenPath());
 
 		Bitmap halfShadow = Bitmap.createBitmap(bmp, bmp.getWidth() / 2 - 10, 0,
 				bmp.getWidth() / 2, bmp.getHeight());
 		shadowClose.setImageBitmap(halfShadow);
 		bmp.recycle();
 
-		shadowOpen.setImageResource(card.getImage3dOpenResId());
+//		shadowOpen.setImageResource(card.getImage3dOpenResId());
+		
+		Bitmap img3dOpenBitmap = FileUtility.getBitmapFromPath(card.getImage3dOpenPath());
+		FileUtility.setImageViewWithBitmap(shadowOpen, img3dOpenBitmap);
 	}
 
 	private void initFlipAndShadow()
@@ -210,7 +220,10 @@ public class CardSenderActivity extends BaseActivity
 		ImageView front = new ImageView(this);
 		front.setLayoutParams(params);
 		front.setScaleType(ScaleType.FIT_XY);
-		front.setImageResource(card.getImageCoverResId());
+//		front.setImageResource(card.getImageCoverResId());
+		Bitmap imgCoverBitmap = FileUtility.getBitmapFromPath(card.getImageCoverPath());
+		FileUtility.setImageViewWithBitmap(front,imgCoverBitmap);
+	
 		ImageView back = new ImageView(this);
 		back.setLayoutParams(params);
 		back.setScaleType(ScaleType.FIT_XY);

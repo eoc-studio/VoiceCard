@@ -1,15 +1,22 @@
 package eoc.studio.voicecard.mainloading;
 
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.card.database.CardAssistant;
 import eoc.studio.voicecard.card.database.CardDatabaseHelper;
+import eoc.studio.voicecard.card.database.CategoryAssistant;
 import eoc.studio.voicecard.facebook.utils.BundleTag;
 import eoc.studio.voicecard.facebook.utils.JSONTag;
 import eoc.studio.voicecard.facebook.utils.Permissions;
 import eoc.studio.voicecard.mailbox.MailboxActivity;
 import eoc.studio.voicecard.mailbox.MailsAdapterData;
 import eoc.studio.voicecard.mainmenu.MainMenuActivity;
+import eoc.studio.voicecard.manager.CardImages;
+import eoc.studio.voicecard.manager.GetCardListener;
+import eoc.studio.voicecard.manager.GetCategoryListener;
 import eoc.studio.voicecard.manager.GetMailListener;
 import eoc.studio.voicecard.manager.GetRecommendListener;
+import eoc.studio.voicecard.manager.GsonCard;
+import eoc.studio.voicecard.manager.GsonCategory;
 import eoc.studio.voicecard.manager.GsonFacebookUser;
 import eoc.studio.voicecard.manager.GsonRecommend;
 import eoc.studio.voicecard.manager.GsonSend;
@@ -18,8 +25,13 @@ import eoc.studio.voicecard.manager.LoginListener;
 import eoc.studio.voicecard.manager.MailCountListener;
 import eoc.studio.voicecard.manager.NotifyMailReadListener;
 import eoc.studio.voicecard.progresswheel.ProgressWheel;
+import eoc.studio.voicecard.utils.FileUtility;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -31,6 +43,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -39,10 +52,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -82,11 +97,21 @@ public class MainLoadingActivity extends Activity
 
 	private static final int MAILBOX_COUNT_PROGRESS = 60;
 
-	private static final int MAILBOX_RECEIVE_PROGRESS = 60;
+	private static final int MAILBOX_RECEIVE_PROGRESS = 45;
 
-	private static final int INIT_DATABASE_PROGRESS = 30;
+	private static final int INIT_DATABASE_PROGRESS = 15;
 
-	private static final int GET_RECOMMEND_PROGRESS = 30;
+	private static final int GET_RECOMMEND_PROGRESS = 45;
+
+	private static final int COPY_CARD_AND_CATEGORY = 15;
+
+	// private static final int GET_CATEGORY_INFO_PROGRESS = 15;
+	//
+	// private static final int GET_CARD_INFO_PROGRESS = 15;
+
+	// private static final int GET_CATEGORY_IMGS_PROGRESS = 15;
+	//
+	// private static final int GET_CARD_IMGS_PROGRESS = 15;
 
 	private Context context;
 
@@ -106,7 +131,11 @@ public class MainLoadingActivity extends Activity
 
 	private String recommendName;
 
-	HttpManager httpManager;
+	private HttpManager httpManager;
+
+	private DownlaodCategoryAysncTaskListener downlaodCategoryAysncTaskListener;
+
+	private DownlaodCardAysncTaskListener downlaodCardAysncTaskListener;
 
 	Handler progressHandler = new Handler()
 	{
@@ -118,7 +147,10 @@ public class MainLoadingActivity extends Activity
 
 			if (progress >= FACEBOOK_ID_PROGRESS + FACEBOOK_USER_PROFILE_PROGRESS
 					+ INIT_HTTP_MANAGER_PROGRESS + MAILBOX_COUNT_PROGRESS
-					+ MAILBOX_RECEIVE_PROGRESS + INIT_DATABASE_PROGRESS + GET_RECOMMEND_PROGRESS)
+					+ MAILBOX_RECEIVE_PROGRESS + INIT_DATABASE_PROGRESS + GET_RECOMMEND_PROGRESS
+					+ COPY_CARD_AND_CATEGORY)
+			// + GET_CATEGORY_INFO_PROGRESS + GET_CARD_INFO_PROGRESS
+			// + GET_CATEGORY_IMGS_PROGRESS + GET_CARD_IMGS_PROGRESS)
 			{
 				goToMainActivity();
 				progress = 361;
@@ -149,8 +181,18 @@ public class MainLoadingActivity extends Activity
 		httpManager = new HttpManager();
 		startProgressWheel();
 		initMailDataBase();
-		getRecommendInfo();
-		
+		initCardDataBase();
+		// getCategoryInfoFromServer();
+		// getCardInfoFromServer();
+		// downloadCategoryAndCardImages();
+		getRecommendInfo(); 
+		copyCardAndCategoryFromAsset();
+
+	}
+
+	private void initCardDataBase()
+	{
+
 		cardDatabaseHelper = new CardDatabaseHelper(context);
 		cardDatabaseHelper.open();
 		
@@ -164,6 +206,7 @@ public class MainLoadingActivity extends Activity
 		Log.d(TAG, "onDestroy()");
 		progressWheel.stopSpinning();
 		mailsAdapterData.close();
+		cardDatabaseHelper.close();
 
 	}
 
@@ -176,6 +219,73 @@ public class MainLoadingActivity extends Activity
 
 		openFacebookSession();
 
+	}
+
+	private void copyCardAndCategoryFromAsset()
+	{
+
+		if (FileUtility.copyAssetFolder(getAssets(), "files", getFilesDir().getAbsolutePath()))
+		{
+			addProgressWheel(COPY_CARD_AND_CATEGORY);
+			Log.d(TAG_PROGRESS, "COPY_CARD_AND_CATEGORY");
+		}
+	}
+
+	private void downloadCategoryAndCardImages()
+	{
+
+		ArrayList<CategoryAssistant> categoryAssistantList = new ArrayList<CategoryAssistant>();
+		categoryAssistantList = cardDatabaseHelper.getEnabledCategory(cardDatabaseHelper
+				.getSystemDPI(context));
+		// Log.d(TAG, "onResume() categoryAssistantList :" +
+		// categoryAssistantList);
+
+		downlaodCategoryAysncTaskListener = new DownlaodCategoryAysncTaskListener()
+		{
+
+			@Override
+			public void processFinish(ArrayList<CategoryAssistant> result)
+			{
+
+				cardDatabaseHelper.updateCategoryImgLocalPath(result,
+						cardDatabaseHelper.getSystemDPI(context));
+
+				// addProgressWheel(GET_CATEGORY_IMGS_PROGRESS);
+				// Log.d(TAG_PROGRESS, "GET_CATEGORY_IMGS_PROGRESS");
+			}
+
+		};
+		DownlaodCategoryAysncTask downlaodCategoryAysncTask = new DownlaodCategoryAysncTask(
+				context, downlaodCategoryAysncTaskListener);
+		downlaodCategoryAysncTask.execute(categoryAssistantList);
+
+		downlaodCardAysncTaskListener = new DownlaodCardAysncTaskListener()
+		{
+			@Override
+			public void processFinish(ArrayList<CardAssistant> result)
+			{
+
+				cardDatabaseHelper.updateCardImgLocalPath(result,
+						cardDatabaseHelper.getSystemDPI(context));
+				// addProgressWheel(GET_CARD_IMGS_PROGRESS);
+				// Log.d(TAG_PROGRESS, "GET_CARD_IMGS_PROGRESS");
+			}
+		};
+		ArrayList<CardAssistant> cardAssistantList = new ArrayList<CardAssistant>();
+		cardAssistantList = cardDatabaseHelper.getEnabledCard(cardDatabaseHelper
+				.getSystemDPI(context));
+
+		Log.d(TAG, "onResume() cardAssistantList :" + cardAssistantList);
+
+		for (int index = 0; index < cardAssistantList.size(); index++)
+		{
+			Log.d(TAG, "onResume() cardAssistantList getCardName:"
+					+ cardAssistantList.get(index).getCardName());
+		}
+
+		DownlaodCardAysncTask downlaodCardAysncTask = new DownlaodCardAysncTask(context,
+				downlaodCardAysncTaskListener);
+		downlaodCardAysncTask.execute(cardAssistantList);
 	}
 
 	private void initMailDataBase()
@@ -198,8 +308,9 @@ public class MainLoadingActivity extends Activity
 			public void onResult(Boolean isSuccess, ArrayList<GsonRecommend> recommends)
 			{
 
-				Log.e(TAG, "httpManager.getRecommend() isSuccess:" + isSuccess + ",mails:"
-						+ recommends.toString());
+				// Log.e(TAG, "httpManager.getRecommend() isSuccess:" +
+				// isSuccess + ",mails:"
+				// + recommends.toString());
 
 				if (recommends != null && recommends.size() > 0)
 				{
@@ -215,6 +326,79 @@ public class MainLoadingActivity extends Activity
 
 		});
 
+	}
+
+	private void getCategoryInfoFromServer()
+	{
+
+		httpManager.getCategory(context, new GetCategoryListener()
+		{
+			@Override
+			public void onResult(Boolean isSuccess, ArrayList<GsonCategory> gsonCategoryList)
+			{
+
+				if (isSuccess)
+				{
+					Log.d(TAG, "gsonCategoryList " + gsonCategoryList.toString());
+
+					cardDatabaseHelper.deleteCategoryTable();
+					// write to datebase
+					for (int index = 0; index < gsonCategoryList.size(); index++)
+					{
+						cardDatabaseHelper.createCategoryRow(gsonCategoryList.get(index)
+								.getCategoryID(), gsonCategoryList.get(index).getCategoryName(),
+								gsonCategoryList.get(index).getCategoryEnable(), gsonCategoryList
+										.get(index).getCategoryImageMDPI(),
+								gsonCategoryList.get(index).getCategoryImageHDPI(),
+								gsonCategoryList.get(index).getCategoryImageXHDPI(),
+								gsonCategoryList.get(index).getCategoryImageXXHDPI(), null, null,
+								null, null);
+					}
+
+					// addProgressWheel(GET_CATEGORY_INFO_PROGRESS);
+					// Log.d(TAG_PROGRESS, "GET_CATEGORY_INFO_PROGRESS");
+				}
+			}
+		});
+	}
+
+	private void getCardInfoFromServer()
+	{
+
+		httpManager.getCard(context, new GetCardListener()
+		{
+			@Override
+			public void onResult(Boolean isSuccess, ArrayList<GsonCard> gsonCardList)
+			{
+
+				if (isSuccess)
+				{
+
+					Log.d(TAG, "gsonCardList " + gsonCardList.toString());
+					cardDatabaseHelper.deleteCardTable();
+					// write to datebase
+					for (int index = 0; index < gsonCardList.size(); index++)
+					{
+						CardImages cardImages = new CardImages(gsonCardList.get(index),
+								cardDatabaseHelper.getSystemDPI(context));
+
+						cardDatabaseHelper.createCardRow(cardDatabaseHelper.getSystemDPI(context),
+								Integer.valueOf(gsonCardList.get(index).getCardID()), gsonCardList
+										.get(index).getCardName(), Integer.valueOf(gsonCardList
+										.get(index).getCategoryID()), gsonCardList.get(index)
+										.getCardEnable(), gsonCardList.get(index).getCardFont(),
+								cardImages.getCloseURL(), cardImages.getCoverURL(), cardImages
+										.getLeftURL(), cardImages.getOpenURL(), cardImages
+										.getRightURL(), null, null, null, null, null, 0);
+					}
+					// addProgressWheel(GET_CARD_INFO_PROGRESS);
+					// Log.d(TAG_PROGRESS, "GET_CARD_INFO_PROGRESS");
+
+					// downloadCategoryAndCardImages();
+				}
+
+			}
+		});
 	}
 
 	public void openFacebookSession()

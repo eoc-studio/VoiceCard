@@ -1,5 +1,8 @@
 package eoc.studio.voicecard.card;
 
+import java.lang.reflect.Field;
+
+import eoc.studio.voicecard.card.database.CategoryAssistant;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Parcel;
@@ -16,13 +19,21 @@ public class Card implements Parcelable
 
 	// original
 	private int id;
-	private CardCategory category;
+//	private CardCategory category;
+	private CategoryAssistant category;
 	private String name;
-	private int image3dCoverResId;
-	private int image3dOpenResId;
-	private int imageCoverResId;
-	private int imageInnerLeftResId;
-	private int imageInnerRightResId;
+//	private int image3dCoverResId;
+//	private int image3dOpenResId;
+//	private int imageCoverResId;
+//	private int imageInnerLeftResId;
+//	private int imageInnerRightResId;
+
+	private String image3dCoverPath;
+	private String image3dOpenPath;
+	private String imageCoverPath;
+	private String imageInnerLeftPath;
+	private String imageInnerRightPath;
+	
 	private int textColor;
 
 	// user input
@@ -35,18 +46,18 @@ public class Card implements Parcelable
 	private Uri signHandwriting;
 	private Uri signPositionInfo;
 
-	public Card(int id, CardCategory category, String name, int image3dCoverResId,
-			int image3dOpenResId, int imageCoverResId, int imageInnerLeftResId,
-			int imageInnerRightResId, int textColor)
+	public Card(int id, CategoryAssistant category, String name, String image3dCoverPath,
+			String image3dOpenPath, String imageCoverPath, String imageInnerLeftPath,
+			String imageInnerRightPath, int textColor)
 	{
 		this.id = id;
 		this.category = category;
 		this.name = name;
-		this.image3dCoverResId = image3dCoverResId;
-		this.image3dOpenResId = image3dOpenResId;
-		this.imageCoverResId = imageCoverResId;
-		this.imageInnerLeftResId = imageInnerLeftResId;
-		this.imageInnerRightResId = imageInnerRightResId;
+		this.image3dCoverPath = image3dCoverPath;
+		this.image3dOpenPath = image3dOpenPath;
+		this.imageCoverPath = imageCoverPath;
+		this.imageInnerLeftPath = imageInnerLeftPath;
+		this.imageInnerRightPath = imageInnerRightPath;
 		this.textColor = textColor;
 	}
 
@@ -55,11 +66,11 @@ public class Card implements Parcelable
 		this.id = card.id;
 		this.category = card.category;
 		this.name = card.name;
-		this.image3dCoverResId = card.image3dCoverResId;
-		this.image3dOpenResId = card.image3dOpenResId;
-		this.imageCoverResId = card.imageCoverResId;
-		this.imageInnerLeftResId = card.imageInnerLeftResId;
-		this.imageInnerRightResId = card.imageInnerRightResId;
+		this.image3dCoverPath = card.image3dCoverPath;
+		this.image3dOpenPath = card.image3dOpenPath;
+		this.imageCoverPath = card.imageCoverPath;
+		this.imageInnerLeftPath = card.imageInnerLeftPath;
+		this.imageInnerRightPath = card.imageInnerRightPath;
 		this.textColor = card.textColor;
 
 		this.sound = card.sound;
@@ -82,12 +93,12 @@ public class Card implements Parcelable
 		this.id = id;
 	}
 
-	public CardCategory getCategory()
+	public CategoryAssistant getCategory()
 	{
 		return category;
 	}
 
-	public void setCategory(CardCategory category)
+	public void setCategory(CategoryAssistant category)
 	{
 		this.category = category;
 	}
@@ -102,55 +113,55 @@ public class Card implements Parcelable
 		this.name = name;
 	}
 
-	public int getImage3dCoverResId()
-	{
-		return image3dCoverResId;
-	}
-
-	public void setImage3dCoverResId(int image3dCoverResId)
-	{
-		this.image3dCoverResId = image3dCoverResId;
-	}
-
-	public int getImage3dOpenResId()
-	{
-		return image3dOpenResId;
-	}
-
-	public void setImage3dOpenResId(int image3dOpenResId)
-	{
-		this.image3dOpenResId = image3dOpenResId;
-	}
-
-	public int getImageCoverResId()
-	{
-		return imageCoverResId;
-	}
-
-	public void setImageCoverResId(int imageCoverResId)
-	{
-		this.imageCoverResId = imageCoverResId;
-	}
-
-	public int getImageInnerLeftResId()
-	{
-		return imageInnerLeftResId;
-	}
-
-	public void setImageInnerLeftResId(int imageInnerLeftResId)
-	{
-		this.imageInnerLeftResId = imageInnerLeftResId;
-	}
-
-	public int getImageInnerRightResId()
-	{
-		return imageInnerRightResId;
-	}
-
-	public void setImageInnerRightResId(int imageInnerRightResId)
-	{
-		this.imageInnerRightResId = imageInnerRightResId;
-	}
+//	public int getImage3dCoverResId()
+//	{
+//		return image3dCoverResId;
+//	}
+//
+//	public void setImage3dCoverResId(int image3dCoverResId)
+//	{
+//		this.image3dCoverResId = image3dCoverResId;
+//	}
+//
+//	public int getImage3dOpenResId()
+//	{
+//		return image3dOpenResId;
+//	}
+//
+//	public void setImage3dOpenResId(int image3dOpenResId)
+//	{
+//		this.image3dOpenResId = image3dOpenResId;
+//	}
+//
+//	public int getImageCoverResId()
+//	{
+//		return imageCoverResId;
+//	}
+//
+//	public void setImageCoverResId(int imageCoverResId)
+//	{
+//		this.imageCoverResId = imageCoverResId;
+//	}
+//
+//	public int getImageInnerLeftResId()
+//	{
+//		return imageInnerLeftResId;
+//	}
+//
+//	public void setImageInnerLeftResId(int imageInnerLeftResId)
+//	{
+//		this.imageInnerLeftResId = imageInnerLeftResId;
+//	}
+//
+//	public int getImageInnerRightResId()
+//	{
+//		return imageInnerRightResId;
+//	}
+//
+//	public void setImageInnerRightResId(int imageInnerRightResId)
+//	{
+//		this.imageInnerRightResId = imageInnerRightResId;
+//	}
 
 	public Uri getSound()
 	{
@@ -214,20 +225,55 @@ public class Card implements Parcelable
 		this.textColor = color;
 	}
 
-	@Override
+//	@Override
+//	public String toString()
+//	{
+//		return "Card [id=" + id + ", category=" + category + ", name=" + name
+//				+ ", image3dCoverResId=" + image3dCoverResId + ", image3dOpenResId="
+//				+ image3dOpenResId + ", imageCoverResId=" + imageCoverResId
+//				+ ", imageInnerLeftResId=" + imageInnerLeftResId + ", imageInnerRightResId="
+//				+ imageInnerRightResId + ", textColor=" + textColor + ", sound=" + sound
+//				+ ", image=" + image + ", message=" + message + ", messageTextColor="
+//				+ messageTextColor + ", messageTextSizeType=" + messageTextSizeType
+//				+ ", signDraftImage=" + signDraftImage + ", signHandwriting=" + signHandwriting
+//				+ ", signPositionInfo=" + signPositionInfo + "]";
+//	}
 	public String toString()
 	{
-		return "Card [id=" + id + ", category=" + category + ", name=" + name
-				+ ", image3dCoverResId=" + image3dCoverResId + ", image3dOpenResId="
-				+ image3dOpenResId + ", imageCoverResId=" + imageCoverResId
-				+ ", imageInnerLeftResId=" + imageInnerLeftResId + ", imageInnerRightResId="
-				+ imageInnerRightResId + ", textColor=" + textColor + ", sound=" + sound
-				+ ", image=" + image + ", message=" + message + ", messageTextColor="
-				+ messageTextColor + ", messageTextSizeType=" + messageTextSizeType
-				+ ", signDraftImage=" + signDraftImage + ", signHandwriting=" + signHandwriting
-				+ ", signPositionInfo=" + signPositionInfo + "]";
-	}
 
+		StringBuilder result = new StringBuilder();
+		String newLine = System.getProperty("line.separator");
+
+		result.append(this.getClass().getName());
+		result.append(" Object {");
+		result.append(newLine);
+
+		// determine fields declared in this class only (no fields of
+		// superclass)
+		Field[] fields = this.getClass().getDeclaredFields();
+
+		// print field names paired with their values
+		for (Field field : fields)
+		{
+			result.append("  ");
+			try
+			{
+				result.append(field.getName());
+				result.append(": ");
+				// requires access to private field:
+				result.append(field.get(this));
+			}
+			catch (IllegalAccessException ex)
+			{
+				System.out.println(ex);
+			}
+			result.append(newLine);
+		}
+		result.append("}");
+
+		return result.toString();
+	}
+	
 	public int describeContents()
 	{
 		return 0;
@@ -236,13 +282,20 @@ public class Card implements Parcelable
 	public void writeToParcel(Parcel out, int flags)
 	{
 		out.writeInt(id);
-		out.writeString(category.name());
+		out.writeParcelable(category, flags);
 		out.writeString(name);
-		out.writeInt(image3dCoverResId);
-		out.writeInt(image3dOpenResId);
-		out.writeInt(imageCoverResId);
-		out.writeInt(imageInnerLeftResId);
-		out.writeInt(imageInnerRightResId);
+
+		out.writeString(image3dCoverPath);
+		out.writeString(image3dOpenPath);
+		out.writeString(imageCoverPath);
+		out.writeString(imageInnerLeftPath);
+		out.writeString(imageInnerRightPath);
+		
+//		out.writeInt(image3dCoverResId);
+//		out.writeInt(image3dOpenResId);
+//		out.writeInt(imageCoverResId);
+//		out.writeInt(imageInnerLeftResId);
+//		out.writeInt(imageInnerRightResId);
 		out.writeInt(textColor);
 
 		out.writeParcelable(sound, flags);
@@ -271,13 +324,22 @@ public class Card implements Parcelable
 	private Card(Parcel in)
 	{
 		id = in.readInt();
-		category = CardCategory.valueOf(in.readString());
+		ClassLoader categoryAssistantClazzLoader = CategoryAssistant.class.getClassLoader();
+		category = in.readParcelable(categoryAssistantClazzLoader);
 		name = in.readString();
-		image3dCoverResId = in.readInt();
-		image3dOpenResId = in.readInt();
-		imageCoverResId = in.readInt();
-		imageInnerLeftResId = in.readInt();
-		imageInnerRightResId = in.readInt();
+		
+		
+		this.image3dCoverPath = in.readString();
+		this.image3dOpenPath = in.readString();
+		this.imageCoverPath = in.readString();
+		this.imageInnerLeftPath = in.readString();
+		this.imageInnerRightPath = in.readString();
+		
+//		image3dCoverResId = in.readInt();
+//		image3dOpenResId = in.readInt();
+//		imageCoverResId = in.readInt();
+//		imageInnerLeftResId = in.readInt();
+//		imageInnerRightResId = in.readInt();
 		textColor = in.readInt();
 
 		ClassLoader uriClazzLoader = Uri.class.getClassLoader();
@@ -313,5 +375,65 @@ public class Card implements Parcelable
 	{
 	
 		this.signPositionInfo = signPositionInfo;
+	}
+
+	public String getImage3dCoverPath()
+	{
+	
+		return image3dCoverPath;
+	}
+
+	public void setImage3dCoverPath(String image3dCoverPath)
+	{
+	
+		this.image3dCoverPath = image3dCoverPath;
+	}
+
+	public String getImage3dOpenPath()
+	{
+	
+		return image3dOpenPath;
+	}
+
+	public void setImage3dOpenPath(String image3dOpenPath)
+	{
+	
+		this.image3dOpenPath = image3dOpenPath;
+	}
+
+	public String getImageCoverPath()
+	{
+	
+		return imageCoverPath;
+	}
+
+	public void setImageCoverPath(String imageCoverPath)
+	{
+	
+		this.imageCoverPath = imageCoverPath;
+	}
+
+	public String getImageInnerLeftPath()
+	{
+	
+		return imageInnerLeftPath;
+	}
+
+	public void setImageInnerLeftPath(String imageInnerLeftPath)
+	{
+	
+		this.imageInnerLeftPath = imageInnerLeftPath;
+	}
+
+	public String getImageInnerRightPath()
+	{
+	
+		return imageInnerRightPath;
+	}
+
+	public void setImageInnerRightPath(String imageInnerRightPath)
+	{
+	
+		this.imageInnerRightPath = imageInnerRightPath;
 	}
 }

@@ -16,19 +16,19 @@ public class Favorite extends ImageView
 	{
 		super(context, attrs);
 		this.setImageResource(R.drawable.menu_folder);
-		this.setOnClickListener(new OnClickListener()
-		{
-
-			@Override
-			public void onClick(View v)
-			{
-				Intent intent = new Intent(context, CardSelectorActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				intent.putExtra(CardSelectorActivity.EXTRA_KEY_CATEGORY, CardCategory.USER_FAVORITE);
-				context.startActivity(intent);
-			}
-
-		});
+//		this.setOnClickListener(new OnClickListener()
+//		{
+//
+//			@Override
+//			public void onClick(View v)
+//			{
+//				Intent intent = new Intent(context, CardSelectorActivity.class);
+//				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//				intent.putExtra(CardSelectorActivity.EXTRA_KEY_CATEGORY, CardCategory.USER_FAVORITE);
+//				context.startActivity(intent);
+//			}
+//
+//		});
 	}
 
 }

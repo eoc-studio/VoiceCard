@@ -865,6 +865,43 @@ public class HttpManager
 		getRecommendGsonRequset.setTag("getRecommend");
 		VolleySingleton.getInstance(context).getRequestQueue().add(getRecommendGsonRequset);
 	}
+	
+	
+	public void getCategory(Context context, GetCategoryListener getCategoryListener)
+	{
+
+		java.lang.reflect.Type typeSend = new com.google.gson.reflect.TypeToken<ArrayList<GsonCategory>>()
+		{
+		}.getType();
+
+		String uriGetCategory = "http://www.charliefind.com/api.php?op=card_cat";
+
+		Log.e(TAG, "uriGetCategory:" + uriGetCategory);
+		GsonListRequest<ArrayList<GsonCategory>> getCategoryGsonRequset = new GsonListRequest<ArrayList<GsonCategory>>(
+				Method.GET, uriGetCategory, typeSend,
+				createGetCategoryGsonReqSuccessListener(getCategoryListener),
+				createGetCategoryGsonReqErrorListener());
+		getCategoryGsonRequset.setTag("getCategory");
+		VolleySingleton.getInstance(context).getRequestQueue().add(getCategoryGsonRequset);
+	}
+	
+	public void getCard(Context context, GetCardListener getCardListener)
+	{
+
+		java.lang.reflect.Type typeSend = new com.google.gson.reflect.TypeToken<ArrayList<GsonCard>>()
+		{
+		}.getType();
+
+		String uriGetCard = "http://www.charliefind.com/api.php?op=card";
+
+		Log.e(TAG, "uriGetCard:" + uriGetCard);
+		GsonListRequest<ArrayList<GsonCard>> getCardGsonRequset = new GsonListRequest<ArrayList<GsonCard>>(
+				Method.GET, uriGetCard, typeSend,
+				createGetCardGsonReqSuccessListener(getCardListener),
+				createGetCardGsonReqErrorListener());
+		getCardGsonRequset.setTag("getCard");
+		VolleySingleton.getInstance(context).getRequestQueue().add(getCardGsonRequset);
+	}
 
 	public void uploadDIY(Context context, Uri diyUri, final UploadDiyListener uploadDiyListener)
 	{
@@ -966,6 +1003,41 @@ public class HttpManager
 
 	}
 
+	private Response.Listener<ArrayList<GsonCard>> createGetCardGsonReqSuccessListener(
+			final  GetCardListener getCardListener)
+	{
+
+		return new Response.Listener<ArrayList<GsonCard>>()
+		{
+			@Override
+			public void onResponse(ArrayList<GsonCard> response)
+			{
+
+				Log.e(TAG, "GsonCard response: " + response.toString());
+
+				if (getCardListener != null) getCardListener.onResult(true, response);
+			}
+		};
+	}
+	
+	private Response.Listener<ArrayList<GsonCategory>> createGetCategoryGsonReqSuccessListener(
+			final  GetCategoryListener getCategoryListener)
+	{
+
+		return new Response.Listener<ArrayList<GsonCategory>>()
+		{
+			@Override
+			public void onResponse(ArrayList<GsonCategory> response)
+			{
+
+				Log.e(TAG, "GsonCategory response: " + response.toString());
+
+				if (getCategoryListener != null) getCategoryListener.onResult(true, response);
+			}
+		};
+	}
+	
+	
 	private Response.Listener<ArrayList<GsonRecommend>> createGetRecommendGsonReqSuccessListener(
 			final GetRecommendListener getRecommendListener)
 	{
@@ -976,7 +1048,7 @@ public class HttpManager
 			public void onResponse(ArrayList<GsonRecommend> response)
 			{
 
-				Log.e(TAG, "GsonSend response: " + response.toString());
+				Log.e(TAG, "GsonRecommend response: " + response.toString());
 
 				if (getRecommendListener != null) getRecommendListener.onResult(true, response);
 			}
@@ -1018,6 +1090,36 @@ public class HttpManager
 
 	}
 
+	private Response.ErrorListener createGetCardGsonReqErrorListener()
+	{
+
+		return new Response.ErrorListener()
+		{
+			@Override
+			public void onErrorResponse(VolleyError error)
+			{
+
+				Log.e(TAG, "GsonCard error: " + error.toString());
+			}
+		};
+
+	}
+	
+	private Response.ErrorListener createGetCategoryGsonReqErrorListener()
+	{
+
+		return new Response.ErrorListener()
+		{
+			@Override
+			public void onErrorResponse(VolleyError error)
+			{
+
+				Log.e(TAG, "GsonCategory error: " + error.toString());
+			}
+		};
+
+	}
+	
 	private Response.ErrorListener createGetRecommendGsonReqErrorListener()
 	{
 
