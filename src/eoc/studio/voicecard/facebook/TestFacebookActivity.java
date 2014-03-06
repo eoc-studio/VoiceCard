@@ -152,7 +152,7 @@ public class TestFacebookActivity extends BaseActivity
                     File signfile = new File("/storage/sdcard1/Download/jordan.jpg");
                     Uri signUri = Uri.fromFile(signfile);
                     
-                    Card card = new Card(0, null, "Voice Card", 0, 0, 0, 0, 0, 0);
+                    Card card = new Card(1, null, "Voice Card", null, null, null, null, null, 8022614);
                     card.setImage(imgUri);
                     card.setSound(imgUri);
                     card.setMessage("Voice Card invite", 0, 0);
