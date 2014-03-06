@@ -10,7 +10,7 @@ public class UserInfo
     private JSONObject userJson;
     
     private String id = "", email = "", name = "", gender = "", birthday = "", link = "", locale = "", imgLink = "",
-            hometown = "", work = "", education = "";
+            hometown = "", work = "", title = "", education = "";
     private int timeZone = 0;
     
     public UserInfo(JSONObject userJson) 
@@ -26,6 +26,7 @@ public class UserInfo
         setImgLink(this.userJson);
         setHometown(this.userJson);
         setWork(this.userJson);
+        setTitle(this.userJson);
         setEducation(this.userJson);
         setTimezone(this.userJson);
     }
@@ -209,6 +210,25 @@ public class UserInfo
     public String getWork() 
     {
         return work;
+    }
+    
+    private void setTitle(JSONObject userJson) 
+    {
+        try 
+        {
+            title = userJson.getJSONArray(JSONTag.WORK).getJSONObject(0).getJSONObject(JSONTag.POSITION)
+                    .getString(JSONTag.NAME);
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            title = "";
+        }
+    }
+    
+    public String getTitle() 
+    {
+        return title;
     }
     
     private void setEducation(JSONObject userJson) 

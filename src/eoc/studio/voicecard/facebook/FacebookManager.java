@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -34,6 +36,7 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.Settings;
+import com.facebook.model.GraphUser;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 
@@ -41,6 +44,7 @@ import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.facebook.enetities.Photo;
 import eoc.studio.voicecard.facebook.enetities.Publish;
+import eoc.studio.voicecard.facebook.enetities.UserInfo;
 import eoc.studio.voicecard.facebook.utils.BundleTag;
 import eoc.studio.voicecard.facebook.utils.FacebookListener;
 import eoc.studio.voicecard.facebook.utils.JSONTag;
@@ -65,9 +69,10 @@ public class FacebookManager
 	private int actionType;
 	private FacebookListener facebookListener;
 	private Request.GraphUserListCallback friendListCallback;
-	private Request.GraphUserCallback userCallback;
+	private RequestGraphUserCallback userCallback;
 	private RequestAsyncTask requestAsyncTask;
 	private Card publishCard;
+	private Uri fileUri;
 	
 	private volatile static FacebookManager facebookManager;
 	
@@ -83,6 +88,7 @@ public class FacebookManager
 	    public static final int UPLOAD = 6;
 	    public static final int LOGOUT = 7;
 	    public static final int PUBLISH_USER_FEED = 8;
+	    public static final int PUBLISH_NEWS = 9;
 	}
 			
 	private class SessionStatusCallback implements Session.StatusCallback {        
@@ -257,7 +263,7 @@ public class FacebookManager
 		}
 	}
 
-	public void getUserProfile(Context context, Request.GraphUserCallback callback)
+	public void getUserProfile(Context context, RequestGraphUserCallback callback)
 	{
 	    Log.d(TAG, "getUserProfile");
 	    actionType = ManagerState.GET_USER_PROFILE;
@@ -276,7 +282,7 @@ public class FacebookManager
 	
 	private void sendUserInfoRequest() {
 	    Log.d(TAG, "sendUserInfoRequest");
-	    dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
+//	    dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
         Session session = Session.getActiveSession();
         Log.d(TAG, "access token is " + session.getAccessToken());
         if (session.isOpened()) {
@@ -295,7 +301,7 @@ public class FacebookManager
             requestAsyncTask = rb.executeAsync();
         } else {
             Log.d(TAG, "getUserProfile session is closed");
-            dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
+//            dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
         }
 	}
 
@@ -385,29 +391,13 @@ public class FacebookManager
     }
     
     public void publishNews(Context context, String sendId, Uri fileUri) {
-        dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
         this.context = context;
-        HttpManager httpManager = new HttpManager();
-        httpManager.init(context, "100007720118618"); // for test john_wang
+        this.fileUri = fileUri;
         publish = new Publish(sendId, Publish.DEFAULT_NAME, null, Publish.DEFAULT_CAPTION, Publish.DEFAULT_DESCRIPTION,
                 null);
-        httpManager.uploadDIY(context, fileUri, new UploadDiyListener()
-        {
-            @Override
-            public void onResult(Boolean isSuccess, String URL)
-            {
-                Log.e(TAG, "httpManager.uploadDIY() isSuccess:" + isSuccess + ",URL:" + URL);
-                dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
-                if (isSuccess) {
-                    publish.setImgLink(URL);
-                    publish.setLink(URL);
-                    publishTimeline(FacebookManager.this.context, publish);
-                } else {
-                    // show error
-                    showToast(URL);
-                }
-            }
-        });
+        managerState = ManagerState.PUBLISH_NEWS;
+        actionType = ManagerState.PUBLISH_NEWS;
+        login(context, new LoginListener());
     }
 		
 	public void publishTimeline(Context context, Publish publish)
@@ -665,6 +655,27 @@ public class FacebookManager
             }
         }
     }
+    
+    private void getNewsLinkfromServer() {
+        Log.d(TAG, "getNewsLinkfromServer()");
+        dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
+        HttpManager httpManager = new HttpManager();
+        httpManager.uploadDIY(context, fileUri, new UploadDiyListener() {
+            @Override
+            public void onResult(Boolean isSuccess, String URL) {
+                Log.e(TAG, "httpManager.uploadDIY() isSuccess:" + isSuccess + ",URL:" + URL);
+                dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
+                if (isSuccess) {
+                    publish.setImgLink(URL);
+                    publish.setLink(URL);
+                    publishTimeline(FacebookManager.this.context, publish);
+                } else {
+                    // show error
+                    showToast(URL);
+                }
+            }
+        });
+    }
 	    
     private class LoginListener implements FacebookListener
     {
@@ -672,9 +683,43 @@ public class FacebookManager
         public void onSuccess() 
         {
             Log.d(TAG, "Login onSucess ");
+            if (actionType != ManagerState.GET_USER_PROFILE) {
+                userCallback = new RequestGraphUserCallback();
+            }
+            sendUserInfoRequest();
+        }
+
+        @Override
+        public void onError(String errorMsg) 
+        {
+            Log.d(TAG, "Login onError actionType === " + actionType);
+            if (actionType != ManagerState.GET_USER_PROFILE) {
+                showToast(errorMsg);
+            } else {
+                userCallback.onCompleted(null, null);
+            }
+        }
+    }
+    
+    public class RequestGraphUserCallback implements Request.GraphUserCallback
+    {
+        @Override
+        public void onCompleted(GraphUser user, Response response)
+        {
+            if (user != null) {
+                JSONObject userJSON = user.getInnerJSONObject();
+                if(userJSON != null) {
+                    UserInfo userInfo = new UserInfo(userJSON);
+                    
+                    Log.d(TAG, "userInfo id is " + userInfo.getId());
+                    HttpManager httpManager = new HttpManager();
+                    httpManager.init(context, userInfo.getId());
+                }
+            }
+            dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
+            
             switch (actionType) {
             case ManagerState.GET_USER_PROFILE:
-                sendUserInfoRequest();
                 break;
             case ManagerState.GET_FRIEND:
                 sendFriendListRequest();
@@ -687,14 +732,10 @@ public class FacebookManager
             case ManagerState.PUBLISH_USER_FEED:
                 checkPublishPermission();
                 break;
+            case ManagerState.PUBLISH_NEWS:
+                getNewsLinkfromServer();
+                break;
             }
-        }
-
-        @Override
-        public void onError(String errorMsg) 
-        {
-            Log.d(TAG, "Login onError ");
-            showToast(errorMsg);
         }
     }
     

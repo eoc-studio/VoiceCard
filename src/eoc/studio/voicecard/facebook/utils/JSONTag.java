@@ -18,4 +18,5 @@ public class JSONTag
 	public static final String URL = "url";
 	public static final String EMPLOYER = "employer";
 	public static final String SCHOOL = "school";
+	public static final String POSITION = "position";
 }

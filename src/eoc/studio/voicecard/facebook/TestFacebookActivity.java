@@ -25,12 +25,13 @@ import com.facebook.model.GraphUser;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.Card;
-import eoc.studio.voicecard.card.database.CategoryAssistant;
+import eoc.studio.voicecard.facebook.FacebookManager.RequestGraphUserCallback;
 import eoc.studio.voicecard.facebook.enetities.FriendInfo;
 import eoc.studio.voicecard.facebook.enetities.Photo;
 import eoc.studio.voicecard.facebook.enetities.Publish;
 import eoc.studio.voicecard.facebook.enetities.UserInfo;
 import eoc.studio.voicecard.facebook.friends.SelectFriendActivity;
+import eoc.studio.voicecard.manager.HttpManager;
 import eoc.studio.voicecard.utils.ListUtility;
 
 public class TestFacebookActivity extends BaseActivity
@@ -111,7 +112,21 @@ public class TestFacebookActivity extends BaseActivity
             public void onClick(View v) {
                 if (facebookManager != null)
                 {
-                    facebookManager.getUserProfile(TestFacebookActivity.this, new RequestGraphUserCallback());
+                    facebookManager.getUserProfile(TestFacebookActivity.this, facebookManager.new RequestGraphUserCallback() {
+                        @Override
+                        public void onCompleted(GraphUser user, Response response) {
+                            if (user != null) {
+                                JSONObject userJSON = user.getInnerJSONObject();
+                                if(userJSON != null) {
+                                    UserInfo userInfo = new UserInfo(userJSON);
+                                    
+                                    Log.d(TAG, "userInfo id is " + userInfo.getId());
+                                }
+                            } else {
+                                Log.d(TAG, "userInfo id is null ");
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -136,7 +151,8 @@ public class TestFacebookActivity extends BaseActivity
                     
                     File signfile = new File("/storage/sdcard1/Download/jordan.jpg");
                     Uri signUri = Uri.fromFile(signfile);
-                    Card card = new Card(1, null, "Voice Card", null, null, null, null, null, 8022614);    
+                    
+                    Card card = new Card(0, null, "Voice Card", 0, 0, 0, 0, 0, 0);
                     card.setImage(imgUri);
                     card.setSound(imgUri);
                     card.setMessage("Voice Card invite", 0, 0);
@@ -229,21 +245,6 @@ public class TestFacebookActivity extends BaseActivity
             }
         });
 	}
-    
-    private class RequestGraphUserCallback implements Request.GraphUserCallback
-    {
-        @Override
-        public void onCompleted(GraphUser user, Response response)
-        {
-            if (user != null) {
-                JSONObject userJSON = user.getInnerJSONObject();
-                if(userJSON != null) {
-                    UserInfo userInfo = new UserInfo(userJSON);
-                }
-            }
-            facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
-        }
-    }
     
     private byte[] getPhoto() {
         Drawable drawable = getResources().getDrawable(R.drawable.dog);
