@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName;
 public class GsonSend
 {
 
+	@SerializedName("card_id")
+	private String cardID;
+	
 	@SerializedName("send_id")
 	private String sendID;
 
@@ -238,7 +241,20 @@ public class GsonSend
 		this.sendFromName = sendFromName;
 	}
 
+	public String getCardID()
+	{
+	
+		return cardID;
+	}
+
+	public void setCardID(String cardID)
+	{
+	
+		this.cardID = cardID; 
+	}
+
 }
+//card_id: "1"
 // send_id: "12"
 // send_from: "1118054263"
 // send_to: "0939918739"

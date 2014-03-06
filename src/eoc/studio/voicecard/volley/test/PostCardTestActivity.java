@@ -113,7 +113,7 @@ public class PostCardTestActivity extends Activity
 					cardDraft.getSoundUri(), cardDraft.getMessage(),
 					cardDraft.getSignDraftImageUri(),
 					String.valueOf(cardDraft.getMessageTextSizeType()),
-					String.valueOf(cardDraft.getMessageTextColor()), "thisCardName",
+					String.valueOf(cardDraft.getMessageTextColor()), "7",
 					new PostMailListener()
 					{
 

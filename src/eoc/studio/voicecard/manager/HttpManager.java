@@ -211,7 +211,7 @@ public class HttpManager
 
 	public void postMail(Context context, String sendTo, Uri imageUri, Uri speechUri,
 			String editTextMessage, Uri signatureUri, String fontSize, String fontColor,
-			String cardName, final PostMailListener postMailListener) throws Exception
+			String cardID, final PostMailListener postMailListener) throws Exception
 	{
 
 		isPostImageOk = false;
@@ -355,7 +355,7 @@ public class HttpManager
 		String uriMailPost = String.format("http://www.charliefind.com/api.php?op=mailbox_post");
 
 		HashMap<String, String> paramsFacebookMailPost = new HashMap<String, String>();
-
+		paramsFacebookMailPost.put("card_id", cardID);
 		paramsFacebookMailPost.put("send_from", facebookID);
 		paramsFacebookMailPost.put("send_to", sendTo);
 		paramsFacebookMailPost.put("subject", editTextBody);
@@ -422,7 +422,7 @@ public class HttpManager
 
 	public void postMailByList(Context context, ArrayList<String> sendToList, Uri imageUri,
 			Uri speechUri, String editTextMessage, Uri signatureUri, String fontSize,
-			String fontColor, String cardName, final PostMailListener postMailListener)
+			String fontColor, String cardID, final PostMailListener postMailListener)
 			throws Exception
 	{
 
@@ -623,6 +623,7 @@ public class HttpManager
 		{
 			HashMap<String, String> paramsFacebookMailPost = new HashMap<String, String>();
 
+			paramsFacebookMailPost.put("card_id", cardID);
 			paramsFacebookMailPost.put("send_from", facebookID);
 			paramsFacebookMailPost.put("send_to", sendToList.get(parserIndex));
 			paramsFacebookMailPost.put("subject", editTextBody);

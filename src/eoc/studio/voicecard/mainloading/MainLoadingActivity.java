@@ -652,7 +652,7 @@ public class MainLoadingActivity extends Activity
 														{
 															mailsAdapterData.create(
 															        facebookUserID,
-															        "card_id",
+															        mail.getCardID(),
 																	mail.getSendID(),
 																	mail.getSendFrom(),
 																	mail.getSendFromName(), // replace
