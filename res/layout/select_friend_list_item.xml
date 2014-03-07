@@ -18,6 +18,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/user_info_name_margin_left"
         android:layout_toRightOf="@+id/glb_selectfriend_list_item_header"
+        android:singleLine="true"
         android:gravity="center_vertical" />
 
     <ImageView

@@ -61,14 +61,14 @@ public class SelectFriendActivity extends BaseActivity {
         Log.d(TAG, "onCreate");
         findViews();
         getBundle();
+        facebookManager = FacebookManager.getInstance(SelectFriendActivity.this);
+        friendsAdapterData = new FriendsAdapterData(SelectFriendActivity.this);
+        getFriendsfromWeb();
     }
     
     @Override
     public void onResume() {
         super.onResume();
-        facebookManager = FacebookManager.getInstance(SelectFriendActivity.this);
-        friendsAdapterData = new FriendsAdapterData(SelectFriendActivity.this);
-        getFriendsfromWeb();
     }
     
     @Override

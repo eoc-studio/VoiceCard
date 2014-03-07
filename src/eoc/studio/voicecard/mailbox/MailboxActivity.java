@@ -22,6 +22,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.card.editor.CardSenderActivity;
 import eoc.studio.voicecard.facebook.enetities.FriendInfo;
 import eoc.studio.voicecard.menu.ClearAllMail;
 import eoc.studio.voicecard.menu.DeleteSelectedMail;
@@ -389,10 +390,11 @@ public class MailboxActivity extends BaseActivity
             downloadHandler.removeMessages(ListUtility.GET_THUMBNAIL);
             if (position < mails.size()) {
                 Log.d(TAG, "mail is " + mails.get(position).toString());
-                Intent mailIntent = new Intent();
+                Intent mailIntent = new Intent(MailboxActivity.this, CardSenderActivity.class);
                 Bundle mailBundle = new Bundle();
                 mailBundle.putParcelable(Mail.GET_MAIL, mails.get(position));
                 mailIntent.putExtras(mailBundle);
+//                startActivity(mailIntent);
             }
         }
     };
