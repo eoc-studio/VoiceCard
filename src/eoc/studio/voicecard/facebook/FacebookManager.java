@@ -593,8 +593,19 @@ public class FacebookManager
         }
         
         // when logout need to clear db's img for another user to login
+        HttpManager httpManager = new HttpManager();
+        String id = httpManager.getFacebookID();
+        Log.d(TAG, "logout id is " + id);
+        
         MailsAdapterData mailsAdapterData = new MailsAdapterData(context); 
         mailsAdapterData.open();
+	    
+        if (id != null) {
+            mailsAdapterData.updateImgfromOwerId(id, null);
+        } else {
+            Log.e(TAG, "logout id is null ");
+            mailsAdapterData.updateImgfromOwerId("1111", null); // for test
+        }
     }
 	
     private void showToast(String msg) {

@@ -406,6 +406,21 @@ public class MailsAdapterData
 			return false;
 		}
 	}
+	
+	public boolean updateImgfromOwerId(String owerId, byte[] img)
+    {
+
+        if (db.isOpen())
+        {
+            ContentValues args = new ContentValues();
+            args.put(KEY_IMG, img);
+            return db.update(DATABASE_TABLE, args, KEY_OWNER_ID + "=" + owerId, null) > 0;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 	/** Query single entry with title and date */
 	// For test
@@ -446,21 +461,5 @@ public class MailsAdapterData
 		{
 			return count;
 		}
-	}
-	
-	public void clearLastMailImgs(String ownerId) {
-	    if (db.isOpen())
-        {
-            Cursor cursor = db.query(true, DATABASE_TABLE, new String[] {KEY_IMG}, KEY_OWNER_ID + "=" + ownerId,
-                    null, null, null, null, null);
-            if (cursor != null)
-            {
-                cursor.moveToFirst();
-            }
-        }
-        else
-        {
-            Log.d(TAG, "To clear img error");
-        }
 	}
 }
