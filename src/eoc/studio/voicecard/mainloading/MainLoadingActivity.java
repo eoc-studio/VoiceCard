@@ -4,6 +4,10 @@ import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.database.CardAssistant;
 import eoc.studio.voicecard.card.database.CardDatabaseHelper;
 import eoc.studio.voicecard.card.database.CategoryAssistant;
+import eoc.studio.voicecard.facebook.FacebookManager;
+import eoc.studio.voicecard.facebook.TestFacebookActivity;
+import eoc.studio.voicecard.facebook.FacebookManager.RequestGraphUserCallback;
+import eoc.studio.voicecard.facebook.enetities.UserInfo;
 import eoc.studio.voicecard.facebook.utils.BundleTag;
 import eoc.studio.voicecard.facebook.utils.JSONTag;
 import eoc.studio.voicecard.facebook.utils.Permissions;
@@ -61,6 +65,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -137,6 +142,8 @@ public class MainLoadingActivity extends Activity
 
 	private DownlaodCardAysncTaskListener downlaodCardAysncTaskListener;
 
+	
+	private FacebookManager facebookManager;
 	Handler progressHandler = new Handler()
 	{
 		@Override
@@ -178,6 +185,36 @@ public class MainLoadingActivity extends Activity
 		progressWheel = (ProgressWheel) findViewById(R.id.act_main_loading_progresswheel_main);
 		progress = 0;
 
+//		facebookManager = FacebookManager.getInstance(MainLoadingActivity.this);
+//		
+//        if (facebookManager != null)
+//        {
+//            facebookManager.getUserProfile(MainLoadingActivity.this, facebookManager.new RequestGraphUserCallback() {
+//                @Override
+//                public void onCompleted(GraphUser user, Response response) {
+//                    if (user != null) {
+//                        JSONObject userJSON = user.getInnerJSONObject();
+//                        if(userJSON != null) {
+//                            UserInfo userInfo = new UserInfo(userJSON);
+//                            
+//                            Log.d(TAG, "userInfo id is " + userInfo.getId());
+//                            Log.d(TAG, "userInfo : " + userInfo.toString());
+//                        }
+//                        
+//                        if(response!=null){
+//                        	Log.d(TAG, "user is non-null,response is "+response);
+//                        }
+//                    } else {
+//                        Log.d(TAG, "userInfo id is null ");
+//                        
+//                        if(response!=null){
+//                        	Log.d(TAG, "user is null,response is "+response);
+//                        }
+//                    }
+//                }
+//            });
+//        }
+		
 		httpManager = new HttpManager();
 		startProgressWheel();
 		initMailDataBase();
@@ -314,8 +351,8 @@ public class MainLoadingActivity extends Activity
 
 				if (recommends != null && recommends.size() > 0)
 				{
-					Log.e(TAG, "recommends.get(0).getImg():" + recommends.get(0).getImg()
-							+ "recommends.get(0).getName():" + recommends.get(0).getName());
+//					Log.e(TAG, "recommends.get(0).getImg():" + recommends.get(0).getImg()
+//							+ "recommends.get(0).getName():" + recommends.get(0).getName());
 					recommendBitmapUrl = recommends.get(0).getImg();
 					recommendName = recommends.get(0).getName();
 					addProgressWheel(GET_RECOMMEND_PROGRESS);
@@ -401,6 +438,14 @@ public class MainLoadingActivity extends Activity
 		});
 	}
 
+	public String getMobile(){
+		TelephonyManager tm = (TelephonyManager) context
+				.getSystemService(Context.TELEPHONY_SERVICE);
+		Log.d(TAG, "getMobile" +tm.getLine1Number());
+		return  tm.getLine1Number();
+	}
+	
+	
 	public void openFacebookSession()
 	{
 
@@ -588,7 +633,7 @@ public class MainLoadingActivity extends Activity
 											getStringJsonObjectByCheck(userJSON, JSONTag.NAME),
 											getStringJsonObjectByCheck(userJSON, JSONTag.GENDER),
 											getEducation(userJSON), getWork(userJSON),
-											"this is dummy mobile");
+											getMobile());
 
 								}
 								catch (JSONException e)
@@ -753,18 +798,22 @@ public class MainLoadingActivity extends Activity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-
+		
 		super.onActivityResult(requestCode, resultCode, data);
 		Log.d(TAG, "onActivityResult() Result Code is - " + resultCode + "");
-		if (Session.getActiveSession() != null)
-		{
-			Session.getActiveSession().onActivityResult(MainLoadingActivity.this, requestCode,
-					resultCode, data);
-		}
-		else
-		{
-			// Session.openActiveSession(this, true, statusCallback);
-		}
+		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+
+//		super.onActivityResult(requestCode, resultCode, data);
+//		Log.d(TAG, "onActivityResult() Result Code is - " + resultCode + "");
+//		if (Session.getActiveSession() != null)
+//		{
+//			Session.getActiveSession().onActivityResult(MainLoadingActivity.this, requestCode,
+//					resultCode, data);
+//		}
+//		else
+//		{
+//			// Session.openActiveSession(this, true, statusCallback);
+//		}
 	}
 
 	public synchronized void addProgressWheel(int newProgress)
