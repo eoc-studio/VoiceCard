@@ -71,6 +71,7 @@ public class FacebookManager
 	private Request.GraphUserListCallback friendListCallback;
 	private RequestGraphUserCallback userCallback;
 	private RequestAsyncTask requestAsyncTask;
+	private InviteListener inviteListener;
 	private Card publishCard;
 	private Uri fileUri;
 	
@@ -486,12 +487,13 @@ public class FacebookManager
         requestAsyncTask = rb.executeAsync();
     }
     
-    public void inviteFriend(Context context, String message, Card publishCard) {
+    public void inviteFriend(Context context, String message, Card publishCard, InviteListener inviteListener) {
         Log.d(TAG, "inviteFriend invite all friend");
         managerState = ManagerState.INVITE;
         actionType = ManagerState.INVITE;
         this.context = context;
         this.publishCard = publishCard;
+        this.inviteListener = inviteListener;
         Bundle params = new Bundle();
         if (message != null) {
             params.putString(BundleTag.MESSAGE, message);
@@ -565,8 +567,11 @@ public class FacebookManager
         Session session = Session.getActiveSession();
         if (session.isOpened()) {
             if (inviteBundle != null && context != null) {
+                if (inviteListener == null) {
+                    inviteListener = new InviteListener();
+                }
                 final WebDialog requestsDialog = new WebDialog.RequestsDialogBuilder(context,
-                        Session.getActiveSession(), inviteBundle).setOnCompleteListener(new InviteListener()).build();
+                        Session.getActiveSession(), inviteBundle).setOnCompleteListener(inviteListener).build();
                 Window dialogWindow = requestsDialog.getWindow();
                 dialogWindow.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                         WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -605,7 +610,7 @@ public class FacebookManager
         return false;
     }
     
-    private ArrayList<String> fetchInvitedFriends(Bundle values)
+    public ArrayList<String> fetchInvitedFriends(Bundle values)
     {
         ArrayList<String> friends = new ArrayList<String>();
 
@@ -628,7 +633,7 @@ public class FacebookManager
         return friends;
     }
     
-    private void sendCardtoServer(ArrayList<String> friendList) {
+    public void sendCardtoServer(ArrayList<String> friendList) {
         if (friendList != null) {
             HttpManager httpManager = new HttpManager();
 
@@ -788,7 +793,7 @@ public class FacebookManager
         }
     }
     
-    private class InviteListener implements OnCompleteListener
+    public class InviteListener implements OnCompleteListener
     {
         @Override
         public void onComplete(Bundle values, FacebookException error) {

@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.facebook.FacebookException;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -158,7 +159,18 @@ public class TestFacebookActivity extends BaseActivity
                     card.setMessage("Voice Card invite", 0, 0);
                     card.setSignDraftImage(signUri);
                     card.setName("Test");
-                    facebookManager.inviteFriend(TestFacebookActivity.this, null, card);
+                    facebookManager.inviteFriend(TestFacebookActivity.this, null, card, facebookManager.new InviteListener() {
+                        @Override
+                        public void onComplete(Bundle values, FacebookException error) {
+                            if (error != null) {
+                                Log.d(TAG, "Invite had error is " + error.getMessage());
+                            } else {
+                                Log.d(TAG, "Invite no error ");
+                                Log.d(TAG, "values " + values) ;
+                                facebookManager.sendCardtoServer(facebookManager.fetchInvitedFriends(values)); 
+                            }
+                        }
+                    });
 				}
 			}
 		});
