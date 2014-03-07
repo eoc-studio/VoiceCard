@@ -44,9 +44,13 @@ public class MailboxActivity extends BaseActivity
 	private int currentListSize = 0;
 
 	private int lastVisiblePosition = 0;
+	
+	private boolean isSelectedAll = false;
 
 	// Views
 	private TextView mailInfo, errorMsg;
+	
+	private Button selectAll;
 
 	private ListView showMails;
 
@@ -71,6 +75,7 @@ public class MailboxActivity extends BaseActivity
 	{
 
 		super.onResume();
+		isSelectedAll = false;
 		showMailInfo(0);
 		
         LoadDbThread loadDbThread = new LoadDbThread();
@@ -121,7 +126,7 @@ public class MailboxActivity extends BaseActivity
 		showMails = (ListView) findViewById(R.id.act_mailbox_lv);
 		errorMsg = (TextView) findViewById(R.id.act_mailbox_tv_errorMsg);
 
-		Button selectAll = (Button) findViewById(R.id.act_mailbox_bt_title_bar);
+		selectAll = (Button) findViewById(R.id.act_mailbox_bt_title_bar);
 
 		selectAll.setOnClickListener(new View.OnClickListener()
 		{
@@ -131,7 +136,15 @@ public class MailboxActivity extends BaseActivity
 
 				if (mailAdapterView != null)
 				{
-					mailAdapterView.selectAll();
+				    if (!isSelectedAll) {
+				        selectAll.setText(getResources().getString(R.string.deselect_all));
+				        mailAdapterView.selectAll();
+				        isSelectedAll = true;
+				    } else {
+				        selectAll.setText(getResources().getString(R.string.select_all));
+				        mailAdapterView.deselectAll();
+				        isSelectedAll = false;
+				    }
 				}
 			}
 		});
@@ -278,6 +291,11 @@ public class MailboxActivity extends BaseActivity
 	{
 
 		mailInfo.setText(getResources().getString(R.string.select_mails, count));
+	}
+	
+	public void setButtonString(boolean isSelectedAll, int resId) {
+	    selectAll.setText(getResources().getString(resId));
+	    this.isSelectedAll = isSelectedAll;
 	}
 
 	private void getMailsImgfromDB()

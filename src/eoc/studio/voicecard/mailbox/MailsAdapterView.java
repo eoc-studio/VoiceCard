@@ -136,14 +136,24 @@ public class MailsAdapterView extends BaseAdapter {
                     viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_checkbox));
                     mails.get(position).setCheckState(NOCHECKED);
                     selecedMail.remove(mails.get(position).getRowId());
-                    count--;
+                    if (count > 0) {
+                        count--;
+                    }
                     ((MailboxActivity)context).showMailInfo(count);
+                    ((MailboxActivity)context).setButtonString(false, R.string.select_all);
                 } else {
                     viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_checkbox_check));
                     mails.get(position).setCheckState(CHECKED);
                     selecedMail.add(mails.get(position).getRowId());
-                    count++;
+                    if (count < mails.size()) {
+                        count++;
+                    }
+                    
                     ((MailboxActivity)context).showMailInfo(count);
+                    
+                    if (count == mails.size()) {
+                        ((MailboxActivity)context).setButtonString(true, R.string.deselect_all);
+                    }
                 }
                 MailsAdapterView.this.notifyDataSetChanged();
             }
@@ -157,6 +167,18 @@ public class MailsAdapterView extends BaseAdapter {
         }
         MailsAdapterView.this.notifyDataSetChanged();
         count = mails.size();
+
+        
+        ((MailboxActivity)context).showMailInfo(count);
+    }
+    
+    public void deselectAll() {
+        for(Mail mail:mails) {
+            mail.setCheckState(NOCHECKED);
+        }
+        selecedMail.clear();
+        MailsAdapterView.this.notifyDataSetChanged();
+        count = 0;
         
         ((MailboxActivity)context).showMailInfo(count);
     }

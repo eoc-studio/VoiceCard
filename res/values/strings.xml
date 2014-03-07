@@ -69,6 +69,7 @@
     <!-- About Mailbox -->
     <string name="select_mails">Already select %s mails</string>
     <string name="select_all">Select all</string>
+    <string name="deselect_all">Cancel all</string>
     <string name="mailbox_errorMsg">No content</string>
 
     <!-- Audio Recorder -->
