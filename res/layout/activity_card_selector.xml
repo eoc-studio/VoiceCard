@@ -1,93 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+<RelativeLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/act_card_selector_iv_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/header_bg1" >
+		<RelativeLayout
+				android:id="@+id/act_card_selector_iv_header"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/header_bg1">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/title_select_card" />
+				<ImageView
+						android:id="@+id/act_card_selector_iv_title"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_centerInParent="true"
+						android:src="@drawable/title_select_card" />
 
-        <ImageView
-            android:id="@+id/act_card_selector_iv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dip"
-            android:src="@drawable/icon_ar1_left" />
-    </RelativeLayout>
+				<ImageView
+						android:id="@+id/act_card_selector_iv_back"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_alignParentLeft="true"
+						android:layout_centerVertical="true"
+						android:layout_marginLeft="10dip"
+						android:src="@drawable/icon_ar1_left" />
+		</RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/act_card_select_rlyt_bubble"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/act_card_selector_iv_header"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/bubble"
-        android:gravity="center" >
+		<RelativeLayout
+				android:id="@+id/act_card_select_rlyt_bubble"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/act_card_selector_iv_header"
+				android:layout_centerHorizontal="true"
+				android:background="@drawable/bubble"
+				android:gravity="center">
 
-        <TextView
-            android:id="@+id/act_card_select_tv_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/dark_wooden"
-            android:translationY="-8dip" />
-    </RelativeLayout>
+				<TextView
+						android:id="@+id/act_card_select_tv_name"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textColor="@color/dark_wooden"
+						android:translationY="-8dip" />
+		</RelativeLayout>
 
-    <Gallery
-        android:id="@+id/act_card_selector_gl_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/act_card_selector_iv_footer_bg"
-        android:layout_below="@id/act_card_select_rlyt_bubble"
-        android:cacheColorHint="@android:color/transparent"
-        android:listSelector="@android:color/transparent" />
+		<Gallery
+				android:id="@+id/act_card_selector_gl_list"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_above="@+id/act_card_selector_iv_footer_bg"
+				android:layout_below="@id/act_card_select_rlyt_bubble"
+				android:cacheColorHint="@android:color/transparent"
+				android:listSelector="@android:color/transparent" />
+		<ImageView
+				android:id="@+id/act_card_selector_iv_empty"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_above="@+id/act_card_selector_iv_footer_bg"
+				android:layout_below="@id/act_card_select_rlyt_bubble"
+				android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/act_card_selector_iv_footer_bg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/menu_bg" />
 
-    <RelativeLayout
-        android:id="@+id/act_card_selector_rlyt_menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dip" >
+		<ImageView
+				android:id="@+id/act_card_selector_iv_footer_bg"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:background="@drawable/menu_bg" />
 
-        <View
-            android:id="@+id/act_card_selector_v_menu_divider"
-            android:layout_width="1dip"
-            android:layout_height="40dip"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
-            android:background="@color/white" />
+		<RelativeLayout
+				android:id="@+id/act_card_selector_rlyt_menu"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:layout_centerHorizontal="true"
+				android:layout_marginBottom="10dip">
 
-        <eoc.studio.voicecard.menu.Index
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/act_card_selector_v_menu_divider" />
+				<View
+						android:id="@+id/act_card_selector_v_menu_divider"
+						android:layout_width="1dip"
+						android:layout_height="40dip"
+						android:layout_centerInParent="true"
+						android:layout_marginLeft="20dip"
+						android:layout_marginRight="20dip"
+						android:background="@color/white" />
 
-        <eoc.studio.voicecard.menu.AddToFavorite
-            android:id="@+id/act_card_selector_adf_add_to_favorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/act_card_selector_v_menu_divider" />
-    </RelativeLayout>
+				<eoc.studio.voicecard.menu.Index
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_centerVertical="true"
+						android:layout_toLeftOf="@id/act_card_selector_v_menu_divider" />
+
+				<eoc.studio.voicecard.menu.AddToFavorite
+						android:id="@+id/act_card_selector_adf_add_to_favorite"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_centerVertical="true"
+						android:layout_toRightOf="@id/act_card_selector_v_menu_divider" />
+		</RelativeLayout>
 
 </RelativeLayout>

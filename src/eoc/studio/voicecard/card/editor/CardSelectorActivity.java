@@ -40,12 +40,19 @@ public class CardSelectorActivity extends BaseActivity
 
 	private static final String TAG = "CardSelector";
 
+	private static Boolean isFavorite = false;
+
 	// private CardCategory category;
 	private CategoryAssistant category;
 
 	private Card currentCenteredCard;
 
 	private Gallery list;
+
+	private ImageView empty;
+
+	private ImageView title;
+
 	private ImageView back;
 	private TextView centerCardName;
 	private AddToFavorite addToFavorite;
@@ -98,6 +105,10 @@ public class CardSelectorActivity extends BaseActivity
 
 		Intent intent = getIntent();
 		category = (CategoryAssistant) intent.getParcelableExtra(EXTRA_KEY_CATEGORY);
+
+		isFavorite = (category.getCategoryID() == INT_FAVORITE) ? true : false;
+
+		Log.d(TAG, "isFavorite: " + isFavorite);
 		Log.d(TAG,
 				"list card for category id: " + category.getCategoryID() + ",name: "
 						+ category.getCategoryName());
@@ -106,8 +117,10 @@ public class CardSelectorActivity extends BaseActivity
 
 	private void initLayout()
 	{
+
 		setContentView(R.layout.activity_card_selector);
 		findViews();
+		updateByIsFavorite();
 		initList();
 		setListener();
 	}
@@ -168,10 +181,29 @@ public class CardSelectorActivity extends BaseActivity
 
 	private void findViews()
 	{
+
+		title = (ImageView) findViewById(R.id.act_card_selector_iv_title);
 		back = (ImageView) findViewById(R.id.act_card_selector_iv_back);
 		list = (Gallery) findViewById(R.id.act_card_selector_gl_list);
+		empty = (ImageView) findViewById(R.id.act_card_selector_iv_empty);
 		centerCardName = (TextView) findViewById(R.id.act_card_select_tv_name);
 		addToFavorite = (AddToFavorite) findViewById(R.id.act_card_selector_adf_add_to_favorite);
+	}
+
+	private void updateByIsFavorite()
+	{
+
+		if (isFavorite)
+		{
+			title.setImageResource(R.drawable.title_collection);
+			addToFavorite.setImageResource(R.drawable.menu_remove_col);
+		}
+		else
+		{
+			title.setImageResource(R.drawable.title_select_card);
+			addToFavorite.setImageResource(R.drawable.menu_collect);
+		}
+
 	}
 
 	private void initList()
@@ -201,14 +233,19 @@ public class CardSelectorActivity extends BaseActivity
 					cardDatabaseHelper.getSystemDPI(context));
 		}
 
-		for (int index = 0; index < cardAssistantList.size(); index++)
+		if (cardAssistantList != null)
 		{
-			cards.add(new Card(cardAssistantList.get(index).getCardID(), category,
-					cardAssistantList.get(index).getCardName(), cardAssistantList.get(index)
-							.getCloseLocalPath(), cardAssistantList.get(index).getOpenLocalPath(),
-					cardAssistantList.get(index).getCoverLocalPath(), cardAssistantList.get(index)
-							.getLeftLocalPath(), cardAssistantList.get(index).getRightLocalPath(),
-					cardAssistantList.get(index).getCardFontColor()));
+			for (int index = 0; index < cardAssistantList.size(); index++)
+			{
+				cards.add(new Card(cardAssistantList.get(index).getCardID(), category,
+						cardAssistantList.get(index).getCardName(), cardAssistantList.get(index)
+								.getCloseLocalPath(), cardAssistantList.get(index)
+								.getOpenLocalPath(), cardAssistantList.get(index)
+								.getCoverLocalPath(), cardAssistantList.get(index)
+								.getLeftLocalPath(), cardAssistantList.get(index)
+								.getRightLocalPath(), cardAssistantList.get(index)
+								.getCardFontColor()));
+			}
 		}
 		return cards;
 
@@ -217,12 +254,41 @@ public class CardSelectorActivity extends BaseActivity
 	private void addToFavorite(Card card)
 	{
 
-		Log.d(TAG, "add " + card.getId() + " to favorite");
-		boolean isOK = cardDatabaseHelper.setFavoriteCardByCardID(card.getId());
-		if (isOK)
+		if (isFavorite)
 		{
-			Log.d(TAG, "add " + card.getName() + " to favorite successful!");
-			Toast.makeText(context, "add " + card.getName() + " to favorite successful!", Toast.LENGTH_LONG).show();
+			Log.d(TAG, "remove " + card.getId() + " from favorite");
+			boolean isOK = cardDatabaseHelper.setNonFavoriteCardByCardID(card.getId());
+			if (isOK)
+			{
+				List<Card> cards = getCartList(category);
+				Log.d(TAG, "get " + cards.size() + " cards from data provider");
+				if (cards.size() == 0)
+				{
+					list.setEmptyView(empty);
+					list.setAdapter(null);
+
+					centerCardName.setText("");
+					centerCardName.invalidate();
+				}
+				else
+				{
+					CardAdapter adapter = new CardAdapter(cards);
+					list.setAdapter(adapter);
+
+				}
+				list.invalidate();
+			}
+		}
+		else
+		{
+			Log.d(TAG, "add " + card.getId() + " to favorite");
+			boolean isOK = cardDatabaseHelper.setFavoriteCardByCardID(card.getId());
+			if (isOK)
+			{
+				Log.d(TAG, "add " + card.getName() + " to favorite successful!");
+				Toast.makeText(context, "add " + card.getName() + " to favorite successful!",
+						Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 

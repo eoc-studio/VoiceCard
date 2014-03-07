@@ -316,6 +316,22 @@ public class CardDatabaseHelper
 		}
 
 	}
+	
+	public Boolean setNonFavoriteCardByCardID(int cardID)
+	{
+
+		if (db.isOpen())
+		{
+			ContentValues args = new ContentValues();
+			args.put(CARD_FAVORITE_ENABLE, 0);
+			return db.update(DATABASE_TABLE_CARD, args, CARD_ID + "=" + cardID, null) > 0;
+		}
+		else
+		{
+			return false;
+		}
+
+	}
 
 	public Card getCardByCardID(int cardID, int dpi)
 	{
@@ -661,6 +677,16 @@ public class CardDatabaseHelper
 				cursor.moveToFirst();
 			}
 
+			if(cursor.getCount() == 0)
+			{
+				if (cursor != null)
+				{
+					cursor.close();
+				}
+				return null;
+			}
+			
+			
 			do
 			{
 				CardAssistant cardAssistant = new CardAssistant();

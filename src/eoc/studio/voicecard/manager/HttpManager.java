@@ -148,19 +148,22 @@ public class HttpManager
 		paramsFacebookUpdate.put("auth", hash_auth);
 		paramsFacebookUpdate.put("fb_id", facebookID);
 
-		if (user.getBirthday() != null) paramsFacebookUpdate.put("birthDay", user.getBirthday());
-		if (user.getImg() != null) paramsFacebookUpdate.put("img", user.getImg());
-		if (user.getLocale() != null) paramsFacebookUpdate.put("locale", user.getLocale());
-		if (user.getLink() != null) paramsFacebookUpdate.put("link", user.getLink());
-		if (user.getCountry() != null) paramsFacebookUpdate.put("country", user.getCountry());
-		if (user.getTimezone() != null) paramsFacebookUpdate.put("timezone", user.getTimezone());
-		if (user.getTitle() != null) paramsFacebookUpdate.put("title", user.getTitle());
-		if (user.getEmail() != null) paramsFacebookUpdate.put("email", user.getEmail());
-		if (user.getName() != null) paramsFacebookUpdate.put("name", user.getName());
-		if (user.getEdu() != null) paramsFacebookUpdate.put("edu", user.getEdu());
-		if (user.getGender() != null) paramsFacebookUpdate.put("gender", user.getGender());
-		if (user.getIndustry() != null) paramsFacebookUpdate.put("industry", user.getIndustry());
-		if (user.getMobile() != null) paramsFacebookUpdate.put("mobile", user.getMobile());
+		paramsFacebookUpdate
+				.put("birthDay", (user.getBirthday() != null) ? user.getBirthday() : "");
+		paramsFacebookUpdate.put("img", (user.getImg() != null) ? user.getImg() : "");
+		paramsFacebookUpdate.put("locale", (user.getLocale() != null) ? user.getLocale() : "");
+		paramsFacebookUpdate.put("link", (user.getLink() != null) ? user.getLink() : "");
+		paramsFacebookUpdate.put("country", (user.getCountry() != null) ? user.getCountry() : "");
+		paramsFacebookUpdate
+				.put("timezone", (user.getTimezone() != null) ? user.getTimezone() : "");
+		paramsFacebookUpdate.put("title", (user.getTitle() != null) ? user.getTitle() : "");
+		paramsFacebookUpdate.put("email", (user.getEmail() != null) ? user.getEmail() : "");
+		paramsFacebookUpdate.put("name", (user.getName() != null) ? user.getName() : "");
+		paramsFacebookUpdate.put("edu", (user.getEdu() != null) ? user.getEdu() : "");
+		paramsFacebookUpdate.put("gender", (user.getGender() != null) ? user.getGender() : "");
+		paramsFacebookUpdate
+				.put("industry", (user.getIndustry() != null) ? user.getIndustry() : "");
+		paramsFacebookUpdate.put("mobile", (user.getMobile() != null) ? user.getMobile() : "");
 
 		Log.e(TAG, "fascebookLogin() uri_facebook_update" + uriFacebookUpdate);
 		JsonObjectRequest req = new JsonObjectRequest(uriFacebookUpdate, new JSONObject(
