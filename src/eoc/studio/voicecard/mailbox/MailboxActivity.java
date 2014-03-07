@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,12 +14,15 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView.OnItemClickListener;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.facebook.enetities.FriendInfo;
 import eoc.studio.voicecard.menu.ClearAllMail;
 import eoc.studio.voicecard.menu.DeleteSelectedMail;
 import eoc.studio.voicecard.utils.ListUtility;
@@ -158,65 +162,53 @@ public class MailboxActivity extends BaseActivity
 		});
 
 		showMails.setOnScrollListener(listScrollListener);
+		showMails.setOnItemClickListener(itemClickListener);
 	}
 
-	private boolean loadDb()
-	{
-		mails = new ArrayList<Mail>();
+    private boolean loadDb() {
+        mails = new ArrayList<Mail>();
 
-        String rowId, cardId, ownerId, sendId, sendFrom, sendFromName, sendTo, subject, body, fontSize, fontColor, imgLink, speech, sign, sendTime;
-		int checkState = 0, newState;
-		byte[] img;
+        String rowId, cardId, ownerId, sendId, sendFrom, sendFromName, senderImgLink, sendTo, subject, body, fontSize, fontColor, imgLink, speech, sign, sendTime;
+        int checkState = 0, newState;
+        byte[] img;
 
-		Cursor cursor = mailsAdapterData.getAll();
-		if (cursor != null)
-		{
-			int count = cursor.getCount();
-			Log.d(TAG, "cursor size is " + count);
-			if (count > 0)
-			{
-				while (cursor.moveToNext())
-				{
-					rowId = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_ROW_ID));
-					cardId = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_CARD_ID));
-					ownerId = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_OWNER_ID));
-					sendId = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SEND_ID));
-					sendFrom = cursor.getString(cursor
-							.getColumnIndex(MailsAdapterData.KEY_SEND_FROM));
-					sendFromName = cursor.getString(cursor
-							.getColumnIndex(MailsAdapterData.KEY_SEND_FROM_NAME));
-					sendTo = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SEND_TO));
-					subject = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SUBJECT));
-					body = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_BODY));
-					fontSize = cursor.getString(cursor
-							.getColumnIndex(MailsAdapterData.KEY_FONT_SIZE));
-					fontColor = cursor.getString(cursor
-							.getColumnIndex(MailsAdapterData.KEY_FONT_COLOR));
-					imgLink = cursor
-							.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SEND_FROM_LINK));
-					img = cursor.getBlob(cursor.getColumnIndex(MailsAdapterData.KEY_IMG));
-					speech = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SPEECH));
-					sign = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SIGN));
-					sendTime = cursor.getString(cursor
-							.getColumnIndex(MailsAdapterData.KEY_SEND_TIME));
-					newState = cursor.getInt(cursor.getColumnIndex(MailsAdapterData.KEY_NEW_STATE));
+        Cursor cursor = mailsAdapterData.getAll();
+        if (cursor != null) {
+            int count = cursor.getCount();
+            Log.d(TAG, "cursor size is " + count);
+            if (count > 0) {
+                while (cursor.moveToNext()) {
+                    rowId = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_ROW_ID));
+                    cardId = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_CARD_ID));
+                    ownerId = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_OWNER_ID));
+                    sendId = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SEND_ID));
+                    sendFrom = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SEND_FROM));
+                    sendFromName = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SEND_FROM_NAME));
+                    senderImgLink = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SEND_FROM_LINK));
+                    sendTo = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SEND_TO));
+                    subject = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SUBJECT));
+                    body = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_BODY));
+                    fontSize = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_FONT_SIZE));
+                    fontColor = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_FONT_COLOR));
+                    imgLink = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_IMG_LINK));
+                    img = cursor.getBlob(cursor.getColumnIndex(MailsAdapterData.KEY_IMG));
+                    speech = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SPEECH));
+                    sign = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SIGN));
+                    sendTime = cursor.getString(cursor.getColumnIndex(MailsAdapterData.KEY_SEND_TIME));
+                    newState = cursor.getInt(cursor.getColumnIndex(MailsAdapterData.KEY_NEW_STATE));
 
-					mails.add(new Mail(rowId, cardId, ownerId, sendId, sendFrom, sendFromName, sendTo, subject,
-							body, fontSize, fontColor, imgLink, img, speech, sign, sendTime,
-							checkState, newState));
-				}
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
-	}
+                    mails.add(new Mail(rowId, cardId, ownerId, sendId, sendFrom, sendFromName, senderImgLink, sendTo,
+                            subject, body, fontSize, fontColor, imgLink, img, speech, sign, sendTime, checkState,
+                            newState));
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
 	private void updateView(boolean isEmpty)
 	{
@@ -388,6 +380,22 @@ public class MailboxActivity extends BaseActivity
 			}
 		}
 	};
+	
+    private OnItemClickListener itemClickListener = new OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Log.d(TAG, "This position is " + position);
+            mailAdapterView.setInterrupt(true);
+            downloadHandler.removeMessages(ListUtility.GET_THUMBNAIL);
+            if (position < mails.size()) {
+                Log.d(TAG, "mail is " + mails.get(position).toString());
+                Intent mailIntent = new Intent();
+                Bundle mailBundle = new Bundle();
+                mailBundle.putParcelable(Mail.GET_MAIL, mails.get(position));
+                mailIntent.putExtras(mailBundle);
+            }
+        }
+    };
 
 	private class LoadDbThread extends Thread
 	{

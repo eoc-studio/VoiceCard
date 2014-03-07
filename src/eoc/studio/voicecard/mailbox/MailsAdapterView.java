@@ -98,7 +98,7 @@ public class MailsAdapterView extends BaseAdapter {
             }
 
             //itemImg
-            byte[] img = mails.get(position).getImg();
+            byte[] img = mails.get(position).getSenderImg();
             if (img != null) {
                 viewTag.itemImg.setBackgroundDrawable(new BitmapDrawable(context.getResources(), BitmapFactory
                         .decodeByteArray(img, 0, img.length)));
@@ -192,7 +192,7 @@ public class MailsAdapterView extends BaseAdapter {
         public void handleMessage(Message msg) {
             if (msg.what < mails.size()) {
                 Log.d(TAG, "showImgHandler === msg.what === " + msg.what);
-                if (mails.get(msg.what).getImg() == null) {
+                if (mails.get(msg.what).getSenderImg() == null) {
                     Log.d(TAG, "mails is null");
                     if (showMails.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
                         viewTag = (ViewTag) showMails.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
@@ -203,7 +203,7 @@ public class MailsAdapterView extends BaseAdapter {
                     Log.d(TAG, "mails not null");
                     if (showMails.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
                         viewTag = (ViewTag) showMails.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
-                        byte[] img = mails.get(msg.what).getImg();
+                        byte[] img = mails.get(msg.what).getSenderImg();
                         viewTag.itemImg.setBackgroundDrawable(new BitmapDrawable(context.getResources(), BitmapFactory
                                 .decodeByteArray(img, 0, img.length)));
                     } else {
@@ -245,7 +245,7 @@ public class MailsAdapterView extends BaseAdapter {
 
         @Override
         public void run() {
-            Log.d(TAG, "friendList size === " + mails.size());
+            Log.d(TAG, "mails size === " + mails.size());
             Log.d(TAG, "startPosition === " + startPosition);
             Log.d(TAG, "endPosition === " + endPosition);
             for (int i = startPosition; i < endPosition; i++) {
@@ -256,13 +256,13 @@ public class MailsAdapterView extends BaseAdapter {
                     int position = i - startPosition;
                     if (position < mails.size()) {
                         Mail mail = mails.get(position);
-                        byte[] mailImg = mail.getImg();
+                        byte[] mailImg = mail.getSenderImg();
 
                         if (mailImg == null) {
-                            mailImg = WebImageUtility.getWebImage(mail.getImgLink());
+                            mailImg = WebImageUtility.getWebImage(mail.getSenderImgLink());
                             mailsAdapterData.updateImg(mail.getRowId(), mailImg);
                             if (position < mails.size())
-                                mails.get(position).setImg(mailImg);
+                                mails.get(position).setSenderImg(mailImg);
                         }
                         showImgHandler.sendMessage(showImgHandler.obtainMessage(i));
                     } else {
