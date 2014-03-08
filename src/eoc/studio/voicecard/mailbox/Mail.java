@@ -151,10 +151,6 @@ public class Mail implements Parcelable {
         this.fontColor = in.readString();
         this.imgLink = in.readString();
         
-//        if (in.readInt() > 0) {
-/*            senderImg = new byte[in.readInt()]; 
-            in.readByteArray(senderImg);*/
-//        }
         this.speech = in.readString();
         this.sign = in.readString();
         this.sendTime = in.readString();
@@ -183,10 +179,7 @@ public class Mail implements Parcelable {
         dest.writeString(fontSize);
         dest.writeString(fontColor);
         dest.writeString(imgLink);
-//        if (senderImg != null) {
-/*            dest.writeInt(senderImg.length); 
-            dest.writeByteArray(senderImg);*/
-//        }
+
         dest.writeString(speech);
         dest.writeString(sign);
         dest.writeInt(checkState);

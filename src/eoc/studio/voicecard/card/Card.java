@@ -478,7 +478,7 @@ public class Card implements Parcelable
 		{
 			Uri img = Uri.parse(mailImageLink);
 			img = FileUtility.downloadToLocal(img, new File(context.getFilesDir(), fileName
-					+ ".png"));
+					+ "_img.png"));
 			card.setImage(img);
 		}
 		if (mailSoundLink != null)
@@ -492,7 +492,7 @@ public class Card implements Parcelable
 		{
 			Uri sign = Uri.parse(mail.getSign());
 			sign = FileUtility.downloadToLocal(sign, new File(context.getFilesDir(), fileName
-					+ ".png"));
+					+ "_sign.png"));
 			card.setSignDraftImage(sign);
 		}
 
