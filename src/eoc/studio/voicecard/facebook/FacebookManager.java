@@ -60,7 +60,7 @@ public class FacebookManager
 	private static final String TAG = "FacebookManager";
 	private static final int TIME_OUT_INTERVAL = 300000;
 	private Context context;
-	private Session.StatusCallback statusCallback = null;
+	private SessionStatusCallback statusCallback = null;
 	private ProgressDialog progressDialog;
 	private Publish publish;
 	private Bundle inviteBundle = null;
@@ -398,7 +398,14 @@ public class FacebookManager
                 null);
         managerState = ManagerState.PUBLISH_NEWS;
         actionType = ManagerState.PUBLISH_NEWS;
-        login(context, new LoginListener());
+        if (isLogin())
+        {
+            getNewsLinkfromServer();
+        } 
+        else 
+        {
+            login(context, new LoginListener());
+        }
     }
 		
 	public void publishTimeline(Context context, Publish publish)
