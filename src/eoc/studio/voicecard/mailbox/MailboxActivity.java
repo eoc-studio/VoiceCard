@@ -24,6 +24,7 @@ import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.viewer.CardViewerActivity;
 import eoc.studio.voicecard.facebook.enetities.FriendInfo;
+import eoc.studio.voicecard.manager.HttpManager;
 import eoc.studio.voicecard.menu.ClearAllMail;
 import eoc.studio.voicecard.menu.DeleteSelectedMail;
 import eoc.studio.voicecard.utils.ListUtility;
@@ -38,6 +39,8 @@ public class MailboxActivity extends BaseActivity
 	private MailsAdapterData mailsAdapterData;
 
 	private MailsAdapterView mailAdapterView;
+	
+	private HttpManager httpManager = new HttpManager();
 
 	private int firstVisiblePosition = 0;
 
@@ -66,8 +69,6 @@ public class MailboxActivity extends BaseActivity
 		setContentView(R.layout.activity_mailbox);
 		context = getApplicationContext();
 		findViews();
-		mailsAdapterData = new MailsAdapterData(MailboxActivity.this); 
-		mailsAdapterData.open();
 	}
 
 	@Override
@@ -76,6 +77,8 @@ public class MailboxActivity extends BaseActivity
 
 		super.onResume();
 		isSelectedAll = false;
+        mailsAdapterData = new MailsAdapterData(MailboxActivity.this);
+        mailsAdapterData.open();
 		showMailInfo(0);
 		
         LoadDbThread loadDbThread = new LoadDbThread();
@@ -99,6 +102,10 @@ public class MailboxActivity extends BaseActivity
 			}
 			mailAdapterView.clearData();
 		}
+		
+		if (mailsAdapterData != null) {
+		    mailsAdapterData.close();
+		}
 	}
 
 	private void updateUnReadCount()
@@ -106,8 +113,12 @@ public class MailboxActivity extends BaseActivity
 
 		String PREFS_FILENAME = "MAIN_MENU_SETTING";
 		SharedPreferences configPreferences = getSharedPreferences(PREFS_FILENAME, 0);
-		Log.d(TAG, "updateUnReadCount() mailsAdapterData.getLocalUnReadMailCount(): "+mailsAdapterData.getLocalUnReadMailCount());
-		configPreferences.edit().putInt("mailboxUnReadCount", mailsAdapterData.getLocalUnReadMailCount()).commit();
+        Log.d(TAG,
+                "updateUnReadCount() mailsAdapterData.getLocalUnReadMailCount(): "
+                        + mailsAdapterData.getLocalUnReadMailCount(httpManager.getFacebookID()));
+        configPreferences.edit()
+                .putInt("mailboxUnReadCount", mailsAdapterData.getLocalUnReadMailCount(httpManager.getFacebookID()))
+                .commit();
 	}
 
 	@Override
@@ -185,8 +196,8 @@ public class MailboxActivity extends BaseActivity
         String rowId, cardId, ownerId, sendId, sendFrom, sendFromName, senderImgLink, sendTo, subject, body, fontSize, fontColor, imgLink, speech, sign, sendTime;
         int checkState = 0, newState;
         byte[] img;
-
-        Cursor cursor = mailsAdapterData.getAll();
+        
+        Cursor cursor = mailsAdapterData.getDatafromOwnerId(httpManager.getFacebookID());
         if (cursor != null) {
             int count = cursor.getCount();
             Log.d(TAG, "cursor size is " + count);
@@ -408,6 +419,7 @@ public class MailboxActivity extends BaseActivity
             downloadHandler.removeMessages(ListUtility.GET_THUMBNAIL);
             if (position < mails.size()) {
                 Log.d(TAG, "mail is " + mails.get(position).toString());
+                mailsAdapterData.updateNewState(mails.get(position).getRowId(), MailsAdapterData.NOTNEW);
                 Intent mailIntent = new Intent(MailboxActivity.this, CardViewerActivity.class);
                 mailIntent.putExtra(CardViewerActivity.EXTRA_KEY_MODE, CardViewerActivity.MODE_VIEWER);
                 mailIntent.putExtra(CardViewerActivity.EXTRA_KEY_MAIL,  mails.get(position));

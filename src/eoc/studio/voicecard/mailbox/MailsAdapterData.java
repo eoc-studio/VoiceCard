@@ -347,14 +347,34 @@ public class MailsAdapterData
 					null, null, null, null, null);
 			if (cursor != null)
 			{
-				cursor.moveToFirst();
+			    return cursor;
 			}
-			return cursor;
+			return null;
 		}
 		else
 		{
 			return null;
 		}
+	}
+	
+	public Cursor getDatafromOwnerId(String ownerId) throws SQLException {
+	       if (db.isOpen())
+	        {
+	            Cursor cursor = db.query(true, DATABASE_TABLE, new String[] { KEY_ROW_ID, KEY_CARD_ID, KEY_OWNER_ID, KEY_SEND_ID,
+	                    KEY_SEND_FROM, KEY_SEND_FROM_NAME, KEY_SEND_FROM_LINK, KEY_SEND_TO,
+	                    KEY_SUBJECT, KEY_BODY, KEY_FONT_SIZE, KEY_FONT_COLOR, KEY_IMG_LINK, KEY_IMG,
+	                    KEY_SPEECH, KEY_SIGN, KEY_SEND_TIME, KEY_NEW_STATE }, KEY_OWNER_ID + "=" + ownerId,
+	                    null, null, null, null, null);
+	            if (cursor != null)
+	            {
+	                return cursor;
+	            }
+	            return null;
+	        }
+	        else
+	        {
+	            return null;
+	        }
 	}
 
 	/** Update the database */
@@ -462,4 +482,29 @@ public class MailsAdapterData
 			return count;
 		}
 	}
+	
+    public int getLocalUnReadMailCount(String owerId) throws SQLException {
+        int count = 0;
+        if (db.isOpen()) {
+            Cursor cursor = db.rawQuery("SELECT * FROM mails WHERE " + KEY_NEW_STATE + " = " + "1 AND " + KEY_OWNER_ID
+                    + "=" + owerId, null);
+            if (cursor != null) {
+                count = cursor.getCount();
+
+            }
+            return count;
+        } else {
+            return count;
+        }
+    }
+	
+    public boolean updateNewState(String rowId, int state) {
+        if (db.isOpen()) {
+            ContentValues args = new ContentValues();
+            args.put(KEY_NEW_STATE, state);
+            return db.update(DATABASE_TABLE, args, KEY_ROW_ID + "=" + rowId, null) > 0;
+        } else {
+            return false;
+        }
+    }
 }
