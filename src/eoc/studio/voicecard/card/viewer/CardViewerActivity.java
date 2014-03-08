@@ -2,6 +2,7 @@ package eoc.studio.voicecard.card.viewer;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -31,7 +32,6 @@ import eoc.studio.voicecard.animation.FlipView;
 import eoc.studio.voicecard.animation.FlipView.FlipListener;
 import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.card.Constant;
-import eoc.studio.voicecard.card.database.CardDatabaseHelper;
 import eoc.studio.voicecard.card.editor.CardCategorySelectorActivity;
 import eoc.studio.voicecard.card.editor.CardEditorActivity;
 import eoc.studio.voicecard.facebook.FacebookManager;
@@ -171,7 +171,7 @@ public class CardViewerActivity extends BaseActivity
 		progressDialog = ProgressDialog.show(this, getString(R.string.processing),
 				getString(R.string.please_wait), true, false);
 		mail = intent.getParcelableExtra(EXTRA_KEY_MAIL);
-		
+
 		Log.d(TAG, "getCardFromViewerModeIntent : " + mail.toString());
 		setMailInfoView();
 
@@ -204,11 +204,6 @@ public class CardViewerActivity extends BaseActivity
 		if (sendBackId != null)
 		{
 			Log.d(TAG, "We are going to SEND BACK TO " + sendBackId);
-
-			// TODO 20140308
-			// footer should leave only one button to reply!
-			// we need to check it's Facebook ID or mobile number,
-			// now, wait for John & Bruce
 		}
 	}
 
@@ -217,6 +212,8 @@ public class CardViewerActivity extends BaseActivity
 		setContentView(R.layout.activity_card_viewer);
 		setViewsVisibilityForSenderMode();
 		findViews();
+		hideSendButtonAccordingToSendBackId();
+
 	}
 
 	private void initViewerModeLayout()
@@ -241,6 +238,23 @@ public class CardViewerActivity extends BaseActivity
 		generateShadow();
 		initFlipAndShadow();
 		setListenersForViewerMode();
+	}
+
+	private void hideSendButtonAccordingToSendBackId()
+	{
+		if (sendBackId != null)
+		{
+			if (sendBackId.startsWith("0") && sendBackId.length() == 10)
+			{
+				Log.d(TAG, "hide Send Facebook button");
+				sendFacebook.setVisibility(View.GONE);
+			}
+			else
+			{
+				Log.d(TAG, "hide Send Contact button");
+				sendContact.setVisibility(View.GONE);
+			}
+		}
 	}
 
 	private void setMailInfoView()
@@ -535,7 +549,14 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
-				startFacebookSender();
+				if (sendBackId == null)
+				{
+					startFacebookSender();
+				}
+				else
+				{
+					sendBack();
+				}
 			}
 
 		});
@@ -546,7 +567,14 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
-				sendContactSender();
+				if (sendBackId == null)
+				{
+					sendContactSender();
+				}
+				else
+				{
+					sendBack();
+				}
 			}
 
 		});
@@ -593,11 +621,7 @@ public class CardViewerActivity extends BaseActivity
 					Log.d(TAG, "Invite no error, send card to server");
 					facebookManager.sendCardtoServer(facebookManager.fetchInvitedFriends(values));
 
-					Log.d(TAG, "back to MainMenu and finish");
-					Intent intent = new Intent(CardViewerActivity.this, MainMenuActivity.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(intent);
-					finish();
+					goBackToMainMenuAndFinish();
 				}
 			}
 		});
@@ -606,6 +630,25 @@ public class CardViewerActivity extends BaseActivity
 	private void sendContactSender()
 	{
 		// TODO to Ryan
+	}
+
+	private void sendBack()
+	{
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(sendBackId);
+		Log.d(TAG, "sendBack to " + sendBackId);
+		facebookManager.sendCardtoServer(list);
+
+		goBackToMainMenuAndFinish();
+	}
+
+	private void goBackToMainMenuAndFinish()
+	{
+		Log.d(TAG, "back to MainMenu and finish");
+		Intent intent = new Intent(CardViewerActivity.this, MainMenuActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+		finish();
 	}
 
 }
