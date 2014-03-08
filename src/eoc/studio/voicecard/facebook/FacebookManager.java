@@ -652,7 +652,7 @@ public class FacebookManager
                 httpManager.postMailByList(context, friendList, publishCard.getImage(), publishCard.getSound(),
                         publishCard.getMessage(), publishCard.getSignDraftImage(),
                         String.valueOf(publishCard.getMessageTextSizeType()),
-                        String.valueOf(publishCard.getMessageTextColor()), "thisCardName", new PostMailListener() {
+                        String.valueOf(publishCard.getMessageTextColor()), String.valueOf(publishCard.getCategory().getCategoryID()), new PostMailListener() {
 
                             @Override
                             public void onResult(Boolean isSuccess, String information) {
