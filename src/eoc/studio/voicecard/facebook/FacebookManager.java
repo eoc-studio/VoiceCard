@@ -140,7 +140,7 @@ public class FacebookManager
 	    return facebookManager;
 	}
 	
-	public void handleManagerState(Session session, SessionState state, Exception exception) {
+	private void handleManagerState(Session session, SessionState state, Exception exception) {
         Log.d(TAG, "session is " + session);
         Log.d(TAG, "state is " + state);
         Log.d(TAG, "exception is " + exception);
@@ -479,10 +479,6 @@ public class FacebookManager
         RequestBatch rb = new RequestBatch();
         Bundle params = new Bundle();
         params.putString(BundleTag.NAME, publish.getName());
-        if (publish.getImgLink() != null) {
-            params.putString(BundleTag.PICTURE, publish.getImgLink());
-        }
-        params.putString(BundleTag.TO, publish.getId());
         params.putString(BundleTag.CAPTION, publish.getCaption());
         params.putString(BundleTag.DESCRIPTION, publish.getDescription());
         if (publish.getLink() != null) {
@@ -615,9 +611,13 @@ public class FacebookManager
         }
     }
 	
-    private void showToast(String msg) {
+    private void showToast(String msg, boolean isSuccess) {
         if (context != null) {
-            Toast.makeText(context, context.getResources().getString(R.string.errorIs, msg), Toast.LENGTH_SHORT).show();
+            if (isSuccess) {
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, context.getResources().getString(R.string.errorIs, msg), Toast.LENGTH_SHORT).show();
+            }
         }
     }
     
@@ -666,9 +666,12 @@ public class FacebookManager
 
                                 Log.e(TAG, "httpManager.postMailByList() isSuccess:" + isSuccess + ",information:"
                                         + information);
-
-                                Toast.makeText(context, "httpManager.postMailByList() isSuccess:" + isSuccess,
-                                        Toast.LENGTH_LONG).show();
+                                
+                                if (isSuccess) {
+                                    showToast(context.getResources().getString(R.string.publishSuccess), isSuccess);
+                                } else {
+                                    showToast(context.getResources().getString(R.string.publishFail), isSuccess);
+                                }
                             }
 
                         });
@@ -694,7 +697,7 @@ public class FacebookManager
                     publishTimeline(FacebookManager.this.context, publish);
                 } else {
                     // show error
-                    showToast(URL);
+                    showToast(URL, isSuccess);
                 }
             }
         });
@@ -717,7 +720,7 @@ public class FacebookManager
         {
             Log.d(TAG, "Login onError actionType === " + actionType);
             if (actionType != ManagerState.GET_USER_PROFILE) {
-                showToast(errorMsg);
+                showToast(errorMsg, false);
             } else {
                 userCallback.onCompleted(null, null);
             }
@@ -788,7 +791,7 @@ public class FacebookManager
         public void onError(String errorMsg) 
         {
             Log.d(TAG, "Request onError ");
-            showToast(errorMsg);
+            showToast(errorMsg, false);
         } 
     }
     
@@ -800,10 +803,10 @@ public class FacebookManager
                 Log.d(TAG, "Publish had error is " + error.getMessage());
                 if (error.getMessage() == null) {
                     if (context != null) {
-                        showToast(context.getResources().getString(R.string.cancelPublish));
+                        showToast(context.getResources().getString(R.string.cancelPublish), false);
                     }
                 } else {
-                    showToast(error.getMessage());
+                    showToast(error.getMessage(), false);
                 }
             } else {
                 Log.d(TAG, "Publish no error ");
@@ -820,7 +823,7 @@ public class FacebookManager
                 if (error.getMessage() == null) {
                     
                 } else {
-                    showToast(error.getMessage());
+                    showToast(error.getMessage(), false);
                 }
             } else {
                 Log.d(TAG, "Invite no error ");

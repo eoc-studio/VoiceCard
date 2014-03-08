@@ -75,6 +75,8 @@
 	<!-- About Facebook Manager -->
 	<string name="errorIs">錯誤是 %s </string>
 	<string name="cancelPublish">取消發佈</string>
+	<string name="publishSuccess">發佈成功</string>
+	<string name="publishFail">發佈失敗</string>
 
 	<!-- Audio Recorder -->
     <string name="start_recording">開始錄音</string>
