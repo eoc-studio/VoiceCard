@@ -1627,8 +1627,7 @@ public class CardDatabaseHelper
 			result = DPI_MDPI;
 			break;
 		case DisplayMetrics.DENSITY_HIGH:
-//			result = DPI_HPPI;
-			result = DPI_XHDPI;
+			result = DPI_HPPI;
 			break;
 		case DisplayMetrics.DENSITY_XHIGH:
 			result = DPI_XHDPI;
