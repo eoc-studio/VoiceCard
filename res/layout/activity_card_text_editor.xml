@@ -85,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dip"
-            android:src="@drawable/icon_editor_clear" />
+            android:background="@drawable/icon_editor_clear_selector" />
     </LinearLayout>
 
     <EditText
@@ -97,6 +97,7 @@
         android:layout_marginBottom="10dip"
         android:layout_marginLeft="10dip"
         android:layout_toLeftOf="@id/act_rich_text_editor_llyt_control_size_bar"
+        android:textColor="@color/black"
         android:gravity="start" />
 
     <TextView

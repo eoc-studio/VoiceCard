@@ -26,13 +26,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.audio.AudioRecorderActivity;
 import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.card.CardDraft;
+import eoc.studio.voicecard.card.Constant;
 import eoc.studio.voicecard.card.FakeData;
 import eoc.studio.voicecard.card.viewer.AudioMessageView;
+import eoc.studio.voicecard.card.viewer.CardViewerActivity;
 import eoc.studio.voicecard.card.database.CardDatabaseHelper;
 import eoc.studio.voicecard.manufacture.EditSignatureActivity;
 import eoc.studio.voicecard.menu.OpenDraft;
@@ -152,11 +155,15 @@ public class CardEditorActivity extends BaseActivity
 
 	private ProgressDialog progressDialog;
 
-	private CardDatabaseHelper cardDatabaseHelper ;
+	private CardDatabaseHelper cardDatabaseHelper;
+
+	private String sendBackId;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 
+		initSendBackId();
 		initCardDataBase();
 		if (savedInstanceState != null)
 		{
@@ -185,15 +192,20 @@ public class CardEditorActivity extends BaseActivity
 
 		super.onCreate(savedInstanceState);
 	}
-	
+
+	private void initSendBackId()
+	{
+		Intent intent = getIntent();
+		sendBackId = intent.getStringExtra(Constant.EXTRA_KEY_SENDBACK_ID);
+	}
+
 	private void initCardDataBase()
 	{
 
 		cardDatabaseHelper = new CardDatabaseHelper(getApplicationContext());
 		cardDatabaseHelper.open();
 	}
-	
-	
+
 	private void saveCardInformation()
 	{
 
@@ -269,6 +281,8 @@ public class CardEditorActivity extends BaseActivity
 	private void restoreUserData(Bundle savedInstanceState)
 	{
 
+		sendBackId = savedInstanceState.getString(Constant.EXTRA_KEY_SENDBACK_ID);
+
 		card = getEmptyCardFromSavedInstanceState(savedInstanceState);
 		userImage = savedInstanceState.getParcelable(EXTRA_KEY_USER_IMAGE);
 		userImageBitmap = savedInstanceState.getParcelable(EXTRA_KEY_USER_IMAGE_BITMAP);
@@ -283,6 +297,7 @@ public class CardEditorActivity extends BaseActivity
 				.getParcelable(EXTRA_KEY_USER_SIGN_POSITION_INFO);
 		userSignDraftImageUri = savedInstanceState.getParcelable(EXTRA_KEY_USER_SIGN_DRAFT_IMAGE);
 
+		Log.d(TAG, "restore sendBackId -- " + sendBackId);
 		Log.d(TAG, "restore user data -- IMAGE URI: " + userImage);
 		Log.d(TAG, "restore user data -- IMAGE BITMAP: " + userImageBitmap);
 		Log.d(TAG, "restore user data -- VOICE URI: " + userVoice);
@@ -299,6 +314,11 @@ public class CardEditorActivity extends BaseActivity
 
 	private void saveUserData(Bundle savedInstanceState)
 	{
+		if (sendBackId != null)
+		{
+			savedInstanceState.putString(Constant.EXTRA_KEY_SENDBACK_ID, sendBackId);
+			Log.d(TAG, "save sendBackId -- " + sendBackId);
+		}
 
 		savedInstanceState.putInt(EXTRA_KEY_CARD_ID, card.getId());
 		Log.d(TAG, "save user data -- card.getId(): " + card.getId());
@@ -375,9 +395,10 @@ public class CardEditorActivity extends BaseActivity
 		Card card;
 		if (id != -1)
 		{
-//			card = FakeData.getCard(id);
+			// card = FakeData.getCard(id);
 			Log.d(TAG, "getCardById id : " + id);
-			card = cardDatabaseHelper.getCardByCardID(id, cardDatabaseHelper.getSystemDPI(getApplicationContext()));
+			card = cardDatabaseHelper.getCardByCardID(id,
+					cardDatabaseHelper.getSystemDPI(getApplicationContext()));
 			assert card != null;
 
 			Log.d(TAG, "EDIT : " + card.getName());
@@ -434,17 +455,17 @@ public class CardEditorActivity extends BaseActivity
 	private void setupCardView()
 	{
 		Bitmap img3dOpenBitmap = FileUtility.getBitmapFromPath(card.getImage3dOpenPath());
-		FileUtility.setImageViewWithBitmap(innerPage, img3dOpenBitmap);	
-		
-/*		innerPage.setImageResource(android.R.color.transparent);*/
-		setCardColor(); 
+		FileUtility.setImageViewWithBitmap(innerPage, img3dOpenBitmap);
+
+		/* innerPage.setImageResource(android.R.color.transparent); */
+		setCardColor();
 	}
 
 	private void setCardColor()
 	{
 
 		int color = card.getTextColor();
-		Log.d(TAG, "setCardColor() card.getTextColor() "+card.getTextColor());
+		Log.d(TAG, "setCardColor() card.getTextColor() " + card.getTextColor());
 		Resources res = getResources();
 		int dashGap = res.getDimensionPixelSize(R.dimen.dash_border_stroke_dash_gap);
 		int dashWidth = res.getDimensionPixelSize(R.dimen.dash_border_stroke_dash_width);
@@ -496,10 +517,18 @@ public class CardEditorActivity extends BaseActivity
 			{
 
 				Log.d(TAG, "next");
-				progressDialog = ProgressDialog.show(CardEditorActivity.this,
-						getString(R.string.processing), getString(R.string.please_wait), true,
-						false);
-				startScreenshotThread();
+				if (isCardUserDataCompleted())
+				{
+					progressDialog = ProgressDialog.show(CardEditorActivity.this,
+							getString(R.string.processing), getString(R.string.please_wait), true,
+							false);
+					startScreenshotThread();
+				}
+				else
+				{
+					Toast.makeText(CardEditorActivity.this, getString(R.string.data_incomplete),
+							Toast.LENGTH_LONG).show();
+				}
 			}
 
 		});
@@ -981,17 +1010,26 @@ public class CardEditorActivity extends BaseActivity
 	private void startCardSender()
 	{
 
-		Intent intent = new Intent(this, CardSenderActivity.class);
-		intent.putExtra(CardSenderActivity.EXTRA_KEY_CARD_WITH_USER_DATA_FOR_SEND, card);
+		Intent intent = new Intent(this, CardViewerActivity.class);
+		intent.putExtra(CardViewerActivity.EXTRA_KEY_MODE, CardViewerActivity.MODE_SENDER);
+		intent.putExtra(CardViewerActivity.EXTRA_KEY_CARD_WITH_USER_DATA_FOR_SEND, card);
 		Log.d(TAG, "send card:: " + card);
-		intent.putExtra(CardSenderActivity.EXTRA_KEY_CARD_LEFT_SCREENSHOT_FILEPATH,
+		intent.putExtra(CardViewerActivity.EXTRA_KEY_CARD_LEFT_SCREENSHOT_FILEPATH,
 				screenshotLeftFilePath);
-		intent.putExtra(CardSenderActivity.EXTRA_KEY_CARD_RIGHT_SCREENSHOT_FILEPATH,
+		intent.putExtra(CardViewerActivity.EXTRA_KEY_CARD_RIGHT_SCREENSHOT_FILEPATH,
 				screenshotRightFilePath);
-		intent.putExtra(CardSenderActivity.EXTRA_KEY_CARD_VOICE_DURATION_TEXT, userVoiceDuration);
+		intent.putExtra(CardViewerActivity.EXTRA_KEY_CARD_VOICE_DURATION_TEXT, userVoiceDuration);
+		intent.putExtra(Constant.EXTRA_KEY_SENDBACK_ID, sendBackId);
 		Log.d(TAG, "screenshot left:: " + screenshotLeftFilePath);
 		Log.d(TAG, "screenshot right:: " + screenshotRightFilePath);
 		startActivity(intent);
+	}
+
+	private boolean isCardUserDataCompleted()
+	{
+		// card.setSignDraftImage(card.getImage());
+		return card.getImage() != null && card.getMessage() != null && card.getSound() != null
+				&& card.getSignDraftImage() != null;
 	}
 
 	private Bitmap getBitmapFromUri(Uri uri)

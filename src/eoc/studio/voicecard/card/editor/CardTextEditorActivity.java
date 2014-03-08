@@ -78,7 +78,6 @@ public class CardTextEditorActivity extends BaseActivity
 		setContentView(R.layout.activity_card_text_editor);
 		findViews();
 		setListener();
-		initColorPicker();
 	}
 
 	private void applyConfig()
@@ -94,8 +93,10 @@ public class CardTextEditorActivity extends BaseActivity
 
 		if (textContent != null)
 		{
-			editText.setText(textContent);
+			setTextContent(textContent);
 		}
+
+		initColorPicker();
 	}
 
 	private void findViews()
@@ -182,9 +183,7 @@ public class CardTextEditorActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
-				setTextSize(Card.DEFAULT_TEXT_SIZE_TYPE);
-				setTextColor(Card.DEFAULT_TEXT_COLOR);
-				initColorPicker();
+				setTextContent("");
 			}
 		});
 		back.setOnClickListener(new OnClickListener()
@@ -286,6 +285,23 @@ public class CardTextEditorActivity extends BaseActivity
 
 	private void setTextSize(int type)
 	{
+		switch(type){
+		case Card.TEXT_SIZE_TYPE_SMALL:
+			smallSetter.setBackgroundResource(R.drawable.icon_editor_bg2);
+			normalSetter.setBackgroundResource(R.drawable.icon_editor_bg1);
+			largeSetter.setBackgroundResource(R.drawable.icon_editor_bg1);
+			break;
+		case Card.TEXT_SIZE_TYPE_NORMAL:
+			smallSetter.setBackgroundResource(R.drawable.icon_editor_bg1);
+			normalSetter.setBackgroundResource(R.drawable.icon_editor_bg2);
+			largeSetter.setBackgroundResource(R.drawable.icon_editor_bg1);
+			break;
+		case Card.TEXT_SIZE_TYPE_LARGE:
+			smallSetter.setBackgroundResource(R.drawable.icon_editor_bg1);
+			normalSetter.setBackgroundResource(R.drawable.icon_editor_bg1);
+			largeSetter.setBackgroundResource(R.drawable.icon_editor_bg2);
+			break;
+		}
 		textSizeType = type;
 		editText.setTextSize(getTextSizeByType(type));
 	}
@@ -294,6 +310,12 @@ public class CardTextEditorActivity extends BaseActivity
 	{
 		textColor = color;
 		editText.setTextColor(color);
+	}
+
+	private void setTextContent(String content)
+	{
+		textContent = content;
+		editText.setText(content);
 	}
 
 	private void returnTheResult()

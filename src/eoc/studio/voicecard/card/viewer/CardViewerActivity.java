@@ -1,17 +1,18 @@
-package eoc.studio.voicecard.card.editor;
+package eoc.studio.voicecard.card.viewer;
 
 import java.io.File;
 import java.io.IOException;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
@@ -21,23 +22,44 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.facebook.FacebookException;
+
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.animation.FlipView;
 import eoc.studio.voicecard.animation.FlipView.FlipListener;
 import eoc.studio.voicecard.card.Card;
-import eoc.studio.voicecard.card.viewer.AudioMessageView;
+import eoc.studio.voicecard.card.Constant;
+import eoc.studio.voicecard.card.database.CardDatabaseHelper;
+import eoc.studio.voicecard.card.editor.CardCategorySelectorActivity;
+import eoc.studio.voicecard.card.editor.CardEditorActivity;
+import eoc.studio.voicecard.facebook.FacebookManager;
+import eoc.studio.voicecard.mailbox.Mail;
+import eoc.studio.voicecard.mainmenu.MainMenuActivity;
 import eoc.studio.voicecard.utils.FileUtility;
-public class CardSenderActivity extends BaseActivity
+
+public class CardViewerActivity extends BaseActivity
 {
+	public static final String EXTRA_KEY_MODE = "card_viewer_mode";
+	public static final String MODE_VIEWER = "mode_viewer";
+	public static final String MODE_SENDER = "mode_sender";
+
+	public static final String EXTRA_KEY_MAIL = "mail_to_view";
 	public static final String EXTRA_KEY_CARD_WITH_USER_DATA_FOR_SEND = "card_with_user_data_for_send";
 	public static final String EXTRA_KEY_CARD_LEFT_SCREENSHOT_FILEPATH = "card_left_screenshot_filepath";
 	public static final String EXTRA_KEY_CARD_RIGHT_SCREENSHOT_FILEPATH = "card_right_screenshot_filepath";
 	public static final String EXTRA_KEY_CARD_VOICE_DURATION_TEXT = "card_voice_duraiton";
 
-	private static final String TAG = "CardSenderActivity";
+	private static final String TAG = "CardViewerActivity";
+
+	private FacebookManager facebookManager;
+	private Mail mail;
+	private Bitmap leftScreenshotBitmap;
+	private Bitmap rightScreenshotBitmap;
 
 	private Card card;
+	private String sendBackId;
 	private String leftScreenshotFilePath;
 	private String rightScreenshotFilePath;
 	private String voiceDurationText;
@@ -45,6 +67,9 @@ public class CardSenderActivity extends BaseActivity
 	private View back;
 	private ImageView sendFacebook;
 	private ImageView sendContact;
+	private TextView mailInfo;
+	private ImageView backToMailbox;
+	private ImageView sendCardBack;
 
 	private View rightBlock; // a workaround in order to push
 								// cardWrapper to the middle at
@@ -63,17 +88,40 @@ public class CardSenderActivity extends BaseActivity
 	private TextView cardTextView;
 	private ImageView cardSignatureView;
 
+	private ProgressDialog progressDialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		getCardFromIntent();
-		initLayout();
+		facebookManager = FacebookManager.getInstance(this);
+
+		if (isSenderMode())
+		{
+			initSendBackId();
+			initSenderModeLayout();
+			getCardFromSenderModeIntent();
+			setupSenderModeWithCardData();
+		}
+		else
+		{
+			initViewerModeLayout();
+			getCardFromViewerModeIntent();
+		}
+
 		super.onCreate(savedInstanceState);
 	}
 
 	@Override
 	protected void onDestroy()
 	{
+		if (leftScreenshotBitmap != null && !leftScreenshotBitmap.isRecycled())
+		{
+			leftScreenshotBitmap.recycle();
+		}
+		if (rightScreenshotBitmap != null && !rightScreenshotBitmap.isRecycled())
+		{
+			rightScreenshotBitmap.recycle();
+		}
 		super.onDestroy();
 	}
 
@@ -89,7 +137,22 @@ public class CardSenderActivity extends BaseActivity
 		super.onResume();
 	}
 
-	private void getCardFromIntent()
+	@Override
+	public void onBackPressed()
+	{
+		finish();
+		super.onBackPressed();
+	}
+
+	private boolean isSenderMode()
+	{
+		Intent intent = getIntent();
+		String mode = intent.getStringExtra(EXTRA_KEY_MODE);
+		Log.d(TAG, "mode: " + mode);
+		return MODE_SENDER.equals(mode);
+	}
+
+	private void getCardFromSenderModeIntent()
 	{
 		Intent intent = getIntent();
 		card = intent.getParcelableExtra(EXTRA_KEY_CARD_WITH_USER_DATA_FOR_SEND);
@@ -102,31 +165,130 @@ public class CardSenderActivity extends BaseActivity
 		Log.d(TAG, "voiceDurationText : " + voiceDurationText);
 	}
 
-	private void initLayout()
+	private void getCardFromViewerModeIntent()
 	{
-		setContentView(R.layout.activity_card_sender);
+		Intent intent = getIntent();
+		progressDialog = ProgressDialog.show(this, getString(R.string.processing),
+				getString(R.string.please_wait), true, false);
+		mail = intent.getParcelableExtra(EXTRA_KEY_MAIL);
+		setMailInfoView();
+
+		new Thread("getCardFromMail")
+		{
+			@Override
+			public void run()
+			{
+				Log.d(TAG, "start getCardFromMail");
+				card = Card.getCardFromMail(CardViewerActivity.this, mail);
+				Log.d(TAG, "Card to view : " + card);
+
+				runOnUiThread(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						setupViewerModeWithCardData();
+					}
+				});
+				progressDialog.dismiss();
+			}
+		}.start();
+	}
+
+	private void initSendBackId()
+	{
+		Intent intent = getIntent();
+		sendBackId = intent.getStringExtra(Constant.EXTRA_KEY_SENDBACK_ID);
+		if (sendBackId != null)
+		{
+			Log.d(TAG, "We are going to SEND BACK TO " + sendBackId);
+
+			// TODO 20140308
+			// footer should leave only one button to reply!
+			// we need to check it's Facebook ID or mobile number,
+			// now, wait for John & Bruce
+		}
+	}
+
+	private void initSenderModeLayout()
+	{
+		setContentView(R.layout.activity_card_viewer);
+		setViewsVisibilityForSenderMode();
 		findViews();
+	}
+
+	private void initViewerModeLayout()
+	{
+		setContentView(R.layout.activity_card_viewer);
+		setViewsVisibilityForViewerMode();
+		findViews();
+	}
+
+	private void setupSenderModeWithCardData()
+	{
 		initCardView();
 		generateShadow();
 		initFlipAndShadow();
-		setListeners();
+		setListenersForSenderMode();
+	}
+
+	private void setupViewerModeWithCardData()
+	{
+		initCardView();
+		generateScreenshotBitmap();
+		generateShadow();
+		initFlipAndShadow();
+		setListenersForViewerMode();
+	}
+
+	private void setMailInfoView()
+	{
+		mailInfo.setText(mail.getSendedTime() + " FROM : " + mail.getSendedFromName());
+	}
+
+	private void setViewsVisibilityForSenderMode()
+	{
+		findViewById(R.id.act_card_viewer_rlyt_header_for_sender).setVisibility(View.VISIBLE);
+		findViewById(R.id.act_card_viewer_rlyt_header_for_viewer).setVisibility(View.INVISIBLE);
+
+		findViewById(R.id.act_card_viewer_iv_tip_for_sender).setVisibility(View.VISIBLE);
+		findViewById(R.id.act_card_viewer_tv_mail_info_for_viewer).setVisibility(View.INVISIBLE);
+
+		findViewById(R.id.act_card_viewer_llyt_footer_for_sender).setVisibility(View.VISIBLE);
+		findViewById(R.id.act_card_viewer_llyt_footer_for_viewer).setVisibility(View.INVISIBLE);
+	}
+
+	private void setViewsVisibilityForViewerMode()
+	{
+		findViewById(R.id.act_card_viewer_rlyt_header_for_sender).setVisibility(View.INVISIBLE);
+		findViewById(R.id.act_card_viewer_rlyt_header_for_viewer).setVisibility(View.VISIBLE);
+
+		findViewById(R.id.act_card_viewer_iv_tip_for_sender).setVisibility(View.INVISIBLE);
+		findViewById(R.id.act_card_viewer_tv_mail_info_for_viewer).setVisibility(View.VISIBLE);
+
+		findViewById(R.id.act_card_viewer_llyt_footer_for_sender).setVisibility(View.INVISIBLE);
+		findViewById(R.id.act_card_viewer_llyt_footer_for_viewer).setVisibility(View.VISIBLE);
 	}
 
 	private void findViews()
 	{
-		back = findViewById(R.id.act_card_sender_iv_back);
-		sendFacebook = (ImageView) findViewById(R.id.act_card_sender_iv_send_fb);
-		sendContact = (ImageView) findViewById(R.id.act_card_sender_iv_send_contact);
+		back = findViewById(R.id.act_card_viewer_iv_back);
+		sendFacebook = (ImageView) findViewById(R.id.act_card_viewer_iv_send_fb);
+		sendContact = (ImageView) findViewById(R.id.act_card_viewer_iv_send_contact);
 
-		rightBlock = findViewById(R.id.act_card_sender_v_right_block);
-		cardWrapper = (FrameLayout) findViewById(R.id.act_card_sender_flyt_card_wrapper);
+		mailInfo = (TextView) findViewById(R.id.act_card_viewer_tv_mail_info_for_viewer);
+		backToMailbox = (ImageView) findViewById(R.id.act_card_viewer_iv_back_to_mailbox);
+		sendCardBack = (ImageView) findViewById(R.id.act_card_viewer_iv_send_card_back);
+
+		rightBlock = findViewById(R.id.act_card_viewer_v_right_block);
+		cardWrapper = (FrameLayout) findViewById(R.id.act_card_viewer_flyt_card_wrapper);
 		flipViewWrapper = (FrameLayout) findViewById(R.id.glb_card_animation_flyt_card_wrapper);
 		animationScrollView = (HorizontalScrollView) findViewById(R.id.glb_card_animation_hsv_root);
 		shadowOpen = (ImageView) findViewById(R.id.glb_card_animation_iv_card_open_shadow);
 		shadowClose = (ImageView) findViewById(R.id.glb_card_animation_iv_card_close_shadow);
 
-		cardScrollView = (HorizontalScrollView) findViewById(R.id.act_card_sender_hsv_card_scroll_view);
-		cardInnerBackground = (ImageView) findViewById(R.id.act_card_sender_iv_card_inner_page);
+		cardScrollView = (HorizontalScrollView) findViewById(R.id.act_card_viewer_hsv_card_scroll_view);
+		cardInnerBackground = (ImageView) findViewById(R.id.act_card_viewer_iv_card_inner_page);
 		cardImageView = (ImageView) findViewById(R.id.glb_card_iv_editable_image);
 		cardVoice = (AudioMessageView) findViewById(R.id.glb_card_amv_editable_voice);
 		cardTextView = (TextView) findViewById(R.id.glb_card_tv_editable_text);
@@ -141,13 +303,10 @@ public class CardSenderActivity extends BaseActivity
 
 	private void initCardView()
 	{
-//		cardInnerBackground.setBackgroundResource(card.getImage3dOpenResId());
-		
-		
 		Bitmap img3dOpenBitmap = FileUtility.getBitmapFromPath(card.getImage3dOpenPath());
-		
+
 		FileUtility.setImageViewBackgroundWithBitmap(cardInnerBackground, img3dOpenBitmap);
-	
+
 		cardImageView.setImageURI(card.getImage());
 		cardTextView.setText(card.getMessage());
 		cardTextView.setTextColor(card.getMessageTextColor());
@@ -187,7 +346,8 @@ public class CardSenderActivity extends BaseActivity
 
 	private void generateShadow()
 	{
-//		Bitmap bmp = BitmapFactory.decodeResource(getResources(), card.getImage3dOpenResId());
+		// Bitmap bmp = BitmapFactory.decodeResource(getResources(),
+		// card.getImage3dOpenResId());
 		Bitmap bmp = FileUtility.getBitmapFromPath(card.getImage3dOpenPath());
 
 		Bitmap halfShadow = Bitmap.createBitmap(bmp, bmp.getWidth() / 2 - 10, 0,
@@ -195,10 +355,33 @@ public class CardSenderActivity extends BaseActivity
 		shadowClose.setImageBitmap(halfShadow);
 		bmp.recycle();
 
-//		shadowOpen.setImageResource(card.getImage3dOpenResId());
-		
+		// shadowOpen.setImageResource(card.getImage3dOpenResId());
+
 		Bitmap img3dOpenBitmap = FileUtility.getBitmapFromPath(card.getImage3dOpenPath());
 		FileUtility.setImageViewWithBitmap(shadowOpen, img3dOpenBitmap);
+	}
+
+	private void generateScreenshotBitmap()
+	{
+		View wholeCard = findViewById(R.id.act_card_viewer_rlyt_card);
+		wholeCard.setDrawingCacheEnabled(true);
+
+		// this is the important code :)
+		// Without it the view will have a dimension of 0,0
+		// and the bitmap will be null
+		wholeCard.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+				MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+		wholeCard.layout(0, 0, wholeCard.getMeasuredWidth(), wholeCard.getMeasuredHeight());
+		wholeCard.buildDrawingCache(true);
+
+		Bitmap wholeScreenshot = wholeCard.getDrawingCache();
+		Log.d(TAG, "wholeScreenshot " + wholeScreenshot);
+		int pageWidth = wholeScreenshot.getWidth() / 2;
+		int pageHeight = wholeScreenshot.getHeight();
+		leftScreenshotBitmap = Bitmap.createBitmap(wholeScreenshot, 0, 0, pageWidth, pageHeight);
+		rightScreenshotBitmap = Bitmap.createBitmap(wholeScreenshot, pageWidth, 0, pageWidth,
+				pageHeight);
+		wholeCard.setDrawingCacheEnabled(false);
 	}
 
 	private void initFlipAndShadow()
@@ -220,20 +403,31 @@ public class CardSenderActivity extends BaseActivity
 		ImageView front = new ImageView(this);
 		front.setLayoutParams(params);
 		front.setScaleType(ScaleType.FIT_XY);
-//		front.setImageResource(card.getImageCoverResId());
 		Bitmap imgCoverBitmap = FileUtility.getBitmapFromPath(card.getImageCoverPath());
-		FileUtility.setImageViewWithBitmap(front,imgCoverBitmap);
-	
+		FileUtility.setImageViewWithBitmap(front, imgCoverBitmap);
+
 		ImageView back = new ImageView(this);
 		back.setLayoutParams(params);
 		back.setScaleType(ScaleType.FIT_XY);
-		// back.setImageResource(card.getImageInnerLeftResId());
-		back.setImageURI(Uri.fromFile(new File(leftScreenshotFilePath)));
+		if (leftScreenshotBitmap != null)
+		{
+			back.setImageBitmap(leftScreenshotBitmap);
+		}
+		else
+		{
+			back.setImageURI(Uri.fromFile(new File(leftScreenshotFilePath)));
+		}
 		ImageView inner = new ImageView(this);
 		inner.setLayoutParams(params);
 		inner.setScaleType(ScaleType.FIT_XY);
-		// inner.setImageResource(card.getImageInnerRightResId());
-		inner.setImageURI(Uri.fromFile(new File(rightScreenshotFilePath)));
+		if (rightScreenshotBitmap != null)
+		{
+			inner.setImageBitmap(rightScreenshotBitmap);
+		}
+		else
+		{
+			inner.setImageURI(Uri.fromFile(new File(rightScreenshotFilePath)));
+		}
 
 		flipView.setFrontPage(front);
 		flipView.setBackPage(back);
@@ -320,7 +514,7 @@ public class CardSenderActivity extends BaseActivity
 		});
 	}
 
-	private void setListeners()
+	private void setListenersForSenderMode()
 	{
 		back.setOnClickListener(new OnClickListener()
 		{
@@ -356,9 +550,55 @@ public class CardSenderActivity extends BaseActivity
 		});
 	}
 
+	private void setListenersForViewerMode()
+	{
+		backToMailbox.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				finish();
+			}
+		});
+		sendCardBack.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Intent intent = new Intent(CardViewerActivity.this,
+						CardCategorySelectorActivity.class);
+				intent.putExtra(Constant.EXTRA_KEY_SENDBACK_ID, mail.getSendedFrom());
+				startActivity(intent);
+				finish();
+			}
+		});
+	}
+
 	private void startFacebookSender()
 	{
-		// TODO to John
+		Log.d(TAG, "startFacebookSender");
+		facebookManager.inviteFriend(this, null, card, facebookManager.new InviteListener()
+		{
+			@Override
+			public void onComplete(Bundle values, FacebookException error)
+			{
+				if (error != null)
+				{
+					Log.d(TAG, "Invite had error is " + error.getMessage());
+				}
+				else
+				{
+					Log.d(TAG, "Invite no error, send card to server");
+					facebookManager.sendCardtoServer(facebookManager.fetchInvitedFriends(values));
+
+					Log.d(TAG, "back to MainMenu and finish");
+					Intent intent = new Intent(CardViewerActivity.this, MainMenuActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivity(intent);
+					finish();
+				}
+			}
+		});
 	}
 
 	private void sendContactSender()

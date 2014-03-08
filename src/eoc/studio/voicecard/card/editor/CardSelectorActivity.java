@@ -25,6 +25,7 @@ import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.card.CardCategory;
+import eoc.studio.voicecard.card.Constant;
 import eoc.studio.voicecard.card.FakeData;
 import eoc.studio.voicecard.card.database.CardAssistant;
 import eoc.studio.voicecard.card.database.CardDatabaseHelper;
@@ -60,6 +61,8 @@ public class CardSelectorActivity extends BaseActivity
 	private CardDatabaseHelper cardDatabaseHelper;
 
 	private Context context;
+	
+	private String sendBackId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -67,6 +70,7 @@ public class CardSelectorActivity extends BaseActivity
 
 		context = getApplicationContext();
 		getCategoryFromIntent();
+		initSendBackId();
 		initCardDataBase();
 		initLayout();
 		super.onCreate(savedInstanceState);
@@ -113,6 +117,12 @@ public class CardSelectorActivity extends BaseActivity
 				"list card for category id: " + category.getCategoryID() + ",name: "
 						+ category.getCategoryName());
 		Toast.makeText(this, "CATEGORY: " + category.getCategoryName(), Toast.LENGTH_LONG).show();
+	}
+	
+	private void initSendBackId()
+	{
+		Intent intent = getIntent();
+		sendBackId = intent.getStringExtra(Constant.EXTRA_KEY_SENDBACK_ID);
 	}
 
 	private void initLayout()
@@ -299,6 +309,7 @@ public class CardSelectorActivity extends BaseActivity
 
 		Log.d(TAG, "start editor card.getId(): " + card.getId());
 		intent.putExtra(CardEditorActivity.EXTRA_KEY_CARD_ID, card.getId());
+		intent.putExtra(Constant.EXTRA_KEY_SENDBACK_ID, sendBackId);
 		startActivity(intent);
 	}
 

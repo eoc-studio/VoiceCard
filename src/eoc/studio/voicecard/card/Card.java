@@ -1,12 +1,18 @@
 package eoc.studio.voicecard.card;
 
+import java.io.File;
 import java.lang.reflect.Field;
 
-import eoc.studio.voicecard.card.database.CategoryAssistant;
+import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+import eoc.studio.voicecard.card.database.CardDatabaseHelper;
+import eoc.studio.voicecard.card.database.CategoryAssistant;
+import eoc.studio.voicecard.mailbox.Mail;
+import eoc.studio.voicecard.utils.FileUtility;
 
 public class Card implements Parcelable
 {
@@ -19,21 +25,21 @@ public class Card implements Parcelable
 
 	// original
 	private int id;
-//	private CardCategory category;
+	// private CardCategory category;
 	private CategoryAssistant category;
 	private String name;
-//	private int image3dCoverResId;
-//	private int image3dOpenResId;
-//	private int imageCoverResId;
-//	private int imageInnerLeftResId;
-//	private int imageInnerRightResId;
+	// private int image3dCoverResId;
+	// private int image3dOpenResId;
+	// private int imageCoverResId;
+	// private int imageInnerLeftResId;
+	// private int imageInnerRightResId;
 
 	private String image3dCoverPath;
 	private String image3dOpenPath;
 	private String imageCoverPath;
 	private String imageInnerLeftPath;
 	private String imageInnerRightPath;
-	
+
 	private int textColor;
 
 	// user input
@@ -113,55 +119,55 @@ public class Card implements Parcelable
 		this.name = name;
 	}
 
-//	public int getImage3dCoverResId()
-//	{
-//		return image3dCoverResId;
-//	}
-//
-//	public void setImage3dCoverResId(int image3dCoverResId)
-//	{
-//		this.image3dCoverResId = image3dCoverResId;
-//	}
-//
-//	public int getImage3dOpenResId()
-//	{
-//		return image3dOpenResId;
-//	}
-//
-//	public void setImage3dOpenResId(int image3dOpenResId)
-//	{
-//		this.image3dOpenResId = image3dOpenResId;
-//	}
-//
-//	public int getImageCoverResId()
-//	{
-//		return imageCoverResId;
-//	}
-//
-//	public void setImageCoverResId(int imageCoverResId)
-//	{
-//		this.imageCoverResId = imageCoverResId;
-//	}
-//
-//	public int getImageInnerLeftResId()
-//	{
-//		return imageInnerLeftResId;
-//	}
-//
-//	public void setImageInnerLeftResId(int imageInnerLeftResId)
-//	{
-//		this.imageInnerLeftResId = imageInnerLeftResId;
-//	}
-//
-//	public int getImageInnerRightResId()
-//	{
-//		return imageInnerRightResId;
-//	}
-//
-//	public void setImageInnerRightResId(int imageInnerRightResId)
-//	{
-//		this.imageInnerRightResId = imageInnerRightResId;
-//	}
+	// public int getImage3dCoverResId()
+	// {
+	// return image3dCoverResId;
+	// }
+	//
+	// public void setImage3dCoverResId(int image3dCoverResId)
+	// {
+	// this.image3dCoverResId = image3dCoverResId;
+	// }
+	//
+	// public int getImage3dOpenResId()
+	// {
+	// return image3dOpenResId;
+	// }
+	//
+	// public void setImage3dOpenResId(int image3dOpenResId)
+	// {
+	// this.image3dOpenResId = image3dOpenResId;
+	// }
+	//
+	// public int getImageCoverResId()
+	// {
+	// return imageCoverResId;
+	// }
+	//
+	// public void setImageCoverResId(int imageCoverResId)
+	// {
+	// this.imageCoverResId = imageCoverResId;
+	// }
+	//
+	// public int getImageInnerLeftResId()
+	// {
+	// return imageInnerLeftResId;
+	// }
+	//
+	// public void setImageInnerLeftResId(int imageInnerLeftResId)
+	// {
+	// this.imageInnerLeftResId = imageInnerLeftResId;
+	// }
+	//
+	// public int getImageInnerRightResId()
+	// {
+	// return imageInnerRightResId;
+	// }
+	//
+	// public void setImageInnerRightResId(int imageInnerRightResId)
+	// {
+	// this.imageInnerRightResId = imageInnerRightResId;
+	// }
 
 	public Uri getSound()
 	{
@@ -208,7 +214,7 @@ public class Card implements Parcelable
 	public Uri getSignDraftImage()
 	{
 		return signDraftImage;
-	} 
+	}
 
 	public void setSignDraftImage(Uri signature)
 	{
@@ -225,19 +231,21 @@ public class Card implements Parcelable
 		this.textColor = color;
 	}
 
-//	@Override
-//	public String toString()
-//	{
-//		return "Card [id=" + id + ", category=" + category + ", name=" + name
-//				+ ", image3dCoverResId=" + image3dCoverResId + ", image3dOpenResId="
-//				+ image3dOpenResId + ", imageCoverResId=" + imageCoverResId
-//				+ ", imageInnerLeftResId=" + imageInnerLeftResId + ", imageInnerRightResId="
-//				+ imageInnerRightResId + ", textColor=" + textColor + ", sound=" + sound
-//				+ ", image=" + image + ", message=" + message + ", messageTextColor="
-//				+ messageTextColor + ", messageTextSizeType=" + messageTextSizeType
-//				+ ", signDraftImage=" + signDraftImage + ", signHandwriting=" + signHandwriting
-//				+ ", signPositionInfo=" + signPositionInfo + "]";
-//	}
+	// @Override
+	// public String toString()
+	// {
+	// return "Card [id=" + id + ", category=" + category + ", name=" + name
+	// + ", image3dCoverResId=" + image3dCoverResId + ", image3dOpenResId="
+	// + image3dOpenResId + ", imageCoverResId=" + imageCoverResId
+	// + ", imageInnerLeftResId=" + imageInnerLeftResId +
+	// ", imageInnerRightResId="
+	// + imageInnerRightResId + ", textColor=" + textColor + ", sound=" + sound
+	// + ", image=" + image + ", message=" + message + ", messageTextColor="
+	// + messageTextColor + ", messageTextSizeType=" + messageTextSizeType
+	// + ", signDraftImage=" + signDraftImage + ", signHandwriting=" +
+	// signHandwriting
+	// + ", signPositionInfo=" + signPositionInfo + "]";
+	// }
 	public String toString()
 	{
 
@@ -273,7 +281,7 @@ public class Card implements Parcelable
 
 		return result.toString();
 	}
-	
+
 	public int describeContents()
 	{
 		return 0;
@@ -290,12 +298,12 @@ public class Card implements Parcelable
 		out.writeString(imageCoverPath);
 		out.writeString(imageInnerLeftPath);
 		out.writeString(imageInnerRightPath);
-		
-//		out.writeInt(image3dCoverResId);
-//		out.writeInt(image3dOpenResId);
-//		out.writeInt(imageCoverResId);
-//		out.writeInt(imageInnerLeftResId);
-//		out.writeInt(imageInnerRightResId);
+
+		// out.writeInt(image3dCoverResId);
+		// out.writeInt(image3dOpenResId);
+		// out.writeInt(imageCoverResId);
+		// out.writeInt(imageInnerLeftResId);
+		// out.writeInt(imageInnerRightResId);
 		out.writeInt(textColor);
 
 		out.writeParcelable(sound, flags);
@@ -303,7 +311,7 @@ public class Card implements Parcelable
 		out.writeString(message);
 		out.writeInt(messageTextColor);
 		out.writeInt(messageTextSizeType);
-		out.writeParcelable(signDraftImage, flags); 
+		out.writeParcelable(signDraftImage, flags);
 		out.writeParcelable(signHandwriting, flags);
 		out.writeParcelable(signPositionInfo, flags);
 	}
@@ -327,19 +335,18 @@ public class Card implements Parcelable
 		ClassLoader categoryAssistantClazzLoader = CategoryAssistant.class.getClassLoader();
 		category = in.readParcelable(categoryAssistantClazzLoader);
 		name = in.readString();
-		
-		
+
 		this.image3dCoverPath = in.readString();
 		this.image3dOpenPath = in.readString();
 		this.imageCoverPath = in.readString();
 		this.imageInnerLeftPath = in.readString();
 		this.imageInnerRightPath = in.readString();
-		
-//		image3dCoverResId = in.readInt();
-//		image3dOpenResId = in.readInt();
-//		imageCoverResId = in.readInt();
-//		imageInnerLeftResId = in.readInt();
-//		imageInnerRightResId = in.readInt();
+
+		// image3dCoverResId = in.readInt();
+		// image3dOpenResId = in.readInt();
+		// imageCoverResId = in.readInt();
+		// imageInnerLeftResId = in.readInt();
+		// imageInnerRightResId = in.readInt();
 		textColor = in.readInt();
 
 		ClassLoader uriClazzLoader = Uri.class.getClassLoader();
@@ -350,90 +357,150 @@ public class Card implements Parcelable
 		messageTextSizeType = in.readInt();
 		signDraftImage = in.readParcelable(uriClazzLoader);
 		signHandwriting = in.readParcelable(uriClazzLoader);
-		signPositionInfo = in.readParcelable(uriClazzLoader);		
+		signPositionInfo = in.readParcelable(uriClazzLoader);
 	}
 
 	public Uri getSignHandwriting()
 	{
-	
+
 		return signHandwriting;
 	}
 
 	public void setSignHandwriting(Uri signHandwriting)
 	{
-	
+
 		this.signHandwriting = signHandwriting;
 	}
 
 	public Uri getSignPositionInfo()
 	{
-	
+
 		return signPositionInfo;
 	}
 
 	public void setSignPositionInfo(Uri signPositionInfo)
 	{
-	
+
 		this.signPositionInfo = signPositionInfo;
 	}
 
 	public String getImage3dCoverPath()
 	{
-	
+
 		return image3dCoverPath;
 	}
 
 	public void setImage3dCoverPath(String image3dCoverPath)
 	{
-	
+
 		this.image3dCoverPath = image3dCoverPath;
 	}
 
 	public String getImage3dOpenPath()
 	{
-	
+
 		return image3dOpenPath;
 	}
 
 	public void setImage3dOpenPath(String image3dOpenPath)
 	{
-	
+
 		this.image3dOpenPath = image3dOpenPath;
 	}
 
 	public String getImageCoverPath()
 	{
-	
+
 		return imageCoverPath;
 	}
 
 	public void setImageCoverPath(String imageCoverPath)
 	{
-	
+
 		this.imageCoverPath = imageCoverPath;
 	}
 
 	public String getImageInnerLeftPath()
 	{
-	
+
 		return imageInnerLeftPath;
 	}
 
 	public void setImageInnerLeftPath(String imageInnerLeftPath)
 	{
-	
+
 		this.imageInnerLeftPath = imageInnerLeftPath;
 	}
 
 	public String getImageInnerRightPath()
 	{
-	
+
 		return imageInnerRightPath;
 	}
 
 	public void setImageInnerRightPath(String imageInnerRightPath)
 	{
-	
+
 		this.imageInnerRightPath = imageInnerRightPath;
+	}
+
+	/**
+	 * time consuming
+	 * 
+	 * @param context
+	 * @param mail
+	 * @return
+	 */
+	public static Card getCardFromMail(Context context, Mail mail)
+	{
+		int id = Integer.parseInt(mail.getCardId());
+		CardDatabaseHelper cardDatabaseHelper = new CardDatabaseHelper(context);
+		cardDatabaseHelper.open();
+		Card card = cardDatabaseHelper
+				.getCardByCardID(id, cardDatabaseHelper.getSystemDPI(context));
+
+		String mailImageLink = mail.getImgLink();
+		String mailSoundLink = mail.getSpeech();
+		String mailSignLink = mail.getSign();
+		final String fileName = "cardFromMail_" + System.currentTimeMillis();
+
+		String mailMessageBody = mail.getBody();
+		String mailTextSize = mail.getFontSize();
+		String mailTextColor = mail.getFontColor();
+		Log.d("Card", "mailImageLink: " + mailImageLink);
+		Log.d("Card", "mailSoundLink: " + mailSoundLink);
+		Log.d("Card", "mailSignLink: " + mailSignLink);
+		Log.d("Card", "mailMessageBody: " + mailMessageBody);
+		Log.d("Card", "mailTextSize: " + mailTextSize);
+		Log.d("Card", "mailTextColor: " + mailTextColor);
+
+		if (mailImageLink != null)
+		{
+			Uri img = Uri.parse(mailImageLink);
+			img = FileUtility.downloadToLocal(img, new File(context.getFilesDir(), fileName
+					+ ".png"));
+			card.setImage(img);
+		}
+		if (mailSoundLink != null)
+		{
+			Uri sound = Uri.parse(mailSoundLink);
+			sound = FileUtility.downloadToLocal(sound, new File(context.getFilesDir(), fileName
+					+ ".3gp"));
+			card.setSound(sound);
+		}
+		if (mailSignLink != null)
+		{
+			Uri sign = Uri.parse(mail.getSign());
+			sign = FileUtility.downloadToLocal(sign, new File(context.getFilesDir(), fileName
+					+ ".png"));
+			card.setSignDraftImage(sign);
+		}
+
+		// mailTextSize =
+		// CardEditorActivity.getTextSizeByType(Integer.parseInt(mailSize));
+		card.setMessage(mailMessageBody, Integer.parseInt(mailTextSize),
+				Color.parseColor(mailTextColor));
+
+		return card;
 	}
 }

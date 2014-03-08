@@ -46,11 +46,11 @@ public class Mail implements Parcelable {
     }
     
     public String getCardId() {
-        return ownerId;
+        return cardId;
     }
     
     public String getOwnerId() {
-        return cardId;
+        return ownerId;
     }
     
     public String getSendedId() {

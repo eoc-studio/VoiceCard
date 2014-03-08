@@ -1,19 +1,16 @@
 package eoc.studio.voicecard.card.editor;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -23,14 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
-import eoc.studio.voicecard.card.CardCategory;
 import eoc.studio.voicecard.card.CardDraft;
+import eoc.studio.voicecard.card.Constant;
+import eoc.studio.voicecard.card.database.CardDatabaseHelper;
+import eoc.studio.voicecard.card.database.CategoryAssistant;
 import eoc.studio.voicecard.menu.Favorite;
 import eoc.studio.voicecard.menu.OpenDraft;
 import eoc.studio.voicecard.utils.FileUtility;
-import eoc.studio.voicecard.card.database.CardDatabaseHelper;
-import eoc.studio.voicecard.card.database.CategoryAssistant;
-import eoc.studio.voicecard.card.editor.CardEditorActivity;
 
 public class CardCategorySelectorActivity extends BaseActivity implements OnItemClickListener
 {
@@ -42,22 +38,26 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 	private CardDraftManager cardDraftManager;
 
 	private OpenDraft openDraft;
-	
+
 	private Favorite favorite;
 
-	private CardDatabaseHelper cardDatabaseHelper ;
-	
+	private CardDatabaseHelper cardDatabaseHelper;
+
 	ArrayList<CategoryAssistant> categoryAssistantList = new ArrayList<CategoryAssistant>();
-	
+
+	private String sendBackId;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		context = getApplicationContext();
-		
+
 		initCardDataBase();
-		categoryAssistantList = cardDatabaseHelper.getEnabledCategory(cardDatabaseHelper.getSystemDPI(context));
-		Log.d(TAG, "categoryAssistantList: "+categoryAssistantList);
+		categoryAssistantList = cardDatabaseHelper.getEnabledCategory(cardDatabaseHelper
+				.getSystemDPI(context));
+		Log.d(TAG, "categoryAssistantList: " + categoryAssistantList);
 		initCardDraftManager();
+		initSendBackId();
 		initLayout();
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
@@ -102,6 +102,7 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 		cardDatabaseHelper = new CardDatabaseHelper(context);
 		cardDatabaseHelper.open();
 	}
+
 	private void initLayout()
 	{
 
@@ -115,6 +116,12 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 	{
 
 		categories.setAdapter(new CategoryAdapter());
+	}
+
+	private void initSendBackId()
+	{
+		Intent intent = getIntent();
+		sendBackId = intent.getStringExtra(Constant.EXTRA_KEY_SENDBACK_ID);
 	}
 
 	private void findViews()
@@ -153,7 +160,7 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 			}
 
 		});
-		
+
 		favorite.setOnClickListener(new OnClickListener()
 		{
 
@@ -163,15 +170,19 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 
 				try
 				{
-					if(cardDatabaseHelper.getEnabledFavoriteCardListCount() > 0){
+					if (cardDatabaseHelper.getEnabledFavoriteCardListCount() > 0)
+					{
 						Intent intent = new Intent(context, CardSelectorActivity.class);
 						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
-						intent.putExtra(CardSelectorActivity.EXTRA_KEY_CATEGORY, new CategoryAssistant(INT_FAVORITE));
+						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						intent.putExtra(CardSelectorActivity.EXTRA_KEY_CATEGORY,
+								new CategoryAssistant(INT_FAVORITE));
 						context.startActivity(intent);
 					}
-					else{
-						Toast.makeText(context, "There is no favorite card!", Toast.LENGTH_LONG).show();
+					else
+					{
+						Toast.makeText(context, "There is no favorite card!", Toast.LENGTH_LONG)
+								.show();
 					}
 
 				}
@@ -188,67 +199,49 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 	public void onItemClick(AdapterView<?> adapterView, View view, int position, long id)
 	{
 
-//		CardCategory category = (CardCategory) categories.getItemAtPosition(position);
-//		Log.d(TAG, "clicked: " + category.name());
+		// CardCategory category = (CardCategory)
+		// categories.getItemAtPosition(position);
+		// Log.d(TAG, "clicked: " + category.name());
 
 		CategoryAssistant category = (CategoryAssistant) categories.getItemAtPosition(position);
 		Log.d(TAG, "clicked: " + category.getCategoryName());
-		
+
 		startCardSelector(category);
 	}
 
-/*	private class CategoryAdapter extends BaseAdapter
-	{
-
-		@Override
-		public int getCount()
-		{
-
-			return CardCategory.values().length - 1; // don't contain
-														// USER_FAVORITE
-		}
-
-		@Override
-		public CardCategory getItem(int position)
-		{
-
-			return CardCategory.values()[position];
-		}
-
-		@Override
-		public long getItemId(int position)
-		{
-
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent)
-		{
-
-			ViewHolder holder;
-			if (convertView == null)
-			{
-				LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-				convertView = inflater.inflate(R.layout.view_card_category_grid_item, null);
-				holder = new ViewHolder();
-				holder.image = (ImageView) convertView
-						.findViewById(R.id.glb_card_category_grid_item_iv_image);
-				holder.name = (TextView) convertView
-						.findViewById(R.id.glb_card_category_grid_item_tv_name);
-				convertView.setTag(holder);
-			}
-			else
-			{
-				holder = (ViewHolder) convertView.getTag();
-			}
-			CardCategory category = getItem(position);
-			holder.image.setImageResource(category.getDrawableResource());
-			holder.name.setText(category.getStringResource());
-			return convertView;
-		}
-
-	}*/
+	/*
+	 * private class CategoryAdapter extends BaseAdapter {
+	 * 
+	 * @Override public int getCount() {
+	 * 
+	 * return CardCategory.values().length - 1; // don't contain //
+	 * USER_FAVORITE }
+	 * 
+	 * @Override public CardCategory getItem(int position) {
+	 * 
+	 * return CardCategory.values()[position]; }
+	 * 
+	 * @Override public long getItemId(int position) {
+	 * 
+	 * return position; }
+	 * 
+	 * @Override public View getView(int position, View convertView, ViewGroup
+	 * parent) {
+	 * 
+	 * ViewHolder holder; if (convertView == null) { LayoutInflater inflater =
+	 * LayoutInflater.from(getApplicationContext()); convertView =
+	 * inflater.inflate(R.layout.view_card_category_grid_item, null); holder =
+	 * new ViewHolder(); holder.image = (ImageView) convertView
+	 * .findViewById(R.id.glb_card_category_grid_item_iv_image); holder.name =
+	 * (TextView) convertView
+	 * .findViewById(R.id.glb_card_category_grid_item_tv_name);
+	 * convertView.setTag(holder); } else { holder = (ViewHolder)
+	 * convertView.getTag(); } CardCategory category = getItem(position);
+	 * holder.image.setImageResource(category.getDrawableResource());
+	 * holder.name.setText(category.getStringResource()); return convertView; }
+	 * 
+	 * }
+	 */
 
 	private class CategoryAdapter extends BaseAdapter
 	{
@@ -258,7 +251,7 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 		{
 
 			return categoryAssistantList.size(); // don't contain
-														// USER_FAVORITE
+													// USER_FAVORITE
 		}
 
 		@Override
@@ -295,14 +288,14 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 			{
 				holder = (ViewHolder) convertView.getTag();
 			}
-			
+
 			CategoryAssistant category = getItem(position);
-			Log.d(TAG, "category.getCategoryLoocalPath(): "+category.getCategoryLoocalPath());
-			Log.d(TAG, "category.getCategoryName(): "+category.getCategoryName());
-			
+			Log.d(TAG, "category.getCategoryLoocalPath(): " + category.getCategoryLoocalPath());
+			Log.d(TAG, "category.getCategoryName(): " + category.getCategoryName());
+
 			Bitmap categoryBitmap = FileUtility.getBitmapFromPath(category.getCategoryLoocalPath());
 			FileUtility.setImageViewWithBitmap(holder.image, categoryBitmap);
-			
+
 			holder.name.setText(category.getCategoryName());
 			return convertView;
 		}
@@ -321,6 +314,7 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 
 		Intent intent = new Intent(this, CardSelectorActivity.class);
 		intent.putExtra(CardSelectorActivity.EXTRA_KEY_CATEGORY, category);
+		intent.putExtra(Constant.EXTRA_KEY_SENDBACK_ID, sendBackId);
 		startActivity(intent);
 	}
 

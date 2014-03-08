@@ -14,8 +14,9 @@
     <GridView
         android:id="@+id/act_card_category_selector_gv_categories"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/act_card_category_selector_iv_header"
+        android:layout_above="@+id/act_card_category_selector_iv_menu_background"
         android:layout_centerHorizontal="true"
         android:cacheColorHint="@android:color/transparent"
         android:listSelector="@android:color/transparent"
@@ -23,6 +24,7 @@
         android:verticalSpacing="15dip" />
 
     <ImageView
+        android:id="@+id/act_card_category_selector_iv_menu_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="eoc.studio.voicecard"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0"
+    android:installLocation="preferExternal" >
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -78,7 +79,7 @@
             android:name="eoc.studio.voicecard.card.editor.CardTextEditorActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="eoc.studio.voicecard.card.editor.CardSenderActivity"
+            android:name="eoc.studio.voicecard.card.viewer.CardViewerActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="eoc.studio.voicecard.recommend.RecommendActivity"

@@ -1,10 +1,14 @@
 package eoc.studio.voicecard.utils;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -378,4 +382,74 @@ public class FileUtility
 	          out.write(buffer, 0, read);
 	        }
 	    }
+	    
+	public static Uri downloadToLocal(Uri remoteUri, File dest)
+	{
+		long startTime = System.currentTimeMillis();
+		String scheme = remoteUri.getScheme();
+		if (scheme.equalsIgnoreCase("file") || scheme.equalsIgnoreCase("content"))
+		{
+			return remoteUri; // is already a local Uri
+		}
+		else
+		{
+			InputStream in = null;
+			OutputStream out = null;
+			try
+			{
+				URL url = new URL(remoteUri.toString());
+				URLConnection conn = url.openConnection();
+				conn.connect();
+				in = new BufferedInputStream(conn.getInputStream());
+				out = new FileOutputStream(dest);
+				byte[] buffer = new byte[1024];
+				int bytesRead;
+				while ((bytesRead = in.read(buffer)) != -1)
+				{
+					out.write(buffer, 0, bytesRead);
+				}
+			}
+			catch (MalformedURLException e)
+			{
+				e.printStackTrace();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+				if (in != null)
+				{
+					try
+					{
+						in.close();
+					}
+					catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+				if (out != null)
+				{
+					try
+					{
+						out.close();
+					}
+					catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+
+		}
+		Log.d("FileUtility", "time spent: " + (System.currentTimeMillis() - startTime) + ", from "
+				+ remoteUri.toString() + " to " + dest.getAbsolutePath());
+		if (!dest.exists() || dest.length() == 0)
+		{
+			Log.e("FileUtility", "download to local failed");
+		}
+		return Uri.fromFile(dest);
+	}
 }

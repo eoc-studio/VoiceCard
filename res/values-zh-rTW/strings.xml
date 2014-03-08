@@ -55,6 +55,7 @@
     <string name="play_voice_message">播放留言 </string>
     <string name="processing">處理中</string>
     <string name="please_wait">請稍待</string>
+    <string name="data_incomplete">請將四樣卡片資料填滿</string>
 
     <!-- TextEditor -->
     <string name="text_limit">/%s字</string>
