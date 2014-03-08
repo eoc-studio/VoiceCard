@@ -171,6 +171,8 @@ public class CardViewerActivity extends BaseActivity
 		progressDialog = ProgressDialog.show(this, getString(R.string.processing),
 				getString(R.string.please_wait), true, false);
 		mail = intent.getParcelableExtra(EXTRA_KEY_MAIL);
+		
+		Log.d(TAG, "getCardFromViewerModeIntent : " + mail.toString());
 		setMailInfoView();
 
 		new Thread("getCardFromMail")

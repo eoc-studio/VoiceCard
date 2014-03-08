@@ -187,6 +187,8 @@ public class Mail implements Parcelable {
 /*            dest.writeInt(senderImg.length); 
             dest.writeByteArray(senderImg);*/
 //        }
+        dest.writeString(speech);
+        dest.writeString(sign);
         dest.writeInt(checkState);
         dest.writeInt(newState);
     }

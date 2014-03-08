@@ -499,7 +499,7 @@ public class Card implements Parcelable
 		// mailTextSize =
 		// CardEditorActivity.getTextSizeByType(Integer.parseInt(mailSize));
 		card.setMessage(mailMessageBody, Integer.parseInt(mailTextSize),
-				Color.parseColor(mailTextColor));
+				Integer.valueOf(mailTextColor));
 
 		return card;
 	}
