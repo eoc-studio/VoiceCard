@@ -260,12 +260,18 @@ public class MainLoadingActivity extends Activity
 
 	private void copyCardAndCategoryFromAsset()
 	{
-
-		if (FileUtility.copyAssetFolder(getAssets(), "files", getFilesDir().getAbsolutePath()))
-		{
-			addProgressWheel(COPY_CARD_AND_CATEGORY);
-			Log.d(TAG_PROGRESS, "COPY_CARD_AND_CATEGORY");
-		}
+		new Thread() {  
+            @Override  
+            public void run() {  
+                super.run();  
+        		if (FileUtility.copyAssetFolder(getAssets(), "files", getFilesDir().getAbsolutePath()))
+        		{
+        			addProgressWheel(COPY_CARD_AND_CATEGORY);
+        			Log.d(TAG_PROGRESS, "COPY_CARD_AND_CATEGORY");
+        		}
+    
+            }  
+        }.start();   
 	}
 
 	private void downloadCategoryAndCardImages()
