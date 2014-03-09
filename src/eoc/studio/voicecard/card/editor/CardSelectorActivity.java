@@ -116,7 +116,7 @@ public class CardSelectorActivity extends BaseActivity
 		Log.d(TAG,
 				"list card for category id: " + category.getCategoryID() + ",name: "
 						+ category.getCategoryName());
-		Toast.makeText(this, "CATEGORY: " + category.getCategoryName(), Toast.LENGTH_LONG).show();
+//		Toast.makeText(this, "CATEGORY: " + category.getCategoryName(), Toast.LENGTH_LONG).show();
 	}
 	
 	private void initSendBackId()

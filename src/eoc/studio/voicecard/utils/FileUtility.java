@@ -2,6 +2,7 @@ package eoc.studio.voicecard.utils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -451,5 +452,65 @@ public class FileUtility
 			Log.e("FileUtility", "download to local failed");
 		}
 		return Uri.fromFile(dest);
+	}
+	
+	public static boolean copyFile(File src, File dest)
+	{
+		boolean result = false;
+		if (src.exists())
+		{
+			InputStream in = null;
+			OutputStream out = null;
+			try
+			{
+				in = new FileInputStream(src);
+				out = new FileOutputStream(dest);
+
+				byte[] buf = new byte[1024];
+				int len;
+
+				while ((len = in.read(buf)) > 0)
+				{
+					out.write(buf, 0, len);
+				}
+				result = true;
+				Log.d("FileUtility", "Copy file successful.");
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+
+				if (in != null)
+				{
+					try
+					{
+						in.close();
+					}
+					catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+				if (out != null)
+				{
+					try
+					{
+						out.close();
+					}
+					catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		else
+		{
+			Log.e("FileUtility", "Copy file failed. Source file missing.");
+		}
+		return result;
 	}
 }

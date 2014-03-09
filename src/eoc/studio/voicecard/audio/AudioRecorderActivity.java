@@ -3,6 +3,7 @@ package eoc.studio.voicecard.audio;
 import java.io.File;
 import java.io.IOException;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -17,8 +18,10 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
+import eoc.studio.voicecard.utils.FileUtility;
 
 public class AudioRecorderActivity extends BaseActivity
 {
@@ -28,6 +31,8 @@ public class AudioRecorderActivity extends BaseActivity
 	private static final String TAG = "AudioRecorderActivity";
 	private static final int MAX_DURATION_MILLISECONDS = 1000 * 60 * 3;
 	private static String outputFile = null;
+	private static final String LAST_SAVED_FILE_NAME = "audio_record_last.3gp";
+	private File lastSavedFileFolder;
 
 	private TextView currentTime;
 	private TextView duration;
@@ -65,10 +70,15 @@ public class AudioRecorderActivity extends BaseActivity
 	private int recordingTime = 0;
 	private Handler uiHandler = new Handler();
 
+	private ProgressDialog progressDialog;
+
 	@Override
 	public void onCreate(Bundle icicle)
 	{
 		super.onCreate(icicle);
+
+		lastSavedFileFolder = getFilesDir();
+
 		initFromIntent();
 		initLayout();
 	}
@@ -286,6 +296,7 @@ public class AudioRecorderActivity extends BaseActivity
 				if (currentState == UiState.DONE)
 				{
 					deleteFile();
+					deleteLastSavedFile();
 					resetTimeAndDuration();
 					setUiState(UiState.INITIAL);
 				}
@@ -338,6 +349,9 @@ public class AudioRecorderActivity extends BaseActivity
 					R.color.audio_recorder_duration_max_color));
 			duration.setVisibility(View.VISIBLE);
 			duration.setTextColor(getResources().getColor(R.color.audio_recorder_done_time));
+			
+			resume.setVisibility(View.GONE);
+			pause.setVisibility(View.VISIBLE);
 			break;
 		case RECORDING:
 			recordingBar.setVisibility(View.VISIBLE);
@@ -379,12 +393,53 @@ public class AudioRecorderActivity extends BaseActivity
 
 	private void openFile()
 	{
-		// TODO from Bruce
+		File lastSavedFile = new File(lastSavedFileFolder, LAST_SAVED_FILE_NAME);
+		if (lastSavedFile.exists())
+		{
+			progressDialog = ProgressDialog.show(this, getString(R.string.processing),
+					getString(R.string.please_wait), true, false);
+			deleteFile();
+			if (FileUtility.copyFile(lastSavedFile, new File(outputFile)))
+			{
+				setUiState(UiState.PLAYING);
+				startPlaying();
+				startUpdateTime();
+			}
+			else
+			{
+				Log.e(TAG, "openFile - file copy failed");
+			}
+			progressDialog.dismiss();
+		}
+		else
+		{
+			Toast.makeText(this, "Found no audio file", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private void saveFile()
 	{
-		// TODO pass to Bruce
+		File fileToSave = new File(outputFile);
+		File lastSavedFile = new File(lastSavedFileFolder, LAST_SAVED_FILE_NAME);
+		if (fileToSave.exists())
+		{
+			progressDialog = ProgressDialog.show(this, getString(R.string.processing),
+					getString(R.string.please_wait), true, false);
+			deleteLastSavedFile();
+			if (FileUtility.copyFile(fileToSave, lastSavedFile))
+			{
+				Toast.makeText(this, "File is saved", Toast.LENGTH_SHORT).show();
+			}
+			else
+			{
+				Log.e(TAG, "saveFile - file copy failed");
+			}
+			progressDialog.dismiss();
+		}
+		else
+		{
+			Log.e(TAG, "saveFile - nothing to save");
+		}
 	}
 
 	private void deleteFile()
@@ -399,6 +454,22 @@ public class AudioRecorderActivity extends BaseActivity
 			else
 			{
 				Log.w(TAG, "deleteFile - file not deleted");
+			}
+		}
+	}
+
+	private void deleteLastSavedFile()
+	{
+		File lastSavedFile = new File(lastSavedFileFolder, LAST_SAVED_FILE_NAME);
+		if (lastSavedFile.exists())
+		{
+			if (lastSavedFile.delete())
+			{
+				Log.d(TAG, "deleteLastFile - lastFile deleted");
+			}
+			else
+			{
+				Log.w(TAG, "deleteLastFile - lastFile not deleted");
 			}
 		}
 	}

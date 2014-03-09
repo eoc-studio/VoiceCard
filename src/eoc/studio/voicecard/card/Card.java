@@ -462,7 +462,7 @@ public class Card implements Parcelable
 		String mailImageLink = mail.getImgLink();
 		String mailSoundLink = mail.getSpeech();
 		String mailSignLink = mail.getSign();
-		final String fileName = "cardFromMail_" + System.currentTimeMillis();
+		final String fileName = "cardFromMail_" + mail.getRowId();
 
 		String mailMessageBody = mail.getBody();
 		String mailTextSize = mail.getFontSize();
