@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.facebook.FacebookException;
-import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
@@ -26,14 +25,11 @@ import com.facebook.model.GraphUser;
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.card.Card;
-import eoc.studio.voicecard.facebook.FacebookManager.RequestGraphUserCallback;
 import eoc.studio.voicecard.facebook.enetities.FriendInfo;
 import eoc.studio.voicecard.facebook.enetities.Photo;
 import eoc.studio.voicecard.facebook.enetities.Publish;
 import eoc.studio.voicecard.facebook.enetities.UserInfo;
 import eoc.studio.voicecard.facebook.friends.SelectFriendActivity;
-import eoc.studio.voicecard.manager.HttpManager;
-import eoc.studio.voicecard.utils.ListUtility;
 
 public class TestFacebookActivity extends BaseActivity
 {

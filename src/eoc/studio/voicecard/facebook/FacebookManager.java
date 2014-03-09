@@ -476,10 +476,12 @@ public class FacebookManager
     }
     
     private void publishUserFeedImpl() {
+        dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
         RequestBatch rb = new RequestBatch();
         Bundle params = new Bundle();
         params.putString(BundleTag.NAME, publish.getName());
         params.putString(BundleTag.CAPTION, publish.getCaption());
+        params.putString(BundleTag.MESSAGE, context.getResources().getString(R.string.invite_message));
         params.putString(BundleTag.DESCRIPTION, publish.getDescription());
         if (publish.getLink() != null) {
             params.putString(BundleTag.LINK, publish.getLink());
@@ -846,6 +848,12 @@ public class FacebookManager
         @Override
         public void onCompleted(Response response) {
             Log.d(TAG, "PublishUserFeed response is " + response.getError());
+            dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
+            if (response.getError() == null) {
+                showToast(context.getResources().getString(R.string.publishSuccess), true);
+            } else {
+                showToast(response.getError().toString(), false);
+            }
         }       
     }
 }

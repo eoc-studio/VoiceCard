@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.facebook.Session;
 
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
@@ -23,6 +24,8 @@ import eoc.studio.voicecard.calendarview.MainCalendarView;
 import eoc.studio.voicecard.calendarview.CalendarIntentHelper;
 import eoc.studio.voicecard.calendarview.DataProcess;
 import eoc.studio.voicecard.card.editor.CardCategorySelectorActivity;
+import eoc.studio.voicecard.facebook.FacebookManager;
+import eoc.studio.voicecard.facebook.enetities.Publish;
 import eoc.studio.voicecard.mailbox.MailboxActivity;
 import eoc.studio.voicecard.manager.HttpManager;
 import eoc.studio.voicecard.recommend.RecommendActivity;
@@ -182,6 +185,13 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 	{
 		super.onDestroy();
 	}
+	
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) 
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+    }
 
 	private void initLayout()
 	{
@@ -287,5 +297,10 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 	private void onFbShareClicked()
 	{
 		Log.d(TAG, "share on facebook");
+        FacebookManager facebookManager = FacebookManager.getInstance(context);
+        HttpManager httpManager = new HttpManager();
+        facebookManager
+                .publishUserFeed(MainMenuActivity.this, new Publish(httpManager.getFacebookID(), Publish.DEFAULT_NAME,
+                        null, Publish.DEFAULT_CAPTION, Publish.DEFAULT_DESCRIPTION, Publish.DEFAULT_LINK));
 	}
 }
