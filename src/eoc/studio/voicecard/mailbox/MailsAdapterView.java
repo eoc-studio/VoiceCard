@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -79,7 +80,8 @@ public class MailsAdapterView extends BaseAdapter {
                     (ImageView) convertView.findViewById(R.id.glb_mailbox_list_item_img),
                     (TextView) convertView.findViewById(R.id.glb_mailbox_list_item_tv_subject),
                     (TextView) convertView.findViewById(R.id.glb_mailbox_list_item_tv_sendtime),
-                    (ImageView) convertView.findViewById(R.id.glb_mailbox_list_item_new_icon));
+                    (ImageView) convertView.findViewById(R.id.glb_mailbox_list_item_new_icon),
+                    (LinearLayout) convertView.findViewById(R.id.glb_mailbox_list_item_llyt_check_icon));
             convertView.setTag(viewTag);
         } else {
             viewTag = (ViewTag) convertView.getTag();
@@ -126,7 +128,7 @@ public class MailsAdapterView extends BaseAdapter {
     }
     
     private void setUIEvent(final int position, View convertView, ViewGroup parent) {
-        viewTag.checkIcon.setOnClickListener(new View.OnClickListener() {
+        viewTag.checkIconLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int checkState = mails.get(position).getCheckState();
@@ -243,14 +245,17 @@ public class MailsAdapterView extends BaseAdapter {
         TextView subject;
         TextView sendTime;
         ImageView newIcon;
+        LinearLayout checkIconLayout;
 
-        public ViewTag(ImageView checkIcon, ImageView itemImg, TextView subject, TextView sendTime, ImageView newIcon)
+        public ViewTag(ImageView checkIcon, ImageView itemImg, TextView subject, TextView sendTime, ImageView newIcon,
+                LinearLayout checkIconLayout) 
         {
             this.checkIcon = checkIcon;
             this.itemImg = itemImg;
             this.subject = subject;
             this.sendTime = sendTime;
             this.newIcon = newIcon;
+            this.checkIconLayout = checkIconLayout;
         }
     }
     

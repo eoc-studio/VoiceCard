@@ -46,8 +46,9 @@
 	<dimen name="act_mailbox_tv_errorMsg_text_size">30dp</dimen>
 	
 	<!-- About Mailbox Item -->
+	<dimen name="glb_mailbox_list_item_llyt_check_icon_width">60dp</dimen>
+	<dimen name="glb_mailbox_list_item_llyt_check_icon_height">60dp</dimen>
 	<dimen name="glb_mailbox_list_item_img_edge">60dp</dimen>
-	<dimen name="glb_mailbox_list_item_img_marginLeft">20dp</dimen>
 	<dimen name="glb_mailbox_list_item_llyt_info_height">60dp</dimen>
 	<dimen name="glb_mailbox_list_item_llyt_info_marginLeft">10dp</dimen>
 	<dimen name="glb_mailbox_list_item_tv_info_height">20dp</dimen>
