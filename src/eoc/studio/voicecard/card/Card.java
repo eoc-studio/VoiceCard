@@ -474,30 +474,45 @@ public class Card implements Parcelable
 		Log.d("Card", "mailTextSize: " + mailTextSize);
 		Log.d("Card", "mailTextColor: " + mailTextColor);
 
-		if (mailImageLink != null)
+		File imgFile = new File(context.getFilesDir(), fileName + "_img.png");
+		File soundFile = new File(context.getFilesDir(), fileName + ".3gp");
+		File signFile = new File(context.getFilesDir(), fileName + "_sign.png");
+		if (imgFile.exists())
+		{
+			Log.d("Card", "image is already at local " + imgFile.getAbsolutePath());
+			card.setImage(Uri.fromFile(imgFile));
+		}
+		else if (mailImageLink != null)
 		{
 			Uri img = Uri.parse(mailImageLink);
-			img = FileUtility.downloadToLocal(img, new File(context.getFilesDir(), fileName
-					+ "_img.png"));
+			img = FileUtility.downloadToLocal(img, imgFile);
 			card.setImage(img);
 		}
-		if (mailSoundLink != null)
+
+		if (soundFile.exists())
+		{
+			Log.d("Card", "sound is already at local " + soundFile.getAbsolutePath());
+			card.setSound(Uri.fromFile(soundFile));
+		}
+		else if (mailSoundLink != null)
 		{
 			Uri sound = Uri.parse(mailSoundLink);
-			sound = FileUtility.downloadToLocal(sound, new File(context.getFilesDir(), fileName
-					+ ".3gp"));
+			sound = FileUtility.downloadToLocal(sound, soundFile);
 			card.setSound(sound);
 		}
-		if (mailSignLink != null)
+
+		if (signFile.exists())
+		{
+			Log.d("Card", "sign is already at local " + signFile.getAbsolutePath());
+			card.setSignDraftImage(Uri.fromFile(signFile));
+		}
+		else if (mailSignLink != null)
 		{
 			Uri sign = Uri.parse(mail.getSign());
-			sign = FileUtility.downloadToLocal(sign, new File(context.getFilesDir(), fileName
-					+ "_sign.png"));
+			sign = FileUtility.downloadToLocal(sign, signFile);
 			card.setSignDraftImage(sign);
 		}
 
-		// mailTextSize =
-		// CardEditorActivity.getTextSizeByType(Integer.parseInt(mailSize));
 		card.setMessage(mailMessageBody, Integer.parseInt(mailTextSize),
 				Integer.valueOf(mailTextColor));
 
