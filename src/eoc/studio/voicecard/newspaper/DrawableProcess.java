@@ -13,9 +13,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import eoc.studio.voicecard.R;
 
@@ -32,6 +34,8 @@ public class DrawableProcess
             PROCESS_TYPE_LEFT_PHOTO_VIEW = 4, PROCESS_TYPE_LEFT_BOTTON_MAIN_VIEW = 5,
             PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW1 = 6, PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW2 = 7;
     protected static final boolean IS_USER_CALL_FUNCTION = true, IS_NOT_USER_CALL_FUNCTION = false;
+
+    protected static Uri imageUri;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected static int getNewspaperDrawable(int value)
@@ -162,14 +166,38 @@ public class DrawableProcess
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected static void getImage(final Activity activity, final int requestCode)
     {
-        Intent intent = new Intent();
+        imageUri = null;
+        imageUri = Uri.fromFile(new File(IMAGE_CACHE_PATH));
+        if (imageUri == null)
+        {
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.putExtra("crop", "true");
         intent.putExtra("outputX", 520);
         intent.putExtra("outputY", 260);
-        intent.putExtra("return-data", true);
-        activity.startActivityForResult(Intent.createChooser(intent, "Select image"), requestCode);
+        intent.putExtra("scale", true);
+        intent.putExtra("return-data", false);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("noFaceDetection", false);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    protected static Bitmap decodeUriAsBitmap(Context context, Uri uri)
+    {
+        Bitmap bitmap = null;
+        try
+        {
+            bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri));
+        }
+        catch (FileNotFoundException e)
+        {
+            return null;
+        }
+        return bitmap;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

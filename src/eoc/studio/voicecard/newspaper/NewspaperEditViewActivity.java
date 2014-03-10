@@ -253,32 +253,37 @@ public class NewspaperEditViewActivity extends Activity implements OnClickListen
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK)
         {
-            Bundle extras = null;
-            if (data == null)
-            {
-                return;
-            }
-            extras = data.getExtras();
             switch (requestCode)
             {
                 case DrawableProcess.PROCESS_TYPE_LEFT_PHOTO_VIEW:
                     mSetLeftEditPhotoIconView.setVisibility(View.INVISIBLE);
-                    ValueCacheProcessCenter.LEFT_PHOTO_BITMAP_CATCHE = (Bitmap) extras.get("data");
-                    mSetLeftPhotoView.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
-                            ValueCacheProcessCenter.LEFT_PHOTO_BITMAP_CATCHE));
+                    if (DrawableProcess.imageUri != null)
+                    {
+                        ValueCacheProcessCenter.LEFT_PHOTO_BITMAP_CATCHE = DrawableProcess.decodeUriAsBitmap(this,
+                                DrawableProcess.imageUri);
+                        mSetLeftPhotoView.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
+                                ValueCacheProcessCenter.LEFT_PHOTO_BITMAP_CATCHE));
+                    }
                     break;
                 case DrawableProcess.PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW1:
                     mSetLeftBottomEditPhotoIconView1.setVisibility(View.INVISIBLE);
-                    ValueCacheProcessCenter.LEFT_BOTTON_PHOTO_BITMAP_CATCHE1 = (Bitmap) extras.get("data");
-                    mSetLeftBottomEditPhotoView1.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
-                            ValueCacheProcessCenter.LEFT_BOTTON_PHOTO_BITMAP_CATCHE1));
+                    if (DrawableProcess.imageUri != null)
+                    {
+                        ValueCacheProcessCenter.LEFT_BOTTON_PHOTO_BITMAP_CATCHE1 = DrawableProcess.decodeUriAsBitmap(
+                                this, DrawableProcess.imageUri);
+                        mSetLeftBottomEditPhotoView1.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
+                                ValueCacheProcessCenter.LEFT_BOTTON_PHOTO_BITMAP_CATCHE1));
+                    }
                     break;
                 case DrawableProcess.PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW2:
                     mSetLeftBottomEditPhotoIconView2.setVisibility(View.INVISIBLE);
-                    ValueCacheProcessCenter.LEFT_BOTTON_PHOTO_BITMAP_CATCHE2 = (Bitmap) extras.get("data");
-
-                    mSetLeftBottomEditPhotoView2.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
-                            ValueCacheProcessCenter.LEFT_BOTTON_PHOTO_BITMAP_CATCHE2));
+                    if (DrawableProcess.imageUri != null)
+                    {
+                        ValueCacheProcessCenter.LEFT_BOTTON_PHOTO_BITMAP_CATCHE2 = DrawableProcess.decodeUriAsBitmap(
+                                this, DrawableProcess.imageUri);
+                        mSetLeftBottomEditPhotoView2.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
+                                ValueCacheProcessCenter.LEFT_BOTTON_PHOTO_BITMAP_CATCHE2));
+                    }
                     break;
             }
         }

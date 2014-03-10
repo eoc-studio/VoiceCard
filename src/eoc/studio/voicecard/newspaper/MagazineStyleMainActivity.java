@@ -117,23 +117,30 @@ public class MagazineStyleMainActivity extends Activity implements OnClickListen
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK)
         {
-            Bundle extras = null;
-            if (data == null)
-            {
-                return;
-            }
-            extras = data.getExtras();
             switch (requestCode)
             {
                 case DrawableProcess.PROCESS_TYPE_TITLE:
+                    if (data == null)
+                    {
+                        return;
+                    }
+                    Bundle extras = data.getExtras();
+                    if (extras == null)
+                    {
+                        return;
+                    }
                     mTitleTextView.setText("");
                     mBtnTitleView
                             .setBackgroundResource(DrawableProcess.getMagazineDrawable(extras.getInt("titleView")));
                     break;
                 case DrawableProcess.PROCESS_TYPE_MAIN_PHOTO:
-                    ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE = (Bitmap) extras.get("data");
-                    mBtnMainPhotoView.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
-                            ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE));
+                    if (DrawableProcess.imageUri != null)
+                    {
+                        ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE = DrawableProcess.decodeUriAsBitmap(this,
+                                DrawableProcess.imageUri);
+                        mBtnMainPhotoView.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
+                                ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE));
+                    }
                     break;
                 case DrawableProcess.PROCESS_TYPE_LEFT_BOTTON_MAIN_VIEW:
                     mMagazineSetLeftBottomPhotoView.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,

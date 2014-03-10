@@ -27,13 +27,41 @@ public class ValueCacheProcessCenter
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////
     protected static void clearALLCacheValue()
     {
-        MAIN_PHOTO_BITMAP_CATCHE = null;
-        LEFT_MAIN_BITMAP_CATCHE = null;
-        LEFT_PHOTO_BITMAP_CATCHE = null;
+        if (MAIN_PHOTO_BITMAP_CATCHE != null)
+        {
+            MAIN_PHOTO_BITMAP_CATCHE.recycle();
+            MAIN_PHOTO_BITMAP_CATCHE = null;
+        }
 
-        LEFT_BOTTON_MAIN_BITMAP_CATCHE = null;
-        LEFT_BOTTON_PHOTO_BITMAP_CATCHE1 = null;
-        LEFT_BOTTON_PHOTO_BITMAP_CATCHE2 = null;
+        if (LEFT_MAIN_BITMAP_CATCHE != null)
+        {
+            LEFT_MAIN_BITMAP_CATCHE.recycle();
+            LEFT_MAIN_BITMAP_CATCHE = null;
+        }
+
+        if (LEFT_PHOTO_BITMAP_CATCHE != null)
+        {
+            LEFT_PHOTO_BITMAP_CATCHE.recycle();
+            LEFT_PHOTO_BITMAP_CATCHE = null;
+        }
+
+        if (LEFT_BOTTON_MAIN_BITMAP_CATCHE != null)
+        {
+            LEFT_BOTTON_MAIN_BITMAP_CATCHE.recycle();
+            LEFT_BOTTON_MAIN_BITMAP_CATCHE = null;
+        }
+
+        if (LEFT_BOTTON_PHOTO_BITMAP_CATCHE1 != null)
+        {
+            LEFT_BOTTON_PHOTO_BITMAP_CATCHE1.recycle();
+            LEFT_BOTTON_PHOTO_BITMAP_CATCHE1 = null;
+        }
+
+        if (LEFT_BOTTON_PHOTO_BITMAP_CATCHE2 != null)
+        {
+            LEFT_BOTTON_PHOTO_BITMAP_CATCHE2.recycle();
+            LEFT_BOTTON_PHOTO_BITMAP_CATCHE2 = null;
+        }
 
         selectedStyleType = -1;
         callProcessingView = -1;
