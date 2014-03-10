@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">VoiceCard</string>
     <string name="action_settings">設定</string>
     <string name="hello_world">Hello world!</string>
@@ -19,6 +20,21 @@
     <string name="file_process_loading">Loading</string>
     <string name="noData">NoData</string>
 
+    <!-- About Newspaper -->
+    <string name="magazine_edit_background_string">封面底圖</string>
+    <string name="newspaper_edit_title_string">選擇標題</string>
+    <string name="newspaper_edit_main_photo_string">圖片</string>
+    <string name="newspaper_edit_photo_and_text_string">圖文</string>
+    <string name="set_dilog_ok">確定</string>
+    <string name="set_dilog_cancel">取消</string>
+    <string name="save_image">另存圖檔</string>
+    <string name="select_friend">選擇收件人</string>
+    <string name="send_news">送出新聞</string>
+    <string name="news_save_ok">儲存成功</string>
+    <string name="news_save_fail">儲存失敗</string>
+    <string name="news_send_fail">傳送失敗</string>
+    <string name="news_no_selection_friend">請選擇聯絡人</string>
+
     <!-- About MemorialDay -->
     <string name="current_month_placeholder">1970-January</string>
     <string name="previous_month_placeholder">&lt;&lt;</string>
@@ -29,12 +45,12 @@
 
     <!-- MemorialDayNotificationView -->
     <string name="a_normal_day">平凡的一天</string>
-    
+
     <!-- About Select Friend -->
     <string name="search_friend">搜尋朋友</string>
     <string name="user_not_install_message">若聯絡人尚未安裝則發送訊息通知</string>
     <string name="user_no_result">沒有朋友或是沒有搜尋之項目</string>
-    
+
     <!-- About Friend Info -->
     <string name="not_install">未安裝</string>
 
@@ -55,14 +71,14 @@
     <string name="processing">處理中</string>
     <string name="please_wait">請稍待</string>
     <string name="data_incomplete">請將四樣卡片資料填滿</string>
-    
+
     <!-- view_recommend_listview_item -->
-	<string name="detail_info">詳細介紹</string>		 
-	
-	<!-- Main Loading -->
-	<string name="main_loading">讀取中...</string>		
-	
-	<!-- Audio Recorder -->
+    <string name="detail_info">詳細介紹</string>
+
+    <!-- Main Loading -->
+    <string name="main_loading">讀取中...</string>
+
+    <!-- Audio Recorder -->
     <string name="start_recording">開始錄音</string>
     <string name="open_file">開啟存檔</string>
     <string name="pause">暫停</string>
@@ -70,4 +86,5 @@
     <string name="play">試聽</string>
     <string name="save">儲存錄音</string>
     <string name="delete">刪除</string>
+
 </resources>

@@ -21,6 +21,7 @@ import eoc.studio.voicecard.R;
 
 public class DrawableProcess
 {
+    protected static final String IMAGE_CACHE_PATH = Environment.getExternalStorageDirectory() + "/Screenshot.jpg";
     protected static final String IMAGE_DEFAULT_PATH = Environment.getExternalStorageDirectory() + "/DCIM/";
     protected static final int[] NEWSPAPER_STYLE_TITLE_DRAWABLE = new int[]
     { R.drawable.news_t01, R.drawable.news_t02, R.drawable.news_t03, R.drawable.news_t04, R.drawable.news_t05 };
@@ -30,6 +31,7 @@ public class DrawableProcess
     protected static final int PROCESS_TYPE_TITLE = 1, PROCESS_TYPE_MAIN_PHOTO = 2, PROCESS_TYPE_LEFT_MAIN_VIEW = 3,
             PROCESS_TYPE_LEFT_PHOTO_VIEW = 4, PROCESS_TYPE_LEFT_BOTTON_MAIN_VIEW = 5,
             PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW1 = 6, PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW2 = 7;
+    protected static final boolean IS_USER_CALL_FUNCTION = true, IS_NOT_USER_CALL_FUNCTION = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected static int getNewspaperDrawable(int value)
@@ -60,14 +62,22 @@ public class DrawableProcess
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    protected static boolean saveBitmap(Context context, Bitmap bitmap)
+    protected static boolean saveBitmap(Context context, Bitmap bitmap, boolean userUse)
     {
         if (bitmap == null)
         {
             return false;
         }
 
-        File imagePath = new File(IMAGE_DEFAULT_PATH + getDateTime() + ".jpg");
+        File imagePath = null;
+        if (userUse)
+        {
+            imagePath = new File(IMAGE_DEFAULT_PATH + getDateTime() + ".jpg");
+        }
+        else
+        {
+            imagePath = new File(IMAGE_CACHE_PATH);
+        }
 
         try
         {
@@ -75,7 +85,10 @@ public class DrawableProcess
             bitmap.compress(CompressFormat.JPEG, 80, fos);
             fos.flush();
             fos.close();
-            reScanMedia(context, imagePath);
+            if (userUse)
+            {
+                reScanMedia(context, imagePath);
+            }
             return true;
         }
         catch (FileNotFoundException e)
@@ -86,6 +99,12 @@ public class DrawableProcess
         {
             return false;
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    protected static boolean saveBitmap(Context context, Bitmap bitmap)
+    {
+        return saveBitmap(context, bitmap, IS_NOT_USER_CALL_FUNCTION);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

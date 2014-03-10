@@ -1,13 +1,18 @@
 package eoc.studio.voicecard.newspaper;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.facebook.FacebookManager;
 import eoc.studio.voicecard.facebook.enetities.FriendInfo;
+import eoc.studio.voicecard.facebook.friends.SelectFriendActivity;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -18,15 +23,19 @@ import android.widget.Toast;
 
 public class NewspaperSendActivity extends Activity implements OnClickListener
 {
+    private static Context mContext;
+    private static String TAG = "NewspaperSendActivity";
     private static RelativeLayout mSaveButton, mSelectFriendButton, mSendButton;
     private static ImageView mMainImageView;
     private static Button mBackBtnView;
+    private static String mFiendId = "";
 
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        mContext = this;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_send_newspaper_view);
         findView();
@@ -51,6 +60,7 @@ public class NewspaperSendActivity extends Activity implements OnClickListener
 
         if (ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE != null)
         {
+            DrawableProcess.saveBitmap(this, ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE);
             mMainImageView.setImageBitmap(ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE);
         }
         else
@@ -86,25 +96,17 @@ public class NewspaperSendActivity extends Activity implements OnClickListener
                 break;
             case R.id.saveButton:
             {
-                if (DrawableProcess.saveBitmap(this, ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE))
-                {
-                    Toast.makeText(this, getResources().getString(R.string.news_save_ok), Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    Toast.makeText(this, getResources().getString(R.string.news_save_fail), Toast.LENGTH_LONG).show();
-                }
+                saveImage();
             }
                 break;
             case R.id.selectFriendButton:
             {
-                addFacebookFriends();
-                System.out.println("*****************magazineImageButton");
+                selectFacebookFriends();
             }
                 break;
             case R.id.sendButton:
             {
-                System.out.println("*****************btnBackMainMenu");
+                sendNews();
             }
                 break;
         }
@@ -124,23 +126,15 @@ public class NewspaperSendActivity extends Activity implements OnClickListener
                     if (bundle != null)
                     {
                         ArrayList<FriendInfo> friendList = bundle.getParcelableArrayList(FriendInfo.GET_FRIEND);
-//                        if (friendList != null)
-//                        {
-//                            int j = 1;
-//                            Log.d(TAG, "********Total Count" + friendList.size());
-//                            for (int i = 0; i < friendList.size(); i++)
-//                            {
-//                                if (friendList.get(i).getFriendBirthday() != null
-//                                        && !friendList.get(i).getFriendBirthday().equals("null"))
-//                                {
-//                                    String getNewFormatOfBirthday = DataProcess.formatDate(DataProcess
-//                                            .checkFacebookBirthdayFormats(friendList.get(i).getFriendBirthday()),
-//                                            "yyyyMMdd");
-//                                    DataProcess.addEvent(this, friendList.get(i).getFriendName() + "'s Birthday",
-//                                            getNewFormatOfBirthday);
-//                                }
-//                            }
-//                        }
+                        if (friendList != null)
+                        {
+                            int j = 1;
+                            for (int i = 0; i < friendList.size(); i++)
+                            {
+                                Log.d(TAG, "ID is " + friendList.get(i).getFriendId());
+                                mFiendId = friendList.get(i).getFriendId();
+                            }
+                        }
                     }
                 }
                 break;
@@ -148,9 +142,44 @@ public class NewspaperSendActivity extends Activity implements OnClickListener
     }
 
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void addFacebookFriends()
+    private void saveImage()
     {
-        FacebookManager.getInstance(this);
+        if (DrawableProcess.saveBitmap(this, ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE,
+                DrawableProcess.IS_USER_CALL_FUNCTION))
+        {
+            Toast.makeText(this, getResources().getString(R.string.news_save_ok), Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Toast.makeText(this, getResources().getString(R.string.news_save_fail), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void selectFacebookFriends()
+    {
+        Intent intent = new Intent(this, SelectFriendActivity.class);
+        startActivityForResult(intent, FriendInfo.GET_FRIEND_REQUEST_CODE);
+    }
+
+    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void sendNews()
+    {
+        if (ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE != null && !mFiendId.equals(""))
+        {
+            File filePath = new File(DrawableProcess.IMAGE_CACHE_PATH);
+
+            if (filePath.exists())
+            {
+                FacebookManager.getInstance(mContext).publishNews(this, mFiendId,
+                        Uri.parse(filePath.getPath().toString()));
+                mFiendId = "";
+            }
+        }
+        else
+        {
+            Toast.makeText(this, getResources().getString(R.string.news_no_selection_friend), Toast.LENGTH_LONG).show();
+        }
     }
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

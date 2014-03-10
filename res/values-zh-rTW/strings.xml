@@ -32,6 +32,8 @@
     <string name="send_news">送出新聞</string>
     <string name="news_save_ok">儲存成功</string>
     <string name="news_save_fail">儲存失敗</string>
+    <string name="news_send_fail">傳送失敗</string>
+    <string name="news_no_selection_friend">請選擇聯絡人</string>
 
     <!-- About MemorialDay -->
     <string name="current_month_placeholder">1970-January</string>
