@@ -94,13 +94,13 @@ public class MainLoadingActivity extends Activity
 
 	private final static String TAG_PROGRESS = "PROGRESS";
 
-	private static final int FACEBOOK_ID_PROGRESS = 60;
+	private static final int FACEBOOK_ID_PROGRESS = 45;
 
-	private static final int FACEBOOK_USER_PROFILE_PROGRESS = 60;
+	private static final int FACEBOOK_USER_PROFILE_PROGRESS = 45;
 
-	private static final int INIT_HTTP_MANAGER_PROGRESS = 60;
+	private static final int INIT_HTTP_MANAGER_PROGRESS = 45;
 
-	private static final int MAILBOX_COUNT_PROGRESS = 60;
+	private static final int MAILBOX_COUNT_PROGRESS = 45;
 
 	private static final int MAILBOX_RECEIVE_PROGRESS = 45;
 
@@ -110,13 +110,13 @@ public class MainLoadingActivity extends Activity
 
 	private static final int COPY_CARD_AND_CATEGORY = 15;
 
-	// private static final int GET_CATEGORY_INFO_PROGRESS = 15;
-	//
-	// private static final int GET_CARD_INFO_PROGRESS = 15;
+	private static final int GET_CATEGORY_INFO_PROGRESS = 15;
 
-	// private static final int GET_CATEGORY_IMGS_PROGRESS = 15;
-	//
-	// private static final int GET_CARD_IMGS_PROGRESS = 15;
+	private static final int GET_CARD_INFO_PROGRESS = 15;
+
+	private static final int GET_CATEGORY_IMGS_PROGRESS = 15;
+
+	private static final int GET_CARD_IMGS_PROGRESS = 15;
 
 	private Context context;
 
@@ -155,9 +155,8 @@ public class MainLoadingActivity extends Activity
 			if (progress >= FACEBOOK_ID_PROGRESS + FACEBOOK_USER_PROFILE_PROGRESS
 					+ INIT_HTTP_MANAGER_PROGRESS + MAILBOX_COUNT_PROGRESS
 					+ MAILBOX_RECEIVE_PROGRESS + INIT_DATABASE_PROGRESS + GET_RECOMMEND_PROGRESS
-					+ COPY_CARD_AND_CATEGORY)
-			// + GET_CATEGORY_INFO_PROGRESS + GET_CARD_INFO_PROGRESS
-			// + GET_CATEGORY_IMGS_PROGRESS + GET_CARD_IMGS_PROGRESS)
+					+ COPY_CARD_AND_CATEGORY + GET_CATEGORY_INFO_PROGRESS + GET_CARD_INFO_PROGRESS
+					+ GET_CATEGORY_IMGS_PROGRESS + GET_CARD_IMGS_PROGRESS)
 			{
 				goToMainActivity();
 				progress = 361;
@@ -185,44 +184,31 @@ public class MainLoadingActivity extends Activity
 		progressWheel = (ProgressWheel) findViewById(R.id.act_main_loading_progresswheel_main);
 		progress = 0;
 
-//		facebookManager = FacebookManager.getInstance(MainLoadingActivity.this);
-//		
-//        if (facebookManager != null)
-//        {
-//            facebookManager.getUserProfile(MainLoadingActivity.this, facebookManager.new RequestGraphUserCallback() {
-//                @Override
-//                public void onCompleted(GraphUser user, Response response) {
-//                    if (user != null) {
-//                        JSONObject userJSON = user.getInnerJSONObject();
-//                        if(userJSON != null) {
-//                            UserInfo userInfo = new UserInfo(userJSON);
-//                            
-//                            Log.d(TAG, "userInfo id is " + userInfo.getId());
-//                            Log.d(TAG, "userInfo : " + userInfo.toString());
-//                        }
-//                        
-//                        if(response!=null){
-//                        	Log.d(TAG, "user is non-null,response is "+response);
-//                        }
-//                    } else {
-//                        Log.d(TAG, "userInfo id is null ");
-//                        
-//                        if(response!=null){
-//                        	Log.d(TAG, "user is null,response is "+response);
-//                        }
-//                    }
-//                }
-//            });
-//        }
-		
+		facebookManager = FacebookManager.getInstance(MainLoadingActivity.this);
+
+		if (facebookManager != null)
+		{
+			facebookManager.getUserProfile(MainLoadingActivity.this,
+					facebookManager.new RequestGraphUserCallback()
+					{
+						@Override
+						public void onCompleted(GraphUser user, Response response)
+						{
+
+							getFacebookUserProfile(user, response);
+
+						}
+					});
+		}
+
 		httpManager = new HttpManager();
 		startProgressWheel();
 		initMailDataBase();
 		initCardDataBase();
-		// getCategoryInfoFromServer();
-		// getCardInfoFromServer();
-		// downloadCategoryAndCardImages();
-		getRecommendInfo(); 
+		getCategoryInfoFromServer();
+		getCardInfoFromServer();
+
+		getRecommendInfo();
 		copyCardAndCategoryFromAsset();
 
 	}
@@ -254,53 +240,77 @@ public class MainLoadingActivity extends Activity
 		super.onResume();
 		Log.d(TAG, "onResume()");
 
-		openFacebookSession();
+//		openFacebookSession();
 
 	}
 
 	private void copyCardAndCategoryFromAsset()
 	{
-		new Thread() {  
-            @Override  
-            public void run() {  
-                super.run();  
-        		if (FileUtility.copyAssetFolder(getAssets(), "files", getFilesDir().getAbsolutePath()))
-        		{
-        			addProgressWheel(COPY_CARD_AND_CATEGORY);
-        			Log.d(TAG_PROGRESS, "COPY_CARD_AND_CATEGORY");
-        		}
-    
-            }  
-        }.start();   
+
+		new Thread()
+		{
+			@Override
+			public void run()
+			{
+
+				super.run();
+				if (FileUtility.copyAssetFolder(getAssets(), "files", getFilesDir()
+						.getAbsolutePath()))
+				{
+					addProgressWheel(COPY_CARD_AND_CATEGORY);
+					Log.d(TAG_PROGRESS, "COPY_CARD_AND_CATEGORY");
+				}
+
+			}
+		}.start();
 	}
 
-	private void downloadCategoryAndCardImages()
+	private void downloadCategoryImages()
 	{
 
 		ArrayList<CategoryAssistant> categoryAssistantList = new ArrayList<CategoryAssistant>();
-		categoryAssistantList = cardDatabaseHelper.getEnabledCategory(cardDatabaseHelper
-				.getSystemDPI(context));
-		// Log.d(TAG, "onResume() categoryAssistantList :" +
-		// categoryAssistantList);
+		// categoryAssistantList =
+		// cardDatabaseHelper.getEnabledCategory(cardDatabaseHelper
+		// .getSystemDPI(context));
 
-		downlaodCategoryAysncTaskListener = new DownlaodCategoryAysncTaskListener()
+		categoryAssistantList = cardDatabaseHelper
+				.getEnabledAndLocalIsNullCategory(cardDatabaseHelper.getSystemDPI(context));
+
+		Log.d(TAG, "onResume() EnabledAndLocalIsNull categoryAssistantList :"
+				+ categoryAssistantList);
+		if (categoryAssistantList != null)
 		{
-
-			@Override
-			public void processFinish(ArrayList<CategoryAssistant> result)
+			downlaodCategoryAysncTaskListener = new DownlaodCategoryAysncTaskListener()
 			{
 
-				cardDatabaseHelper.updateCategoryImgLocalPath(result,
-						cardDatabaseHelper.getSystemDPI(context));
+				@Override
+				public void processFinish(ArrayList<CategoryAssistant> result)
+				{
 
-				// addProgressWheel(GET_CATEGORY_IMGS_PROGRESS);
-				// Log.d(TAG_PROGRESS, "GET_CATEGORY_IMGS_PROGRESS");
-			}
+					cardDatabaseHelper.updateCategoryImgLocalPath(result,
+							cardDatabaseHelper.getSystemDPI(context));
 
-		};
-		DownlaodCategoryAysncTask downlaodCategoryAysncTask = new DownlaodCategoryAysncTask(
-				context, downlaodCategoryAysncTaskListener);
-		downlaodCategoryAysncTask.execute(categoryAssistantList);
+					addProgressWheel(GET_CATEGORY_IMGS_PROGRESS);
+					Log.d(TAG_PROGRESS, "GET_CATEGORY_IMGS_PROGRESS");
+				}
+
+			};
+			DownlaodCategoryAysncTask downlaodCategoryAysncTask = new DownlaodCategoryAysncTask(
+					context, downlaodCategoryAysncTaskListener);
+			downlaodCategoryAysncTask.execute(categoryAssistantList);
+		}
+		else
+		{
+			addProgressWheel(GET_CATEGORY_IMGS_PROGRESS);
+			Log.d(TAG_PROGRESS, "GET_CATEGORY_IMGS_PROGRESS");
+		}
+
+		
+
+	}
+
+	private void downloadCradImages()
+	{
 
 		downlaodCardAysncTaskListener = new DownlaodCardAysncTaskListener()
 		{
@@ -310,25 +320,39 @@ public class MainLoadingActivity extends Activity
 
 				cardDatabaseHelper.updateCardImgLocalPath(result,
 						cardDatabaseHelper.getSystemDPI(context));
-				// addProgressWheel(GET_CARD_IMGS_PROGRESS);
-				// Log.d(TAG_PROGRESS, "GET_CARD_IMGS_PROGRESS");
+				addProgressWheel(GET_CARD_IMGS_PROGRESS);
+				Log.d(TAG_PROGRESS, "GET_CARD_IMGS_PROGRESS");
 			}
 		};
 		ArrayList<CardAssistant> cardAssistantList = new ArrayList<CardAssistant>();
-		cardAssistantList = cardDatabaseHelper.getEnabledCard(cardDatabaseHelper
+		/*
+		 * cardAssistantList =
+		 * cardDatabaseHelper.getEnabledCard(cardDatabaseHelper
+		 * .getSystemDPI(context));
+		 */
+		cardAssistantList = cardDatabaseHelper.getEnabledAndLocalIsNullCard(cardDatabaseHelper
 				.getSystemDPI(context));
-
 		Log.d(TAG, "onResume() cardAssistantList :" + cardAssistantList);
 
-		for (int index = 0; index < cardAssistantList.size(); index++)
+		if (cardAssistantList != null)
 		{
-			Log.d(TAG, "onResume() cardAssistantList getCardName:"
-					+ cardAssistantList.get(index).getCardName());
-		}
 
-		DownlaodCardAysncTask downlaodCardAysncTask = new DownlaodCardAysncTask(context,
-				downlaodCardAysncTaskListener);
-		downlaodCardAysncTask.execute(cardAssistantList);
+			for (int index = 0; index < cardAssistantList.size(); index++)
+			{
+				Log.d(TAG,
+						"onResume() cardAssistantList getCardName:"
+								+ cardAssistantList.get(index).getCardName());
+			}
+
+			DownlaodCardAysncTask downlaodCardAysncTask = new DownlaodCardAysncTask(context,
+					downlaodCardAysncTaskListener);
+			downlaodCardAysncTask.execute(cardAssistantList);
+		}
+		else
+		{
+			addProgressWheel(GET_CARD_IMGS_PROGRESS);
+			Log.d(TAG_PROGRESS, "GET_CARD_IMGS_PROGRESS");
+		}
 	}
 
 	private void initMailDataBase()
@@ -357,8 +381,10 @@ public class MainLoadingActivity extends Activity
 
 				if (recommends != null && recommends.size() > 0)
 				{
-//					Log.e(TAG, "recommends.get(0).getImg():" + recommends.get(0).getImg()
-//							+ "recommends.get(0).getName():" + recommends.get(0).getName());
+					// Log.e(TAG, "recommends.get(0).getImg():" +
+					// recommends.get(0).getImg()
+					// + "recommends.get(0).getName():" +
+					// recommends.get(0).getName());
 					recommendBitmapUrl = recommends.get(0).getImg();
 					recommendName = recommends.get(0).getName();
 					addProgressWheel(GET_RECOMMEND_PROGRESS);
@@ -382,24 +408,53 @@ public class MainLoadingActivity extends Activity
 
 				if (isSuccess)
 				{
-					Log.d(TAG, "gsonCategoryList " + gsonCategoryList.toString());
 
-					cardDatabaseHelper.deleteCategoryTable();
+					for (int index = 0; index < gsonCategoryList.size(); index++)
+					{
+//						Log.d(TAG,
+//								"gsonCategoryList index:[" + index + "]"
+//										+ gsonCategoryList.get(index).toString());
+
+					}
+					// cardDatabaseHelper.deleteCategoryTable();
 					// write to datebase
 					for (int index = 0; index < gsonCategoryList.size(); index++)
 					{
-						cardDatabaseHelper.createCategoryRow(gsonCategoryList.get(index)
-								.getCategoryID(), gsonCategoryList.get(index).getCategoryName(),
-								gsonCategoryList.get(index).getCategoryEnable(), gsonCategoryList
-										.get(index).getCategoryImageMDPI(),
-								gsonCategoryList.get(index).getCategoryImageHDPI(),
-								gsonCategoryList.get(index).getCategoryImageXHDPI(),
-								gsonCategoryList.get(index).getCategoryImageXXHDPI(), null, null,
-								null, null);
+
+						if (cardDatabaseHelper.isExistCategory(gsonCategoryList.get(index)
+								.getCategoryID()))
+						{
+							// if the category exist , update the row
+							cardDatabaseHelper.updateCategoryRow(gsonCategoryList.get(index)
+									.getCategoryID(),
+									gsonCategoryList.get(index).getCategoryName(), gsonCategoryList
+											.get(index).getCategoryEnable(),
+									gsonCategoryList.get(index).getCategoryImageMDPI(),
+									gsonCategoryList.get(index).getCategoryImageHDPI(),
+									gsonCategoryList.get(index).getCategoryImageXHDPI(),
+									gsonCategoryList.get(index).getCategoryImageXXHDPI(), null,
+									null, null, null);
+						}
+						else
+						{
+							// if the cateory is not exist, insert the row
+							cardDatabaseHelper.createCategoryRow(gsonCategoryList.get(index)
+									.getCategoryID(),
+									gsonCategoryList.get(index).getCategoryName(), gsonCategoryList
+											.get(index).getCategoryEnable(),
+									gsonCategoryList.get(index).getCategoryImageMDPI(),
+									gsonCategoryList.get(index).getCategoryImageHDPI(),
+									gsonCategoryList.get(index).getCategoryImageXHDPI(),
+									gsonCategoryList.get(index).getCategoryImageXXHDPI(), null,
+									null, null, null);
+						}
+
 					}
 
-					// addProgressWheel(GET_CATEGORY_INFO_PROGRESS);
-					// Log.d(TAG_PROGRESS, "GET_CATEGORY_INFO_PROGRESS");
+					addProgressWheel(GET_CATEGORY_INFO_PROGRESS);
+					Log.d(TAG_PROGRESS, "GET_CATEGORY_INFO_PROGRESS");
+
+					downloadCategoryImages();
 				}
 			}
 		});
@@ -417,34 +472,62 @@ public class MainLoadingActivity extends Activity
 				if (isSuccess)
 				{
 
-					Log.d(TAG, "gsonCardList " + gsonCardList.toString());
-					cardDatabaseHelper.deleteCardTable();
+					for (int index = 0; index < gsonCardList.size(); index++)
+					{
+//						Log.d(TAG, "gsonCardList index:[" + index + "]"
+//								+ gsonCardList.get(index).toString());
+					}
+
+					// cardDatabaseHelper.deleteCardTable();
 					// write to datebase
 					for (int index = 0; index < gsonCardList.size(); index++)
 					{
 						CardImages cardImages = new CardImages(gsonCardList.get(index),
 								cardDatabaseHelper.getSystemDPI(context));
 
-						cardDatabaseHelper.createCardRow(cardDatabaseHelper.getSystemDPI(context),
-								Integer.valueOf(gsonCardList.get(index).getCardID()), gsonCardList
-										.get(index).getCardName(), Integer.valueOf(gsonCardList
-										.get(index).getCategoryID()), gsonCardList.get(index)
-										.getCardEnable(), gsonCardList.get(index).getCardFont(),
-								cardImages.getCloseURL(), cardImages.getCoverURL(), cardImages
-										.getLeftURL(), cardImages.getOpenURL(), cardImages
-										.getRightURL(), null, null, null, null, null, 0);
-					}
-					// addProgressWheel(GET_CARD_INFO_PROGRESS);
-					// Log.d(TAG_PROGRESS, "GET_CARD_INFO_PROGRESS");
+						if (cardDatabaseHelper.isExistCard(gsonCardList.get(index).getCardID()))
+						{
+							// if the card exist , update the row
 
-					// downloadCategoryAndCardImages();
+							cardDatabaseHelper.updateCardRow(cardDatabaseHelper
+									.getSystemDPI(context), Integer.valueOf(gsonCardList.get(index)
+									.getCardID()), gsonCardList.get(index).getCardName(), Integer
+									.valueOf(gsonCardList.get(index).getCategoryID()), gsonCardList
+									.get(index).getCardEnable(), gsonCardList.get(index)
+									.getCardFont(), cardImages.getCloseURL(), cardImages
+									.getCoverURL(), cardImages.getLeftURL(), cardImages
+									.getOpenURL(), cardImages.getRightURL(), null, null, null,
+									null, null);
+						}
+						else
+						{
+							// if the card is not exist, insert the row
+
+							cardDatabaseHelper.createCardRow(cardDatabaseHelper
+									.getSystemDPI(context), Integer.valueOf(gsonCardList.get(index)
+									.getCardID()), gsonCardList.get(index).getCardName(), Integer
+									.valueOf(gsonCardList.get(index).getCategoryID()), gsonCardList
+									.get(index).getCardEnable(), gsonCardList.get(index)
+									.getCardFont(), cardImages.getCloseURL(), cardImages
+									.getCoverURL(), cardImages.getLeftURL(), cardImages
+									.getOpenURL(), cardImages.getRightURL(), null, null, null,
+									null, null, 0);
+						}
+
+					}
+					 addProgressWheel(GET_CARD_INFO_PROGRESS);
+					 Log.d(TAG_PROGRESS, "GET_CARD_INFO_PROGRESS");
+					 downloadCradImages();
+					 
 				}
 
 			}
 		});
 	}
 
-	public String getMobile(){
+	public String getMobile()
+	{
+
 		TelephonyManager tm = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
 		Log.d(TAG, "getMobile" +tm.getLine1Number());
@@ -583,63 +666,92 @@ public class MainLoadingActivity extends Activity
 					public void onCompleted(GraphUser user, Response response)
 					{
 
-						if (user != null)
-						{
-							Map<String, Object> responseMap = new HashMap<String, Object>();
-							GraphObject graphObject = response.getGraphObject();
-							responseMap = graphObject.asMap();
-							Log.d("", "Response Map KeySet - " + responseMap.keySet());
+						getFacebookUserProfile(user, response);
+					}
 
-							JSONObject userJSON = user.getInnerJSONObject();
-							if (userJSON != null)
-							{
-								try
-								{
-									facebookUserID = userJSON.getString(JSONTag.ID);
-									Log.d(TAG, "id:" + userJSON.getString(JSONTag.ID));
-									Log.d(TAG,
-											"picture link:"
-													+ userJSON.getJSONObject(JSONTag.PICTURE)
-															.getJSONObject("data").getString("url"));
-									Log.d(TAG, "email:" + userJSON.getString(JSONTag.EMAIL));
-									Log.d(TAG, "name:" + userJSON.getString(JSONTag.NAME));
-									Log.d(TAG, "gender:" + userJSON.getString(JSONTag.GENDER));
-									Log.d(TAG, "birthday:" + userJSON.getString(JSONTag.BIRTHDAY));
-									Log.d(TAG, "link:" + userJSON.getString(JSONTag.LINK));
-									Log.d(TAG, "timezone:" + userJSON.getInt(JSONTag.TIMEZONE));
-									Log.d(TAG, "locale:" + userJSON.getString(JSONTag.LOCALE));
-								}
-								catch (Exception e)
-								{
-									e.printStackTrace();
-								}
-							}
 
-							addProgressWheel(FACEBOOK_ID_PROGRESS);
-							Log.d(TAG_PROGRESS, "FACEBOOK_ID_PROGRESS");
-							if (facebookUserID != null)
-							{
 
-								httpManager.init(context, facebookUserID);
-								addProgressWheel(INIT_HTTP_MANAGER_PROGRESS);
-								Log.d(TAG_PROGRESS, "INIT_HTTP_MANAGER_PROGRESS");
-								GsonFacebookUser gsonFacebookUser = null;
-								try
-								{
+				});
 
-									gsonFacebookUser = new GsonFacebookUser(facebookUserID,
-											userJSON.getString(JSONTag.BIRTHDAY),
-											getPictureLink(userJSON), getStringJsonObjectByCheck(
-													userJSON, JSONTag.LOCALE),
-											getStringJsonObjectByCheck(userJSON, JSONTag.LINK),
-											getHomeTown(userJSON), getStringJsonObjectByCheck(
-													userJSON, JSONTag.TIMEZONE),
-											"this is dummy title", getStringJsonObjectByCheck(
-													userJSON, JSONTag.EMAIL),
-											getStringJsonObjectByCheck(userJSON, JSONTag.NAME),
-											getStringJsonObjectByCheck(userJSON, JSONTag.GENDER),
-											getEducation(userJSON), getWork(userJSON),
-											getMobile());
+				StringBuilder queryString = new StringBuilder().append(JSONTag.NAME).append(", ")
+						.append(JSONTag.BIRTHDAY).append(", ").append(JSONTag.PICTURE).append(", ")
+						.append(JSONTag.EMAIL).append(", ").append(JSONTag.EDUCATION).append(", ")
+						.append(JSONTag.WORK).append(", ").append(JSONTag.GENDER).append(", ")
+						.append(JSONTag.LINK).append(", ").append(JSONTag.HOMETOWN).append(", ")
+						.append(JSONTag.TIMEZONE).append(", ").append(JSONTag.LOCALE);
+				Bundle requestParams = getMe.getParameters();
+				requestParams.putString(BundleTag.FIELDS, queryString.toString());
+				getMe.setParameters(requestParams);
+
+				getMe.executeAsync();
+			}
+			else
+			{
+				session.requestNewReadPermissions(new Session.NewPermissionsRequest(
+						MainLoadingActivity.this, Permissions.READ_PERMISSION));
+			}
+		}
+	}
+
+	private void getFacebookUserProfile(GraphUser user, Response response)
+	{
+
+		if (user != null)
+		{
+			Map<String, Object> responseMap = new HashMap<String, Object>();
+			GraphObject graphObject = response.getGraphObject();
+			responseMap = graphObject.asMap();
+			Log.d("", "Response Map KeySet - " + responseMap.keySet());
+
+			JSONObject userJSON = user.getInnerJSONObject();
+			if (userJSON != null)
+			{
+				try
+				{
+					facebookUserID = userJSON.getString(JSONTag.ID);
+					Log.d(TAG, "id:" + userJSON.getString(JSONTag.ID));
+					Log.d(TAG,
+							"picture link:"
+									+ userJSON.getJSONObject(JSONTag.PICTURE)
+											.getJSONObject("data").getString("url"));
+					Log.d(TAG, "email:" + userJSON.getString(JSONTag.EMAIL));
+					Log.d(TAG, "name:" + userJSON.getString(JSONTag.NAME));
+					Log.d(TAG, "gender:" + userJSON.getString(JSONTag.GENDER));
+					Log.d(TAG, "birthday:" + userJSON.getString(JSONTag.BIRTHDAY));
+					Log.d(TAG, "link:" + userJSON.getString(JSONTag.LINK));
+					Log.d(TAG, "timezone:" + userJSON.getInt(JSONTag.TIMEZONE));
+					Log.d(TAG, "locale:" + userJSON.getString(JSONTag.LOCALE));
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+
+			addProgressWheel(FACEBOOK_ID_PROGRESS);
+			Log.d(TAG_PROGRESS, "FACEBOOK_ID_PROGRESS");
+			if (facebookUserID != null)
+			{
+
+				httpManager.init(context, facebookUserID);
+				addProgressWheel(INIT_HTTP_MANAGER_PROGRESS);
+				Log.d(TAG_PROGRESS, "INIT_HTTP_MANAGER_PROGRESS");
+				GsonFacebookUser gsonFacebookUser = null;
+				try
+				{
+
+					gsonFacebookUser = new GsonFacebookUser(facebookUserID,
+							userJSON.getString(JSONTag.BIRTHDAY),
+							getPictureLink(userJSON), getStringJsonObjectByCheck(
+									userJSON, JSONTag.LOCALE),
+							getStringJsonObjectByCheck(userJSON, JSONTag.LINK),
+							getHomeTown(userJSON), getStringJsonObjectByCheck(
+									userJSON, JSONTag.TIMEZONE),
+							"this is dummy title", getStringJsonObjectByCheck(
+									userJSON, JSONTag.EMAIL),
+							getStringJsonObjectByCheck(userJSON, JSONTag.NAME),
+							getStringJsonObjectByCheck(userJSON, JSONTag.GENDER),
+							getEducation(userJSON), getWork(userJSON), getMobile());
 
 								}
 								catch (JSONException e)
@@ -764,43 +876,21 @@ public class MainLoadingActivity extends Activity
 										Log.d(TAG_PROGRESS, "MAILBOX_RECEIVE_PROGRESS");
 									}
 
-								});
-							}
-						}
-						else
-						{
-							// Clear all session info & ask user to login
-							// again
-							Session session = Session.getActiveSession();
-							if (session != null)
-							{
-								session.closeAndClearTokenInformation();
-							}
-						}
-					}
-
 				});
-
-				StringBuilder queryString = new StringBuilder().append(JSONTag.NAME).append(", ")
-						.append(JSONTag.BIRTHDAY).append(", ").append(JSONTag.PICTURE).append(", ")
-						.append(JSONTag.EMAIL).append(", ").append(JSONTag.EDUCATION).append(", ")
-						.append(JSONTag.WORK).append(", ").append(JSONTag.GENDER).append(", ")
-						.append(JSONTag.LINK).append(", ").append(JSONTag.HOMETOWN).append(", ")
-						.append(JSONTag.TIMEZONE).append(", ").append(JSONTag.LOCALE);
-				Bundle requestParams = getMe.getParameters();
-				requestParams.putString(BundleTag.FIELDS, queryString.toString());
-				getMe.setParameters(requestParams);
-
-				getMe.executeAsync();
 			}
-			else
+		}
+		else
+		{
+			// Clear all session info & ask user to login
+			// again
+			Session session = Session.getActiveSession();
+			if (session != null)
 			{
-				session.requestNewReadPermissions(new Session.NewPermissionsRequest(
-						MainLoadingActivity.this, Permissions.READ_PERMISSION));
+				session.closeAndClearTokenInformation();
 			}
 		}
 	}
-
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{

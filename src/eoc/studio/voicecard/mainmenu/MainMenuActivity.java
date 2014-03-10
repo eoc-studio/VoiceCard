@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +19,9 @@ import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.facebook.Response;
 import com.facebook.Session;
+import com.facebook.model.GraphUser;
 
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
@@ -25,8 +30,12 @@ import eoc.studio.voicecard.calendarview.CalendarIntentHelper;
 import eoc.studio.voicecard.calendarview.DataProcess;
 import eoc.studio.voicecard.card.editor.CardCategorySelectorActivity;
 import eoc.studio.voicecard.facebook.FacebookManager;
+import eoc.studio.voicecard.facebook.TestFacebookActivity;
+import eoc.studio.voicecard.facebook.FacebookManager.RequestGraphUserCallback;
+import eoc.studio.voicecard.facebook.enetities.UserInfo;
 import eoc.studio.voicecard.facebook.enetities.Publish;
 import eoc.studio.voicecard.mailbox.MailboxActivity;
+import eoc.studio.voicecard.mainloading.MainLoadingActivity;
 import eoc.studio.voicecard.manager.HttpManager;
 import eoc.studio.voicecard.newspaper.NewspaperMainActivity;
 import eoc.studio.voicecard.recommend.RecommendActivity;
@@ -38,9 +47,11 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
     private MailboxIconView mailbox;
     private ImageView fbShare;
 
-    private ImageView cardEditor;
-    private ImageView newsEditor;
-    private ImageView memorialDayEditor;
+	private ImageView cardEditor;
+	private ImageView newsEditor;
+	private ImageView memorialDayEditor;
+	private ImageView facebookLogin;
+	private ImageView facebookLogout;
 
     private MemorialDayNotificationView memorialDayNotification;
     private AdvertisementView advertisement;
@@ -49,17 +60,21 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 
     private String recommendName;
 
-    private String PREFS_FILENAME = "MAIN_MENU_SETTING";
-    SharedPreferences configPreferences;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-
-        context = getApplicationContext();
-        configPreferences = getSharedPreferences(PREFS_FILENAME, 0);
-        initLayout();
-        updateAdvertisementInfo();
+	private String PREFS_FILENAME = "MAIN_MENU_SETTING";
+	private SharedPreferences configPreferences;
+	private FacebookManager facebookManager;
+	private static boolean isFacebookLogin = false;
+	private HttpManager httpManager;
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		Log.d(TAG, "onCreate()");
+		context = getApplicationContext();
+		configPreferences = getSharedPreferences(PREFS_FILENAME, 0);
+		facebookManager = FacebookManager.getInstance(context);
+		httpManager = new HttpManager();
+		initLayout();
+		updateAdvertisementInfo();
 
         super.onCreate(savedInstanceState);
     }
@@ -70,23 +85,26 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
         String recommendBitmapUrl = configPreferences.getString("recommendBitmapUrl", null);
         recommendName = configPreferences.getString("recommendName", null);
 
-        if (recommendBitmapUrl != null && recommendName != null)
-        {
-            HttpManager httpManager = new HttpManager();
-            httpManager.getBitmapFromWeb(context, recommendBitmapUrl, new ImageLoader.ImageListener()
-            {
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate)
-                {
+		if (recommendBitmapUrl != null && recommendName != null)
+		{
+			HttpManager httpManager = new HttpManager();
+			httpManager.getBitmapFromWeb(context, recommendBitmapUrl,
+					new ImageLoader.ImageListener()
+					{
+						@Override
+						public void onResponse(ImageLoader.ImageContainer response,
+								boolean isImmediate)
+						{
 
-                    Log.e(TAG, "httpManager.getBitmapFromWeb() isImmediate:" + isImmediate);
+							Log.e(TAG, "httpManager.getBitmapFromWeb() isImmediate:" + isImmediate);
 
-                    if (response.getBitmap() != null)
-                    {
-                        Log.e(TAG, "response.getBitmap() != null");
-                        advertisement.updateView(response.getBitmap().copy(Bitmap.Config.ARGB_8888, true),
-                                recommendName);
-                    }
+							if (response.getBitmap() != null)
+							{
+								Log.e(TAG, "response.getBitmap() != null");
+								advertisement.updateView(
+										response.getBitmap().copy(Bitmap.Config.ARGB_8888, true),
+										recommendName);
+							}
 
                 }
 
@@ -107,13 +125,15 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
         mailbox.update(mailboxUnReadCount);
     }
 
-    @Override
-    protected void onResume()
-    {
-        updateNewMailBoxCount();
-        setMemorialDayNotification();
-        super.onResume();
-    }
+	@Override
+	protected void onResume()
+	{
+		Log.d(TAG, "onResume()");
+		updateViewVisibility();
+		updateNewMailBoxCount();
+		setMemorialDayNotification();
+		super.onResume();
+	}
 
     private void setMemorialDayNotification()
     {
@@ -172,24 +192,19 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
         }
     }
 
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-    }
+	@Override
+	protected void onPause()
+	{
+		Log.d(TAG, "onPause()");
+		super.onPause();
+	}
 
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-        Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
-    }
+	@Override
+	protected void onDestroy()
+	{
+		Log.d(TAG, "onDestroy()");
+		super.onDestroy();
+	}
 
     private void initLayout()
     {
@@ -198,66 +213,169 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
         setListeners();
     }
 
-    private void findViews()
-    {
-        fbShare = (ImageView) findViewById(R.id.act_mainmenu_iv_fb_share);
-        mailbox = (MailboxIconView) findViewById(R.id.act_mainmenu_mbiv_mailbox);
-        cardEditor = (ImageView) findViewById(R.id.act_mainmenu_iv_card_editor);
-        newsEditor = (ImageView) findViewById(R.id.act_mainmenu_iv_news_editor);
-        memorialDayEditor = (ImageView) findViewById(R.id.act_mainmenu_iv_memorial_day_editor);
-        memorialDayNotification = (MemorialDayNotificationView) findViewById(R.id.act_mainmenu_mdnv_memorial_notification);
-        advertisement = (AdvertisementView) findViewById(R.id.act_mainmenu_av_advertisement);
-    }
+	private void findViews()
+	{
+		fbShare = (ImageView) findViewById(R.id.act_mainmenu_iv_fb_share);
+		mailbox = (MailboxIconView) findViewById(R.id.act_mainmenu_mbiv_mailbox);
+		cardEditor = (ImageView) findViewById(R.id.act_mainmenu_iv_card_editor);
+		newsEditor = (ImageView) findViewById(R.id.act_mainmenu_iv_news_editor);
+		memorialDayEditor = (ImageView) findViewById(R.id.act_mainmenu_iv_memorial_day_editor);
+		memorialDayNotification = (MemorialDayNotificationView) findViewById(R.id.act_mainmenu_mdnv_memorial_notification);
+		advertisement = (AdvertisementView) findViewById(R.id.act_mainmenu_av_advertisement);
+		facebookLogin  = (ImageView) findViewById(R.id.act_mainmenu_iv_facebook_login);
+		facebookLogout = (ImageView) findViewById(R.id.act_mainmenu_iv_facebook_logout);
+		
+		updateViewVisibility();
+	}
 
-    private void setListeners()
-    {
-        fbShare.setOnClickListener(this);
-        mailbox.setOnClickListener(this);
-        cardEditor.setOnClickListener(this);
-        newsEditor.setOnClickListener(this);
-        memorialDayEditor.setOnClickListener(this);
-        memorialDayNotification.setOnClickListener(this);
-        advertisement.setOnClickListener(this);
-    }
+	private void updateViewVisibility()
+	{
+		isFacebookLogin = facebookManager.isLogin();
+		Log.d(TAG, "isFacebookLogin: "+isFacebookLogin +" ,httpManager.getFacebookID(): "+httpManager.getFacebookID());
+		if(isFacebookLogin && httpManager.getFacebookID()!=null){
+			
+			facebookLogin.setVisibility(View.INVISIBLE);
+			facebookLogout.setVisibility(View.VISIBLE);
+			
+			fbShare.setVisibility(View.VISIBLE);
+			mailbox.setVisibility(View.VISIBLE);
+			cardEditor.setVisibility(View.VISIBLE);
+			newsEditor.setVisibility(View.VISIBLE);
+			memorialDayEditor.setVisibility(View.VISIBLE);
+		}
+		else{
+			facebookLogin.setVisibility(View.VISIBLE);
+			facebookLogout.setVisibility(View.INVISIBLE);
+			fbShare.setVisibility(View.INVISIBLE);
+			mailbox.setVisibility(View.INVISIBLE);
+			cardEditor.setVisibility(View.GONE);
+			newsEditor.setVisibility(View.GONE);
+			memorialDayEditor.setVisibility(View.GONE);
+		}
+		facebookLogin.invalidate();
+		facebookLogout.invalidate();
+		fbShare.invalidate();
+		mailbox.invalidate();
+		cardEditor.invalidate();
+		newsEditor.invalidate();
+		memorialDayEditor.invalidate();
+		
+	}
 
-    @Override
-    public void onClick(View v)
-    {
-        if (v == fbShare)
-        {
-            onFbShareClicked();
-        }
-        else if (v == mailbox)
-        {
-            onMailboxClicked();
-        }
-        else if (v == cardEditor)
-        {
-            onCardEditorClicked();
-        }
-        else if (v == newsEditor)
-        {
-            onNewsEditorClicked();
-        }
-        else if (v == memorialDayEditor)
-        {
-            onMemorialDayEditorClicked();
-        }
-        else if (v == memorialDayNotification)
-        {
-            onMemorialDayNotificationClicked();
-        }
-        else if (v == advertisement)
-        {
-            onAdvertisementClicked();
-        }
-    }
+	private void setListeners()
+	{
+		fbShare.setOnClickListener(this);
+		mailbox.setOnClickListener(this);
+		cardEditor.setOnClickListener(this);
+		newsEditor.setOnClickListener(this);
+		memorialDayEditor.setOnClickListener(this);
+		memorialDayNotification.setOnClickListener(this);
+		advertisement.setOnClickListener(this);
+		facebookLogin.setOnClickListener(this);
+		facebookLogout.setOnClickListener(this);
+	}
 
-    private void onAdvertisementClicked()
-    {
-        Log.d(TAG, "go to store");
-        Intent intent = new Intent(this, RecommendActivity.class);
-        startActivity(intent);
+	@Override
+	public void onClick(View v)
+	{
+		if (v == fbShare)
+		{
+			onFbShareClicked();
+		}
+		else if (v == mailbox)
+		{
+			onMailboxClicked();
+		}
+		else if (v == cardEditor)
+		{
+			onCardEditorClicked();
+		}
+		else if (v == newsEditor)
+		{
+			onNewsEditorClicked();
+		}
+		else if (v == memorialDayEditor)
+		{
+			onMemorialDayEditorClicked();
+		}
+		else if (v == memorialDayNotification)
+		{
+			onMemorialDayNotificationClicked();
+		}
+		else if (v == advertisement)
+		{
+			onAdvertisementClicked();
+		}
+		else if (v == facebookLogin)
+		{
+			onFacebookLogInClicked();
+		}
+		else if (v == facebookLogout)
+		{
+			onFacebookLogoutClicked();
+		}
+	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.d(TAG, "onActivityResult() Result Code is - " + resultCode + "");
+		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+	}
+	private void onFacebookLogoutClicked()
+	{
+		Log.d(TAG, "Facebook LogOut");
+        if (facebookManager != null)
+        {
+        	httpManager.setFacebookID(null);
+            facebookManager.logout();
+            if (Build.VERSION.SDK_INT >= 11) {
+                recreate();
+            } else {
+                Intent intent = getIntent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                overridePendingTransition(0, 0);
+
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            }
+        }
+
+	}
+	
+	private void onFacebookLogInClicked()
+	{
+		Log.d(TAG, "Facebook LogIn");
+        facebookManager.getUserProfile(MainMenuActivity.this, facebookManager.new RequestGraphUserCallback() {
+            @Override
+            public void onCompleted(GraphUser user, Response response) {
+                if (user != null) {
+                    JSONObject userJSON = user.getInnerJSONObject();
+                    if(userJSON != null) {
+                        UserInfo userInfo = new UserInfo(userJSON);
+                        
+                        Log.d(TAG, "userInfo id is " + userInfo.getId());
+                        
+                        Log.d(TAG, "Go to main loading");
+                        finish();
+                		Intent intent = new Intent(MainMenuActivity.this, MainLoadingActivity.class);
+                		startActivity(intent);
+                    }
+                } else {
+                    Log.d(TAG, "userInfo id is null ");
+                }
+            }
+        });
+
+	}
+	
+	private void onAdvertisementClicked()
+	{
+		Log.d(TAG, "go to store");
+		Intent intent = new Intent(this, RecommendActivity.class);
+		startActivity(intent);
 
     }
 

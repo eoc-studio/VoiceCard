@@ -831,6 +831,16 @@ public class CardDatabaseHelper
 				cursor.moveToFirst();
 			}
 
+
+			if (cursor.getCount() == 0)
+			{
+				if (cursor != null)
+				{
+					cursor.close();
+				}
+				return null;
+			}
+
 			do
 			{
 				CardAssistant cardAssistant = new CardAssistant();
@@ -972,6 +982,15 @@ public class CardDatabaseHelper
 				cursor.moveToFirst();
 			}
 
+			if (cursor.getCount() == 0)
+			{
+				if (cursor != null)
+				{
+					cursor.close();
+				}
+				return null;
+			}
+			
 			do
 			{
 				CardAssistant cardAssistant = new CardAssistant();
@@ -1021,6 +1040,158 @@ public class CardDatabaseHelper
 
 	}
 
+	public ArrayList<CardAssistant> getEnabledAndLocalIsNullCard(int dpi){
+		String closeURLColumn;
+		String closeLocalPathColumn;
+		String coverURLColumn;
+		String coverLocalPathColumn;
+		String leftURLColumn;
+		String leftLocalPathColumn;
+		String openURLColumn;
+		String openLocalPathColumn;
+		String rightURLColumn;
+		String rightLocalPathColumn;
+
+		switch (dpi)
+		{
+		case DPI_MDPI:
+			closeURLColumn = CARD_MDPI_CLOSE;
+			closeLocalPathColumn = CARD_MDPI_CLOSE_LOCAL_PATH;
+			coverURLColumn = CARD_MDPI_COVER;
+			coverLocalPathColumn = CARD_MDPI_COVER_LOCAL_PATH;
+			leftURLColumn = CARD_MDPI_LEFT;
+			leftLocalPathColumn = CARD_MDPI_LEFT_LOCAL_PATH;
+			openURLColumn = CARD_MDPI_OPEN;
+			openLocalPathColumn = CARD_MDPI_OPEN_LOCAL_PATH;
+			rightURLColumn = CARD_MDPI_RIGHT;
+			rightLocalPathColumn = CARD_MDPI_RIGHT_LOCAL_PATH;
+			break;
+		case DPI_HPPI:
+			closeURLColumn = CARD_HDPI_CLOSE;
+			closeLocalPathColumn = CARD_HDPI_CLOSE_LOCAL_PATH;
+			coverURLColumn = CARD_HDPI_COVER;
+			coverLocalPathColumn = CARD_HDPI_COVER_LOCAL_PATH;
+			leftURLColumn = CARD_HDPI_LEFT;
+			leftLocalPathColumn = CARD_HDPI_LEFT_LOCAL_PATH;
+			openURLColumn = CARD_HDPI_OPEN;
+			openLocalPathColumn = CARD_HDPI_OPEN_LOCAL_PATH;
+			rightURLColumn = CARD_HDPI_RIGHT;
+			rightLocalPathColumn = CARD_HDPI_RIGHT_LOCAL_PATH;
+			break;
+		case DPI_XHDPI:
+			closeURLColumn = CARD_XHDPI_CLOSE;
+			closeLocalPathColumn = CARD_XHDPI_CLOSE_LOCAL_PATH;
+			coverURLColumn = CARD_XHDPI_COVER;
+			coverLocalPathColumn = CARD_XHDPI_COVER_LOCAL_PATH;
+			leftURLColumn = CARD_XHDPI_LEFT;
+			leftLocalPathColumn = CARD_XHDPI_LEFT_LOCAL_PATH;
+			openURLColumn = CARD_XHDPI_OPEN;
+			openLocalPathColumn = CARD_XHDPI_OPEN_LOCAL_PATH;
+			rightURLColumn = CARD_XHDPI_RIGHT;
+			rightLocalPathColumn = CARD_XHDPI_RIGHT_LOCAL_PATH;
+			break;
+		case DPI_XXHDPI:
+			closeURLColumn = CARD_XXHDPI_CLOSE;
+			closeLocalPathColumn = CARD_XXHDPI_CLOSE_LOCAL_PATH;
+			coverURLColumn = CARD_XXHDPI_COVER;
+			coverLocalPathColumn = CARD_XXHDPI_COVER_LOCAL_PATH;
+			leftURLColumn = CARD_XXHDPI_LEFT;
+			leftLocalPathColumn = CARD_XXHDPI_LEFT_LOCAL_PATH;
+			openURLColumn = CARD_XXHDPI_OPEN;
+			openLocalPathColumn = CARD_XXHDPI_OPEN_LOCAL_PATH;
+			rightURLColumn = CARD_XXHDPI_RIGHT;
+			rightLocalPathColumn = CARD_XXHDPI_RIGHT_LOCAL_PATH;
+			break;
+		default:
+			closeURLColumn = CARD_XHDPI_CLOSE;
+			closeLocalPathColumn = CARD_XHDPI_CLOSE_LOCAL_PATH;
+			coverURLColumn = CARD_XHDPI_COVER;
+			coverLocalPathColumn = CARD_XHDPI_COVER_LOCAL_PATH;
+			leftURLColumn = CARD_XHDPI_LEFT;
+			leftLocalPathColumn = CARD_XHDPI_LEFT_LOCAL_PATH;
+			openURLColumn = CARD_XHDPI_OPEN;
+			openLocalPathColumn = CARD_XHDPI_OPEN_LOCAL_PATH;
+			rightURLColumn = CARD_XHDPI_RIGHT;
+			rightLocalPathColumn = CARD_XHDPI_RIGHT_LOCAL_PATH;
+			break;
+		}
+
+		ArrayList<CardAssistant> cardAssistantList = new ArrayList<CardAssistant>();
+		if (db.isOpen())
+		{
+
+			String select = CARD_ENABLE + "=1 " + "AND (" + closeLocalPathColumn + " is null "
+					+ "OR " + coverLocalPathColumn + " is null " + "OR " + leftLocalPathColumn
+					+ " is null " + "OR " + openLocalPathColumn + " is null " + "OR "
+					+ rightLocalPathColumn + " is null " + ")";
+			Log.d(TAG, "getEnabledAndLocalIsNullCard() selection is: " + select);
+			Cursor cursor = db.query(true, DATABASE_TABLE_CARD, new String[] { CARD_ID, CARD_NAME,
+					CARD_CAT_ID, CARD_NAME, CARD_FONT_COLOR, closeURLColumn, closeLocalPathColumn,
+					coverURLColumn, coverLocalPathColumn, leftURLColumn, leftLocalPathColumn,
+					openURLColumn, openLocalPathColumn, rightURLColumn, rightLocalPathColumn },
+					select, null, null, null, null, null);
+			if (cursor != null)
+			{
+				cursor.moveToFirst();
+			}
+
+			if (cursor.getCount() == 0)
+			{
+				if (cursor != null)
+				{
+					cursor.close();
+				}
+				return null;
+			}
+			
+			do
+			{
+				CardAssistant cardAssistant = new CardAssistant();
+
+				cardAssistant.setCardID(cursor.getInt(cursor.getColumnIndexOrThrow(CARD_ID)));
+				cardAssistant.setCardFontColor(cursor.getInt(cursor
+						.getColumnIndexOrThrow(CARD_FONT_COLOR)));
+				cardAssistant
+						.setCardName(cursor.getString(cursor.getColumnIndexOrThrow(CARD_NAME)));
+				cardAssistant
+						.setCategoryID(cursor.getInt(cursor.getColumnIndexOrThrow(CARD_CAT_ID)));
+				cardAssistant.setCloseLocalPath(cursor.getString(cursor
+						.getColumnIndexOrThrow(closeLocalPathColumn)));
+				cardAssistant.setCloseURL(cursor.getString(cursor
+						.getColumnIndexOrThrow(closeURLColumn)));
+				cardAssistant.setCoverLocalPath(cursor.getString(cursor
+						.getColumnIndexOrThrow(coverLocalPathColumn)));
+				cardAssistant.setCoverURL(cursor.getString(cursor
+						.getColumnIndexOrThrow(coverURLColumn)));
+				cardAssistant.setLeftLocalPath(cursor.getString(cursor
+						.getColumnIndexOrThrow(leftLocalPathColumn)));
+				cardAssistant.setLeftURL(cursor.getString(cursor
+						.getColumnIndexOrThrow(leftURLColumn)));
+				cardAssistant.setOpenLocalPath(cursor.getString(cursor
+						.getColumnIndexOrThrow(openLocalPathColumn)));
+				cardAssistant.setOpenURL(cursor.getString(cursor
+						.getColumnIndexOrThrow(openURLColumn)));
+				cardAssistant.setRightLocalPath(cursor.getString(cursor
+						.getColumnIndexOrThrow(rightLocalPathColumn)));
+				cardAssistant.setRightURL(cursor.getString(cursor
+						.getColumnIndexOrThrow(rightURLColumn)));
+
+				cardAssistantList.add(cardAssistant);
+			}
+			while (cursor.moveToNext());
+
+			if (cursor != null)
+			{
+				cursor.close();
+			}
+			return cardAssistantList;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
 	public ArrayList<CategoryAssistant> getEnabledCategory(int dpi)
 	{
 
@@ -1062,6 +1233,15 @@ public class CardDatabaseHelper
 				cursor.moveToFirst();
 			}
 
+			if (cursor.getCount() == 0)
+			{
+				if (cursor != null)
+				{
+					cursor.close();
+				}
+				return null;
+			}
+			
 			do
 			{
 				CategoryAssistant categoryAssistant = new CategoryAssistant();
@@ -1090,6 +1270,125 @@ public class CardDatabaseHelper
 		else
 		{
 			return null;
+		}
+
+	}
+
+	public ArrayList<CategoryAssistant> getEnabledAndLocalIsNullCategory(int dpi)
+	{
+
+		ArrayList<CategoryAssistant> categoryAssistantList = new ArrayList<CategoryAssistant>();
+		String urlColumn;
+		String localPathColumn;
+		switch (dpi)
+		{
+		case DPI_MDPI:
+			urlColumn = CAT_IMG_MDPI;
+			localPathColumn = CAT_IMG_MDPI_LOCAL_PATH;
+			break;
+		case DPI_HPPI:
+			urlColumn = CAT_IMG_HDPI;
+			localPathColumn = CAT_IMG_HDPI_LOCAL_PATH;
+			break;
+		case DPI_XHDPI:
+			urlColumn = CAT_IMG_XHDPI;
+			localPathColumn = CAT_IMG_XHDPI_LOCAL_PATH;
+			break;
+		case DPI_XXHDPI:
+			urlColumn = CAT_IMG_XXHDPI;
+			localPathColumn = CAT_IMG_XXHDPI_LOCAL_PATH;
+			break;
+		default:
+			urlColumn = CAT_IMG_XHDPI;
+			localPathColumn = CAT_IMG_XHDPI_LOCAL_PATH;
+			break;
+		}
+
+		if (db.isOpen())
+		{
+
+			Cursor cursor = db.query(true, DATABASE_TABLE_CATEGORY, new String[] { CAT_ID,
+					CAT_NAME, urlColumn, localPathColumn }, CAT_ENABLE + "=1 "+"and (" + localPathColumn + " is null "+")" , null, null, null,
+					null, null);			
+			if (cursor != null)
+			{
+				cursor.moveToFirst();
+			}
+
+			if (cursor.getCount() == 0)
+			{
+				if (cursor != null)
+				{
+					cursor.close();
+				}
+				return null;
+			}
+			
+			
+			do
+			{
+				CategoryAssistant categoryAssistant = new CategoryAssistant();
+				categoryAssistant
+						.setCategoryID(cursor.getInt(cursor.getColumnIndexOrThrow(CAT_ID)));
+
+				categoryAssistant.setCategoryName(cursor.getString(cursor
+						.getColumnIndexOrThrow(CAT_NAME)));
+
+				categoryAssistant.setCategoryURL(cursor.getString(cursor
+						.getColumnIndexOrThrow(urlColumn)));
+
+				categoryAssistant.setCategoryLoocalPath(cursor.getString(cursor
+						.getColumnIndexOrThrow(localPathColumn)));
+
+				categoryAssistantList.add(categoryAssistant);
+			}
+			while (cursor.moveToNext());
+
+			if (cursor != null)
+			{
+				cursor.close();
+			}
+			return categoryAssistantList;
+		}
+		else
+		{
+			return null;
+		}
+
+	}
+	
+	public Boolean isExistCategory(String catId)
+	{
+
+		if (db.isOpen())
+		{
+			boolean exists = false;
+			Cursor cursor = db.rawQuery("select "+CAT_ID+" from " + DATABASE_TABLE_CATEGORY + " where "
+					+ CAT_ID + "="+catId, null);
+			if(cursor == null){
+				Log.d(TAG, "isExistCategory "+catId+": cursor == null");
+			}
+			
+			if (cursor.moveToFirst()) {
+				exists =true;
+			} else {
+				exists = false;
+			}
+			
+			
+//			boolean exists = (cursor.getCount() > 0);
+			Log.d(TAG, "isExistCategory "+catId+": "+exists );
+			if (cursor != null)
+			{
+				cursor.close();
+			}
+
+			return exists;
+
+		}
+		else
+		{
+			return false;
 		}
 
 	}
@@ -1134,6 +1433,9 @@ public class CardDatabaseHelper
 		return db.insert(DATABASE_TABLE_CATEGORY, null, args);
 	}
 
+
+	
+	
 	public void updateCategoryImgLocalPath(ArrayList<CategoryAssistant> list, int dpi)
 	{
 
@@ -1185,10 +1487,10 @@ public class CardDatabaseHelper
 		}
 	}
 
-	public long createCardRow(int dpi, int cardId, String cardName, int cat_id,
-			String cardEnable, String cardFontColor, String closeURL, String coverURL,
-			String leftURL, String openURL, String rightURL, String closeLocalPath,
-			String coverLocalPath, String leftLocalPath, String openLocalPath, String rightLocalPath,int favoriteEnable)
+	public long createCardRow(int dpi, int cardId, String cardName, int cat_id, String cardEnable,
+			String cardFontColor, String closeURL, String coverURL, String leftURL, String openURL,
+			String rightURL, String closeLocalPath, String coverLocalPath, String leftLocalPath,
+			String openLocalPath, String rightLocalPath, int favoriteEnable)
 	{
 
 		String closeURLColumn;
@@ -1266,49 +1568,82 @@ public class CardDatabaseHelper
 			break;
 		}
 
+		ContentValues args = new ContentValues();
+		if (cardId != -1) args.put(CARD_ID, cardId);
 
-			ContentValues args = new ContentValues();
-			if (cardId != -1) args.put(CARD_ID, cardId);
+		if (cardName != null) args.put(CARD_NAME, cardName);
 
-			if (cardName != null) args.put(CARD_NAME, cardName);
+		if (cat_id != -1) args.put(CARD_CAT_ID, cat_id);
+		if (cardEnable != null)
+		{
 
-			if (cat_id != -1) args.put(CARD_CAT_ID, cat_id);
-			if (cardEnable != null)
+			if (cardEnable.equals("Y"))
 			{
-
-				if (cardEnable.equals("Y"))
-				{
-					args.put(CARD_ENABLE, 1);
-				}
-				else if (cardEnable.equals("N"))
-				{
-					args.put(CARD_ENABLE, 0);
-				}
-				else
-				{
-					args.put(CARD_ENABLE, 0);
-				}
-
+				args.put(CARD_ENABLE, 1);
 			}
-			if (cardFontColor != null) args.put(CARD_FONT_COLOR, Long.valueOf(cardFontColor));
+			else if (cardEnable.equals("N"))
+			{
+				args.put(CARD_ENABLE, 0);
+			}
+			else
+			{
+				args.put(CARD_ENABLE, 0);
+			}
 
-			if (closeURL != null) args.put(closeURLColumn, closeURL);
-			if (coverURL != null) args.put(coverURLColumn, coverURL);
-			if (leftURL != null) args.put(leftURLColumn, leftURL);
-			if (openURL != null) args.put(openURLColumn, openURL);
-			if (rightURL != null) args.put(rightURLColumn, rightURL);
-			if (closeLocalPath != null) args.put(closeLocalPathColumn, closeLocalPath);
-			if (coverLocalPath != null) args.put(coverLocalPathColumn, coverLocalPath);
-			if (leftLocalPath != null) args.put(leftLocalPathColumn, leftLocalPath);
-			if (openLocalPath != null) args.put(openLocalPathColumn, openLocalPath);
-			if (rightLocalPath != null) args.put(rightLocalPathColumn, rightLocalPath);
-			
-			if(favoriteEnable!=-1)args.put(CARD_FAVORITE_ENABLE, favoriteEnable);
-			
-			return db.insert(DATABASE_TABLE_CARD, null, args);
+		}
+		if (cardFontColor != null) args.put(CARD_FONT_COLOR, Long.valueOf(cardFontColor));
+
+		if (closeURL != null) args.put(closeURLColumn, closeURL);
+		if (coverURL != null) args.put(coverURLColumn, coverURL);
+		if (leftURL != null) args.put(leftURLColumn, leftURL);
+		if (openURL != null) args.put(openURLColumn, openURL);
+		if (rightURL != null) args.put(rightURLColumn, rightURL);
+		if (closeLocalPath != null) args.put(closeLocalPathColumn, closeLocalPath);
+		if (coverLocalPath != null) args.put(coverLocalPathColumn, coverLocalPath);
+		if (leftLocalPath != null) args.put(leftLocalPathColumn, leftLocalPath);
+		if (openLocalPath != null) args.put(openLocalPathColumn, openLocalPath);
+		if (rightLocalPath != null) args.put(rightLocalPathColumn, rightLocalPath);
+
+		if (favoriteEnable != -1) args.put(CARD_FAVORITE_ENABLE, favoriteEnable);
+
+		return db.insert(DATABASE_TABLE_CARD, null, args);
 	}
-	
 
+	public Boolean isExistCard(String cardId)
+	{
+
+		if (db.isOpen())
+		{
+			boolean exists = false;
+			Cursor cursor = db.rawQuery("select "+CARD_ID+" from " + DATABASE_TABLE_CARD + " where "
+					+ CARD_ID + "="+cardId, null);
+			if(cursor == null){
+				Log.d(TAG, "isExistCard "+cardId+": cursor == null");
+			}
+			
+			if (cursor.moveToFirst()) {
+				exists =true;
+			} else {
+				exists = false;
+			}
+			
+			
+//			boolean exists = (cursor.getCount() > 0);
+			Log.d(TAG, "isExistCard "+cardId+": "+exists );
+			if (cursor != null)
+			{
+				cursor.close();
+			}
+
+			return exists;
+
+		}
+		else
+		{
+			return false;
+		}
+
+	}
 	
 	
 	public boolean updateCardRow(int dpi, int cardId, String cardName, int cat_id,

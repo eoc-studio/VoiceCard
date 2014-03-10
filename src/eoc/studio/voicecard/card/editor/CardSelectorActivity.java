@@ -264,18 +264,20 @@ public class CardSelectorActivity extends BaseActivity
 	private void addToFavorite(Card card)
 	{
 
-		if (isFavorite)
+		if (card != null)
 		{
-			Log.d(TAG, "remove " + card.getId() + " from favorite");
-			boolean isOK = cardDatabaseHelper.setNonFavoriteCardByCardID(card.getId());
-			if (isOK)
+			if (isFavorite)
 			{
-				List<Card> cards = getCartList(category);
-				Log.d(TAG, "get " + cards.size() + " cards from data provider");
-				if (cards.size() == 0)
+				Log.d(TAG, "remove " + card.getId() + " from favorite");
+				boolean isOK = cardDatabaseHelper.setNonFavoriteCardByCardID(card.getId());
+				if (isOK)
 				{
-					list.setEmptyView(empty);
-					list.setAdapter(null);
+					List<Card> cards = getCartList(category);
+					Log.d(TAG, "get " + cards.size() + " cards from data provider");
+					if (cards.size() == 0)
+					{
+						list.setEmptyView(empty);
+						list.setAdapter(null);
 
 					centerCardName.setText("");
 					centerCardName.invalidate();
@@ -285,21 +287,23 @@ public class CardSelectorActivity extends BaseActivity
 					CardAdapter adapter = new CardAdapter(cards);
 					list.setAdapter(adapter);
 
+					}
+					list.invalidate();
 				}
-				list.invalidate();
 			}
-		}
-		else
-		{
-			Log.d(TAG, "add " + card.getId() + " to favorite");
-			boolean isOK = cardDatabaseHelper.setFavoriteCardByCardID(card.getId());
-			if (isOK)
+			else
 			{
-				Log.d(TAG, "add " + card.getName() + " to favorite successful!");
-				Toast.makeText(context, "add " + card.getName() + " to favorite successful!",
-						Toast.LENGTH_LONG).show();
+				Log.d(TAG, "add " + card.getId() + " to favorite");
+				boolean isOK = cardDatabaseHelper.setFavoriteCardByCardID(card.getId());
+				if (isOK)
+				{
+					Log.d(TAG, "add " + card.getName() + " to favorite successful!");
+					Toast.makeText(context, "add " + card.getName() + " to favorite successful!",
+							Toast.LENGTH_LONG).show();
+				}
 			}
 		}
+
 	}
 
 	private void startCardEditor(Card card)

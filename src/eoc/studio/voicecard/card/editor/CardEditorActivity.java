@@ -480,18 +480,18 @@ public class CardEditorActivity extends BaseActivity
 			editableTextFrame.setBackgroundResource(R.drawable.dash_border);
 			editableSignatureFrame.setBackgroundResource(R.drawable.dash_border);
 		}
-		((GradientDrawable) editableImageFrame.getBackground()).setStroke(width, color, dashWidth,
+		((GradientDrawable) editableImageFrame.getBackground()).setStroke(width,  color | 0xFF000000, dashWidth,
 				dashGap);
-		((GradientDrawable) editableVoiceFrame.getBackground()).setStroke(width, color, dashWidth,
+		((GradientDrawable) editableVoiceFrame.getBackground()).setStroke(width, color | 0xFF000000, dashWidth,
 				dashGap);
-		((GradientDrawable) editableTextFrame.getBackground()).setStroke(width, color, dashWidth,
+		((GradientDrawable) editableTextFrame.getBackground()).setStroke(width, color | 0xFF000000, dashWidth,
 				dashGap);
-		((GradientDrawable) editableSignatureFrame.getBackground()).setStroke(width, color,
+		((GradientDrawable) editableSignatureFrame.getBackground()).setStroke(width, color| 0xFF000000,
 				dashWidth, dashGap);
-		editableImageTip.setTextColor(color);
-		editableVoiceTip.setTextColor(color);
-		editableTextTip.setTextColor(color);
-		editableSignatureTip.setTextColor(color);
+		editableImageTip.setTextColor(color| 0xFF000000);
+		editableVoiceTip.setTextColor(color| 0xFF000000);
+		editableTextTip.setTextColor(color| 0xFF000000);
+		editableSignatureTip.setTextColor(color| 0xFF000000);
 	}
 
 	private void setListener()
