@@ -24,6 +24,8 @@ import eoc.studio.voicecard.R;
 public class DrawableProcess
 {
     protected static final String IMAGE_CACHE_PATH = Environment.getExternalStorageDirectory() + "/Screenshot.jpg";
+	
+	
     protected static final String IMAGE_DEFAULT_PATH = Environment.getExternalStorageDirectory() + "/DCIM/";
     protected static final int[] NEWSPAPER_STYLE_TITLE_DRAWABLE = new int[]
     { R.drawable.news_t01, R.drawable.news_t02, R.drawable.news_t03, R.drawable.news_t04, R.drawable.news_t05 };
@@ -88,7 +90,7 @@ public class DrawableProcess
             FileOutputStream fos = new FileOutputStream(imagePath);
             bitmap.compress(CompressFormat.JPEG, 80, fos);
             fos.flush();
-            fos.close();
+            fos.close(); 
             if (userUse)
             {
                 reScanMedia(context, imagePath);

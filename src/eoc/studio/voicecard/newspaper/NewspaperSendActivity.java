@@ -1,17 +1,26 @@
 package eoc.studio.voicecard.newspaper;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+
+import com.facebook.Session;
 
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.facebook.FacebookManager;
 import eoc.studio.voicecard.facebook.enetities.FriendInfo;
 import eoc.studio.voicecard.facebook.friends.SelectFriendActivity;
+import eoc.studio.voicecard.utils.FileUtility;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore.Files;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -117,6 +126,7 @@ public class NewspaperSendActivity extends Activity implements OnClickListener
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
+        Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
         switch (requestCode)
         {
             case FriendInfo.GET_FRIEND_REQUEST_CODE:
@@ -167,12 +177,31 @@ public class NewspaperSendActivity extends Activity implements OnClickListener
     {
         if (ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE != null && !mFiendId.equals(""))
         {
+        	
+        	Log.d(TAG, "sendNews()");
             File filePath = new File(DrawableProcess.IMAGE_CACHE_PATH);
-
-            if (filePath.exists())
+            Log.d(TAG, "filePath: "+filePath.getPath());
+            String renameDirString = getCacheDir() +"/News";
+    		File pathCacheDir = new File(renameDirString);
+    		if(!pathCacheDir.exists())pathCacheDir.mkdirs();
+            
+            File renamefilePath  = new File( renameDirString, FileUtility.getRandomNewsName("jpg"));
+            
+            try
+			{
+				copy(filePath,renamefilePath);
+			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+            if (renamefilePath.exists())
             {
+            	Log.d(TAG, "renamefilePath: "+renamefilePath.getPath());
                 FacebookManager.getInstance(mContext).publishNews(this, mFiendId,
-                        Uri.parse(filePath.getPath().toString()));
+                        Uri.parse(renamefilePath.getPath().toString()));
                 mFiendId = "";
             }
         }
@@ -182,4 +211,18 @@ public class NewspaperSendActivity extends Activity implements OnClickListener
         }
     }
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    public void copy(File src, File dst) throws IOException {
+        InputStream in = new FileInputStream(src);
+        OutputStream out = new FileOutputStream(dst);
+
+        // Transfer bytes from in to out
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
+    }
 }

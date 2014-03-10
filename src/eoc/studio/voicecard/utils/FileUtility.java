@@ -274,6 +274,18 @@ public class FileUtility
 		return sdf.format(date) + "_SignCompleted_" + random.nextInt(65535) + "."
 				+ filenameExtension;
 	}
+	
+	public static String getRandomNewsName(String filenameExtension)
+	{
+
+		Date date = new Date(System.currentTimeMillis());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		Random random = new Random();
+		return sdf.format(date) + "_News_" + random.nextInt(65535) + "."
+				+ filenameExtension;
+	}
+	
+	
 
 	public static Bitmap getBitmapFromUri(Uri uri, Context context)
 	{
