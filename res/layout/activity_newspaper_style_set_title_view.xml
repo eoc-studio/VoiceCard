@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/ImageView01"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView2"
+        android:layout_below="@+id/relativeLayout2"
+        android:layout_marginTop="-3.0dip"
+        android:src="@drawable/dotted_line3" />
+
+    <ImageView
+        android:id="@+id/ImageView02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="-3.0dip"
+        android:layout_toRightOf="@+id/relativeLayout2"
+        android:src="@drawable/dotted_line4" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="280.0dip"
+        android:layout_height="90.0dip"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="62.0dip"
+        android:background="#ffbbbbbb" >
+
+        <ImageView
+            android:id="@+id/imageTitleViewOfNewsPaper"
+            android:layout_width="260.0dip"
+            android:layout_height="90.0dip"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/news_t01" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/relativeLayout2"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="-4.0dip"
+        android:src="@drawable/dotted_line4" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/relativeLayout2"
+        android:layout_marginTop="-4.0dip"
+        android:src="@drawable/dotted_line3" />
+
+    <ImageView
+        android:id="@+id/setTitleOkBtnViewOfNewsPaper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/setTitleBackBtnViewOfNewsPaper"
+        android:layout_marginLeft="15.0dip"
+        android:layout_toRightOf="@+id/setTitleBackBtnViewOfNewsPaper"
+        android:src="@drawable/btn_sure_selector" />
+
+    <ImageView
+        android:id="@+id/setTitleBackBtnViewOfNewsPaper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ImageView01"
+        android:layout_marginLeft="17.0dip"
+        android:layout_marginTop="22.0dip"
+        android:layout_toRightOf="@+id/imageView3"
+        android:src="@drawable/btn_return_selector" />
+
+    <TextView
+        android:id="@+id/countViewOfNewsPaper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="17.0dip"
+        android:text="TextView" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/header_bg2_long" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/title_select_title" />
+    </RelativeLayout>
+
+</RelativeLayout>

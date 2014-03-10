@@ -22,6 +22,19 @@
     <string name="file_process_loading">Loading</string>
     <string name="noData">NoData</string>
 
+    <!-- About Newspaper -->
+    <string name="magazine_edit_background_string">封面底圖</string>
+    <string name="newspaper_edit_title_string">選擇標題</string>
+    <string name="newspaper_edit_main_photo_string">圖片</string>
+    <string name="newspaper_edit_photo_and_text_string">圖文</string>
+    <string name="set_dilog_ok">確定</string>
+    <string name="set_dilog_cancel">取消</string>
+    <string name="save_image">另存圖檔</string>
+    <string name="select_friend">選擇收件人</string>
+    <string name="send_news">送出新聞</string>
+    <string name="news_save_ok">儲存成功</string>
+    <string name="news_save_fail">儲存失敗</string>
+
     <!-- About MemorialDay -->
     <string name="current_month_placeholder">1970-January</string>
     <string name="cancelBtn">Cancel</string>
@@ -60,7 +73,7 @@
     <string name="processing">Processing</string>
     <string name="please_wait">Please wait</string>
     <string name="data_incomplete">Please insert all</string>
-    
+
     <!-- view_recommend_listview_item -->
     <string name="detail_info">Detail information</string>
 
@@ -83,4 +96,5 @@
     <string name="play">Play</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
+
 </resources>

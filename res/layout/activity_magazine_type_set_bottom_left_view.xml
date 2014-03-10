@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/setLeftBottomMainLayoutView"
+        android:layout_width="270.0dip"
+        android:layout_height="220.0dip"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="#ffff0000" >
+
+        <RelativeLayout
+            android:id="@+id/setLeftBottomEditPhotoView1"
+            android:layout_width="122.0dip"
+            android:layout_height="140.0dip"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="8.0dip"
+            android:layout_marginTop="8.0dip"
+            android:background="@drawable/newspaper_layout_style" >
+
+            <ImageView
+                android:id="@+id/setLeftBottomEditPhotoIconView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/icon_img" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/setLeftBottomEditPhotoView2"
+            android:layout_width="122.0dip"
+            android:layout_height="140.0dip"
+            android:layout_alignTop="@+id/setLeftBottomEditPhotoView1"
+            android:layout_marginLeft="11.0dip"
+            android:layout_toRightOf="@+id/setLeftBottomEditPhotoView1"
+            android:background="@drawable/newspaper_layout_style" >
+
+            <ImageView
+                android:id="@+id/setLeftBottomEditPhotoIconView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/icon_img" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="122.0dip"
+            android:layout_height="22.0dip"
+            android:layout_alignLeft="@+id/setLeftBottomEditPhotoView1"
+            android:layout_below="@+id/setLeftBottomEditPhotoView1"
+            android:layout_marginTop="10.0dip"
+            android:background="@drawable/newspaper_layout_style" >
+
+            <ImageView
+                android:id="@+id/setLeftBottomEditTextIconView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/icon_edit" />
+
+            <TextView
+                android:id="@+id/setLeftBottomEditTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:textColor="#ffffffff"
+                android:textSize="18.0sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout4"
+            android:layout_width="122.0dip"
+            android:layout_height="22.0dip"
+            android:layout_alignLeft="@+id/setLeftBottomEditPhotoView2"
+            android:layout_alignTop="@+id/relativeLayout2"
+            android:background="@drawable/newspaper_layout_style" >
+
+            <ImageView
+                android:id="@+id/setLeftBottomEditTextIconView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/icon_edit" />
+
+            <TextView
+                android:id="@+id/setLeftBottomEditTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:textColor="#ffffffff"
+                android:textSize="18.0sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout3"
+            android:layout_width="122.0dip"
+            android:layout_height="22.0dip"
+            android:layout_alignLeft="@+id/relativeLayout2"
+            android:layout_below="@+id/relativeLayout2"
+            android:layout_marginTop="10.0dip"
+            android:background="@drawable/newspaper_layout_style" >
+
+            <ImageView
+                android:id="@+id/setLeftBottomEditTextIconView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/icon_edit" />
+
+            <TextView
+                android:id="@+id/setLeftBottomEditTextView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:textColor="#ffffffff"
+                android:textSize="20.0sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="122.0dip"
+            android:layout_height="22.0dip"
+            android:layout_alignLeft="@+id/relativeLayout4"
+            android:layout_alignTop="@+id/relativeLayout3"
+            android:background="@drawable/newspaper_layout_style" >
+
+            <ImageView
+                android:id="@+id/setLeftBottomEditTextIconView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/icon_edit" />
+
+            <TextView
+                android:id="@+id/setLeftBottomEditTextView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:textColor="#ffffffff"
+                android:textSize="20.0sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="-3.0dip"
+        android:layout_toRightOf="@+id/setLeftBottomMainLayoutView"
+        android:src="@drawable/dotted_line2" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout10"
+        android:layout_width="wrap_content"
+        android:layout_height="106.0dip"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/relativeLayout1" >
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/imageView3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="29.0dip"
+            android:src="@drawable/handwrite_07" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/dotted_line1" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/setLeftBottomEditPhotoView1"
+        android:layout_width="fill_parent"
+        android:layout_height="200.0dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" >
+
+        <ImageView
+            android:id="@+id/ImageView01"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dotted_line1" />
+
+        <Button
+            android:id="@+id/setButtonConfirmView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ImageView01"
+            android:layout_marginTop="35.0dip"
+            android:layout_toRightOf="@+id/setButtonBackView"
+            android:background="@drawable/btn_sure_selector" />
+
+        <Button
+            android:id="@+id/setButtonBackView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/setButtonConfirmView"
+            android:layout_alignBottom="@+id/setButtonConfirmView"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="71.0dip"
+            android:background="@drawable/btn_return_selector" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/setLeftBottomMainLayoutView"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="-5.0dip"
+        android:src="@drawable/dotted_line2" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/header_bg2" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/title_edit_illustrate" />
+    </RelativeLayout>
+
+</RelativeLayout>

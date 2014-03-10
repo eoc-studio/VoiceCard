@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/setLeftMainLayoutView"
+        android:layout_width="180.0dip"
+        android:layout_height="220.0dip"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="#ffcccccc" >
+
+        <ImageView
+            android:id="@+id/imageTitleViewOfMagazine"
+            android:layout_width="180.0dip"
+            android:layout_height="220.0dip"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="#ffcccccc"
+            android:src="@drawable/mag_t01" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="-3.0dip"
+        android:layout_toRightOf="@+id/setLeftMainLayoutView"
+        android:src="@drawable/dotted_line2" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/setLeftMainLayoutView"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="-5.0dip"
+        android:src="@drawable/dotted_line2" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/header_bg2" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/title_select_title" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout10"
+        android:layout_width="wrap_content"
+        android:layout_height="106.0dip"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/relativeLayout1" >
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/dotted_line1" />
+
+        <TextView
+            android:id="@+id/countViewOfMagazine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/imageView3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="21.0dip"
+            android:text="TextView" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="200.0dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" >
+
+        <ImageView
+            android:id="@+id/ImageView01"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dotted_line1" />
+
+        <ImageView
+            android:id="@+id/setTitleOkBtnViewOfMagazine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ImageView01"
+            android:layout_marginTop="35.0dip"
+            android:layout_toRightOf="@+id/setTitleBackBtnViewOfMagazine"
+            android:background="@drawable/btn_sure_selector" />
+
+        <ImageView
+            android:id="@+id/setTitleBackBtnViewOfMagazine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/setTitleOkBtnViewOfMagazine"
+            android:layout_alignBottom="@+id/setTitleOkBtnViewOfMagazine"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="71.0dip"
+            android:background="@drawable/btn_return_selector" />
+    </RelativeLayout>
+
+</RelativeLayout>

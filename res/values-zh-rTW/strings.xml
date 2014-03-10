@@ -20,6 +20,19 @@
     <string name="file_process_loading">Loading</string>
     <string name="noData">NoData</string>
 
+    <!-- About Newspaper -->
+    <string name="magazine_edit_background_string">封面底圖</string>
+    <string name="newspaper_edit_title_string">選擇標題</string>
+    <string name="newspaper_edit_main_photo_string">圖片</string>
+    <string name="newspaper_edit_photo_and_text_string">圖文</string>
+    <string name="set_dilog_ok">確定</string>
+    <string name="set_dilog_cancel">取消</string>
+    <string name="save_image">另存圖檔</string>
+    <string name="select_friend">選擇收件人</string>
+    <string name="send_news">送出新聞</string>
+    <string name="news_save_ok">儲存成功</string>
+    <string name="news_save_fail">儲存失敗</string>
+
     <!-- About MemorialDay -->
     <string name="current_month_placeholder">1970-January</string>
     <string name="previous_month_placeholder">&lt;&lt;</string>
@@ -68,17 +81,17 @@
     <string name="select_all">選取全部</string>
     <string name="deselect_all">取消全部</string>
     <string name="mailbox_errorMsg">沒有項目</string>
-    
-    <!-- Main Loading -->
-	<string name="main_loading">讀取中...</string>
-	
-	<!-- About Facebook Manager -->
-	<string name="errorIs">錯誤是 %s </string>
-	<string name="cancelPublish">取消發佈</string>
-	<string name="publishSuccess">發佈成功</string>
-	<string name="publishFail">發佈失敗</string>
 
-	<!-- Audio Recorder -->
+    <!-- Main Loading -->
+    <string name="main_loading">讀取中...</string>
+
+    <!-- About Facebook Manager -->
+    <string name="errorIs">錯誤是 %s </string>
+    <string name="cancelPublish">取消發佈</string>
+    <string name="publishSuccess">發佈成功</string>
+    <string name="publishFail">發佈失敗</string>
+
+    <!-- Audio Recorder -->
     <string name="start_recording">開始錄音</string>
     <string name="open_file">開啟存檔</string>
     <string name="pause">暫停</string>
@@ -86,4 +99,5 @@
     <string name="play">試聽</string>
     <string name="save">儲存錄音</string>
     <string name="delete">刪除</string>
+
 </resources>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/backBtnViewOfNewspaper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15.0dip"
+            android:layout_marginTop="14.0dip"
+            android:background="@drawable/icon_ar1_left" />
+
+        <Button
+            android:id="@+id/nextBtnViewOfNewspaper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="18.0dip"
+            android:background="@drawable/icon_ar1_right" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="13.0dip"
+            android:layout_toRightOf="@+id/backBtnViewOfNewspaper"
+            android:src="@drawable/title_edit_news2" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/newspaperLayoutOfNewspaper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_centerHorizontal="true" >
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/news_bg" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/newspaper_edit_main_photo_string" />
+
+        <TextView
+            android:id="@+id/titleTextViewOfNewspaper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/textView2"
+            android:layout_alignTop="@+id/imageTitleViewOfNewspaper"
+            android:layout_marginTop="10.0dip"
+            android:text="@string/newspaper_edit_title_string" />
+
+        <ImageView
+            android:id="@+id/imageTitleViewOfNewspaper"
+            android:layout_width="260.0dip"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="27.0dip"
+            android:layout_marginTop="28.0dip"
+            android:background="@drawable/news_frame1" />
+
+        <ImageView
+            android:id="@+id/imageMainPhotoViewOfNewspaper"
+            android:layout_width="260.0dip"
+            android:layout_height="130.0dip"
+            android:layout_alignLeft="@+id/imageTitleViewOfNewspaper"
+            android:layout_below="@+id/imageTitleViewOfNewspaper"
+            android:layout_marginTop="4.0dip"
+            android:background="@drawable/news_frame2" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageSmailMainPhotoView"
+            android:layout_alignLeft="@+id/textView3"
+            android:layout_marginBottom="15.0dip"
+            android:layout_marginLeft="15.0dip"
+            android:text="@string/newspaper_edit_photo_and_text_string" />
+
+        <ImageView
+            android:id="@+id/imageSmailMainPhotoView"
+            android:layout_width="65.0dip"
+            android:layout_height="48.0dip"
+            android:layout_alignLeft="@+id/imageMainPhotoViewOfNewspaper"
+            android:layout_alignTop="@+id/imageMainPhotoViewOfNewspaper"
+            android:layout_marginLeft="4.0dip"
+            android:layout_marginTop="4.0dip"
+            android:background="@drawable/news_frame3" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageBottomLeftView"
+            android:layout_alignRight="@+id/imageBottomLeftView"
+            android:layout_marginBottom="10.0dip"
+            android:layout_marginRight="5.5dip"
+            android:text="@string/newspaper_edit_photo_and_text_string" />
+
+        <ImageView
+            android:id="@+id/imageBottomLeftView"
+            android:layout_width="37.0dip"
+            android:layout_height="38.0dip"
+            android:layout_alignLeft="@+id/imageMainPhotoViewOfNewspaper"
+            android:layout_below="@+id/imageMainPhotoViewOfNewspaper"
+            android:layout_marginLeft="2.7999878dip"
+            android:layout_marginTop="7.5dip"
+            android:background="@drawable/news_frame4" />
+    </RelativeLayout>
+
+</RelativeLayout>
