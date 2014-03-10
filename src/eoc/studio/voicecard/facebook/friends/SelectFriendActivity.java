@@ -352,7 +352,7 @@ public class SelectFriendActivity extends BaseActivity {
                 processUserListReponse(users);
             } else {
                 Toast.makeText(SelectFriendActivity.this,
-                        getResources().getString(R.string.errorIs, response.getError()), Toast.LENGTH_SHORT).show();
+                        getResources().getString(R.string.error_is, response.getError()), Toast.LENGTH_SHORT).show();
                 facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
                 finish();
             }

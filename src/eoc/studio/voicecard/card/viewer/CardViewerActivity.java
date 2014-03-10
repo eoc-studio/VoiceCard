@@ -637,7 +637,8 @@ public class CardViewerActivity extends BaseActivity
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(sendBackId);
 		Log.d(TAG, "sendBack to " + sendBackId);
-		facebookManager.sendCardtoServer(list);
+		Log.d(TAG, "sendBack card: " + card);
+		facebookManager.sendCardtoServer(list,card);
 
 		goBackToMainMenuAndFinish();
 	}

@@ -618,7 +618,7 @@ public class FacebookManager
             if (isSuccess) {
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(context, context.getResources().getString(R.string.errorIs, msg), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.error_is, msg), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -670,9 +670,40 @@ public class FacebookManager
                                         + information);
                                 
                                 if (isSuccess) {
-                                    showToast(context.getResources().getString(R.string.publishSuccess), isSuccess);
+                                    showToast(context.getResources().getString(R.string.publish_success), isSuccess);
                                 } else {
-                                    showToast(context.getResources().getString(R.string.publishFail), isSuccess);
+                                    showToast(context.getResources().getString(R.string.publish_fail), isSuccess);
+                                }
+                            }
+
+                        });
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public void sendCardtoServer(ArrayList<String> friendList,Card card) {
+        if (friendList != null) {
+            HttpManager httpManager = new HttpManager();
+
+            try {
+                httpManager.postMailByList(context, friendList, card.getImage(), card.getSound(),
+                        publishCard.getMessage(), card.getSignDraftImage(),
+                        String.valueOf(card.getMessageTextSizeType()),
+                        String.valueOf(card.getMessageTextColor()), String.valueOf(card.getId()), new PostMailListener() {
+
+                            @Override
+                            public void onResult(Boolean isSuccess, String information) {
+
+                                Log.e(TAG, "httpManager.postMailByList() isSuccess:" + isSuccess + ",information:"
+                                        + information);
+                                
+                                if (isSuccess) {
+                                    showToast(context.getResources().getString(R.string.publish_success), isSuccess);
+                                } else {
+                                    showToast(context.getResources().getString(R.string.publish_fail), isSuccess);
                                 }
                             }
 
@@ -805,7 +836,7 @@ public class FacebookManager
                 Log.d(TAG, "Publish had error is " + error.getMessage());
                 if (error.getMessage() == null) {
                     if (context != null) {
-                        showToast(context.getResources().getString(R.string.cancelPublish), false);
+                        showToast(context.getResources().getString(R.string.cancel_publish), false);
                     }
                 } else {
                     showToast(error.getMessage(), false);
@@ -850,7 +881,7 @@ public class FacebookManager
             Log.d(TAG, "PublishUserFeed response is " + response.getError());
             dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
             if (response.getError() == null) {
-                showToast(context.getResources().getString(R.string.publishSuccess), true);
+                showToast(context.getResources().getString(R.string.publish_success), true);
             } else {
                 showToast(response.getError().toString(), false);
             }

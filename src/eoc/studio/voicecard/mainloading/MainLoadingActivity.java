@@ -203,7 +203,7 @@ public class MainLoadingActivity extends Activity
 
 		httpManager = new HttpManager();
 		startProgressWheel();
-		initMailDataBase();
+
 		initCardDataBase();
 		getCategoryInfoFromServer();
 		getCardInfoFromServer();
@@ -355,12 +355,12 @@ public class MainLoadingActivity extends Activity
 		}
 	}
 
-	private void initMailDataBase()
+	private void initMailDataBase(String owerId)
 	{
 
 		mailsAdapterData = new MailsAdapterData(context);
 		mailsAdapterData.open();
-		mailboxUnReadCount = mailboxUnReadCount + mailsAdapterData.getLocalUnReadMailCount();
+		mailboxUnReadCount = mailboxUnReadCount + mailsAdapterData.getLocalUnReadMailCount(owerId);
 		Log.d(TAG, "initMailDataBase() mailboxUnReadCount :" + mailboxUnReadCount);
 		addProgressWheel(INIT_DATABASE_PROGRESS);
 		Log.d(TAG_PROGRESS, "INIT_DATABASE_PROGRESS");
@@ -702,37 +702,22 @@ public class MainLoadingActivity extends Activity
 			GraphObject graphObject = response.getGraphObject();
 			responseMap = graphObject.asMap();
 			Log.d("", "Response Map KeySet - " + responseMap.keySet());
+			UserInfo userInfo = null;
 
 			JSONObject userJSON = user.getInnerJSONObject();
 			if (userJSON != null)
 			{
-				try
-				{
-					facebookUserID = userJSON.getString(JSONTag.ID);
-					Log.d(TAG, "id:" + userJSON.getString(JSONTag.ID));
-					Log.d(TAG,
-							"picture link:"
-									+ userJSON.getJSONObject(JSONTag.PICTURE)
-											.getJSONObject("data").getString("url"));
-					Log.d(TAG, "email:" + userJSON.getString(JSONTag.EMAIL));
-					Log.d(TAG, "name:" + userJSON.getString(JSONTag.NAME));
-					Log.d(TAG, "gender:" + userJSON.getString(JSONTag.GENDER));
-					Log.d(TAG, "birthday:" + userJSON.getString(JSONTag.BIRTHDAY));
-					Log.d(TAG, "link:" + userJSON.getString(JSONTag.LINK));
-					Log.d(TAG, "timezone:" + userJSON.getInt(JSONTag.TIMEZONE));
-					Log.d(TAG, "locale:" + userJSON.getString(JSONTag.LOCALE));
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
+				userInfo = new UserInfo(userJSON);
+
+				Log.d(TAG, "userInfo id is " + userInfo.getId());
+				facebookUserID = userInfo.getId();
+				addProgressWheel(FACEBOOK_ID_PROGRESS);
+				Log.d(TAG_PROGRESS, "FACEBOOK_ID_PROGRESS");
 			}
 
-			addProgressWheel(FACEBOOK_ID_PROGRESS);
-			Log.d(TAG_PROGRESS, "FACEBOOK_ID_PROGRESS");
 			if (facebookUserID != null)
 			{
-
+				initMailDataBase(facebookUserID);
 				httpManager.init(context, facebookUserID);
 				addProgressWheel(INIT_HTTP_MANAGER_PROGRESS);
 				Log.d(TAG_PROGRESS, "INIT_HTTP_MANAGER_PROGRESS");
@@ -741,118 +726,88 @@ public class MainLoadingActivity extends Activity
 				{
 
 					gsonFacebookUser = new GsonFacebookUser(facebookUserID,
-							userJSON.getString(JSONTag.BIRTHDAY),
-							getPictureLink(userJSON), getStringJsonObjectByCheck(
-									userJSON, JSONTag.LOCALE),
+							userJSON.getString(JSONTag.BIRTHDAY), getPictureLink(userJSON),
+							getStringJsonObjectByCheck(userJSON, JSONTag.LOCALE),
 							getStringJsonObjectByCheck(userJSON, JSONTag.LINK),
-							getHomeTown(userJSON), getStringJsonObjectByCheck(
-									userJSON, JSONTag.TIMEZONE),
-							"this is dummy title", getStringJsonObjectByCheck(
-									userJSON, JSONTag.EMAIL),
+							getHomeTown(userJSON), getStringJsonObjectByCheck(userJSON,
+									JSONTag.TIMEZONE), userInfo.getTitle(),
+							getStringJsonObjectByCheck(userJSON, JSONTag.EMAIL),
 							getStringJsonObjectByCheck(userJSON, JSONTag.NAME),
 							getStringJsonObjectByCheck(userJSON, JSONTag.GENDER),
 							getEducation(userJSON), getWork(userJSON), getMobile());
 
-								}
-								catch (JSONException e)
+				}
+				catch (JSONException e)
+				{
+					e.printStackTrace();
+				}
+
+				httpManager.facebookLogin(context, gsonFacebookUser, new LoginListener()
+				{
+					@Override
+					public void onResult(Boolean isSuccess, String information)
+					{
+
+						Log.e(TAG, "httpManager.fascebookLogin() isSuccess:" + isSuccess
+								+ ",information:" + information);
+
+						addProgressWheel(FACEBOOK_USER_PROFILE_PROGRESS);
+						Log.d(TAG_PROGRESS, "FACEBOOK_USER_PROFILE_PROGRESS");
+					}
+
+				});
+
+				httpManager.getUnreadMailCount(context, new MailCountListener()
+				{
+					@Override
+					public void onResult(Boolean isSuccess, int count)
+					{
+
+						Log.e(TAG, "httpManager.getUnreadMailCount() isSuccess:" + isSuccess
+								+ ",information:" + String.valueOf(count));
+
+						mailboxUnReadCount = mailboxUnReadCount + count;
+						Log.d(TAG, "getUnreadMailCount() mailboxUnReadCount :" + mailboxUnReadCount);
+						addProgressWheel(MAILBOX_COUNT_PROGRESS);
+						Log.d(TAG_PROGRESS, "MAILBOX_COUNT_PROGRESS");
+						if (count > 0)
+						{
+							// start get mails from server
+							httpManager.getMails(context, new GetMailListener()
+							{
+								@Override
+								public void onResult(Boolean isSuccess, ArrayList<GsonSend> mails)
 								{
-									e.printStackTrace();
-								}
 
-								httpManager.facebookLogin(context, gsonFacebookUser,
-										new LoginListener()
-										{
-											@Override
-											public void onResult(Boolean isSuccess,
-													String information)
-											{
-
-												Log.e(TAG,
-														"httpManager.fascebookLogin() isSuccess:"
-																+ isSuccess + ",information:"
-																+ information);
-
-												addProgressWheel(FACEBOOK_USER_PROFILE_PROGRESS);
-												Log.d(TAG_PROGRESS,
-														"FACEBOOK_USER_PROFILE_PROGRESS");
-											}
-
-										});
-
-								httpManager.getUnreadMailCount(context, new MailCountListener()
-								{
-									@Override
-									public void onResult(Boolean isSuccess, int count)
+									Log.e(TAG, "httpManager.getMails() isSuccess:" + isSuccess
+											+ ",mails:" + mails.toString());
+									for (GsonSend mail : mails)
 									{
-
-										Log.e(TAG,
-												"httpManager.getUnreadMailCount() isSuccess:"
-														+ isSuccess + ",information:"
-														+ String.valueOf(count));
-
-										mailboxUnReadCount = mailboxUnReadCount + count;
-										Log.d(TAG, "getUnreadMailCount() mailboxUnReadCount :"
-												+ mailboxUnReadCount);
-										addProgressWheel(MAILBOX_COUNT_PROGRESS);
-										Log.d(TAG_PROGRESS, "MAILBOX_COUNT_PROGRESS");
-										if (count > 0)
+										if (mailsAdapterData != null)
 										{
-											// start get mails from server
-											httpManager.getMails(context, new GetMailListener()
-											{
-												@Override
-												public void onResult(Boolean isSuccess,
-														ArrayList<GsonSend> mails)
+											mailsAdapterData.create(mail.getCardID(),
+													facebookUserID, mail.getSendID(),
+													mail.getSendFrom(), mail.getSendFromName(),
+													mail.getSendFromLink(), mail.getSendTo(),
+													mail.getSubject(), mail.getBody(),
+													mail.getFont_size(), mail.getFont_color(),
+													mail.getImg(), null, mail.getSpeech(),
+													mail.getSign(), mail.getSend_time(), 1);
+										}
+
+									}
+
+									if (isSuccess)
+									{
+										// notify server mails
+										// already got from user
+										httpManager.notifyMailsRead(context,
+												new NotifyMailReadListener()
 												{
-
-													Log.e(TAG,
-															"httpManager.getMails() isSuccess:"
-																	+ isSuccess + ",mails:"
-																	+ mails.toString());
-													for (GsonSend mail : mails)
+													@Override
+													public void onResult(Boolean isSuccess,
+															String information)
 													{
-														if (mailsAdapterData != null)
-														{
-															mailsAdapterData.create(
-															        mail.getCardID(),
-															        facebookUserID,
-																	mail.getSendID(),
-																	mail.getSendFrom(),
-																	mail.getSendFromName(), // replace
-																	// this
-																	// col
-																	// with
-																	// sendfromName
-																	mail.getSendFromLink(),// replace
-																							// this
-																							// col
-																							// with
-																							// sendfromLink
-																	mail.getSendTo(),
-																	mail.getSubject(),
-																	mail.getBody(),
-																	mail.getFont_size(),
-																	mail.getFont_color(),
-																	mail.getImg(), null,
-																	mail.getSpeech(),
-																	mail.getSign(),
-																	mail.getSend_time(), 1);
-														}
-
-													}
-
-													if (isSuccess)
-													{
-														// notify server mails
-														// already got from user
-														httpManager.notifyMailsRead(context,
-																new NotifyMailReadListener()
-																{
-																	@Override
-																	public void onResult(
-																			Boolean isSuccess,
-																			String information)
-																	{
 
 																		Log.e(TAG,
 																				"httpManager.notifyMailsRead() isSuccess:"

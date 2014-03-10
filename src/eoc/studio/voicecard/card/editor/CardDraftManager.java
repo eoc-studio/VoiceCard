@@ -59,7 +59,7 @@ public class CardDraftManager
 	public void resetOwner(){
 		owner = "noOwner";
 	}
-	public void saveDraft(CardDraft cardDraft)
+	public boolean saveDraft(CardDraft cardDraft)
 	{
 
 		this.cardDraft = cardDraft;
@@ -110,14 +110,16 @@ public class CardDraftManager
 			catch (IOException e)
 			{
 				e.printStackTrace();
-
+				return false;
 			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-
+			return false;
 		}
+		
+		return true;
 
 	}
 
