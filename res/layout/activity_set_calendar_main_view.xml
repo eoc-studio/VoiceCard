@@ -79,22 +79,22 @@
         android:textSize="20sp" />
 
     <Button
-        android:id="@+id/buttonConfirmView"
+        android:id="@+id/buttonAddView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView3"
         android:layout_marginTop="12dp"
-        android:layout_toRightOf="@+id/buttonAddView"
-        android:background="@drawable/btn_sure_selector" />
+        android:layout_toRightOf="@+id/buttonBackView"
+        android:background="@drawable/btn_add_selector" />
 
     <Button
-        android:id="@+id/buttonAddView"
+        android:id="@+id/buttonBackView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/buttonConfirmView"
-        android:layout_alignBottom="@+id/buttonConfirmView"
+        android:layout_alignBaseline="@+id/buttonAddView"
+        android:layout_alignBottom="@+id/buttonAddView"
         android:layout_alignLeft="@+id/textView3"
         android:layout_marginLeft="55dp"
-        android:background="@drawable/btn_add_selector" />
+        android:background="@drawable/btn_return_selector" />
 
 </RelativeLayout>

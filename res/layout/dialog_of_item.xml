@@ -34,20 +34,20 @@
     </EditText>
 
     <Button
-        android:id="@+id/yes_btn"
+        android:id="@+id/cancel_btn"
         android:layout_width="100dip"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/edit_text_view"
         android:layout_below="@+id/background"
-        android:background="@drawable/btn_sure_selector" />
+        android:background="@drawable/btn_return_selector" />
 
     <Button
-        android:id="@+id/cancel_btn"
+        android:id="@+id/yes_btn"
         android:layout_width="100dip"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/yes_btn"
-        android:layout_alignBottom="@+id/yes_btn"
+        android:layout_alignBaseline="@+id/cancel_btn"
+        android:layout_alignBottom="@+id/cancel_btn"
         android:layout_alignRight="@+id/edit_text_view"
-        android:background="@drawable/btn_return_selector" />
+        android:background="@drawable/btn_sure_selector" />
 
 </RelativeLayout>
