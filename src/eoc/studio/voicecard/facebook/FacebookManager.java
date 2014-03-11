@@ -72,6 +72,7 @@ public class FacebookManager
 	private RequestGraphUserCallback userCallback;
 	private RequestAsyncTask requestAsyncTask;
 	private InviteListener inviteListener;
+	private PublishListener publishListener;
 	private Card publishCard;
 	private Uri fileUri;
 	
@@ -407,6 +408,11 @@ public class FacebookManager
             login(context, new LoginListener());
         }
     }
+    
+    public void publishNews(Context context, String sendId, Uri fileUri, PublishListener publishListener) {
+        this.publishListener = publishListener;
+        publishNews(context, sendId, fileUri);
+    }
 		
 	public void publishTimeline(Context context, Publish publish)
 	{
@@ -434,8 +440,11 @@ public class FacebookManager
         params.putString(BundleTag.LINK, publish.getLink());
         
         try {
+            if (publishListener == null) {
+                publishListener = new PublishListener();
+            }
             WebDialog feedDialog = (new WebDialog.FeedDialogBuilder(context, Session.getActiveSession(), params))
-                    .setOnCompleteListener(new PublishListener()).build();
+                    .setOnCompleteListener(publishListener).build();
             feedDialog.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -828,7 +837,7 @@ public class FacebookManager
         } 
     }
     
-    private class PublishListener implements OnCompleteListener
+    public class PublishListener implements OnCompleteListener
     {
         @Override
         public void onComplete(Bundle values, FacebookException error) {

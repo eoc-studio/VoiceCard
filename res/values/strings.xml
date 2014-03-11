@@ -54,6 +54,8 @@
     <string name="search_friend">Search Friend</string>
     <string name="user_not_install_message">If user not install this app then send message to
 				him/her.</string>
+    <string name="please_select_friends">Please select friends</string>
+    <string name="please_select_one_friend">Please select one friend</string>
 
     <!-- About Friend Info -->
     <string name="not_install">not install</string>

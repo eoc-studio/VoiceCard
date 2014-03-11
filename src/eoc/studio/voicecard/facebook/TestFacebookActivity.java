@@ -248,7 +248,25 @@ public class TestFacebookActivity extends BaseActivity
                     File file = new File("/storage/sdcard1/Download/jordan.jpg");
                     Uri fileUri = Uri.fromFile(file);
                     Log.d(TAG, "fileUri is " + fileUri);
-                    facebookManager.publishNews(TestFacebookActivity.this, "100007811983123", fileUri);
+                    facebookManager.publishNews(TestFacebookActivity.this, "100007811983123", fileUri,
+                            facebookManager.new PublishListener() {
+                                @Override
+                                public void onComplete(Bundle values, FacebookException error) {
+                                    if (error != null) {
+                                        Log.d(TAG, "TestFacebookActivity Publish had error is " + error.getMessage());
+//                                        if (error.getMessage() == null) {
+//                                            if (TestFacebookActivity.this != null) {
+//                                                showToast(getResources().getString(R.string.cancel_publish),
+//                                                        false);
+//                                            }
+//                                        } else {
+//                                            showToast(error.getMessage(), false);
+//                                        }
+                                    } else {
+                                        Log.d(TAG, "TestFacebookActivity Publish no error ");
+                                    }
+                                }
+                            });
                 }
             }
         });

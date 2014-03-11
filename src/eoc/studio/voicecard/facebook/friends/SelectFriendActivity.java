@@ -140,6 +140,12 @@ public class SelectFriendActivity extends BaseActivity {
         if (option != null) {
             isSingleOption = option.getBoolean(BundleTag.SELECTED_OPTION);
         }
+        
+        if (isSingleOption) {
+            displayMessage.setText(getResources().getString(R.string.please_select_one_friend));
+        } else {
+            displayMessage.setText(getResources().getString(R.string.please_select_friends));
+        }
     }
     
     private void confirmAction() {
