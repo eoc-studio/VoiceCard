@@ -77,11 +77,11 @@ public class FriendInfo implements Parcelable {
         friendBirthday = in.readString();
         friendImgLink = in.readString();
         
-        if (in.readInt() > 0) {
-            friendImg = new byte[in.readInt()]; 
-            in.readByteArray(friendImg);
-        }
-        selectedState = in.readInt();
+//        if (in.readInt() > 0) {
+//            friendImg = new byte[in.readInt()]; 
+//            in.readByteArray(friendImg);
+//        }
+//        selectedState = in.readInt();
     }
 
     @Override
@@ -95,11 +95,11 @@ public class FriendInfo implements Parcelable {
         dest.writeString(friendName);
         dest.writeString(friendBirthday);
         dest.writeString(friendImgLink);
-        if (friendImg != null) {
-            dest.writeInt(friendImg.length); 
-            dest.writeByteArray(friendImg);
-        }
-        dest.writeInt(selectedState);
+//        if (friendImg != null) {
+//            dest.writeInt(friendImg.length); 
+//            dest.writeByteArray(friendImg);
+//        }
+//        dest.writeInt(selectedState);
     }
     
     public String toString()

@@ -14,6 +14,7 @@ import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.facebook.FacebookManager;
 import eoc.studio.voicecard.facebook.enetities.FriendInfo;
 import eoc.studio.voicecard.facebook.friends.SelectFriendActivity;
+import eoc.studio.voicecard.facebook.utils.BundleTag;
 import eoc.studio.voicecard.utils.FileUtility;
 import android.app.Activity;
 import android.content.Context;
@@ -169,6 +170,9 @@ public class NewspaperSendActivity extends Activity implements OnClickListener
     private void selectFacebookFriends()
     {
         Intent intent = new Intent(this, SelectFriendActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(BundleTag.SELECTED_OPTION, true);
+        intent.putExtras(bundle);
         startActivityForResult(intent, FriendInfo.GET_FRIEND_REQUEST_CODE);
     }
 
