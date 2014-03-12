@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import com.facebook.Session;
+import com.facebook.FacebookException;
 
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.facebook.FacebookManager;
@@ -21,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore.Files;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -158,11 +158,11 @@ public class NewspaperSendActivity extends Activity implements OnClickListener
         if (DrawableProcess.saveBitmap(this, ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE,
                 DrawableProcess.IS_USER_CALL_FUNCTION))
         {
-            Toast.makeText(this, getResources().getString(R.string.news_save_ok), Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, getResources().getString(R.string.news_save_ok), Toast.LENGTH_LONG).show();
         }
         else
         {
-            Toast.makeText(this, getResources().getString(R.string.news_save_fail), Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, getResources().getString(R.string.news_save_fail), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -181,52 +181,76 @@ public class NewspaperSendActivity extends Activity implements OnClickListener
     {
         if (ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE != null && !mFiendId.equals(""))
         {
-        	
-        	Log.d(TAG, "sendNews()");
+
+            Log.d(TAG, "sendNews()");
             File filePath = new File(DrawableProcess.IMAGE_CACHE_PATH);
-            Log.d(TAG, "filePath: "+filePath.getPath());
-            String renameDirString = getCacheDir() +"/News";
-    		File pathCacheDir = new File(renameDirString);
-    		if(!pathCacheDir.exists())pathCacheDir.mkdirs();
-            
-            File renamefilePath  = new File( renameDirString, FileUtility.getRandomNewsName("jpg"));
-            
+            Log.d(TAG, "filePath: " + filePath.getPath());
+            String renameDirString = getCacheDir() + "/News";
+            File pathCacheDir = new File(renameDirString);
+            if (!pathCacheDir.exists())
+                pathCacheDir.mkdirs();
+
+            final File renamefilePath = new File(renameDirString, FileUtility.getRandomNewsName("jpg"));
+
             try
-			{
-				copy(filePath,renamefilePath);
-			}
-			catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            
+            {
+                copy(filePath, renamefilePath);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+
             if (renamefilePath.exists())
             {
-            	Log.d(TAG, "renamefilePath: "+renamefilePath.getPath());
+                Log.d(TAG, "renamefilePath: " + renamefilePath.getPath());
+
                 FacebookManager.getInstance(mContext).publishNews(this, mFiendId,
-                        Uri.parse(renamefilePath.getPath().toString()));
+                        Uri.parse(renamefilePath.getPath().toString()),
+                        FacebookManager.getInstance(mContext).new PublishListener()
+                        {
+                            @Override
+                            public void onComplete(Bundle values, FacebookException error)
+                            {
+                                if (error != null)
+                                {
+                                    Toast.makeText(mContext, getResources().getString(R.string.news_send_fail),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                                else
+                                {
+                                    Toast.makeText(mContext, getResources().getString(R.string.news_send_ok),
+                                            Toast.LENGTH_LONG).show();
+                                    renamefilePath.delete();
+                                }
+                            }
+                        });
+
                 mFiendId = "";
             }
         }
         else
         {
-            Toast.makeText(this, getResources().getString(R.string.news_no_selection_friend), Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, getResources().getString(R.string.news_no_selection_friend), Toast.LENGTH_LONG)
+                    .show();
         }
     }
+
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    public void copy(File src, File dst) throws IOException {
+    private void copy(File src, File dst) throws IOException
+    {
         InputStream in = new FileInputStream(src);
         OutputStream out = new FileOutputStream(dst);
 
         // Transfer bytes from in to out
         byte[] buf = new byte[1024];
         int len;
-        while ((len = in.read(buf)) > 0) {
+        while ((len = in.read(buf)) > 0)
+        {
             out.write(buf, 0, len);
         }
         in.close();
         out.close();
     }
+    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

@@ -3,6 +3,8 @@ package eoc.studio.voicecard.card.viewer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -144,6 +146,41 @@ public class CardViewerActivity extends BaseActivity
 		super.onBackPressed();
 	}
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK)
+        {
+            switch (requestCode)
+            {
+                case eoc.studio.voicecard.contact.DataProcess.PROCESS_SELECTION_FRIEND:
+                    if (data == null)
+                    {
+                        return;
+                    }
+                    Bundle extras = data.getExtras();
+                    if (extras == null)
+                    {
+                        return;
+                    }
+                    ArrayList list = extras
+                            .getParcelableArrayList(eoc.studio.voicecard.contact.DataProcess.PROCESS_SELECTION_FRIEND_LIST);
+                    List<Map<String, Object>> lists = (List<Map<String, Object>>) list.get(0);
+                    for (int i = 0; i < lists.size(); i++)
+                    {
+                        Log.d(TAG, "NAME: "
+                                + lists.get(i).get(eoc.studio.voicecard.contact.DataProcess.USER_NAME_INDEX).toString());
+                        Log.d(TAG,
+                                "TEL: "
+                                        + lists.get(i).get(eoc.studio.voicecard.contact.DataProcess.PHONE_NUMBER_INDEX)
+                                                .toString());
+                    }
+                    break;
+            }
+        }
+    }
+    
 	private boolean isSenderMode()
 	{
 		Intent intent = getIntent();
@@ -627,10 +664,13 @@ public class CardViewerActivity extends BaseActivity
 		});
 	}
 
-	private void sendContactSender()
-	{
-		// TODO to Ryan
-	}
+    private void sendContactSender()
+    {
+        Intent SendContactSender = new Intent();
+        SendContactSender.setClass(this, eoc.studio.voicecard.contact.ContactActivity.class);
+        startActivityForResult(SendContactSender, eoc.studio.voicecard.contact.DataProcess.PROCESS_SELECTION_FRIEND);
+        overridePendingTransition(0, 0);
+    }
 
 	private void sendBack()
 	{
