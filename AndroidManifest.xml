@@ -113,13 +113,13 @@
         <activity
             android:name="eoc.studio.voicecard.newspaper.NewspaperSendActivity"
             android:screenOrientation="portrait" />
-        <!-- <receiver
+        <receiver
             android:name="eoc.studio.voicecard.utils.NetworkReceiver"
             android:label="NetworkChangeReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
-        </receiver> -->
+        </receiver>
     </application>
 
 </manifest>
