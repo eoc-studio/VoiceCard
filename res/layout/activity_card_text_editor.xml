@@ -107,7 +107,7 @@
         android:layout_above="@+id/act_rich_text_editor_bottom_bar"
         android:layout_alignLeft="@id/act_rich_text_editor_rte_editor"
         android:layout_marginBottom="10dip"
-        android:text="20" />
+        android:text="0" />
 
     <TextView
         android:id="@+id/act_rich_text_editor_tv_text_limit"

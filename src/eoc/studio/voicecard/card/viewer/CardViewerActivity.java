@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.FacebookException;
 
@@ -263,7 +264,6 @@ public class CardViewerActivity extends BaseActivity
 	private void setupSenderModeWithCardData()
 	{
 		initCardView();
-		generateShadow();
 		initFlipAndShadow();
 		setListenersForSenderMode();
 	}
@@ -272,7 +272,6 @@ public class CardViewerActivity extends BaseActivity
 	{
 		initCardView();
 		generateScreenshotBitmap();
-		generateShadow();
 		initFlipAndShadow();
 		setListenersForViewerMode();
 	}
@@ -397,23 +396,6 @@ public class CardViewerActivity extends BaseActivity
 		}
 	}
 
-	private void generateShadow()
-	{
-		// Bitmap bmp = BitmapFactory.decodeResource(getResources(),
-		// card.getImage3dOpenResId());
-		Bitmap bmp = FileUtility.getBitmapFromPath(card.getImage3dOpenPath());
-
-		Bitmap halfShadow = Bitmap.createBitmap(bmp, bmp.getWidth() / 2 - 10, 0,
-				bmp.getWidth() / 2, bmp.getHeight());
-		shadowClose.setImageBitmap(halfShadow);
-		bmp.recycle();
-
-		// shadowOpen.setImageResource(card.getImage3dOpenResId());
-
-		Bitmap img3dOpenBitmap = FileUtility.getBitmapFromPath(card.getImage3dOpenPath());
-		FileUtility.setImageViewWithBitmap(shadowOpen, img3dOpenBitmap);
-	}
-
 	private void generateScreenshotBitmap()
 	{
 		View wholeCard = findViewById(R.id.act_card_viewer_rlyt_card);
@@ -440,15 +422,25 @@ public class CardViewerActivity extends BaseActivity
 	private void initFlipAndShadow()
 	{
 		cardWrapper.bringToFront();
-		final int cardPageWidth = (int) (getResources().getDimensionPixelSize(
-				R.dimen.card_open_width) / 2.f * 0.955f);
-		final int cardPageHeight = (int) (getResources().getDimensionPixelSize(R.dimen.card_height) * 1.42f);
+		// final int cardPageWidth = (int)
+		// (getResources().getDimensionPixelSize(
+		// R.dimen.card_open_width) / 2.f * 0.955f);
+		// final int cardPageHeight = (int)
+		// (getResources().getDimensionPixelSize(R.dimen.card_height) * 1.42f);
+		final int cardOpenWidth = (int) getResources().getDimensionPixelOffset(
+				R.dimen.card_open_page_width);
+		final int cardOpenHeight = (int) getResources().getDimensionPixelSize(
+				R.dimen.card_open_page_height);
+		final int cardFlipViewHeight = (int) (cardOpenHeight * 6.f / 5.f);
+		Toast.makeText(this,
+				"cardOpenHeight[" + cardOpenHeight + "]  height[" + cardFlipViewHeight + "]",
+				Toast.LENGTH_LONG).show();
 
 		shadowOpen.setVisibility(View.INVISIBLE);
 		shadowClose.setVisibility(View.VISIBLE);
 
-		flipView = new FlipView(this, cardPageWidth * 2, cardPageHeight, -10f, 0f,
-				cardPageWidth * 0.5f);
+		flipView = new FlipView(this, cardOpenWidth, cardFlipViewHeight, -10f, 0f,
+				cardFlipViewHeight / 2.f);
 		flipViewWrapper.addView(flipView);
 
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
@@ -493,19 +485,20 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public void onOpened()
 			{
-				// shadowOpen.setVisibility(View.VISIBLE);
-				// shadowClose.setVisibility(View.INVISIBLE);
+				shadowOpen.setVisibility(View.VISIBLE);
+				shadowClose.setVisibility(View.INVISIBLE);
 
-				flipView.setVisibility(View.INVISIBLE);
-				animationScrollView.setVisibility(View.GONE);
-				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) cardWrapper
-						.getLayoutParams();
-				params.setMargins(0, 0, 0, 0);
-				cardWrapper.setLayoutParams(params);
-				cardWrapper.setPadding(0, 0, 0, 0);
-				cardScrollView.setVisibility(View.VISIBLE);
-				cardWrapper.bringToFront();
-				cardScrollView.bringToFront();
+				// flipView.setVisibility(View.INVISIBLE); // TODO open
+				// animationScrollView.setVisibility(View.GONE);
+				// RelativeLayout.LayoutParams params =
+				// (RelativeLayout.LayoutParams) cardWrapper
+				// .getLayoutParams();
+				// params.setMargins(0, 0, 0, 0);
+				// cardWrapper.setLayoutParams(params);
+				// cardWrapper.setPadding(0, 0, 0, 0);
+				// cardScrollView.setVisibility(View.VISIBLE);
+				// cardWrapper.bringToFront();
+				// cardScrollView.bringToFront();
 			}
 
 			@Override
@@ -536,7 +529,7 @@ public class CardViewerActivity extends BaseActivity
 				{
 					public void run()
 					{
-						animationScrollView.smoothScrollTo(cardPageWidth * 2, 0);
+						animationScrollView.smoothScrollTo(cardOpenWidth * 2, 0);
 					}
 				}, 200L);
 			}
@@ -678,7 +671,7 @@ public class CardViewerActivity extends BaseActivity
 		list.add(sendBackId);
 		Log.d(TAG, "sendBack to " + sendBackId);
 		Log.d(TAG, "sendBack card: " + card);
-		facebookManager.sendCardtoServer(list,card);
+		facebookManager.sendCardtoServer(list, card);
 
 		goBackToMainMenuAndFinish();
 	}

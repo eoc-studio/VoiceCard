@@ -13,7 +13,7 @@
     <dimen name="common_input_padding">12dp</dimen>
     <dimen name="common_check_icon_edge">20dp</dimen>
     <dimen name="common_check_icon_margin">20dp</dimen>
-    
+
     <!-- About Select Friend -->
     <dimen name="act_select_friend_margin_top">30dp</dimen>
     <dimen name="act_select_friend_margin_top_small">15dp</dimen>
@@ -22,45 +22,76 @@
     <dimen name="act_select_friend_dash_horizontal_height">1dp</dimen>
     <dimen name="act_select_friend_iv_search_button_margin_top">4dp</dimen>
     <dimen name="act_select_friend_iv_search_button_margin_right">30dp</dimen>
-    
+
     <!-- About Friend Info -->
-	<dimen name="user_info_header_edge">50dp</dimen>
-	<dimen name="user_info_name_width">100dp</dimen>
-	<dimen name="user_info_name_height">80dp</dimen>
-	<dimen name="user_info_name_margin_left">20dp</dimen>
-	
-	<!-- About Mailbox -->
-	<dimen name="act_mailbox_rlyt_menu_marginBottom">10dp</dimen>
-	<dimen name="act_mailbox_v_menu_divider_width">1dp</dimen>
-	<dimen name="act_mailbox_v_menu_divider_height">40dp</dimen>
-	<dimen name="act_mailbox_v_menu_margin">20dp</dimen>
-	
-	<dimen name="act_mailbox_rlyt_titlebar_height">30dp</dimen>
-	<dimen name="act_mailbox_iv_titlebar_margin_left">10dp</dimen>
-	<dimen name="act_mailbox_v_titlebar_divider_width">1dp</dimen>
-	<dimen name="act_mailbox_v_titlebar_divider_height">20dp</dimen>
-	<dimen name="act_mailbox_v_titlebar_margin_left_right">10dp</dimen>
-	<dimen name="act_mailbox_rlyt_content_height">360dp</dimen>
-	<dimen name="act_mailbox_v_titlebar_margin_top">5dp</dimen>
-	<dimen name="act_mailbox_tv_errorMsg_height">40dp</dimen>
-	<dimen name="act_mailbox_tv_errorMsg_text_size">30dp</dimen>
-	
-	<!-- About Mailbox Item -->
-	<dimen name="glb_mailbox_list_item_llyt_check_icon_width">60dp</dimen>
-	<dimen name="glb_mailbox_list_item_llyt_check_icon_height">60dp</dimen>
-	<dimen name="glb_mailbox_list_item_img_edge">60dp</dimen>
-	<dimen name="glb_mailbox_list_item_llyt_info_height">60dp</dimen>
-	<dimen name="glb_mailbox_list_item_llyt_info_marginLeft">10dp</dimen>
-	<dimen name="glb_mailbox_list_item_tv_info_height">20dp</dimen>
-	<dimen name="glb_mailbox_list_item_tv_subject_text_size">16dp</dimen>
-	<dimen name="glb_mailbox_list_item_tv_sendtime_text_size">12dp</dimen>
-	<dimen name="glb_mailbox_list_item_new_icon_width">60dp</dimen>
-	<dimen name="glb_mailbox_list_item_new_icon_height">20dp</dimen>
-	<dimen name="glb_mailbox_list_item_new_icon_marginRight">10dp</dimen>
-	
-	<!-- Card -->
-    <dimen name="card_open_width">417dip</dimen>
-    <dimen name="card_height">250dip</dimen>
-    <dimen name="card_page_width">208.5dip</dimen>
-    <dimen name="view_card_height">400dip</dimen>
+    <dimen name="user_info_header_edge">50dp</dimen>
+    <dimen name="user_info_name_width">100dp</dimen>
+    <dimen name="user_info_name_height">80dp</dimen>
+    <dimen name="user_info_name_margin_left">20dp</dimen>
+
+    <!-- About Mailbox -->
+    <dimen name="act_mailbox_rlyt_menu_marginBottom">10dp</dimen>
+    <dimen name="act_mailbox_v_menu_divider_width">1dp</dimen>
+    <dimen name="act_mailbox_v_menu_divider_height">40dp</dimen>
+    <dimen name="act_mailbox_v_menu_margin">20dp</dimen>
+    <dimen name="act_mailbox_rlyt_titlebar_height">30dp</dimen>
+    <dimen name="act_mailbox_iv_titlebar_margin_left">10dp</dimen>
+    <dimen name="act_mailbox_v_titlebar_divider_width">1dp</dimen>
+    <dimen name="act_mailbox_v_titlebar_divider_height">20dp</dimen>
+    <dimen name="act_mailbox_v_titlebar_margin_left_right">10dp</dimen>
+    <dimen name="act_mailbox_rlyt_content_height">360dp</dimen>
+    <dimen name="act_mailbox_v_titlebar_margin_top">5dp</dimen>
+    <dimen name="act_mailbox_tv_errorMsg_height">40dp</dimen>
+    <dimen name="act_mailbox_tv_errorMsg_text_size">30dp</dimen>
+
+    <!-- About Mailbox Item -->
+    <dimen name="glb_mailbox_list_item_llyt_check_icon_width">60dp</dimen>
+    <dimen name="glb_mailbox_list_item_llyt_check_icon_height">60dp</dimen>
+    <dimen name="glb_mailbox_list_item_img_edge">60dp</dimen>
+    <dimen name="glb_mailbox_list_item_llyt_info_height">60dp</dimen>
+    <dimen name="glb_mailbox_list_item_llyt_info_marginLeft">10dp</dimen>
+    <dimen name="glb_mailbox_list_item_tv_info_height">20dp</dimen>
+    <dimen name="glb_mailbox_list_item_tv_subject_text_size">16dp</dimen>
+    <dimen name="glb_mailbox_list_item_tv_sendtime_text_size">12dp</dimen>
+    <dimen name="glb_mailbox_list_item_new_icon_width">60dp</dimen>
+    <dimen name="glb_mailbox_list_item_new_icon_height">20dp</dimen>
+    <dimen name="glb_mailbox_list_item_new_icon_marginRight">10dp</dimen>
+
+    <!-- Card Selector Gallery Item -->
+    <dimen name="card_list_item_card_width">217.5dip</dimen>
+    <dimen name="card_list_item_card_height">280dip</dimen>
+    <dimen name="card_list_item_wrapper_width">250dip</dimen>
+    <dimen name="card_list_item_wrapper_height">280dip</dimen>
+
+    <!-- Card Editor/Viewer -->
+    <dimen name="card_open_shadow_width">485.5dip</dimen>
+    <dimen name="card_open_shadow_height">290.5dip</dimen>
+    <dimen name="card_open_page_width">474dip</dimen>
+    <dimen name="card_open_page_height">280dip</dimen>
+    <dimen name="card_open_page_margin_left">6dip</dimen>
+    <dimen name="card_open_page_margin_right">5.5dip</dimen>
+    <dimen name="card_open_page_margin_top">0dip</dimen>
+    <dimen name="card_close_shadow_width">248dip</dimen>
+    <dimen name="card_close_shadow_height">291dip</dimen>
+    <dimen name="card_animation_wrapper_width">500dip</dimen>
+    <dimen name="card_editor_land_card_margin_top">50dip</dimen>
+    
+    <!-- Card Editable Frames -->
+    <dimen name="card_editable_frames_image_width">175dip</dimen>
+    <dimen name="card_editable_frames_image_height">175dip</dimen>
+    <dimen name="card_editable_frames_image_top">21.5dip</dimen>
+    <dimen name="card_editable_frames_image_left">37dip</dimen>
+    <dimen name="card_editable_frames_voice_width">175dip</dimen>
+    <dimen name="card_editable_frames_voice_height">50dip</dimen>
+    <dimen name="card_editable_frames_voice_top">208dip</dimen>
+    <dimen name="card_editable_frames_voice_left">37dip</dimen>
+    <dimen name="card_editable_frames_text_width">175dip</dimen>
+    <dimen name="card_editable_frames_text_height">160dip</dimen>
+    <dimen name="card_editable_frames_text_top">21.5dip</dimen>
+    <dimen name="card_editable_frames_text_left">275dip</dimen>
+    <dimen name="card_editable_frames_sign_width">175dip</dimen>
+    <dimen name="card_editable_frames_sign_height">65dip</dimen>
+    <dimen name="card_editable_frames_sign_top">193dip</dimen>
+    <dimen name="card_editable_frames_sign_left">275dip</dimen>
+    
 </resources>

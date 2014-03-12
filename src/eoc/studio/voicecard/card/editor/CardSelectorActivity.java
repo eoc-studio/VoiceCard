@@ -355,7 +355,7 @@ public class CardSelectorActivity extends BaseActivity
 				convertView = inflater.inflate(R.layout.view_card_list_item, null);
 				holder = new ViewHolder();
 				holder.image = (ImageView) convertView
-						.findViewById(R.id.glb_card_grid_item_iv_image);
+						.findViewById(R.id.glb_card_list_item_iv_image);
 				convertView.setTag(holder);
 			}
 			else

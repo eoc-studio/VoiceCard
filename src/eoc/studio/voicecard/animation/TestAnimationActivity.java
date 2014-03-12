@@ -45,8 +45,9 @@ public class TestAnimationActivity extends BaseActivity
 		scrollView = (HorizontalScrollView) findViewById(R.id.glb_card_animation_hsv_root);
 		shadowOpen = (ImageView) findViewById(R.id.glb_card_animation_iv_card_open_shadow);
 		shadowClose = (ImageView) findViewById(R.id.glb_card_animation_iv_card_close_shadow);
-		cardPageWidth = (int) (getResources().getDimensionPixelSize(R.dimen.card_open_width) / 2.f * 0.955f);
-		cardPageHeight = (int) (getResources().getDimensionPixelSize(R.dimen.card_height) * 1.42f);
+
+		cardPageWidth = (int) getResources().getDimensionPixelOffset(R.dimen.card_open_page_width);
+		cardPageHeight = (int) getResources().getDimensionPixelSize(R.dimen.card_open_page_height);
 
 		Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.card08_open);
 

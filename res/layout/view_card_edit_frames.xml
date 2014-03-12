@@ -5,10 +5,10 @@
 
     <FrameLayout
         android:id="@+id/glb_card_flyt_editable_image_frame"
-        android:layout_width="175dip"
-        android:layout_height="131dip"
-        android:layout_marginLeft="20dip"
-        android:layout_marginTop="10dip" >
+        android:layout_width="@dimen/card_editable_frames_image_width"
+        android:layout_height="@dimen/card_editable_frames_image_height"
+        android:layout_marginLeft="@dimen/card_editable_frames_image_left"
+        android:layout_marginTop="@dimen/card_editable_frames_image_top" >
 
         <TextView
             android:id="@+id/glb_card_tv_editable_image_tip"
@@ -25,11 +25,10 @@
 
     <FrameLayout
         android:id="@+id/glb_card_flyt_editable_voice_frame"
-        android:layout_width="175dip"
-        android:layout_height="70dip"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dip"
-        android:layout_marginLeft="20dip" >
+        android:layout_width="@dimen/card_editable_frames_voice_width"
+        android:layout_height="@dimen/card_editable_frames_voice_height"
+        android:layout_marginLeft="@dimen/card_editable_frames_voice_left"
+        android:layout_marginTop="@dimen/card_editable_frames_voice_top" >
 
         <TextView
             android:id="@+id/glb_card_tv_editable_voice_tip"
@@ -49,12 +48,10 @@
 
     <FrameLayout
         android:id="@+id/glb_card_flyt_editable_text_frame"
-        android:layout_width="175dip"
-        android:layout_height="115dip"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="20dip"
-        android:layout_marginTop="10dip" >
+        android:layout_width="@dimen/card_editable_frames_text_width"
+        android:layout_height="@dimen/card_editable_frames_text_height"
+        android:layout_marginLeft="@dimen/card_editable_frames_text_left"
+        android:layout_marginTop="@dimen/card_editable_frames_text_top" >
 
         <TextView
             android:id="@+id/glb_card_tv_editable_text_tip"
@@ -75,12 +72,10 @@
 
     <FrameLayout
         android:id="@+id/glb_card_flyt_editable_signature_frame"
-        android:layout_width="175dip"
-        android:layout_height="87dip"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="20dip"
-        android:layout_marginRight="20dip" >
+        android:layout_width="@dimen/card_editable_frames_sign_width"
+        android:layout_height="@dimen/card_editable_frames_sign_height"
+        android:layout_marginLeft="@dimen/card_editable_frames_sign_left"
+        android:layout_marginTop="@dimen/card_editable_frames_sign_top" >
 
         <TextView
             android:id="@+id/glb_card_tv_editable_signature_tip"

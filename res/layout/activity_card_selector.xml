@@ -34,6 +34,7 @@
 				android:layout_height="wrap_content"
 				android:layout_below="@id/act_card_selector_iv_header"
 				android:layout_centerHorizontal="true"
+				android:layout_marginTop="30dip"
 				android:background="@drawable/bubble"
 				android:gravity="center">
 

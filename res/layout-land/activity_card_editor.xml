@@ -35,25 +35,34 @@
         android:id="@+id/act_card_editor_rlyt_card"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/act_card_editor_rlyt_header"
+        android:layout_marginTop="@dimen/card_editor_land_card_margin_top"
         android:layout_centerHorizontal="true"
         android:gravity="center" >
 
-        <ImageView
-            android:id="@+id/act_card_editor_iv_card_inner_page"
-            android:layout_width="@dimen/card_open_width"
-            android:layout_height="@dimen/card_height"
-            android:layout_centerHorizontal="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/card02_open" />
+        <LinearLayout
+            android:id="@+id/act_card_editor_llyt_card_open_shadow"
+            android:layout_width="@dimen/card_open_shadow_width"
+            android:layout_height="@dimen/card_open_shadow_height"
+            android:background="@drawable/shadow_open" >
+
+            <ImageView
+                android:id="@+id/act_card_editor_iv_card_inner_page"
+                android:layout_width="@dimen/card_open_page_width"
+                android:layout_height="@dimen/card_open_page_height"
+                android:layout_marginLeft="@dimen/card_open_page_margin_left"
+                android:layout_marginRight="@dimen/card_open_page_margin_right"
+                android:layout_marginTop="@dimen/card_open_page_margin_top"
+                android:scaleType="fitXY" >
+            </ImageView>
+        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/act_card_editor_flyt_editables"
-            android:layout_width="@dimen/card_open_width"
-            android:layout_height="@dimen/card_height"
-            android:layout_centerHorizontal="true" >
+            android:layout_width="@dimen/card_open_shadow_width"
+            android:layout_height="@dimen/card_open_shadow_height"
+            android:layout_marginTop="@dimen/card_open_page_margin_top" >
 
-            <include layout="@layout/view_card" />
+            <include layout="@layout/view_card_edit_frames" />
         </FrameLayout>
     </RelativeLayout>
 
@@ -69,6 +78,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:src="@drawable/handwrite_02" />
 
         <ImageView
