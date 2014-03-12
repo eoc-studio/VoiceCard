@@ -1,9 +1,6 @@
 package eoc.studio.voicecard.animation;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
@@ -19,8 +16,6 @@ public class TestAnimationActivity extends BaseActivity
 	private HorizontalScrollView scrollView;
 	private FlipView flipView;
 	private FrameLayout flipViewWrapper;
-	private ImageView shadowOpen;
-	private ImageView shadowClose;
 
 	private int cardPageWidth;
 	private int cardPageHeight;
@@ -29,41 +24,29 @@ public class TestAnimationActivity extends BaseActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		initLayout();
-		initFlipAndShadow();
+		initFlipView();
 		super.onCreate(savedInstanceState);
 	}
 
 	private void initLayout()
 	{
 		setContentView(R.layout.activity_test_animation);
-		flipViewWrapper = (FrameLayout) findViewById(R.id.glb_card_animation_flyt_card_wrapper);
+		flipViewWrapper = (FrameLayout) findViewById(R.id.card);
 
 		// Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
 		// R.drawable.card08_cover);
 		// cardPageWidth = bitmap.getWidth();
 		// cardPageHeight = bitmap.getHeight();
-		scrollView = (HorizontalScrollView) findViewById(R.id.glb_card_animation_hsv_root);
-		shadowOpen = (ImageView) findViewById(R.id.glb_card_animation_iv_card_open_shadow);
-		shadowClose = (ImageView) findViewById(R.id.glb_card_animation_iv_card_close_shadow);
-
-		cardPageWidth = (int) getResources().getDimensionPixelOffset(R.dimen.card_open_page_width);
-		cardPageHeight = (int) getResources().getDimensionPixelSize(R.dimen.card_open_page_height);
-
-		Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.card08_open);
-
-		Bitmap halfShadow = Bitmap.createBitmap(bmp, bmp.getWidth() / 2 - 10, 0,
-				bmp.getWidth() / 2, bmp.getHeight());
-		shadowClose.setImageBitmap(halfShadow);
-		bmp.recycle();
+		scrollView = (HorizontalScrollView) findViewById(R.id.act_test_animation_hsv_root);
+		cardPageWidth = (int) (getResources().getDimensionPixelSize(R.dimen.card_open_page_width) / 2.f);
+		cardPageHeight = (int) (getResources().getDimensionPixelSize(R.dimen.card_open_page_height) * 1.4f);
 	}
 
-	private void initFlipAndShadow()
+	private void initFlipView()
 	{
-		shadowOpen.setVisibility(View.INVISIBLE);
-		shadowClose.setVisibility(View.VISIBLE);
 
-		flipView = new FlipView(this, cardPageWidth * 2, cardPageHeight, -10f, 0f,
-				cardPageWidth * 0.5f);
+		flipView = new FlipView(this, cardPageWidth * 2, cardPageHeight, -12f, 0f,
+				cardPageWidth / 2);
 		flipViewWrapper.addView(flipView);
 
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
@@ -90,8 +73,6 @@ public class TestAnimationActivity extends BaseActivity
 			@Override
 			public void onOpened()
 			{
-				shadowOpen.setVisibility(View.VISIBLE);
-				shadowClose.setVisibility(View.INVISIBLE);
 			}
 
 			@Override
@@ -114,8 +95,6 @@ public class TestAnimationActivity extends BaseActivity
 			@Override
 			public void onStartClosing()
 			{
-				shadowOpen.setVisibility(View.INVISIBLE);
-				shadowClose.setVisibility(View.VISIBLE);
 				scrollView.postDelayed(new Runnable()
 				{
 					public void run()

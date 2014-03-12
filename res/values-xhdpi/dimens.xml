@@ -73,8 +73,12 @@
     <dimen name="card_open_page_margin_top">0dip</dimen>
     <dimen name="card_close_shadow_width">248dip</dimen>
     <dimen name="card_close_shadow_height">291dip</dimen>
-    <dimen name="card_animation_wrapper_width">500dip</dimen>
     <dimen name="card_editor_land_card_margin_top">50dip</dimen>
+    <dimen name="card_animation_wrapper_width">500dip</dimen>
+    <dimen name="card_single_page_width">237dip</dimen>
+    <dimen name="card_single_page_height">280dip</dimen>
+    <dimen name="card_single_page_margin_top">4.5dip</dimen>
+    <dimen name="card_single_page_margin_left">4.5dip</dimen>
     
     <!-- Card Editable Frames -->
     <dimen name="card_editable_frames_image_width">175dip</dimen>

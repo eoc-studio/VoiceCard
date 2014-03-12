@@ -7,30 +7,41 @@
 
     <RelativeLayout
         android:layout_width="@dimen/card_animation_wrapper_width"
-        android:layout_height="match_parent"
-        android:gravity="center" >
+        android:layout_height="match_parent" >
 
         <ImageView
             android:id="@+id/glb_card_animation_iv_card_open_shadow"
             android:layout_width="@dimen/card_open_shadow_width"
             android:layout_height="@dimen/card_open_shadow_height"
-            android:layout_marginTop="50dip"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:background="@drawable/shadow_open"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            android:visibility="invisible" />
 
-        <ImageView
-            android:id="@+id/glb_card_animation_iv_card_close_shadow"
+        <LinearLayout
+            android:id="@+id/glb_card_animation_llyt_card_close_shadow"
             android:layout_width="@dimen/card_close_shadow_width"
             android:layout_height="@dimen/card_close_shadow_height"
             android:layout_alignRight="@id/glb_card_animation_iv_card_open_shadow"
             android:layout_alignTop="@id/glb_card_animation_iv_card_open_shadow"
-            android:background="#f00"
-            android:scaleType="fitXY" />
+            android:background="@drawable/shadow_close"
+            android:visibility="invisible" >
+
+            <ImageView
+                android:id="@+id/glb_card_animation_iv_card_inner_second_page"
+                android:layout_width="@dimen/card_single_page_width"
+                android:layout_height="@dimen/card_single_page_height"
+                android:layout_marginLeft="@dimen/card_single_page_margin_left"
+                android:layout_marginTop="@dimen/card_single_page_margin_top" />
+        </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/glb_card_animation_flyt_card_wrapper"
+            android:id="@+id/glb_card_animation_flyt_card_flipview_wrapper"
             android:layout_width="@dimen/card_open_shadow_width"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:translationX="-8dip"
+            android:translationY="-28dip" >
         </FrameLayout>
     </RelativeLayout>
 

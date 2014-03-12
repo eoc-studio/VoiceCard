@@ -66,59 +66,6 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/act_card_viewer_iv_tip_for_sender" />
 
-    <FrameLayout
-        android:id="@+id/act_card_viewer_flyt_card_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/act_card_viewer_iv_tip_for_sender"
-        android:layout_marginTop="-100dip"
-        android:layout_toLeftOf="@id/act_card_viewer_v_right_block"
-        android:paddingTop="10dip" >
-
-        <include layout="@layout/view_card_animation" />
-
-        <HorizontalScrollView
-            android:id="@+id/act_card_viewer_hsv_card_scroll_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" >
-
-            <RelativeLayout
-                android:id="@+id/act_card_viewer_rlyt_card"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center" >
-
-                <LinearLayout
-                    android:id="@+id/act_card_viewer_llyt_card_open_shadow"
-                    android:layout_width="@dimen/card_open_shadow_width"
-                    android:layout_height="@dimen/card_open_shadow_height"
-                    android:background="@drawable/shadow_open" >
-
-                    <ImageView
-                        android:id="@+id/act_card_viewer_iv_card_inner_page"
-                        android:layout_width="@dimen/card_open_page_width"
-                        android:layout_height="@dimen/card_open_page_height"
-                        android:layout_marginLeft="@dimen/card_open_page_margin_left"
-                        android:layout_marginRight="@dimen/card_open_page_margin_right"
-                        android:layout_marginTop="@dimen/card_open_page_margin_top"
-                        android:scaleType="fitXY" />
-                </LinearLayout>
-
-                <FrameLayout
-                    android:id="@+id/act_card_viewer_flyt_editables"
-                    android:layout_width="@dimen/card_open_page_width"
-                    android:layout_height="@dimen/card_open_page_height"
-                    android:layout_marginLeft="@dimen/card_open_page_margin_left"
-                    android:layout_marginRight="@dimen/card_open_page_margin_right"
-                    android:layout_marginTop="@dimen/card_open_page_margin_top" >
-
-                    <include layout="@layout/view_card_edit_frames" />
-                </FrameLayout>
-            </RelativeLayout>
-        </HorizontalScrollView>
-    </FrameLayout>
-
     <LinearLayout
         android:id="@+id/act_card_viewer_llyt_footer_for_sender"
         android:layout_width="wrap_content"
@@ -167,5 +114,54 @@
             android:layout_height="wrap_content"
             android:src="@drawable/btn_send_card_back_selector" />
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/act_card_viewer_flyt_card_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="370dip"
+        android:layout_below="@id/act_card_viewer_iv_tip_for_sender"
+        android:layout_toLeftOf="@id/act_card_viewer_v_right_block" >
+
+        <include layout="@layout/view_card_animation" />
+
+        <HorizontalScrollView
+            android:id="@+id/act_card_viewer_hsv_card_scroll_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" >
+
+            <RelativeLayout
+                android:id="@+id/act_card_viewer_rlyt_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center" >
+
+                <LinearLayout
+                    android:id="@+id/act_card_viewer_llyt_card_open_shadow"
+                    android:layout_width="@dimen/card_open_shadow_width"
+                    android:layout_height="@dimen/card_open_shadow_height"
+                    android:background="@drawable/shadow_open" >
+
+                    <ImageView
+                        android:id="@+id/act_card_viewer_iv_card_inner_page"
+                        android:layout_width="@dimen/card_open_page_width"
+                        android:layout_height="@dimen/card_open_page_height"
+                        android:layout_marginLeft="@dimen/card_open_page_margin_left"
+                        android:layout_marginRight="@dimen/card_open_page_margin_right"
+                        android:layout_marginTop="@dimen/card_open_page_margin_top"
+                        android:scaleType="fitXY" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/act_card_viewer_flyt_editables"
+                    android:layout_width="@dimen/card_open_shadow_width"
+                    android:layout_height="@dimen/card_open_shadow_height" >
+
+                    <include layout="@layout/view_card_edit_frames" />
+                </FrameLayout>
+            </RelativeLayout>
+        </HorizontalScrollView>
+    </FrameLayout>
 
 </RelativeLayout>

@@ -23,7 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,7 +82,8 @@ public class CardViewerActivity extends BaseActivity
 	private FlipView flipView;
 	private FrameLayout flipViewWrapper;
 	private ImageView shadowOpen;
-	private ImageView shadowClose;
+	private LinearLayout shadowClose;
+	private ImageView cardInnerSecondPage;
 
 	private HorizontalScrollView cardScrollView;
 	private ImageView cardInnerBackground;
@@ -334,10 +335,11 @@ public class CardViewerActivity extends BaseActivity
 
 		rightBlock = findViewById(R.id.act_card_viewer_v_right_block);
 		cardWrapper = (FrameLayout) findViewById(R.id.act_card_viewer_flyt_card_wrapper);
-		flipViewWrapper = (FrameLayout) findViewById(R.id.glb_card_animation_flyt_card_wrapper);
+		flipViewWrapper = (FrameLayout) findViewById(R.id.glb_card_animation_flyt_card_flipview_wrapper);
 		animationScrollView = (HorizontalScrollView) findViewById(R.id.glb_card_animation_hsv_root);
 		shadowOpen = (ImageView) findViewById(R.id.glb_card_animation_iv_card_open_shadow);
-		shadowClose = (ImageView) findViewById(R.id.glb_card_animation_iv_card_close_shadow);
+		shadowClose = (LinearLayout) findViewById(R.id.glb_card_animation_llyt_card_close_shadow);
+		cardInnerSecondPage = (ImageView) findViewById(R.id.glb_card_animation_iv_card_inner_second_page);
 
 		cardScrollView = (HorizontalScrollView) findViewById(R.id.act_card_viewer_hsv_card_scroll_view);
 		cardInnerBackground = (ImageView) findViewById(R.id.act_card_viewer_iv_card_inner_page);
@@ -421,17 +423,15 @@ public class CardViewerActivity extends BaseActivity
 
 	private void initFlipAndShadow()
 	{
+		Bitmap img2dSecondPageBitmap = FileUtility.getBitmapFromPath(card.getImageInnerRightPath());
+		FileUtility.setImageViewBackgroundWithBitmap(cardInnerSecondPage, img2dSecondPageBitmap);
+
 		cardWrapper.bringToFront();
-		// final int cardPageWidth = (int)
-		// (getResources().getDimensionPixelSize(
-		// R.dimen.card_open_width) / 2.f * 0.955f);
-		// final int cardPageHeight = (int)
-		// (getResources().getDimensionPixelSize(R.dimen.card_height) * 1.42f);
 		final int cardOpenWidth = (int) getResources().getDimensionPixelOffset(
 				R.dimen.card_open_page_width);
 		final int cardOpenHeight = (int) getResources().getDimensionPixelSize(
 				R.dimen.card_open_page_height);
-		final int cardFlipViewHeight = (int) (cardOpenHeight * 6.f / 5.f);
+		final int cardFlipViewHeight = (int) (cardOpenHeight * 7.7f / 5.f);
 		Toast.makeText(this,
 				"cardOpenHeight[" + cardOpenHeight + "]  height[" + cardFlipViewHeight + "]",
 				Toast.LENGTH_LONG).show();
@@ -488,17 +488,10 @@ public class CardViewerActivity extends BaseActivity
 				shadowOpen.setVisibility(View.VISIBLE);
 				shadowClose.setVisibility(View.INVISIBLE);
 
-				// flipView.setVisibility(View.INVISIBLE); // TODO open
-				// animationScrollView.setVisibility(View.GONE);
-				// RelativeLayout.LayoutParams params =
-				// (RelativeLayout.LayoutParams) cardWrapper
-				// .getLayoutParams();
-				// params.setMargins(0, 0, 0, 0);
-				// cardWrapper.setLayoutParams(params);
-				// cardWrapper.setPadding(0, 0, 0, 0);
-				// cardScrollView.setVisibility(View.VISIBLE);
-				// cardWrapper.bringToFront();
-				// cardScrollView.bringToFront();
+				flipView.setVisibility(View.INVISIBLE);
+				animationScrollView.setVisibility(View.GONE);
+				cardScrollView.setVisibility(View.VISIBLE);
+				cardScrollView.bringToFront();
 			}
 
 			@Override
