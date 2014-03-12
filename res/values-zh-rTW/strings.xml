@@ -33,7 +33,9 @@
     <string name="news_save_ok">儲存成功</string>
     <string name="news_save_fail">儲存失敗</string>
     <string name="news_send_fail">傳送失敗</string>
+    <string name="news_send_ok">傳送完成</string>
     <string name="news_no_selection_friend">請選擇聯絡人</string>
+    <string name="news_no_setted">請設置各個區塊</string>
 
     <!-- About MemorialDay -->
     <string name="current_month_placeholder">1970-January</string>
@@ -103,14 +105,15 @@
     <string name="play">試聽</string>
     <string name="save">儲存錄音</string>
     <string name="delete">刪除</string>
-    
+
     <!-- Draft -->
     <string name="save_draft_success">儲存草稿成功</string>
     <string name="save_draft_fail">儲存草稿失敗</string>
     <string name="open_draft_success">開啟草稿成功</string>
     <string name="open_draft_fail">開啟草稿失敗</string>
-    
+
     <!-- About Network Receiver -->
     <string name="network_connect_success">網路連接成功！</string>
     <string name="network_connect_fail">手機沒有任何網路</string>
+
 </resources>

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MagazineStyleMainActivity extends Activity implements OnClickListener
 {
@@ -22,6 +23,7 @@ public class MagazineStyleMainActivity extends Activity implements OnClickListen
 
     private static RelativeLayout mMagazineSetBackgroundView;
     private static ImageView mBtnTitleView, mMagazineSetLeftBottomPhotoView;
+    private static boolean mIsTitleSetted = false, mIsSetBackground = false, mIsSetLeftBottomPhoto = false;
 
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -81,9 +83,16 @@ public class MagazineStyleMainActivity extends Activity implements OnClickListen
                 break;
             case R.id.nextBtnViewOfMagazine:
             {
-                ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE = Bitmap.createBitmap(DrawableProcess
-                        .takeScreenshot(newspaperMainView));
-                DrawableProcess.sendNews(this);
+                if (mIsTitleSetted && mIsSetBackground && mIsSetLeftBottomPhoto)
+                {
+                    ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE = Bitmap.createBitmap(DrawableProcess
+                            .takeScreenshot(newspaperMainView));
+                    DrawableProcess.sendNews(this);
+                }
+                else
+                {
+                    Toast.makeText(this, getResources().getString(R.string.news_no_setted), Toast.LENGTH_LONG).show();
+                }
             }
                 break;
             case R.id.imageTitleViewOfMagazine:
@@ -120,6 +129,7 @@ public class MagazineStyleMainActivity extends Activity implements OnClickListen
             switch (requestCode)
             {
                 case DrawableProcess.PROCESS_TYPE_TITLE:
+                {
                     if (data == null)
                     {
                         return;
@@ -132,6 +142,8 @@ public class MagazineStyleMainActivity extends Activity implements OnClickListen
                     mTitleTextView.setText("");
                     mBtnTitleView
                             .setBackgroundResource(DrawableProcess.getMagazineDrawable(extras.getInt("titleView")));
+                    mIsTitleSetted = true;
+                }
                     break;
                 case DrawableProcess.PROCESS_TYPE_MAIN_PHOTO:
                     if (DrawableProcess.imageUri != null)
@@ -140,11 +152,13 @@ public class MagazineStyleMainActivity extends Activity implements OnClickListen
                                 DrawableProcess.imageUri);
                         mBtnMainPhotoView.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
                                 ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE));
+                        mIsSetBackground = true;
                     }
                     break;
                 case DrawableProcess.PROCESS_TYPE_LEFT_BOTTON_MAIN_VIEW:
                     mMagazineSetLeftBottomPhotoView.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
                             ValueCacheProcessCenter.LEFT_BOTTON_MAIN_BITMAP_CATCHE));
+                    mIsSetLeftBottomPhoto = true;
                     break;
             }
         }

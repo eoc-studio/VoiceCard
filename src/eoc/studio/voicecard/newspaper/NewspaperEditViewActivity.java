@@ -158,7 +158,7 @@ public class NewspaperEditViewActivity extends Activity implements OnClickListen
                 break;
             case R.id.setLeftEditTextView:
             {
-                ShowDialog.showSetValueDialog(this, mSetLeftEditTextView, mSetLeftEditTextIconView, "test", "test2",
+                ShowDialog.showSetValueDialog(this, mSetLeftEditTextView, mSetLeftEditTextIconView, "", "",
                         mSetLeftEditTextView.getText().toString());
             }
                 break;
@@ -175,26 +175,26 @@ public class NewspaperEditViewActivity extends Activity implements OnClickListen
                 break;
             case R.id.setLeftBottomEditTextView:
             {
-                ShowDialog.showSetValueDialog(this, mSetLeftBottomEditTextView, mSetLeftBottomEditTextIconView, "test",
-                        "test2", mSetLeftBottomEditTextView.getText().toString());
+                ShowDialog.showSetValueDialog(this, mSetLeftBottomEditTextView, mSetLeftBottomEditTextIconView, "", "",
+                        mSetLeftBottomEditTextView.getText().toString());
             }
                 break;
             case R.id.setLeftBottomEditTextView2:
             {
-                ShowDialog.showSetValueDialog(this, mSetLeftBottomEditTextView2, mSetLeftBottomEditTextIconView2,
-                        "test", "test2", mSetLeftBottomEditTextView2.getText().toString());
+                ShowDialog.showSetValueDialog(this, mSetLeftBottomEditTextView2, mSetLeftBottomEditTextIconView2, "",
+                        "", mSetLeftBottomEditTextView2.getText().toString());
             }
                 break;
             case R.id.setLeftBottomEditTextView3:
             {
-                ShowDialog.showSetValueDialog(this, mSetLeftBottomEditTextView3, mSetLeftBottomEditTextIconView3,
-                        "test", "test2", mSetLeftBottomEditTextView3.getText().toString());
+                ShowDialog.showSetValueDialog(this, mSetLeftBottomEditTextView3, mSetLeftBottomEditTextIconView3, "",
+                        "", mSetLeftBottomEditTextView3.getText().toString());
             }
                 break;
             case R.id.setLeftBottomEditTextView4:
             {
-                ShowDialog.showSetValueDialog(this, mSetLeftBottomEditTextView4, mSetLeftBottomEditTextIconView4,
-                        "test", "test2", mSetLeftBottomEditTextView4.getText().toString());
+                ShowDialog.showSetValueDialog(this, mSetLeftBottomEditTextView4, mSetLeftBottomEditTextIconView4, "",
+                        "", mSetLeftBottomEditTextView4.getText().toString());
             }
                 break;
             ///

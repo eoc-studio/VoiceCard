@@ -35,16 +35,6 @@ public class ShowDialog
             alert.setMessage(message);
         }
 
-        alert.setButton(Dialog.BUTTON_POSITIVE, context.getString(R.string.set_dilog_ok),
-                new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        view.setText(input.getText().toString());
-                        view.setBackgroundColor(Color.RED);
-                        imgView.setVisibility(View.INVISIBLE);
-                    }
-                });
         alert.setButton(Dialog.BUTTON_NEGATIVE, context.getString(R.string.set_dilog_cancel),
                 new DialogInterface.OnClickListener()
                 {
@@ -53,8 +43,38 @@ public class ShowDialog
 
                     }
                 });
+
+        alert.setButton(Dialog.BUTTON_POSITIVE, context.getString(R.string.set_dilog_ok),
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        view.setText(input.getText().toString());
+                        setTextViewBackground(view);
+                        imgView.setVisibility(View.INVISIBLE);
+                    }
+                });
         alert.setView(input);
         alert.show();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private static void setTextViewBackground(final View view)
+    {
+        switch (ValueCacheProcessCenter.callProcessingView)
+        {
+            case ValueCacheProcessCenter.EDIT_NEWSPAPER_STYTLE_LEFT_MAIN_VIEW:
+            case ValueCacheProcessCenter.EDIT_NEWSPAPER_STYTLE_BOTTON_LEFT_MAIN_VIEW:
+            {
+                view.setBackgroundColor(Color.BLACK);
+            }
+                break;
+            case ValueCacheProcessCenter.EDIT_MAGAZINE_STYTLE_BOTTON_LEFT_MAIN_VIEW:
+            {
+                view.setBackgroundColor(Color.RED);
+            }
+                break;
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

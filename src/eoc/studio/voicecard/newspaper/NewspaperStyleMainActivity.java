@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class NewspaperStyleMainActivity extends Activity implements OnClickListener
 {
@@ -19,8 +20,9 @@ public class NewspaperStyleMainActivity extends Activity implements OnClickListe
     private static Button mBackBtn, mNextBtn;
     private static TextView mTitleTextView;
     private static ImageView mBtnMainPhotoView;
-
     private static ImageView mBtnTitleView, mImageSmailMainPhotoView, mImageBottomLeftView;
+    private static boolean mIsTitleSetted = false, mIsSetBackground = false, mIsSetSmailMainPhoto = false,
+            mIsSetBottomLeftPhoto = false;
 
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -80,9 +82,17 @@ public class NewspaperStyleMainActivity extends Activity implements OnClickListe
                 break;
             case R.id.nextBtnViewOfNewspaper:
             {
-                ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE = Bitmap.createBitmap(DrawableProcess
-                        .takeScreenshot(newspaperMainView));
-                DrawableProcess.sendNews(this);
+                if (mIsTitleSetted && mIsSetBackground && mIsSetSmailMainPhoto && mIsSetBottomLeftPhoto)
+                {
+                    ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE = Bitmap.createBitmap(DrawableProcess
+                            .takeScreenshot(newspaperMainView));
+                    DrawableProcess.sendNews(this);
+                }
+                else
+                {
+                    Toast.makeText(this, getResources().getString(R.string.news_no_setted), Toast.LENGTH_LONG).show();
+                }
+
             }
                 break;
             case R.id.imageTitleViewOfNewspaper:
@@ -120,6 +130,7 @@ public class NewspaperStyleMainActivity extends Activity implements OnClickListe
             switch (requestCode)
             {
                 case DrawableProcess.PROCESS_TYPE_TITLE:
+                {
                     if (data == null)
                     {
                         return;
@@ -132,6 +143,8 @@ public class NewspaperStyleMainActivity extends Activity implements OnClickListe
                     mTitleTextView.setText("");
                     mBtnTitleView
                             .setBackgroundResource(DrawableProcess.getNewspaperDrawable(extras.getInt("titleView")));
+                    mIsTitleSetted = true;
+                }
                     break;
                 case DrawableProcess.PROCESS_TYPE_MAIN_PHOTO:
                     if (DrawableProcess.imageUri != null)
@@ -140,15 +153,18 @@ public class NewspaperStyleMainActivity extends Activity implements OnClickListe
                                 DrawableProcess.imageUri);
                         mBtnMainPhotoView.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
                                 ValueCacheProcessCenter.MAIN_PHOTO_BITMAP_CATCHE));
+                        mIsSetBackground = true;
                     }
                     break;
                 case DrawableProcess.PROCESS_TYPE_LEFT_MAIN_VIEW:
                     mImageSmailMainPhotoView.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
                             ValueCacheProcessCenter.LEFT_MAIN_BITMAP_CATCHE));
+                    mIsSetSmailMainPhoto = true;
                     break;
                 case DrawableProcess.PROCESS_TYPE_LEFT_BOTTON_MAIN_VIEW:
                     mImageBottomLeftView.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
                             ValueCacheProcessCenter.LEFT_BOTTON_MAIN_BITMAP_CATCHE));
+                    mIsSetBottomLeftPhoto = true;
                     break;
             }
         }
