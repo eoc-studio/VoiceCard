@@ -8,13 +8,14 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class CardDraft implements Parcelable
 {
-
+	private static final String TAG = "CardDraft";
 	public static final int TEXT_SIZE_TYPE_SMALL = 0;
 
 	public static final int TEXT_SIZE_TYPE_NORMAL = 1;
@@ -90,8 +91,13 @@ public class CardDraft implements Parcelable
 		super();
 		this.cardId = cardId;
 		this.message = message;
-		this.messageTextColor = messageTextColor;
-		this.messageTextSizeType = messageTextSizeType;
+		 
+		Log.d(TAG, "messageTextColor: "+messageTextColor);
+		
+		this.messageTextColor = (messageTextColor != 0) ? messageTextColor : DEFAULT_TEXT_COLOR;
+
+		this.messageTextSizeType = (messageTextSizeType != 0) ? messageTextSizeType
+				: DEFAULT_TEXT_SIZE_TYPE;
 
 		this.soundUri = sound;
 		this.soundDuration = soundDuration;

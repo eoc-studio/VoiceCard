@@ -616,10 +616,19 @@ public class CardEditorActivity extends BaseActivity
 			{
 
 				Log.d(TAG, "saveDraft - onClick()");
-				cardDraftManager.saveDraft(new CardDraft(card.getId(), userVoice,
+				boolean isSuccess = cardDraftManager.saveDraft(new CardDraft(card.getId(), userVoice,
 						userVoiceDuration, userImage, userTextContent, userTextColor,
 						userTextSizeType, userSignHandwritingUri, userSignPositionInfoUri,
 						userSignDraftImageUri));
+				
+				if(isSuccess){
+					Toast.makeText(CardEditorActivity.this, getString(R.string.save_draft_success),
+							Toast.LENGTH_LONG).show();
+				}
+				else{
+					Toast.makeText(CardEditorActivity.this, getString(R.string.save_draft_fail),
+							Toast.LENGTH_LONG).show();
+				}		
 			}
 
 		});
@@ -657,10 +666,14 @@ public class CardEditorActivity extends BaseActivity
 							+ userSignPositionInfoUri);
 					Log.d(TAG, "openDraft - onClick() user data -- SIGN IAMGE: "
 							+ userSignDraftImageUri);
+					Toast.makeText(CardEditorActivity.this, getString(R.string.open_draft_success),
+							Toast.LENGTH_LONG).show();
 				}
 				catch (Exception e)
 				{
 					Log.d(TAG, "openDraft - openDraft error:" + e.toString());
+					Toast.makeText(CardEditorActivity.this, getString(R.string.open_draft_fail),
+							Toast.LENGTH_LONG).show();
 				}
 
 			}
@@ -693,11 +706,14 @@ public class CardEditorActivity extends BaseActivity
 
 	private void updateImageRegion()
 	{
-
+		Log.d(TAG, "updateImageRegion()");
 		if (userImage != null && Bitmap.createBitmap(getBitmapFromUri(userImage)) != null)
 		{
+			
 			userImageBitmap = Bitmap.createBitmap(getBitmapFromUri(userImage));
 			editableImage.setImageBitmap(userImageBitmap);
+			editableImage.invalidate();
+			Log.d(TAG, "updateImageRegion()  editableImage.invalidate()");
 		}
 	}
 
@@ -954,6 +970,17 @@ public class CardEditorActivity extends BaseActivity
 				userImage = Uri.fromFile(file);
 				card.setImage(userImage);
 				Log.d(TAG, "Card image set:" + card.getImage().toString());
+
+				CardEditorActivity.this.runOnUiThread(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+
+						updateImageRegion();
+					}
+				});
+
 			}
 			else
 			{
