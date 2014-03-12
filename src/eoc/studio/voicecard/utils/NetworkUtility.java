@@ -10,7 +10,11 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-public class WebImageUtility {
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo.State;
+
+public class NetworkUtility {
 
     public static byte[] getWebImage(String imgLink) {
         if (imgLink != null) {
@@ -47,6 +51,22 @@ public class WebImageUtility {
             }
         } else {
             return null;
+        }
+    }
+    
+    public static boolean isOnline(Context context) {       
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        State wifiState = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+        State mobileState = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
+        
+        if (wifiState != null && State.CONNECTED == wifiState) {
+            return true;
+        } else {
+            if (mobileState != null && State.CONNECTED == mobileState) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

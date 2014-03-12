@@ -109,5 +109,8 @@
     <string name="save_draft_fail">儲存草稿失敗</string>
     <string name="open_draft_success">開啟草稿成功</string>
     <string name="open_draft_fail">開啟草稿失敗</string>
-
+    
+    <!-- About Network Receiver -->
+    <string name="network_connect_success">網路連接成功！</string>
+    <string name="network_connect_fail">手機沒有任何網路</string>
 </resources>

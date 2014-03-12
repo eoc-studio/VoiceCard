@@ -8,7 +8,7 @@ import java.util.Set;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.facebook.enetities.FriendInfo;
 import eoc.studio.voicecard.utils.ListUtility;
-import eoc.studio.voicecard.utils.WebImageUtility;
+import eoc.studio.voicecard.utils.NetworkUtility;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -286,7 +286,7 @@ public class MailsAdapterView extends BaseAdapter {
                         byte[] mailImg = mail.getSenderImg();
 
                         if (mailImg == null) {
-                            mailImg = WebImageUtility.getWebImage(mail.getSenderImgLink());
+                            mailImg = NetworkUtility.getWebImage(mail.getSenderImgLink());
                             mailsAdapterData.updateImg(mail.getRowId(), mailImg);
                             if (position < mails.size())
                                 mails.get(position).setSenderImg(mailImg);

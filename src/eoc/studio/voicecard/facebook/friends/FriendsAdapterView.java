@@ -19,7 +19,7 @@ import android.widget.TextView;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.facebook.enetities.FriendInfo;
 import eoc.studio.voicecard.utils.ListUtility;
-import eoc.studio.voicecard.utils.WebImageUtility;
+import eoc.studio.voicecard.utils.NetworkUtility;
 
 public class FriendsAdapterView extends BaseAdapter
 {
@@ -204,7 +204,7 @@ public class FriendsAdapterView extends BaseAdapter
                         byte[] friendImg = friendInfo.getFriendImg();
 
                         if (friendImg == null) {
-                            friendImg = WebImageUtility.getWebImage(friendInfo.getFriendImgLink());
+                            friendImg = NetworkUtility.getWebImage(friendInfo.getFriendImgLink());
                             friendsAdapterData.updateFriendImg(friendInfo.getFriendId(), friendImg);
                             if (position < friendList.size())
                                 friendList.get(position).setFriendImg(friendImg);
