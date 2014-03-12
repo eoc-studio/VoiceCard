@@ -148,41 +148,21 @@ public class CardViewerActivity extends BaseActivity
 		super.onBackPressed();
 	}
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK)
-        {
-            switch (requestCode)
-            {
-                case eoc.studio.voicecard.contact.DataProcess.PROCESS_SELECTION_FRIEND:
-                    if (data == null)
-                    {
-                        return;
-                    }
-                    Bundle extras = data.getExtras();
-                    if (extras == null)
-                    {
-                        return;
-                    }
-                    ArrayList list = extras
-                            .getParcelableArrayList(eoc.studio.voicecard.contact.DataProcess.PROCESS_SELECTION_FRIEND_LIST);
-                    List<Map<String, Object>> lists = (List<Map<String, Object>>) list.get(0);
-                    for (int i = 0; i < lists.size(); i++)
-                    {
-                        Log.d(TAG, "NAME: "
-                                + lists.get(i).get(eoc.studio.voicecard.contact.DataProcess.USER_NAME_INDEX).toString());
-                        Log.d(TAG,
-                                "TEL: "
-                                        + lists.get(i).get(eoc.studio.voicecard.contact.DataProcess.PHONE_NUMBER_INDEX)
-                                                .toString());
-                    }
-                    break;
-            }
-        }
-    }
-    
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK)
+		{
+			switch (requestCode)
+			{
+			case eoc.studio.voicecard.contact.DataProcess.PROCESS_SELECTION_FRIEND:
+				onContactSelectorResult(data);
+				break;
+			}
+		}
+	}
+
 	private boolean isSenderMode()
 	{
 		Intent intent = getIntent();
@@ -432,9 +412,9 @@ public class CardViewerActivity extends BaseActivity
 		final int cardOpenHeight = (int) getResources().getDimensionPixelSize(
 				R.dimen.card_open_page_height);
 		final int cardFlipViewHeight = (int) (cardOpenHeight * 7.7f / 5.f);
-		Toast.makeText(this,
-				"cardOpenHeight[" + cardOpenHeight + "]  height[" + cardFlipViewHeight + "]",
-				Toast.LENGTH_LONG).show();
+//		Toast.makeText(this,
+//				"cardOpenHeight[" + cardOpenHeight + "]  height[" + cardFlipViewHeight + "]",
+//				Toast.LENGTH_LONG).show();
 
 		shadowOpen.setVisibility(View.INVISIBLE);
 		shadowClose.setVisibility(View.VISIBLE);
@@ -574,11 +554,12 @@ public class CardViewerActivity extends BaseActivity
 			{
 				if (sendBackId == null)
 				{
-					startFacebookSender();
+					startFacebookInviter();
 				}
 				else
 				{
 					sendBack();
+					goBackToMainMenuAndFinish();
 				}
 			}
 
@@ -592,11 +573,12 @@ public class CardViewerActivity extends BaseActivity
 			{
 				if (sendBackId == null)
 				{
-					sendContactSender();
+					startContactSelector();
 				}
 				else
 				{
 					sendBack();
+					goBackToMainMenuAndFinish();
 				}
 			}
 
@@ -627,7 +609,7 @@ public class CardViewerActivity extends BaseActivity
 		});
 	}
 
-	private void startFacebookSender()
+	private void startFacebookInviter()
 	{
 		Log.d(TAG, "startFacebookSender");
 		facebookManager.inviteFriend(this, null, card, facebookManager.new InviteListener()
@@ -635,38 +617,108 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public void onComplete(Bundle values, FacebookException error)
 			{
-				if (error != null)
-				{
-					Log.d(TAG, "Invite had error is " + error.getMessage());
-				}
-				else
-				{
-					Log.d(TAG, "Invite no error, send card to server");
-					facebookManager.sendCardtoServer(facebookManager.fetchInvitedFriends(values));
-
-					goBackToMainMenuAndFinish();
-				}
+				onFacebookInviterResult(values, error);
 			}
+
 		});
 	}
 
-    private void sendContactSender()
-    {
-        Intent SendContactSender = new Intent();
-        SendContactSender.setClass(this, eoc.studio.voicecard.contact.ContactActivity.class);
-        startActivityForResult(SendContactSender, eoc.studio.voicecard.contact.DataProcess.PROCESS_SELECTION_FRIEND);
-        overridePendingTransition(0, 0);
-    }
+	private void onFacebookInviterResult(Bundle values, FacebookException error)
+	{
+		if (error != null)
+		{
+			Log.d(TAG, "Invite had error is " + error.getMessage());
+		}
+		else
+		{
+			Log.d(TAG, "Invite no error, send card to server");
+			sendCardToServer(facebookManager.fetchInvitedFriends(values));
+			goBackToMainMenuAndFinish();
+		}
+	}
+
+	private void startContactSelector()
+	{
+		Intent SendContactSender = new Intent();
+		SendContactSender.setClass(this, eoc.studio.voicecard.contact.ContactActivity.class);
+		startActivityForResult(SendContactSender,
+				eoc.studio.voicecard.contact.DataProcess.PROCESS_SELECTION_FRIEND);
+		overridePendingTransition(0, 0);
+	}
+
+	private void onContactSelectorResult(Intent data)
+	{
+		if (data == null)
+		{
+			Log.d(TAG, "onContactSelectorResult - NO DATA");
+			return;
+		}
+		Bundle extras = data.getExtras();
+		if (extras == null)
+		{
+			Log.d(TAG, "onContactSelectorResult - NO BUNDLE");
+			return;
+		}
+		ArrayList list = extras
+				.getParcelableArrayList(eoc.studio.voicecard.contact.DataProcess.PROCESS_SELECTION_FRIEND_LIST);
+		List<Map<String, Object>> lists = (List<Map<String, Object>>) list.get(0);
+		if (lists == null || lists.isEmpty())
+		{
+			Log.d(TAG, "onContactSelectorResult - lists is null or empty");
+		}
+		else
+		{
+			Log.d(TAG, "onContactSelectorResult - lists size: " + lists.size());
+			ArrayList<String> phoneList = new ArrayList<String>();
+			Object phoneNum;
+			for (Map<String, Object> map : lists)
+			{
+				phoneNum = map.get(eoc.studio.voicecard.contact.DataProcess.PHONE_NUMBER_INDEX);
+				Log.d(TAG, "onContactSelectorResult - TEL: " + phoneNum);
+				phoneList.add(phoneNum.toString());
+			}
+
+			if (!phoneList.isEmpty())
+			{
+				sendCardToServer(phoneList);
+				goBackToMainMenuAndFinish();
+			}
+			else
+			{
+				Log.e(TAG, "onContactSelectorResult - phoneList empty");
+			}
+		}
+
+		// for (int i = 0; i < lists.size(); i++)
+		// {
+		// Log.d(TAG,
+		// "NAME: "
+		// + lists.get(i)
+		// .get(eoc.studio.voicecard.contact.DataProcess.USER_NAME_INDEX)
+		// .toString());
+		// Log.d(TAG,
+		// "TEL: "
+		// + lists.get(i)
+		// .get(eoc.studio.voicecard.contact.DataProcess.PHONE_NUMBER_INDEX)
+		// .toString());
+		// }
+
+	}
 
 	private void sendBack()
 	{
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(sendBackId);
 		Log.d(TAG, "sendBack to " + sendBackId);
-		Log.d(TAG, "sendBack card: " + card);
-		facebookManager.sendCardtoServer(list, card);
+		sendCardToServer(list);
+	}
 
-		goBackToMainMenuAndFinish();
+	private void sendCardToServer(ArrayList<String> receivers)
+	{
+		Log.d(TAG, "!! sendCardToServer !!");
+		Log.d(TAG, "card: " + card);
+		Log.d(TAG, "receivers " + receivers.size());
+		facebookManager.sendCardtoServer(receivers, card);
 	}
 
 	private void goBackToMainMenuAndFinish()
