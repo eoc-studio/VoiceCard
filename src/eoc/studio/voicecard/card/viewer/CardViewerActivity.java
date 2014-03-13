@@ -675,7 +675,12 @@ public class CardViewerActivity extends BaseActivity
 			{
 				phoneNum = map.get(eoc.studio.voicecard.contact.DataProcess.PHONE_NUMBER_INDEX);
 				Log.d(TAG, "onContactSelectorResult - TEL: " + phoneNum);
-				phoneList.add(phoneNum.toString());
+				String phoneString = phoneNum.toString().replace(" ", "");
+				Log.d(TAG, "onContactSelectorResult - (after remove white space)TEL: " + phoneString);
+				
+				phoneString = phoneNum.toString().replace("-", "");
+				Log.d(TAG, "onContactSelectorResult - (after remove minus sign)TEL: " + phoneString);
+				phoneList.add(phoneString);
 			}
 
 			if (!phoneList.isEmpty())
