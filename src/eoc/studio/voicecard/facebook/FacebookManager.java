@@ -699,7 +699,7 @@ public class FacebookManager
 
             try {
                 httpManager.postMailByList(context, friendList, card.getImage(), card.getSound(),
-                        publishCard.getMessage(), card.getSignDraftImage(),
+                		card.getMessage(), card.getSignDraftImage(),
                         String.valueOf(card.getMessageTextSizeType()),
                         String.valueOf(card.getMessageTextColor()), String.valueOf(card.getId()), new PostMailListener() {
 
