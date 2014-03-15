@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import android.R.integer;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -85,7 +86,10 @@ public class CardEditorActivity extends BaseActivity
 	private static final float TEXT_SIZE_SMALL = TEXT_SIZE_NORMAL * 0.8f;
 
 	private static final float TEXT_SIZE_LARGE = TEXT_SIZE_NORMAL * 1.2f;
+	
+	private static final int EDIT_COLOR = 0xFF594937;
 
+	private static final int EDIT_BACKGROUD_COLOR = 0x90FFFFFF;
 	private ImageView back;
 
 	private ImageView next;
@@ -480,18 +484,18 @@ public class CardEditorActivity extends BaseActivity
 			editableTextFrame.setBackgroundResource(R.drawable.dash_border);
 			editableSignatureFrame.setBackgroundResource(R.drawable.dash_border);
 		}
-		((GradientDrawable) editableImageFrame.getBackground()).setStroke(width,  color | 0xFF000000, dashWidth,
+		((GradientDrawable) editableImageFrame.getBackground()).setStroke(width,  EDIT_COLOR, dashWidth,
 				dashGap);
-		((GradientDrawable) editableVoiceFrame.getBackground()).setStroke(width, color | 0xFF000000, dashWidth,
+		((GradientDrawable) editableVoiceFrame.getBackground()).setStroke(width, EDIT_COLOR, dashWidth,
 				dashGap);
-		((GradientDrawable) editableTextFrame.getBackground()).setStroke(width, color | 0xFF000000, dashWidth,
+		((GradientDrawable) editableTextFrame.getBackground()).setStroke(width, EDIT_COLOR, dashWidth,
 				dashGap);
-		((GradientDrawable) editableSignatureFrame.getBackground()).setStroke(width, color| 0xFF000000,
+		((GradientDrawable) editableSignatureFrame.getBackground()).setStroke(width, EDIT_COLOR,
 				dashWidth, dashGap);
-		editableImageTip.setTextColor(color| 0xFF000000);
-		editableVoiceTip.setTextColor(color| 0xFF000000);
-		editableTextTip.setTextColor(color| 0xFF000000);
-		editableSignatureTip.setTextColor(color| 0xFF000000);
+		editableImageTip.setTextColor(EDIT_COLOR);
+		editableVoiceTip.setTextColor(EDIT_COLOR);
+		editableTextTip.setTextColor(EDIT_COLOR);
+		editableSignatureTip.setTextColor(EDIT_COLOR);
 	}
 
 	private void setListener()

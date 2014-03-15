@@ -18,6 +18,10 @@ public class CategoryAssistant implements Parcelable
 	String categoryURL;
 
 	String categoryLocalPath;
+	
+	String categoryEditedDate;
+	
+	String categoryLocalEditedDate;
 
 	public CategoryAssistant()
 	{
@@ -166,6 +170,30 @@ public class CategoryAssistant implements Parcelable
 	{
 
 		return 0;
+	}
+
+	public String getCategoryEditedDate()
+	{
+	
+		return categoryEditedDate;
+	}
+
+	public void setCategoryEditedDate(String categoryEditedDate)
+	{
+	
+		this.categoryEditedDate = categoryEditedDate;
+	}
+
+	public String getCategoryLocalEditedDate()
+	{
+	
+		return categoryLocalEditedDate;
+	}
+
+	public void setCategoryLocalEditedDate(String categoryLocalEditedDate)
+	{
+	
+		this.categoryLocalEditedDate = categoryLocalEditedDate;
 	}
 
 }

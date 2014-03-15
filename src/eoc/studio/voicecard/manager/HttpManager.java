@@ -70,8 +70,6 @@ public class HttpManager
 
 	private static boolean isPostListSignatureOk = false;
 
-	private static boolean isPostListMailOk = false;
-
 	private static boolean isPostListMailErrored = false;
 
 	private static ArrayList<Boolean> isPostMailOkList = new ArrayList<Boolean>();
@@ -432,7 +430,6 @@ public class HttpManager
 		isPostListImageOk = false;
 		isPostListSpeechOk = false;
 		isPostListSignatureOk = false;
-		isPostListMailOk = false;
 		isPostListMailErrored = false;
 		File imageFile = new File(imageUri.getPath());
 
@@ -770,6 +767,55 @@ public class HttpManager
 		VolleySingleton.getInstance(context).getRequestQueue().add(mailReceiveCountRequest);
 	}
 
+	public void getPatchState(Context context, final PatchStateListener patchStateListener)
+	{
+		String uriGetPatchState = String.format(
+				"http://www.charliefind.com/api.php?op=patch&imei=%1$s", deviceIMEI);
+		Log.e(TAG, "uriGetPatchState:" + uriGetPatchState);
+		JsonObjectRequest getPatchStateRequest = new JsonObjectRequest(Method.GET,
+				uriGetPatchState, null, new Response.Listener<JSONObject>()
+				{
+					@Override
+					public void onResponse(JSONObject response)
+					{
+
+						try
+						{
+							Log.e(TAG,
+									"getPatchState() Response:"
+											+ response.toString(4));
+
+							Log.e(TAG,
+									"getPatchState() Response patch:"
+											+ response.get("patch"));
+							if (patchStateListener != null)
+								patchStateListener.onResult(true,
+										Boolean.valueOf(response.get("patch").toString()));
+
+						}
+						catch (JSONException e)
+						{
+							e.printStackTrace();
+							if (patchStateListener != null) patchStateListener.onResult(false, false);
+						}
+					}
+				}, new Response.ErrorListener()
+				{
+					@Override
+					public void onErrorResponse(VolleyError error)
+					{
+
+						Log.e(TAG,
+								"getPatchState Error: " + error.getMessage());
+
+						if (patchStateListener != null) patchStateListener.onResult(false, false);
+					}
+				});
+		getPatchStateRequest.setTag("getPatchState");
+		VolleySingleton.getInstance(context).getRequestQueue().add(getPatchStateRequest);
+	}
+	
+	
 	public void getMails(Context context, final GetMailListener getMailListener)
 	{
 
@@ -852,6 +898,51 @@ public class HttpManager
 		VolleySingleton.getInstance(context).getRequestQueue().add(mailUpdateRequest);
 	}
 
+	public void notifyPatchUpdate(Context context, final NotifyPatchListener notifyPatchListener)
+	{
+
+		String uriPatchUpdate = String.format("http://www.charliefind.com/api.php?op=patch_update");
+
+		HashMap<String, String> paramsPatchUpdate = new HashMap<String, String>();
+		paramsPatchUpdate.put("imei", deviceIMEI);
+
+		Log.e(TAG, "uriPatchUpdate:" + uriPatchUpdate);
+		JsonObjectRequest patchUpdateRequest = new JsonObjectRequest(uriPatchUpdate, new JSONObject(
+				paramsPatchUpdate), new Response.Listener<JSONObject>()
+		{
+			@Override
+			public void onResponse(JSONObject response)
+			{
+
+				try
+				{
+					Log.e(TAG, "notifyPatchUpdate Response:" + response.toString(4));
+					if (notifyPatchListener != null)
+						notifyPatchListener.onResult(true, response.toString());
+				}
+				catch (JSONException e)
+				{
+					if (notifyPatchListener != null)
+						notifyPatchListener.onResult(false, e.toString());
+					e.printStackTrace();
+				}
+			}
+		}, new Response.ErrorListener()
+		{
+			@Override
+			public void onErrorResponse(VolleyError error)
+			{
+
+				if (notifyPatchListener != null)
+					notifyPatchListener.onResult(false, error.getMessage());
+				Log.e(TAG, "notifyPatchUpdate Error: " + error.getMessage());
+			}
+		});
+		patchUpdateRequest.setTag("notifyPatchUpdate");
+		VolleySingleton.getInstance(context).getRequestQueue().add(patchUpdateRequest);
+	}
+	
+	
 	public void getRecommend(Context context, GetRecommendListener getRecommendListener)
 	{
 

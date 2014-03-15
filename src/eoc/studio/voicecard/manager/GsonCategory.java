@@ -26,6 +26,10 @@ public class GsonCategory
 
 	@SerializedName("cat_enable")
 	private String categoryEnable;
+	
+	@SerializedName("edited_date") 
+	private String categoryEditedDate;
+	
 
 	public String getCategoryID()
 	{
@@ -146,4 +150,18 @@ public class GsonCategory
 
 		return result.toString();
 	}
+
+	public String getCategoryEditedDate()
+	{
+	
+		return categoryEditedDate;
+	}
+
+	public void setCategoryEditedDate(String categoryEditedDate)
+	{
+	
+		this.categoryEditedDate = categoryEditedDate; 
+	}
+
+
 }

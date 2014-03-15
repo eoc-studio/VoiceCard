@@ -156,7 +156,8 @@ public class MainLoadingActivity extends Activity
 					+ INIT_HTTP_MANAGER_PROGRESS + MAILBOX_COUNT_PROGRESS
 					+ MAILBOX_RECEIVE_PROGRESS + INIT_DATABASE_PROGRESS + GET_RECOMMEND_PROGRESS
 					+ COPY_CARD_AND_CATEGORY + GET_CATEGORY_INFO_PROGRESS + GET_CARD_INFO_PROGRESS
-					+ GET_CATEGORY_IMGS_PROGRESS + GET_CARD_IMGS_PROGRESS)
+					+ GET_CATEGORY_IMGS_PROGRESS 
+					+ GET_CARD_IMGS_PROGRESS)
 			{
 				goToMainActivity();
 				progress = 361;
@@ -273,10 +274,13 @@ public class MainLoadingActivity extends Activity
 		// cardDatabaseHelper.getEnabledCategory(cardDatabaseHelper
 		// .getSystemDPI(context));
 
-		categoryAssistantList = cardDatabaseHelper
-				.getEnabledAndLocalIsNullCategory(cardDatabaseHelper.getSystemDPI(context));
+//		categoryAssistantList = cardDatabaseHelper
+//				.getEnabledAndLocalIsNullCategory(cardDatabaseHelper.getSystemDPI(context));
 
-		Log.d(TAG, "onResume() EnabledAndLocalIsNull categoryAssistantList :"
+		categoryAssistantList = cardDatabaseHelper
+				.getLocalDateIsNullOrLocalPathIsNullCategory(cardDatabaseHelper.getSystemDPI(context));
+		
+		Log.d(TAG, "onResume() getLocalDateIsNullOrLocalPathIsNullCategory categoryAssistantList :"
 				+ categoryAssistantList);
 		if (categoryAssistantList != null)
 		{
@@ -330,8 +334,12 @@ public class MainLoadingActivity extends Activity
 		 * cardDatabaseHelper.getEnabledCard(cardDatabaseHelper
 		 * .getSystemDPI(context));
 		 */
-		cardAssistantList = cardDatabaseHelper.getEnabledAndLocalIsNullCard(cardDatabaseHelper
+//		cardAssistantList = cardDatabaseHelper.getEnabledAndLocalIsNullCard(cardDatabaseHelper
+//				.getSystemDPI(context));
+		
+		cardAssistantList = cardDatabaseHelper.getLocalDateIsNullOrLocalPathIsNullCard(cardDatabaseHelper
 				.getSystemDPI(context));
+		
 		Log.d(TAG, "onResume() cardAssistantList :" + cardAssistantList);
 
 		if (cardAssistantList != null)
@@ -411,12 +419,12 @@ public class MainLoadingActivity extends Activity
 
 					for (int index = 0; index < gsonCategoryList.size(); index++)
 					{
-//						Log.d(TAG,
-//								"gsonCategoryList index:[" + index + "]"
-//										+ gsonCategoryList.get(index).toString());
+						Log.d(TAG,
+								"gsonCategoryList index:[" + index + "]"
+										+ gsonCategoryList.get(index).toString());
 
 					}
-					// cardDatabaseHelper.deleteCategoryTable();
+//					 cardDatabaseHelper.deleteCategoryTable();
 					// write to datebase
 					for (int index = 0; index < gsonCategoryList.size(); index++)
 					{
@@ -433,7 +441,7 @@ public class MainLoadingActivity extends Activity
 									gsonCategoryList.get(index).getCategoryImageHDPI(),
 									gsonCategoryList.get(index).getCategoryImageXHDPI(),
 									gsonCategoryList.get(index).getCategoryImageXXHDPI(), null,
-									null, null, null);
+									null, null, null,gsonCategoryList.get(index).getCategoryEditedDate(),null);
 						}
 						else
 						{
@@ -446,7 +454,7 @@ public class MainLoadingActivity extends Activity
 									gsonCategoryList.get(index).getCategoryImageHDPI(),
 									gsonCategoryList.get(index).getCategoryImageXHDPI(),
 									gsonCategoryList.get(index).getCategoryImageXXHDPI(), null,
-									null, null, null);
+									null, null, null,gsonCategoryList.get(index).getCategoryEditedDate());
 						}
 
 					}
@@ -474,11 +482,11 @@ public class MainLoadingActivity extends Activity
 
 					for (int index = 0; index < gsonCardList.size(); index++)
 					{
-//						Log.d(TAG, "gsonCardList index:[" + index + "]"
-//								+ gsonCardList.get(index).toString());
+						Log.d(TAG, "gsonCardList index:[" + index + "]"
+								+ gsonCardList.get(index).toString());
 					}
 
-					// cardDatabaseHelper.deleteCardTable();
+//					cardDatabaseHelper.deleteCardTable();
 					// write to datebase
 					for (int index = 0; index < gsonCardList.size(); index++)
 					{
@@ -497,7 +505,7 @@ public class MainLoadingActivity extends Activity
 									.getCardFont(), cardImages.getCloseURL(), cardImages
 									.getCoverURL(), cardImages.getLeftURL(), cardImages
 									.getOpenURL(), cardImages.getRightURL(), null, null, null,
-									null, null);
+									null, null,gsonCardList.get(index).getCardEditedDate(),null);
 						}
 						else
 						{
@@ -511,7 +519,7 @@ public class MainLoadingActivity extends Activity
 									.getCardFont(), cardImages.getCloseURL(), cardImages
 									.getCoverURL(), cardImages.getLeftURL(), cardImages
 									.getOpenURL(), cardImages.getRightURL(), null, null, null,
-									null, null, 0);
+									null, null, 0,gsonCardList.get(index).getCardEditedDate());
 						}
 
 					}
@@ -853,18 +861,6 @@ public class MainLoadingActivity extends Activity
 		super.onActivityResult(requestCode, resultCode, data);
 		Log.d(TAG, "onActivityResult() Result Code is - " + resultCode + "");
 		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
-
-//		super.onActivityResult(requestCode, resultCode, data);
-//		Log.d(TAG, "onActivityResult() Result Code is - " + resultCode + "");
-//		if (Session.getActiveSession() != null)
-//		{
-//			Session.getActiveSession().onActivityResult(MainLoadingActivity.this, requestCode,
-//					resultCode, data);
-//		}
-//		else
-//		{
-//			// Session.openActiveSession(this, true, statusCallback);
-//		}
 	}
 
 	public synchronized void addProgressWheel(int newProgress)
@@ -1025,53 +1021,4 @@ public class MainLoadingActivity extends Activity
 			return "";
 		}
 	}
-
-	// private class RequestGraphUserCallback implements
-	// Request.GraphUserCallback
-	// {
-	// @Override
-	// public void onCompleted(GraphUser user, Response response)
-	// {
-	// if (user != null) {
-	// JSONObject userJSON = user.getInnerJSONObject();
-	// if(userJSON != null) {
-	// try {
-	// Log.d(TAG, "id is " +
-	// userJSON.getString(FacebookManager.BundleParams.ID));
-	// Log.d(TAG, "email is " + userJSON.getString(BundleParams.EMAIL));
-	// Log.d(TAG, "name is " + userJSON.getString(BundleParams.NAME));
-	// Log.d(TAG, "gender is " + userJSON.getString(BundleParams.GENDER));
-	// Log.d(TAG, "birthday is " + userJSON.getString(BundleParams.BIRTHDAY));
-	// Log.d(TAG, "link is " + userJSON.getString(BundleParams.LINK));
-	// Log.d(TAG, "timezone is " + userJSON.getInt(BundleParams.TIMEZONE));
-	// Log.d(TAG, "locale is " + userJSON.getString(BundleParams.LOCALE));
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	//
-	// try {
-	// Log.d(TAG, "img is "
-	// +
-	// userJSON.getJSONObject(BundleParams.PICTURE).getJSONObject("data").getString("url"));
-	//
-	// Log.d(TAG, "hometown is "
-	// +
-	// userJSON.getJSONObject(BundleParams.HOMETOWN).getString(BundleParams.NAME));
-	//
-	// Log.d(TAG, "work is "
-	// +
-	// userJSON.getJSONArray(BundleParams.WORK).getJSONObject(0).getJSONObject("employer")
-	// .getString(BundleParams.NAME));
-	//
-	// Log.d(TAG, "education is "
-	// +
-	// userJSON.getJSONArray(BundleParams.EDUCATION).getJSONObject(0).getJSONObject("school")
-	// .getString(BundleParams.NAME));
-	// } catch(Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// }
-	// }
-	// }
 }

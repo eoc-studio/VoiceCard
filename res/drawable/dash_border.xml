@@ -3,7 +3,7 @@
 
     <corners android:radius="5dip" />
 
-    <solid android:color="@android:color/transparent" />
+    <solid android:color="@color/card_editor_tip_background" />
 
     <stroke
         android:dashGap="@dimen/dash_border_stroke_dash_gap"

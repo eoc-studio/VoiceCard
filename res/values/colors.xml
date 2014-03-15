@@ -67,6 +67,9 @@
 		<color name="audio_recorder_initial_time">#fbffff</color>
 		<color name="audio_recorder_done_time">#fbffff</color>
 		<color name="audio_recorder_recoding_time">#bdd65e</color>
+		
+		<!-- Card Editor tip -->
+		<color name="card_editor_tip_background">#90FFFFFF</color>
 </resources>
 
 

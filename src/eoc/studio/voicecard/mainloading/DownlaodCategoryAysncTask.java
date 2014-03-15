@@ -53,7 +53,7 @@ public class DownlaodCategoryAysncTask extends
 				int count;
 				Log.d(TAG, "doInBackground() Current:"
 						+ categoryAssistantList.get(index).toString());
-				// System.out.println("Current:  "+current+"\t\tRows: "+rows);
+				
 				fpath = getFileName(categoryAssistantList.get(index));
 				URL url = new URL(categoryAssistantList.get(index).getCategoryURL());
 				URLConnection conexion = url.openConnection();
@@ -74,6 +74,9 @@ public class DownlaodCategoryAysncTask extends
 				input.close();
 
 				categoryAssistantList.get(index).setCategoryLoocalPath(fpath);
+				
+				//update the edit date to local
+				categoryAssistantList.get(index).setCategoryLocalEditedDate(categoryAssistantList.get(index).getCategoryEditedDate());
 			}
 			catch (Exception e)
 			{

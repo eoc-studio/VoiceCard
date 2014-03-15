@@ -84,6 +84,9 @@ public class GsonCard
 	@SerializedName("card_enable")
 	private String cardEnable;
 
+	@SerializedName("edited_date")
+	private String cardEditedDate;
+	
 	public String getCardID()
 	{
 
@@ -430,5 +433,17 @@ public class GsonCard
 		result.append("}");
 
 		return result.toString();
+	}
+
+	public String getCardEditedDate()
+	{
+	 
+		return cardEditedDate;
+	}
+
+	public void setCardEditedDate(String cardEditedDate)
+	{
+	
+		this.cardEditedDate = cardEditedDate;
 	}
 }

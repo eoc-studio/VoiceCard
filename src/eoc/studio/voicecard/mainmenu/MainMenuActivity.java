@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -29,6 +30,7 @@ import eoc.studio.voicecard.calendarview.MainCalendarView;
 import eoc.studio.voicecard.calendarview.CalendarIntentHelper;
 import eoc.studio.voicecard.calendarview.DataProcess;
 import eoc.studio.voicecard.card.editor.CardCategorySelectorActivity;
+import eoc.studio.voicecard.card.editor.CardEditorActivity;
 import eoc.studio.voicecard.facebook.FacebookManager;
 import eoc.studio.voicecard.facebook.TestFacebookActivity;
 import eoc.studio.voicecard.facebook.FacebookManager.RequestGraphUserCallback;
@@ -39,6 +41,7 @@ import eoc.studio.voicecard.mainloading.MainLoadingActivity;
 import eoc.studio.voicecard.manager.HttpManager;
 import eoc.studio.voicecard.newspaper.NewspaperMainActivity;
 import eoc.studio.voicecard.recommend.RecommendActivity;
+import eoc.studio.voicecard.utils.NetworkUtility;
 
 public class MainMenuActivity extends BaseActivity implements OnClickListener
 {
@@ -373,9 +376,18 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 	
 	private void onAdvertisementClicked()
 	{
-		Log.d(TAG, "go to store");
-		Intent intent = new Intent(this, RecommendActivity.class);
-		startActivity(intent);
+		
+		if(NetworkUtility.isOnline(context)){
+			Log.d(TAG, "go to store");
+			Intent intent = new Intent(this, RecommendActivity.class);
+			startActivity(intent);
+		}
+		else{
+			Log.d(TAG, "Cant go to store (because network is not enable)");
+			Toast.makeText(MainMenuActivity.this, getString(R.string.network_connect_fail),
+					Toast.LENGTH_LONG).show();
+		}
+
 
     }
 

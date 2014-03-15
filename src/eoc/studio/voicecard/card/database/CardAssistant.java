@@ -20,6 +20,12 @@ public class CardAssistant
 	String openLocalPath;
 	String rightLocalPath;
 	
+	String cardEditedDate;
+	
+	String cardLocalEditedDate;
+	
+	
+	
 	public int getCardID() 
 	{
 	
@@ -205,6 +211,26 @@ public class CardAssistant
 	{
 	
 		this.cardEnable = cardEnable;
+	}
+	public String getCardEditedDate()
+	{
+	
+		return cardEditedDate;
+	}
+	public void setCardEditedDate(String cardEditedDate)
+	{
+	
+		this.cardEditedDate = cardEditedDate;
+	}
+	public String getCardLocalEditedDate()
+	{
+	
+		return cardLocalEditedDate;
+	}
+	public void setCardLocalEditedDate(String cardLocalEditedDate)
+	{
+	
+		this.cardLocalEditedDate = cardLocalEditedDate;
 	}
 
 }

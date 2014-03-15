@@ -80,6 +80,9 @@ public class DownlaodCardAysncTask extends
 						cardAssistantList.get(index).getCardID());
 
 				cardAssistantList.get(index).setRightLocalPath(rightLocalPath);
+								
+				cardAssistantList.get(index).setCardLocalEditedDate(cardAssistantList.get(index).getCardEditedDate());
+				
 			}
 			catch (Exception e)
 			{
