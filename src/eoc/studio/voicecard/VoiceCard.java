@@ -12,7 +12,7 @@ public class VoiceCard extends Application {
     {
         super.onCreate();
         Log.d(TAG, "onCreate()");
-        NetworkReceiver.setOnline(getApplicationContext());
+        NetworkReceiver.setOnline(VoiceCard.this);
     }
     
     @Override
