@@ -39,32 +39,38 @@
             android:src="@drawable/title_mail2" />
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/act_card_viewer_iv_tip_for_sender"
+    <RelativeLayout
+        android:id="@+id/act_card_viewer_rlyt_tip_and_mail_info_wrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/act_card_viewer_rlyt_header_for_sender"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dip"
-        android:layout_marginTop="20dip"
-        android:src="@drawable/handwrite_03" />
+        android:layout_below="@id/act_card_viewer_rlyt_header_for_sender" >
 
-    <TextView
-        android:id="@+id/act_card_viewer_tv_mail_info_for_viewer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/act_card_viewer_rlyt_header_for_sender"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dip"
-        android:layout_marginTop="20dip"
-        android:visibility="invisible" />
+        <ImageView
+            android:id="@+id/act_card_viewer_iv_tip_for_sender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dip"
+            android:layout_marginTop="20dip"
+            android:src="@drawable/handwrite_03" />
+
+        <TextView
+            android:id="@+id/act_card_viewer_tv_mail_info_for_viewer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dip"
+            android:layout_marginTop="20dip"
+            android:visibility="invisible" />
+    </RelativeLayout>
 
     <View
         android:id="@+id/act_card_viewer_v_right_block"
-        android:layout_width="40dip"
+        android:layout_width="25dip"
         android:layout_height="40dip"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/act_card_viewer_iv_tip_for_sender" />
+        android:layout_below="@id/act_card_viewer_rlyt_tip_and_mail_info_wrapper" />
 
     <LinearLayout
         android:id="@+id/act_card_viewer_llyt_footer_for_sender"
@@ -119,7 +125,7 @@
         android:id="@+id/act_card_viewer_flyt_card_wrapper"
         android:layout_width="match_parent"
         android:layout_height="370dip"
-        android:layout_below="@id/act_card_viewer_iv_tip_for_sender"
+        android:layout_below="@id/act_card_viewer_rlyt_tip_and_mail_info_wrapper"
         android:layout_toLeftOf="@id/act_card_viewer_v_right_block" >
 
         <include layout="@layout/view_card_animation" />

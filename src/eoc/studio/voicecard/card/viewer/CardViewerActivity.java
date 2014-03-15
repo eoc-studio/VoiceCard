@@ -9,6 +9,7 @@ import java.util.Map;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -82,8 +83,6 @@ public class CardViewerActivity extends BaseActivity
 	private FlipView flipView;
 	private FrameLayout flipViewWrapper;
 	private ImageView shadowOpen;
-	private LinearLayout shadowClose;
-	private ImageView cardInnerSecondPage;
 
 	private HorizontalScrollView cardScrollView;
 	private ImageView cardInnerBackground;
@@ -318,8 +317,6 @@ public class CardViewerActivity extends BaseActivity
 		flipViewWrapper = (FrameLayout) findViewById(R.id.glb_card_animation_flyt_card_flipview_wrapper);
 		animationScrollView = (HorizontalScrollView) findViewById(R.id.glb_card_animation_hsv_root);
 		shadowOpen = (ImageView) findViewById(R.id.glb_card_animation_iv_card_open_shadow);
-		shadowClose = (LinearLayout) findViewById(R.id.glb_card_animation_llyt_card_close_shadow);
-		cardInnerSecondPage = (ImageView) findViewById(R.id.glb_card_animation_iv_card_inner_second_page);
 
 		cardScrollView = (HorizontalScrollView) findViewById(R.id.act_card_viewer_hsv_card_scroll_view);
 		cardInnerBackground = (ImageView) findViewById(R.id.act_card_viewer_iv_card_inner_page);
@@ -403,21 +400,17 @@ public class CardViewerActivity extends BaseActivity
 
 	private void initFlipAndShadow()
 	{
-		Bitmap img2dSecondPageBitmap = FileUtility.getBitmapFromPath(card.getImageInnerRightPath());
-		FileUtility.setImageViewBackgroundWithBitmap(cardInnerSecondPage, img2dSecondPageBitmap);
+//		Bitmap img2dSecondPageBitmap = FileUtility.getBitmapFromPath(card.getImageInnerRightPath());
+//		FileUtility.setImageViewBackgroundWithBitmap(cardInnerSecondPage, img2dSecondPageBitmap);
 
 		cardWrapper.bringToFront();
-		final int cardOpenWidth = (int) getResources().getDimensionPixelOffset(
+		final int cardOpenWidth = (int) getResources().getDimensionPixelSize(
 				R.dimen.card_open_page_width);
 		final int cardOpenHeight = (int) getResources().getDimensionPixelSize(
 				R.dimen.card_open_page_height);
 		final int cardFlipViewHeight = (int) (cardOpenHeight * 7.7f / 5.f);
-//		Toast.makeText(this,
-//				"cardOpenHeight[" + cardOpenHeight + "]  height[" + cardFlipViewHeight + "]",
-//				Toast.LENGTH_LONG).show();
 
 		shadowOpen.setVisibility(View.INVISIBLE);
-		shadowClose.setVisibility(View.VISIBLE);
 
 		flipView = new FlipView(this, cardOpenWidth, cardFlipViewHeight, -10f, 0f,
 				cardFlipViewHeight / 2.f);
@@ -427,9 +420,12 @@ public class CardViewerActivity extends BaseActivity
 				LayoutParams.MATCH_PARENT);
 		ImageView front = new ImageView(this);
 		front.setLayoutParams(params);
-		front.setScaleType(ScaleType.FIT_XY);
+		front.setScaleType(ScaleType.FIT_START);
 		Bitmap imgCoverBitmap = FileUtility.getBitmapFromPath(card.getImageCoverPath());
-		FileUtility.setImageViewWithBitmap(front, imgCoverBitmap);
+		Bitmap resizedCoverBitmap = Bitmap.createScaledBitmap(imgCoverBitmap,
+				imgCoverBitmap.getWidth() * 4 / 5, imgCoverBitmap.getHeight(), true);
+		imgCoverBitmap.recycle();
+		FileUtility.setImageViewWithBitmap(front, resizedCoverBitmap);
 
 		ImageView back = new ImageView(this);
 		back.setLayoutParams(params);
@@ -466,7 +462,6 @@ public class CardViewerActivity extends BaseActivity
 			public void onOpened()
 			{
 				shadowOpen.setVisibility(View.VISIBLE);
-				shadowClose.setVisibility(View.INVISIBLE);
 
 				flipView.setVisibility(View.INVISIBLE);
 				animationScrollView.setVisibility(View.GONE);
@@ -482,7 +477,6 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public void onStartOpening()
 			{
-				shadowClose.setVisibility(View.INVISIBLE);
 				rightBlock.setVisibility(View.GONE);
 				animationScrollView.postDelayed(new Runnable()
 				{
@@ -496,15 +490,14 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public void onStartClosing()
 			{
-				shadowOpen.setVisibility(View.INVISIBLE);
-				shadowClose.setVisibility(View.VISIBLE);
-				animationScrollView.postDelayed(new Runnable()
-				{
-					public void run()
-					{
-						animationScrollView.smoothScrollTo(cardOpenWidth * 2, 0);
-					}
-				}, 200L);
+//				shadowOpen.setVisibility(View.INVISIBLE);
+//				animationScrollView.postDelayed(new Runnable()
+//				{
+//					public void run()
+//					{
+//						animationScrollView.smoothScrollTo(cardOpenWidth * 2, 0);
+//					}
+//				}, 200L);
 			}
 		});
 
@@ -676,8 +669,9 @@ public class CardViewerActivity extends BaseActivity
 				phoneNum = map.get(eoc.studio.voicecard.contact.DataProcess.PHONE_NUMBER_INDEX);
 				Log.d(TAG, "onContactSelectorResult - TEL: " + phoneNum);
 				String phoneString = phoneNum.toString().replace(" ", "");
-				Log.d(TAG, "onContactSelectorResult - (after remove white space)TEL: " + phoneString);
-				
+				Log.d(TAG, "onContactSelectorResult - (after remove white space)TEL: "
+						+ phoneString);
+
 				phoneString = phoneNum.toString().replace("-", "");
 				Log.d(TAG, "onContactSelectorResult - (after remove minus sign)TEL: " + phoneString);
 				phoneList.add(phoneString);
