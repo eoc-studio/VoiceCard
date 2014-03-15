@@ -13,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,6 +46,7 @@ public class TestFacebookActivity extends BaseActivity
 		setContentView(R.layout.activity_test_facebook);
 		facebookManager = FacebookManager.getInstance(TestFacebookActivity.this);
 		findViews();
+		getDeviceDesity();
 	}
 
 	@Override
@@ -271,6 +273,12 @@ public class TestFacebookActivity extends BaseActivity
             }
         });
 	}
+    
+    private void getDeviceDesity() {
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        Log.d(TAG, "desity is " + metrics.density);
+        Log.d(TAG, "densityDpi is " + metrics.densityDpi);
+    }
     
     private byte[] getPhoto() {
         Drawable drawable = getResources().getDrawable(R.drawable.dog);

@@ -54,6 +54,7 @@ import eoc.studio.voicecard.manager.HttpManager;
 import eoc.studio.voicecard.manager.PostMailListener;
 import eoc.studio.voicecard.manager.UploadDiyListener;
 import eoc.studio.voicecard.utils.ListUtility;
+import eoc.studio.voicecard.utils.NetworkUtility;
 
 public class FacebookManager
 {
@@ -176,6 +177,9 @@ public class FacebookManager
 
 	public void login(Context context, FacebookListener facebookListener)
 	{
+	    if (!checkNetwork(context)) {
+	        return;
+	    }
 	    this.context = context;
 	    this.facebookListener = facebookListener;
 	    managerState = ManagerState.LOGIN;
@@ -267,6 +271,9 @@ public class FacebookManager
 
 	public void getUserProfile(Context context, RequestGraphUserCallback callback)
 	{
+        if (!checkNetwork(context)) {
+            return;
+        }
 	    Log.d(TAG, "getUserProfile");
 	    actionType = ManagerState.GET_USER_PROFILE;
 	    userCallback = callback;
@@ -309,6 +316,9 @@ public class FacebookManager
 
 	public void getFriendList(Context context, Request.GraphUserListCallback callback)
 	{
+        if (!checkNetwork(context)) {
+            return;
+        }
 	    Log.d(TAG, "getFriendList");
 	    this.context = context;
 	    managerState = ManagerState.GET_FRIEND;
@@ -393,6 +403,9 @@ public class FacebookManager
     }
     
     public void publishNews(Context context, String sendId, Uri fileUri) {
+        if (!checkNetwork(context)) {
+            return;
+        }
         this.context = context;
         this.fileUri = fileUri;
         publish = new Publish(sendId, Publish.DEFAULT_NAME, null, Publish.DEFAULT_CAPTION, Publish.DEFAULT_DESCRIPTION,
@@ -410,12 +423,18 @@ public class FacebookManager
     }
     
     public void publishNews(Context context, String sendId, Uri fileUri, PublishListener publishListener) {
+        if (!checkNetwork(context)) {
+            return;
+        }
         this.publishListener = publishListener;
         publishNews(context, sendId, fileUri);
     }
 		
 	public void publishTimeline(Context context, Publish publish)
 	{
+        if (!checkNetwork(context)) {
+            return;
+        }
         this.context = context;
         
         if (publish != null) {
@@ -452,6 +471,9 @@ public class FacebookManager
 	}
 	
     public void upload(Photo photo) {
+        if (!checkNetwork(context)) {
+            return;
+        }
         this.photo = photo;
         managerState = ManagerState.UPLOAD;
         actionType = ManagerState.UPLOAD;
@@ -476,6 +498,9 @@ public class FacebookManager
     }
     
     public void publishUserFeed(Context context, Publish publish) {
+        if (!checkNetwork(context)) {
+            return;
+        }
         this.context = context;
         this.publish = publish;
         managerState = ManagerState.PUBLISH_USER_FEED;
@@ -502,6 +527,9 @@ public class FacebookManager
     }
     
     public void inviteFriend(Context context, String message, Card publishCard, InviteListener inviteListener) {
+        if (!checkNetwork(context)) {
+            return;
+        }
         Log.d(TAG, "inviteFriend invite all friend");
         managerState = ManagerState.INVITE;
         actionType = ManagerState.INVITE;
@@ -528,6 +556,9 @@ public class FacebookManager
 	
 	public void inviteFriend(Context context, String to, String message)
 	{
+        if (!checkNetwork(context)) {
+            return;
+        }
 	    Log.d(TAG, "inviteFriend invite only specific friend");
 	    managerState = ManagerState.INVITE;
 	    actionType = ManagerState.INVITE;
@@ -552,6 +583,9 @@ public class FacebookManager
 	}
 	
     public void inviteFriend(Context context, String[] suggestedFriends, String message) {
+        if (!checkNetwork(context)) {
+            return;
+        }
         Log.d(TAG, "inviteFriend invite several specific friends");
         managerState = ManagerState.INVITE;
         actionType = ManagerState.INVITE;
@@ -743,6 +777,18 @@ public class FacebookManager
                 }
             }
         });
+    }
+    
+    private boolean checkNetwork(Context context) {
+        boolean isOnline = false;
+        if (context != null) {
+            isOnline = NetworkUtility.isOnline(context);
+            if (!isOnline) {
+                showToast(context.getResources().getString(R.string.network_connect_fail), false);
+            }
+        }
+        
+        return isOnline;
     }
 	    
     private class LoginListener implements FacebookListener
