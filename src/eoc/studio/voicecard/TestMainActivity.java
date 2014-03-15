@@ -88,6 +88,7 @@ public class TestMainActivity extends BaseActivity
 			public void onClick(View v)
 			{
 				Intent intent = new Intent(TestMainActivity.this, MainMenuActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				startActivity(intent);
 			}
 		});

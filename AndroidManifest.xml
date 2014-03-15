@@ -29,6 +29,7 @@
         >
         <activity
             android:name="eoc.studio.voicecard.TestMainActivity"
+            android:launchMode="singleInstance"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -65,6 +66,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="eoc.studio.voicecard.mainmenu.MainMenuActivity"
+            android:launchMode="singleTop"
+            
             android:screenOrientation="portrait" />
         <activity
             android:name="eoc.studio.voicecard.card.editor.CardCategorySelectorActivity"
@@ -95,6 +98,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="eoc.studio.voicecard.mainloading.MainLoadingActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name="eoc.studio.voicecard.volley.test.PostCardTestActivity"

@@ -158,6 +158,21 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
         mailbox.update(mailboxUnReadCount);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        // TODO Auto-generated method stub
+        super.onNewIntent(intent);
+        Log.d(TAG, "onNewIntent()");
+        setIntent(intent);
+        
+//        
+//        
+//        Session.getActiveSession().onActivityResult(this, 0, 0, intent);
+//		updateViewVisibility();
+//		updateNewMailBoxCount();
+//		setMemorialDayNotification();
+    }
+    
 	@Override
 	protected void onResume()
 	{
@@ -368,11 +383,12 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
             } else {
                 Intent intent = getIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                finish();
+              
                 overridePendingTransition(0, 0);
 
                 startActivity(intent);
                 overridePendingTransition(0, 0);
+                finish();
             }
         }
 
@@ -392,9 +408,10 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
                         Log.d(TAG, "userInfo id is " + userInfo.getId());
                         
                         Log.d(TAG, "Go to main loading");
-                        finish();
+                       
                 		Intent intent = new Intent(MainMenuActivity.this, MainLoadingActivity.class);
                 		startActivity(intent);
+                		finish();
                     }
                 } else {
                     Log.d(TAG, "userInfo id is null ");

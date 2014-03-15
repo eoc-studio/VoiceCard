@@ -568,7 +568,9 @@ public class MainLoadingActivity extends Activity
 		 */
 		intent.putExtras(bundle);
 		intent.setClass(context, MainMenuActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+//		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); 
+		
 		String PREFS_FILENAME = "MAIN_MENU_SETTING";
 		SharedPreferences configPreferences = getSharedPreferences(PREFS_FILENAME, 0);
 		Log.d(TAG, "goToMainActivity() this.mailboxUnReadCount:" + this.mailboxUnReadCount);
