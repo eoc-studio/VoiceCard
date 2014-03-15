@@ -104,11 +104,9 @@ public class MainLoadingActivity extends Activity
 
 	private static final int MAILBOX_RECEIVE_PROGRESS = 45;
 
-	private static final int INIT_DATABASE_PROGRESS = 15;
+	private static final int INIT_DATABASE_PROGRESS = 45;
 
-	private static final int GET_RECOMMEND_PROGRESS = 45;
-
-	private static final int COPY_CARD_AND_CATEGORY = 15;
+	private static final int COPY_CARD_AND_CATEGORY = 30;
 
 	private static final int GET_CATEGORY_INFO_PROGRESS = 15;
 
@@ -154,7 +152,7 @@ public class MainLoadingActivity extends Activity
 
 			if (progress >= FACEBOOK_ID_PROGRESS + FACEBOOK_USER_PROFILE_PROGRESS
 					+ INIT_HTTP_MANAGER_PROGRESS + MAILBOX_COUNT_PROGRESS
-					+ MAILBOX_RECEIVE_PROGRESS + INIT_DATABASE_PROGRESS + GET_RECOMMEND_PROGRESS
+					+ MAILBOX_RECEIVE_PROGRESS + INIT_DATABASE_PROGRESS 
 					+ COPY_CARD_AND_CATEGORY + GET_CATEGORY_INFO_PROGRESS + GET_CARD_INFO_PROGRESS
 					+ GET_CATEGORY_IMGS_PROGRESS 
 					+ GET_CARD_IMGS_PROGRESS)
@@ -208,8 +206,6 @@ public class MainLoadingActivity extends Activity
 		initCardDataBase();
 		getCategoryInfoFromServer();
 		getCardInfoFromServer();
-
-		getRecommendInfo();
 		copyCardAndCategoryFromAsset();
 
 	}
@@ -373,38 +369,7 @@ public class MainLoadingActivity extends Activity
 		addProgressWheel(INIT_DATABASE_PROGRESS);
 		Log.d(TAG_PROGRESS, "INIT_DATABASE_PROGRESS");
 	}
-
-	private void getRecommendInfo()
-	{
-
-		httpManager.getRecommend(context, new GetRecommendListener()
-		{
-			@Override
-			public void onResult(Boolean isSuccess, ArrayList<GsonRecommend> recommends)
-			{
-
-				// Log.e(TAG, "httpManager.getRecommend() isSuccess:" +
-				// isSuccess + ",mails:"
-				// + recommends.toString());
-
-				if (recommends != null && recommends.size() > 0)
-				{
-					// Log.e(TAG, "recommends.get(0).getImg():" +
-					// recommends.get(0).getImg()
-					// + "recommends.get(0).getName():" +
-					// recommends.get(0).getName());
-					recommendBitmapUrl = recommends.get(0).getImg();
-					recommendName = recommends.get(0).getName();
-					addProgressWheel(GET_RECOMMEND_PROGRESS);
-					Log.d(TAG_PROGRESS, "GET_RECOMMEND_PROGRESS");
-				}
-
-			}
-
-		});
-
-	}
-
+	
 	private void getCategoryInfoFromServer()
 	{
 
@@ -597,8 +562,6 @@ public class MainLoadingActivity extends Activity
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
 		String PREFS_FILENAME = "MAIN_MENU_SETTING";
 		SharedPreferences configPreferences = getSharedPreferences(PREFS_FILENAME, 0);
-		configPreferences.edit().putString("recommendBitmapUrl", recommendBitmapUrl).commit();
-		configPreferences.edit().putString("recommendName", recommendName).commit();
 		Log.d(TAG, "goToMainActivity() this.mailboxUnReadCount:" + this.mailboxUnReadCount);
 		configPreferences.edit().putInt("mailboxUnReadCount", this.mailboxUnReadCount).commit();
 		startActivity(intent);

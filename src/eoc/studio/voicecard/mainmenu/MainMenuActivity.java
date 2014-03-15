@@ -38,6 +38,8 @@ import eoc.studio.voicecard.facebook.enetities.UserInfo;
 import eoc.studio.voicecard.facebook.enetities.Publish;
 import eoc.studio.voicecard.mailbox.MailboxActivity;
 import eoc.studio.voicecard.mainloading.MainLoadingActivity;
+import eoc.studio.voicecard.manager.GetRecommendListener;
+import eoc.studio.voicecard.manager.GsonRecommend;
 import eoc.studio.voicecard.manager.HttpManager;
 import eoc.studio.voicecard.newspaper.NewspaperMainActivity;
 import eoc.studio.voicecard.recommend.RecommendActivity;
@@ -60,8 +62,9 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
     private AdvertisementView advertisement;
 
     private Context context;
-
+    private String recommendBitmapUrl;
     private String recommendName;
+ 
 
 	private String PREFS_FILENAME = "MAIN_MENU_SETTING";
 	private SharedPreferences configPreferences;
@@ -77,49 +80,76 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		facebookManager = FacebookManager.getInstance(context);
 		httpManager = new HttpManager();
 		initLayout();
-		updateAdvertisementInfo();
-
+		getRecommendInfo();
         super.onCreate(savedInstanceState);
     }
 
-    private void updateAdvertisementInfo()
-    {
 
-        String recommendBitmapUrl = configPreferences.getString("recommendBitmapUrl", null);
-        recommendName = configPreferences.getString("recommendName", null);
+	private void getRecommendInfo()
+	{
 
-		if (recommendBitmapUrl != null && recommendName != null)
-		{
-			HttpManager httpManager = new HttpManager();
-			httpManager.getBitmapFromWeb(context, recommendBitmapUrl,
-					new ImageLoader.ImageListener()
+		if(NetworkUtility.isOnline(context)){
+			httpManager.getRecommend(context, new GetRecommendListener()
+			{
+				@Override
+				public void onResult(Boolean isSuccess, ArrayList<GsonRecommend> recommends)
+				{
+
+					// Log.e(TAG, "httpManager.getRecommend() isSuccess:" +
+					// isSuccess + ",mails:"
+					// + recommends.toString());
+
+					if (recommends != null && recommends.size() > 0)
 					{
-						@Override
-						public void onResponse(ImageLoader.ImageContainer response,
-								boolean isImmediate)
+						// Log.e(TAG, "recommends.get(0).getImg():" +
+						// recommends.get(0).getImg()
+						// + "recommends.get(0).getName():" +
+						// recommends.get(0).getName());
+						recommendBitmapUrl = recommends.get(0).getImg();
+						recommendName = recommends.get(0).getName();
+						if (recommendBitmapUrl != null && recommendName != null)
 						{
+					
+							httpManager.getBitmapFromWeb(context, recommendBitmapUrl,
+									new ImageLoader.ImageListener()
+									{
+										@Override
+										public void onResponse(ImageLoader.ImageContainer response,
+												boolean isImmediate)
+										{
 
-							Log.e(TAG, "httpManager.getBitmapFromWeb() isImmediate:" + isImmediate);
+											Log.e(TAG, "httpManager.getBitmapFromWeb() isImmediate:" + isImmediate);
 
-							if (response.getBitmap() != null)
-							{
-								Log.e(TAG, "response.getBitmap() != null");
-								advertisement.updateView(
-										response.getBitmap().copy(Bitmap.Config.ARGB_8888, true),
-										recommendName);
-							}
+											if (response.getBitmap() != null)
+											{
+												Log.e(TAG, "response.getBitmap() != null");
+												advertisement.updateView(
+														response.getBitmap().copy(Bitmap.Config.ARGB_8888, true),
+														recommendName);
+											}
 
-                }
+				                }
 
-                @Override
-                public void onErrorResponse(VolleyError e)
-                {
-                    Log.e(TAG, "getBitmapFromWeb() error:" + e.getMessage());
-                }
-            });
-        }
-    }
+				                @Override
+				                public void onErrorResponse(VolleyError e)
+				                {
+				                    Log.e(TAG, "getBitmapFromWeb() error:" + e.getMessage());
+				                }
+				            });
+				        }
+					}
 
+				}
+
+			});
+		}
+		else{
+			Log.d(TAG, "Cant getRecommendInfo (because network is not enable)");
+		}
+
+
+	}
+    
     private void updateNewMailBoxCount()
     {
 
