@@ -249,14 +249,23 @@ public class MainLoadingActivity extends Activity
 			@Override
 			public void run()
 			{
-
 				super.run();
-				if (FileUtility.copyAssetFolder(getAssets(), "files", getFilesDir()
-						.getAbsolutePath()))
-				{
-					addProgressWheel(COPY_CARD_AND_CATEGORY);
-					Log.d(TAG_PROGRESS, "COPY_CARD_AND_CATEGORY");
+				
+				File cardFolderFile = new File(getFilesDir()+"/CardImages");
+				File cardCategoryFolderFile = new File(getFilesDir()+"/CategoryImages");
+				
+				if(!cardFolderFile.exists()   || !cardCategoryFolderFile.exists()){
+					FileUtility.copyAssetFolder(getAssets(), "files", getFilesDir()
+							.getAbsolutePath());
+					
+					Log.d(TAG, "copyCardAndCategoryFromAsset()");
 				}
+				else{
+					Log.d(TAG, "cardFolderFile.exists(): "+cardFolderFile.exists()+" ,cardCategoryFolderFile.exists(): "+cardCategoryFolderFile.exists());
+				}
+
+				addProgressWheel(COPY_CARD_AND_CATEGORY);
+				Log.d(TAG_PROGRESS, "COPY_CARD_AND_CATEGORY");
 
 			}
 		}.start();
