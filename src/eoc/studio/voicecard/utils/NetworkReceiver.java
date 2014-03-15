@@ -19,4 +19,8 @@ public class NetworkReceiver extends BroadcastReceiver {
     public static boolean isOnline() {
         return isOnline;
     }
+    
+    public static void setOnline(Context context) {
+        isOnline = NetworkUtility.isOnline(context);
+    }
 }
