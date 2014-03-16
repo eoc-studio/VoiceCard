@@ -6,13 +6,11 @@
     <string name="hello_world">Hello world!</string>
 
     <!-- About Test Facebook -->
-    <string name="app_id">584057725018260</string>
     <string name="get_user_profile">Get User Profile</string>
     <string name="get_friend_list">Get Friends</string>
     <string name="get_picture">Get Picture</string>
     <string name="user_info">User Info</string>
     <string name="invite_friend">Invite Friend</string>
-    <string name="invite_message">我想邀請你一起來使用Voice Card!</string>
     <string name="publish_me">Publish to timeline</string>
     <string name="publish_friend">Publish to friend</string>
 
@@ -92,10 +90,19 @@
     <string name="main_loading">讀取中...</string>
 
     <!-- About Facebook Manager -->
+    <string name="app_id">584057725018260</string>
     <string name="error_is">錯誤是 %s </string>
     <string name="cancel_publish">取消發佈</string>
     <string name="publish_success">發佈成功</string>
     <string name="publish_fail">發佈失敗</string>
+    <string name="share_app_name">Voice Card留聲卡卡</string>
+    <string name="share_caption">送祝福給所有我的好友們</string>
+    <string name="share_description">送個暖暖的問候，愛要記得大聲說出來</string>
+    <string name="share_link">http://www.charliefind.com/app</string>
+    <string name="news_caption">看你幹了甚麼好事</string>
+    <string name="news_description">%s 正在為你造謠生事 …</string>
+    <string name="invite_message">%s 送了個祝福給你，他正對你說了 …</string>
+    
 
     <!-- Audio Recorder -->
     <string name="start_recording">開始錄音</string>

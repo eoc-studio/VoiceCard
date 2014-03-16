@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import org.json.JSONObject;
 
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -36,8 +35,8 @@ public class TestFacebookActivity extends BaseActivity
 {
 	private static final String TAG = "TestFacebookActivity";
 	private FacebookManager facebookManager;
-	private String owerId = "100007720118618";
-	private String[] testIdList = {"100007811983123", "100007720118618"};
+	private String johnId = "100007720118618";
+	private String[] testIdList = { "100007811983123", "100007720118618" };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -73,29 +72,34 @@ public class TestFacebookActivity extends BaseActivity
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
-        switch (requestCode) {
-        case FriendInfo.GET_FRIEND_REQUEST_CODE:
-            Log.d(TAG, "GET_FRIEND_REQUEST_CODE");
-            if (data != null) {
-                Bundle bundle = data.getExtras();
-                if (bundle != null) {
-                    ArrayList<FriendInfo> friendList = bundle.getParcelableArrayList(FriendInfo.GET_FRIEND);
-                    
-                    if (friendList != null) {
-                        for (int i = 0; i < friendList.size(); i++) {
-                            Log.d(TAG, "ID is " + friendList.get(i).getFriendId());
-                            Log.d(TAG, "Name is " + friendList.get(i).getFriendName());
-                            Log.d(TAG, "Birthday is " + friendList.get(i).getFriendBirthday());
-                            Log.d(TAG, "ImgLink is " + friendList.get(i).getFriendImgLink());
-                        }
-                    }
-                }
-            }
-            break;
-        }
+		switch (requestCode)
+		{
+		case FriendInfo.GET_FRIEND_REQUEST_CODE:
+			Log.d(TAG, "GET_FRIEND_REQUEST_CODE");
+			if (data != null)
+			{
+				Bundle bundle = data.getExtras();
+				if (bundle != null)
+				{
+					ArrayList<FriendInfo> friendList = bundle
+							.getParcelableArrayList(FriendInfo.GET_FRIEND);
+					if (friendList != null)
+					{
+						for (int i = 0; i < friendList.size(); i++)
+						{
+							Log.d(TAG, "ID is " + friendList.get(i).getFriendId());
+							Log.d(TAG, "Name is " + friendList.get(i).getFriendName());
+							Log.d(TAG, "Birthday is " + friendList.get(i).getFriendBirthday());
+							Log.d(TAG, "ImgLink is " + friendList.get(i).getFriendImgLink());
+						}
+					}
+				}
+			}
+			break;
+		}
 	}
 
-    private void findViews() {
+	private void findViews() {
         Button getUserProfile = (Button) findViewById(R.id.getUserProfile);
         Button getFriendList = (Button) findViewById(R.id.getFriendList);
         Button inviteFriend = (Button) findViewById(R.id.inviteFriend);
@@ -180,9 +184,11 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {
-                    facebookManager.publishTimeline(TestFacebookActivity.this, new Publish(owerId,
-                            Publish.DEFAULT_NAME, Publish.DEFAULT_PICTURE, Publish.DEFAULT_CAPTION,
-                            Publish.DEFAULT_DESCRIPTION, Publish.DEFAULT_LINK));
+					facebookManager.publishTimeline(TestFacebookActivity.this,
+							new Publish(johnId, getResources().getString(R.string.share_app_name),
+									null, getResources().getString(R.string.share_caption),
+									getResources().getString(R.string.share_description),
+									getResources().getString(R.string.share_link)));
                 }
             }
         });
@@ -193,10 +199,11 @@ public class TestFacebookActivity extends BaseActivity
             public void onClick(View v)
             {
                 if (facebookManager != null)
-                {
-                    facebookManager.publishTimeline(TestFacebookActivity.this, new Publish(owerId,
-                            Publish.DEFAULT_NAME, Publish.DEFAULT_PICTURE, Publish.DEFAULT_CAPTION,
-                            Publish.DEFAULT_DESCRIPTION, Publish.DEFAULT_LINK));
+                {	// only publish john for test 
+                    facebookManager.publishTimeline(TestFacebookActivity.this, new Publish(johnId,
+                    		getResources().getString(R.string.share_app_name), Publish.DEFAULT_PICTURE, getResources().getString(R.string.share_caption),
+                    		getResources().getString(R.string.share_caption), getResources().getString(
+									R.string.share_link)));
                 }
             }
         });
@@ -221,7 +228,7 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {
-                    facebookManager.upload(new Photo(Publish.DEFAULT_NAME, getPhoto()));
+                    facebookManager.upload(new Photo(getResources().getString(R.string.share_app_name), getPhoto()));
                 }
             }
         });
@@ -233,9 +240,12 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {
-                    facebookManager.publishUserFeed(TestFacebookActivity.this, new Publish(owerId,
-                            Publish.DEFAULT_NAME, null, Publish.DEFAULT_CAPTION, Publish.DEFAULT_DESCRIPTION,
-                            Publish.DEFAULT_LINK));
+					facebookManager.publishUserFeed(TestFacebookActivity.this, new Publish(johnId,
+							getResources().getString(
+									R.string.share_app_name), null, getResources().getString(
+									R.string.share_caption), getResources().getString(
+									R.string.share_description), getResources().getString(
+									R.string.share_link)));
                 }
             }
         });
@@ -273,19 +283,20 @@ public class TestFacebookActivity extends BaseActivity
             }
         });
 	}
-    
-    private void getDeviceDesity() {
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        Log.d(TAG, "desity is " + metrics.density);
-        Log.d(TAG, "densityDpi is " + metrics.densityDpi);
-    }
-    
-    private byte[] getPhoto() {
-        Drawable drawable = getResources().getDrawable(R.drawable.dog);
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
-        return stream.toByteArray();
-    }
+	private void getDeviceDesity()
+	{
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
+		Log.d(TAG, "desity is " + metrics.density);
+		Log.d(TAG, "densityDpi is " + metrics.densityDpi);
+	}
+
+	private byte[] getPhoto()
+	{
+		Drawable drawable = getResources().getDrawable(R.drawable.dog);
+		Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+		return stream.toByteArray();
+	}
 }

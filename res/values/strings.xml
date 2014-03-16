@@ -6,11 +6,9 @@
     <string name="hello_world">Hello world!</string>
 
     <!-- About Test Facebook -->
-    <string name="app_id">584057725018260</string>
     <string name="get_user_profile">Get User Profile</string>
     <string name="get_friend_list">Get Friends</string>
     <string name="invite_friend">Invite Friend</string>
-    <string name="invite_message">I want invite you!</string>
     <string name="publish_me">Publish to timeline</string>
     <string name="publish_friend">Publish to friend</string>
     <string name="fb_logout">Logout</string>
@@ -91,6 +89,14 @@
     <string name="select_all">Select all</string>
     <string name="deselect_all">Cancel all</string>
     <string name="mailbox_errorMsg">No content</string>
+    
+    <!-- About Facebook Manager -->
+    <string name="app_id">584057725018260</string>
+    <string name="error_is">錯誤是 %s </string>
+    <string name="cancel_publish">取消發佈</string>
+    <string name="publish_success">發佈成功</string>
+    <string name="publish_fail">發佈失敗</string>
+    <string name="invite_message">I want invite you to use Voice Card</string>
 
     <!-- Audio Recorder -->
     <string name="time_separator">/</string>

@@ -406,10 +406,12 @@ public class FacebookManager
         if (!checkNetwork(context)) {
             return;
         }
+        String userName = getUserName();
         this.context = context;
         this.fileUri = fileUri;
-        publish = new Publish(sendId, Publish.DEFAULT_NAME, null, Publish.DEFAULT_CAPTION, Publish.DEFAULT_DESCRIPTION,
-                null);
+		publish = new Publish(sendId, context.getResources().getString(R.string.share_app_name),
+				null, context.getResources().getString(R.string.news_caption),
+				context.getResources().getString(R.string.news_description, userName), null);
         managerState = ManagerState.PUBLISH_NEWS;
         actionType = ManagerState.PUBLISH_NEWS;
         if (isLogin())
@@ -437,11 +439,13 @@ public class FacebookManager
         }
         this.context = context;
         
-        if (publish != null) {
+        if (publish != null) 
+        {
             this.publish = publish;
-        } else {
-            this.publish = new Publish(Publish.DEFAULT_ID, Publish.DEFAULT_NAME, null, Publish.DEFAULT_CAPTION,
-                    Publish.DEFAULT_DESCRIPTION, Publish.DEFAULT_LINK);
+        } 
+        else 
+        {
+        	showToast(context.getResources().getString(R.string.publish_fail), false);
         }
         managerState = ManagerState.PUBLISH;
         actionType = ManagerState.PUBLISH;
@@ -515,7 +519,7 @@ public class FacebookManager
         Bundle params = new Bundle();
         params.putString(BundleTag.NAME, publish.getName());
         params.putString(BundleTag.CAPTION, publish.getCaption());
-        params.putString(BundleTag.MESSAGE, context.getResources().getString(R.string.invite_message));
+//        params.putString(BundleTag.MESSAGE, context.getResources().getString(R.string.invite_message));
         params.putString(BundleTag.DESCRIPTION, publish.getDescription());
         if (publish.getLink() != null) {
             params.putString(BundleTag.LINK, publish.getLink());
@@ -540,7 +544,7 @@ public class FacebookManager
         if (message != null) {
             params.putString(BundleTag.MESSAGE, message);
         } else {
-            params.putString(BundleTag.MESSAGE, context.getResources().getString(R.string.invite_message));
+            params.putString(BundleTag.MESSAGE, context.getResources().getString(R.string.invite_message, getUserName()));
         }
         inviteBundle = params;
         
@@ -789,6 +793,13 @@ public class FacebookManager
         }
         
         return isOnline;
+    }
+    
+    private String getUserName()
+    {
+    	HttpManager httpManager = new HttpManager();
+    	String userName = httpManager.getFacebookID();
+    	return userName;
     }
 	    
     private class LoginListener implements FacebookListener

@@ -471,13 +471,18 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
         startActivity(intent);
     }
 
-    private void onFbShareClicked()
-    {
-        Log.d(TAG, "share on facebook");
-        FacebookManager facebookManager = FacebookManager.getInstance(context);
-        HttpManager httpManager = new HttpManager();
-        facebookManager
-                .publishUserFeed(MainMenuActivity.this, new Publish(httpManager.getFacebookID(), Publish.DEFAULT_NAME,
-                        null, Publish.DEFAULT_CAPTION, Publish.DEFAULT_DESCRIPTION, Publish.DEFAULT_LINK));
-    }
+	private void onFbShareClicked()
+	{
+		Log.d(TAG, "share on facebook");
+		FacebookManager facebookManager = FacebookManager.getInstance(context);
+		HttpManager httpManager = new HttpManager();
+		facebookManager
+				.publishUserFeed(
+						MainMenuActivity.this,
+						new Publish(httpManager.getFacebookID(), getResources().getString(
+								R.string.share_app_name), null, getResources().getString(
+								R.string.share_caption), getResources().getString(
+								R.string.share_description), getResources().getString(
+								R.string.share_link)));
+	}
 }
