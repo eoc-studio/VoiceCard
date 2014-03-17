@@ -48,6 +48,8 @@ public class HttpManager
 
 	private static String facebookID;
 
+	private static String userName;
+	
 	private static String deviceIMEI;
 
 	private static String hash_auth;
@@ -86,6 +88,38 @@ public class HttpManager
 	public void init(Context context, String facebookID)
 	{
 
+		TelephonyManager tm = (TelephonyManager) context
+				.getSystemService(Context.TELEPHONY_SERVICE);
+		String phone = tm.getLine1Number();
+		HttpManager.mobile = phone;
+
+		Log.e(TAG, "HttpManager()  init() phone:" + phone);
+
+		HttpManager.facebookID = facebookID;
+		HttpManager.hash_time = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance()
+				.getTime());
+
+		HttpManager.hash_auth = StringXORer.encode(facebookID + "_" + hash_time, HASH_CODE);
+
+		if (tm.getDeviceId() != null)
+		{
+			HttpManager.deviceIMEI = tm.getDeviceId();
+		}
+		else
+		{
+			HttpManager.deviceIMEI = android.os.Build.SERIAL;
+		}
+
+		Log.e(TAG, "init(): facebookID:" + facebookID + ",hash_time:" + hash_time + ",deviceIMEI:"
+				+ deviceIMEI + ",hash_auth:" + hash_auth + ",mobile=" + mobile);
+	}
+	
+	public void init(Context context, String facebookID,String userName)
+	{
+
+		if (userName!=null){
+			HttpManager.userName = userName;
+		}
 		TelephonyManager tm = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
 		String phone = tm.getLine1Number();
@@ -1266,4 +1300,16 @@ public class HttpManager
 
 		HttpManager.facebookID = facebookID;
 	}
+
+	public static String getUserName()
+	{
+	
+		return userName;
+	}
+
+	public static void setUserName(String userName)
+	{
+	
+		HttpManager.userName = userName;
+	} 
 }

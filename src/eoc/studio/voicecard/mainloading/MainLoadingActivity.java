@@ -123,6 +123,8 @@ public class MainLoadingActivity extends Activity
 	private int progress = 0;
 
 	private String facebookUserID = null;
+	
+	private String userName = null;
 
 	private MailsAdapterData mailsAdapterData;
 
@@ -690,9 +692,11 @@ public class MainLoadingActivity extends Activity
 			if (userJSON != null)
 			{
 				userInfo = new UserInfo(userJSON);
-
+				
 				Log.d(TAG, "userInfo id is " + userInfo.getId());
 				facebookUserID = userInfo.getId();
+				Log.d(TAG, "userInfo getName is " + userInfo.getName());
+				userName =  userInfo.getName();
 				addProgressWheel(FACEBOOK_ID_PROGRESS);
 				Log.d(TAG_PROGRESS, "FACEBOOK_ID_PROGRESS");
 			}
@@ -700,7 +704,8 @@ public class MainLoadingActivity extends Activity
 			if (facebookUserID != null)
 			{
 				initMailDataBase(facebookUserID);
-				httpManager.init(context, facebookUserID);
+				httpManager.init(context, facebookUserID,userName);
+				Log.d(TAG, "httpManager.getUserName is " + httpManager.getUserName()); 
 				addProgressWheel(INIT_HTTP_MANAGER_PROGRESS);
 				Log.d(TAG_PROGRESS, "INIT_HTTP_MANAGER_PROGRESS");
 				GsonFacebookUser gsonFacebookUser = null;
