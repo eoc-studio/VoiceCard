@@ -797,8 +797,11 @@ public class FacebookManager
     
     private String getUserName()
     {
-    	HttpManager httpManager = new HttpManager();
-    	String userName = httpManager.getFacebookID();
+        String userName;
+    	userName = new HttpManager().getUserName();
+    	if (userName == null) {
+    	    userName = "";
+    	}
     	return userName;
     }
 	    
