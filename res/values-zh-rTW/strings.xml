@@ -129,6 +129,7 @@
     <string name="handwriting_font_size_two">字體中</string>
     <string name="handwriting_font_size_three">字體中</string>
     
-    
+    <!-- exit app -->
+    <string name="exit_app_to_home">再按一次返回鍵，即將離開留聲卡卡。</string>
 
 </resources>

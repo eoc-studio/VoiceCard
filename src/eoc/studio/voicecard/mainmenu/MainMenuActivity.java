@@ -415,7 +415,7 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 			MainMenuActivity.this.finish();
 		else
 		{
-			Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getResources().getString(R.string.exit_app_to_home), Toast.LENGTH_SHORT).show();
 			exitApp = true;
 			new Handler().postDelayed(new Runnable()
 			{
