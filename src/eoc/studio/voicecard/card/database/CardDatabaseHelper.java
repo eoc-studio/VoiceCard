@@ -2251,13 +2251,13 @@ public class CardDatabaseHelper
 		switch (density)
 		{
 		case DisplayMetrics.DENSITY_LOW:
-			result = DPI_MDPI;
+			result = DPI_XHDPI;
 			break;
 		case DisplayMetrics.DENSITY_MEDIUM:
-			result = DPI_MDPI;
+			result = DPI_XHDPI;
 			break;
 		case DisplayMetrics.DENSITY_HIGH:
-			result = DPI_HPPI;
+			result = DPI_XHDPI;
 			break;
 		case DisplayMetrics.DENSITY_XHIGH:
 			result = DPI_XHDPI;

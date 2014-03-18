@@ -49,7 +49,7 @@ public class HttpManager
 	private static String facebookID;
 
 	private static String userName;
-	
+
 	private static String deviceIMEI;
 
 	private static String hash_auth;
@@ -90,7 +90,8 @@ public class HttpManager
 
 		TelephonyManager tm = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
-		String phone = tm.getLine1Number();
+		String phone = tm.getLine1Number();  
+
 		HttpManager.mobile = phone;
 
 		Log.e(TAG, "HttpManager()  init() phone:" + phone);
@@ -113,11 +114,12 @@ public class HttpManager
 		Log.e(TAG, "init(): facebookID:" + facebookID + ",hash_time:" + hash_time + ",deviceIMEI:"
 				+ deviceIMEI + ",hash_auth:" + hash_auth + ",mobile=" + mobile);
 	}
-	
-	public void init(Context context, String facebookID,String userName)
+
+	public void init(Context context, String facebookID, String userName)
 	{
 
-		if (userName!=null){
+		if (userName != null)
+		{
 			HttpManager.userName = userName;
 		}
 		TelephonyManager tm = (TelephonyManager) context
@@ -803,6 +805,7 @@ public class HttpManager
 
 	public void getPatchState(Context context, final PatchStateListener patchStateListener)
 	{
+
 		String uriGetPatchState = String.format(
 				"http://www.charliefind.com/api.php?op=patch&imei=%1$s", deviceIMEI);
 		Log.e(TAG, "uriGetPatchState:" + uriGetPatchState);
@@ -815,13 +818,9 @@ public class HttpManager
 
 						try
 						{
-							Log.e(TAG,
-									"getPatchState() Response:"
-											+ response.toString(4));
+							Log.e(TAG, "getPatchState() Response:" + response.toString(4));
 
-							Log.e(TAG,
-									"getPatchState() Response patch:"
-											+ response.get("patch"));
+							Log.e(TAG, "getPatchState() Response patch:" + response.get("patch"));
 							if (patchStateListener != null)
 								patchStateListener.onResult(true,
 										Boolean.valueOf(response.get("patch").toString()));
@@ -830,7 +829,8 @@ public class HttpManager
 						catch (JSONException e)
 						{
 							e.printStackTrace();
-							if (patchStateListener != null) patchStateListener.onResult(false, false);
+							if (patchStateListener != null)
+								patchStateListener.onResult(false, false);
 						}
 					}
 				}, new Response.ErrorListener()
@@ -839,8 +839,7 @@ public class HttpManager
 					public void onErrorResponse(VolleyError error)
 					{
 
-						Log.e(TAG,
-								"getPatchState Error: " + error.getMessage());
+						Log.e(TAG, "getPatchState Error: " + error.getMessage());
 
 						if (patchStateListener != null) patchStateListener.onResult(false, false);
 					}
@@ -848,8 +847,7 @@ public class HttpManager
 		getPatchStateRequest.setTag("getPatchState");
 		VolleySingleton.getInstance(context).getRequestQueue().add(getPatchStateRequest);
 	}
-	
-	
+
 	public void getMails(Context context, final GetMailListener getMailListener)
 	{
 
@@ -941,42 +939,41 @@ public class HttpManager
 		paramsPatchUpdate.put("imei", deviceIMEI);
 
 		Log.e(TAG, "uriPatchUpdate:" + uriPatchUpdate);
-		JsonObjectRequest patchUpdateRequest = new JsonObjectRequest(uriPatchUpdate, new JSONObject(
-				paramsPatchUpdate), new Response.Listener<JSONObject>()
-		{
-			@Override
-			public void onResponse(JSONObject response)
-			{
-
-				try
+		JsonObjectRequest patchUpdateRequest = new JsonObjectRequest(uriPatchUpdate,
+				new JSONObject(paramsPatchUpdate), new Response.Listener<JSONObject>()
 				{
-					Log.e(TAG, "notifyPatchUpdate Response:" + response.toString(4));
-					if (notifyPatchListener != null)
-						notifyPatchListener.onResult(true, response.toString());
-				}
-				catch (JSONException e)
-				{
-					if (notifyPatchListener != null)
-						notifyPatchListener.onResult(false, e.toString());
-					e.printStackTrace();
-				}
-			}
-		}, new Response.ErrorListener()
-		{
-			@Override
-			public void onErrorResponse(VolleyError error)
-			{
+					@Override
+					public void onResponse(JSONObject response)
+					{
 
-				if (notifyPatchListener != null)
-					notifyPatchListener.onResult(false, error.getMessage());
-				Log.e(TAG, "notifyPatchUpdate Error: " + error.getMessage());
-			}
-		});
+						try
+						{
+							Log.e(TAG, "notifyPatchUpdate Response:" + response.toString(4));
+							if (notifyPatchListener != null)
+								notifyPatchListener.onResult(true, response.toString());
+						}
+						catch (JSONException e)
+						{
+							if (notifyPatchListener != null)
+								notifyPatchListener.onResult(false, e.toString());
+							e.printStackTrace();
+						}
+					}
+				}, new Response.ErrorListener()
+				{
+					@Override
+					public void onErrorResponse(VolleyError error)
+					{
+
+						if (notifyPatchListener != null)
+							notifyPatchListener.onResult(false, error.getMessage());
+						Log.e(TAG, "notifyPatchUpdate Error: " + error.getMessage());
+					}
+				});
 		patchUpdateRequest.setTag("notifyPatchUpdate");
 		VolleySingleton.getInstance(context).getRequestQueue().add(patchUpdateRequest);
 	}
-	
-	
+
 	public void getRecommend(Context context, GetRecommendListener getRecommendListener)
 	{
 
@@ -994,8 +991,7 @@ public class HttpManager
 		getRecommendGsonRequset.setTag("getRecommend");
 		VolleySingleton.getInstance(context).getRequestQueue().add(getRecommendGsonRequset);
 	}
-	
-	
+
 	public void getCategory(Context context, GetCategoryListener getCategoryListener)
 	{
 
@@ -1013,7 +1009,7 @@ public class HttpManager
 		getCategoryGsonRequset.setTag("getCategory");
 		VolleySingleton.getInstance(context).getRequestQueue().add(getCategoryGsonRequset);
 	}
-	
+
 	public void getCard(Context context, GetCardListener getCardListener)
 	{
 
@@ -1133,7 +1129,7 @@ public class HttpManager
 	}
 
 	private Response.Listener<ArrayList<GsonCard>> createGetCardGsonReqSuccessListener(
-			final  GetCardListener getCardListener)
+			final GetCardListener getCardListener)
 	{
 
 		return new Response.Listener<ArrayList<GsonCard>>()
@@ -1148,9 +1144,9 @@ public class HttpManager
 			}
 		};
 	}
-	
+
 	private Response.Listener<ArrayList<GsonCategory>> createGetCategoryGsonReqSuccessListener(
-			final  GetCategoryListener getCategoryListener)
+			final GetCategoryListener getCategoryListener)
 	{
 
 		return new Response.Listener<ArrayList<GsonCategory>>()
@@ -1165,8 +1161,7 @@ public class HttpManager
 			}
 		};
 	}
-	
-	
+
 	private Response.Listener<ArrayList<GsonRecommend>> createGetRecommendGsonReqSuccessListener(
 			final GetRecommendListener getRecommendListener)
 	{
@@ -1233,7 +1228,7 @@ public class HttpManager
 		};
 
 	}
-	
+
 	private Response.ErrorListener createGetCategoryGsonReqErrorListener()
 	{
 
@@ -1248,7 +1243,7 @@ public class HttpManager
 		};
 
 	}
-	
+
 	private Response.ErrorListener createGetRecommendGsonReqErrorListener()
 	{
 
@@ -1303,13 +1298,13 @@ public class HttpManager
 
 	public static String getUserName()
 	{
-	
+
 		return userName;
 	}
 
 	public static void setUserName(String userName)
 	{
-	
+
 		HttpManager.userName = userName;
-	} 
+	}
 }

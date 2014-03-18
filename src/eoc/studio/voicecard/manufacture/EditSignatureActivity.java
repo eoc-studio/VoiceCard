@@ -53,7 +53,7 @@ public class EditSignatureActivity extends Activity
 {
 	private final static String TAG = "EditSignatureActivity";
 
-	private Boolean isDebug = true;
+	private Boolean isDebug = true; 
 
 	private Context context = null;
 
@@ -653,9 +653,9 @@ public class EditSignatureActivity extends Activity
 			public void onClick(View v)
 			{
 
-				Toast.makeText(EditSignatureActivity.this,
-						"The favorite list would appear on clicking this icon", Toast.LENGTH_LONG)
-						.show();
+//				Toast.makeText(EditSignatureActivity.this,
+//						"The favorite list would appear on clicking this icon", Toast.LENGTH_LONG)
+//						.show();
 				colorPicker();
 			}
 		});
@@ -683,9 +683,10 @@ public class EditSignatureActivity extends Activity
 					public void onClick(DialogInterface dialog, int which)
 					{
 
-						Toast.makeText(EditSignatureActivity.this,
-								"Selected Color: " + colorToHexString(colorDialog.getColor()),
-								Toast.LENGTH_LONG).show();
+//						Toast.makeText(EditSignatureActivity.this,
+//								"Selected Color: " + colorToHexString(colorDialog.getColor()),
+//								Toast.LENGTH_LONG).show();
+						Log.d(TAG, "Selected Color:"+colorToHexString(colorDialog.getColor()));
 						chooseColorImageView.setBackgroundColor(colorDialog.getColor());
 						handWritingView.setPenColor(colorDialog.getColor());
 					}
@@ -771,11 +772,11 @@ public class EditSignatureActivity extends Activity
 					break;
 				}
 
-				if (isDebug)
+/*				if (isDebug)
 				{
 					Toast.makeText(EditSignatureActivity.this, rb.getText(), Toast.LENGTH_SHORT)
 							.show();
-				}
+				}*/
 
 			}
 		};

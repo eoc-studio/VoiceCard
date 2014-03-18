@@ -529,7 +529,10 @@ public class MainLoadingActivity extends Activity
 		TelephonyManager tm = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
 		Log.d(TAG, "getMobile" + tm.getLine1Number());
-		return tm.getLine1Number();
+		String phone = tm.getLine1Number();
+		
+
+		return phone;
 	}
 
 	public void openFacebookSession()

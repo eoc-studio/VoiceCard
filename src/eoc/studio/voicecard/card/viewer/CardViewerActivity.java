@@ -46,49 +46,77 @@ import eoc.studio.voicecard.utils.FileUtility;
 public class CardViewerActivity extends BaseActivity
 {
 	public static final String EXTRA_KEY_MODE = "card_viewer_mode";
+
 	public static final String MODE_VIEWER = "mode_viewer";
+
 	public static final String MODE_SENDER = "mode_sender";
 
 	public static final String EXTRA_KEY_MAIL = "mail_to_view";
+
 	public static final String EXTRA_KEY_CARD_WITH_USER_DATA_FOR_SEND = "card_with_user_data_for_send";
+
 	public static final String EXTRA_KEY_CARD_LEFT_SCREENSHOT_FILEPATH = "card_left_screenshot_filepath";
+
 	public static final String EXTRA_KEY_CARD_RIGHT_SCREENSHOT_FILEPATH = "card_right_screenshot_filepath";
+
 	public static final String EXTRA_KEY_CARD_VOICE_DURATION_TEXT = "card_voice_duraiton";
 
 	private static final String TAG = "CardViewerActivity";
 
 	private FacebookManager facebookManager;
+
 	private Mail mail;
+
 	private Bitmap leftScreenshotBitmap;
+
 	private Bitmap rightScreenshotBitmap;
 
 	private Card card;
+
 	private String sendBackId;
+
 	private String leftScreenshotFilePath;
+
 	private String rightScreenshotFilePath;
+
 	private String voiceDurationText;
 
 	private View back;
+
 	private ImageView sendFacebook;
+
 	private ImageView sendContact;
+
 	private TextView mailInfo;
+
 	private ImageView backToMailbox;
+
 	private ImageView sendCardBack;
 
 	private View rightBlock; // a workaround in order to push
 								// cardWrapper to the middle at
 								// beginning
+
 	private FrameLayout cardWrapper;
+
 	private HorizontalScrollView animationScrollView;
+
 	private FlipView flipView;
+
 	private FrameLayout flipViewWrapper;
+
 	private ImageView shadowOpen;
 
 	private HorizontalScrollView cardScrollView;
+
 	private ImageView cardInnerBackground;
+
 	private ImageView cardImageView;
+
 	private AudioMessageView cardVoice;
+
 	private TextView cardTextView;
+
 	private ImageView cardSignatureView;
 
 	private ProgressDialog progressDialog;
@@ -96,6 +124,7 @@ public class CardViewerActivity extends BaseActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+
 		facebookManager = FacebookManager.getInstance(this);
 
 		if (isSenderMode())
@@ -117,6 +146,7 @@ public class CardViewerActivity extends BaseActivity
 	@Override
 	protected void onDestroy()
 	{
+
 		if (leftScreenshotBitmap != null && !leftScreenshotBitmap.isRecycled())
 		{
 			leftScreenshotBitmap.recycle();
@@ -131,18 +161,21 @@ public class CardViewerActivity extends BaseActivity
 	@Override
 	protected void onPause()
 	{
+
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume()
 	{
+
 		super.onResume();
 	}
 
 	@Override
 	public void onBackPressed()
 	{
+
 		finish();
 		super.onBackPressed();
 	}
@@ -150,6 +183,7 @@ public class CardViewerActivity extends BaseActivity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK)
 		{
@@ -164,6 +198,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private boolean isSenderMode()
 	{
+
 		Intent intent = getIntent();
 		String mode = intent.getStringExtra(EXTRA_KEY_MODE);
 		Log.d(TAG, "mode: " + mode);
@@ -172,6 +207,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void getCardFromSenderModeIntent()
 	{
+
 		Intent intent = getIntent();
 		card = intent.getParcelableExtra(EXTRA_KEY_CARD_WITH_USER_DATA_FOR_SEND);
 		leftScreenshotFilePath = intent.getStringExtra(EXTRA_KEY_CARD_LEFT_SCREENSHOT_FILEPATH);
@@ -185,6 +221,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void getCardFromViewerModeIntent()
 	{
+
 		Intent intent = getIntent();
 		progressDialog = ProgressDialog.show(this, getString(R.string.processing),
 				getString(R.string.please_wait), true, false);
@@ -198,6 +235,7 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public void run()
 			{
+
 				Log.d(TAG, "start getCardFromMail");
 				card = Card.getCardFromMail(CardViewerActivity.this, mail);
 				Log.d(TAG, "Card to view : " + card);
@@ -207,6 +245,7 @@ public class CardViewerActivity extends BaseActivity
 					@Override
 					public void run()
 					{
+
 						setupViewerModeWithCardData();
 					}
 				});
@@ -217,6 +256,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void initSendBackId()
 	{
+
 		Intent intent = getIntent();
 		sendBackId = intent.getStringExtra(Constant.EXTRA_KEY_SENDBACK_ID);
 		if (sendBackId != null)
@@ -227,6 +267,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void initSenderModeLayout()
 	{
+
 		setContentView(R.layout.activity_card_viewer);
 		setViewsVisibilityForSenderMode();
 		findViews();
@@ -236,6 +277,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void initViewerModeLayout()
 	{
+
 		setContentView(R.layout.activity_card_viewer);
 		setViewsVisibilityForViewerMode();
 		findViews();
@@ -243,6 +285,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void setupSenderModeWithCardData()
 	{
+
 		initCardView();
 		initFlipAndShadow();
 		setListenersForSenderMode();
@@ -250,6 +293,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void setupViewerModeWithCardData()
 	{
+
 		initCardView();
 		generateScreenshotBitmap();
 		initFlipAndShadow();
@@ -258,6 +302,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void hideSendButtonAccordingToSendBackId()
 	{
+
 		if (sendBackId != null)
 		{
 			if (sendBackId.startsWith("0") && sendBackId.length() == 10)
@@ -275,11 +320,13 @@ public class CardViewerActivity extends BaseActivity
 
 	private void setMailInfoView()
 	{
+
 		mailInfo.setText(mail.getSendedTime() + " FROM : " + mail.getSendedFromName());
 	}
 
 	private void setViewsVisibilityForSenderMode()
 	{
+
 		findViewById(R.id.act_card_viewer_rlyt_header_for_sender).setVisibility(View.VISIBLE);
 		findViewById(R.id.act_card_viewer_rlyt_header_for_viewer).setVisibility(View.INVISIBLE);
 
@@ -292,6 +339,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void setViewsVisibilityForViewerMode()
 	{
+
 		findViewById(R.id.act_card_viewer_rlyt_header_for_sender).setVisibility(View.INVISIBLE);
 		findViewById(R.id.act_card_viewer_rlyt_header_for_viewer).setVisibility(View.VISIBLE);
 
@@ -304,6 +352,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void findViews()
 	{
+
 		back = findViewById(R.id.act_card_viewer_iv_back);
 		sendFacebook = (ImageView) findViewById(R.id.act_card_viewer_iv_send_fb);
 		sendContact = (ImageView) findViewById(R.id.act_card_viewer_iv_send_contact);
@@ -334,6 +383,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void initCardView()
 	{
+
 		Bitmap img3dOpenBitmap = FileUtility.getBitmapFromPath(card.getImage3dOpenPath());
 
 		FileUtility.setImageViewBackgroundWithBitmap(cardInnerBackground, img3dOpenBitmap);
@@ -377,6 +427,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void generateScreenshotBitmap()
 	{
+
 		View wholeCard = findViewById(R.id.act_card_viewer_rlyt_card);
 		wholeCard.setDrawingCacheEnabled(true);
 
@@ -400,8 +451,11 @@ public class CardViewerActivity extends BaseActivity
 
 	private void initFlipAndShadow()
 	{
-//		Bitmap img2dSecondPageBitmap = FileUtility.getBitmapFromPath(card.getImageInnerRightPath());
-//		FileUtility.setImageViewBackgroundWithBitmap(cardInnerSecondPage, img2dSecondPageBitmap);
+
+		// Bitmap img2dSecondPageBitmap =
+		// FileUtility.getBitmapFromPath(card.getImageInnerRightPath());
+		// FileUtility.setImageViewBackgroundWithBitmap(cardInnerSecondPage,
+		// img2dSecondPageBitmap);
 
 		cardWrapper.bringToFront();
 		final int cardOpenWidth = (int) getResources().getDimensionPixelSize(
@@ -461,6 +515,7 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public void onOpened()
 			{
+
 				shadowOpen.setVisibility(View.VISIBLE);
 
 				flipView.setVisibility(View.INVISIBLE);
@@ -472,16 +527,19 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public void onClosed()
 			{
+
 			}
 
 			@Override
 			public void onStartOpening()
 			{
+
 				rightBlock.setVisibility(View.GONE);
 				animationScrollView.postDelayed(new Runnable()
 				{
 					public void run()
 					{
+
 						animationScrollView.smoothScrollTo(0, 0);
 					}
 				}, 200L);
@@ -490,14 +548,15 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public void onStartClosing()
 			{
-//				shadowOpen.setVisibility(View.INVISIBLE);
-//				animationScrollView.postDelayed(new Runnable()
-//				{
-//					public void run()
-//					{
-//						animationScrollView.smoothScrollTo(cardOpenWidth * 2, 0);
-//					}
-//				}, 200L);
+
+				// shadowOpen.setVisibility(View.INVISIBLE);
+				// animationScrollView.postDelayed(new Runnable()
+				// {
+				// public void run()
+				// {
+				// animationScrollView.smoothScrollTo(cardOpenWidth * 2, 0);
+				// }
+				// }, 200L);
 			}
 		});
 
@@ -505,6 +564,7 @@ public class CardViewerActivity extends BaseActivity
 		{
 			public void run()
 			{
+
 				animationScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
 			}
 		}, 100L);
@@ -515,6 +575,7 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public boolean onTouch(View v, MotionEvent event)
 			{
+
 				if (!flipView.isOpened())
 				{
 					flipView.requestFlip();
@@ -528,12 +589,14 @@ public class CardViewerActivity extends BaseActivity
 
 	private void setListenersForSenderMode()
 	{
+
 		back.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
 			public void onClick(View v)
 			{
+
 				finish();
 			}
 
@@ -545,6 +608,7 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
+
 				if (sendBackId == null)
 				{
 					startFacebookInviter();
@@ -564,6 +628,7 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
+
 				if (sendBackId == null)
 				{
 					startContactSelector();
@@ -580,11 +645,13 @@ public class CardViewerActivity extends BaseActivity
 
 	private void setListenersForViewerMode()
 	{
+
 		backToMailbox.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
+
 				finish();
 			}
 		});
@@ -593,6 +660,7 @@ public class CardViewerActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
+
 				Intent intent = new Intent(CardViewerActivity.this,
 						CardCategorySelectorActivity.class);
 				intent.putExtra(Constant.EXTRA_KEY_SENDBACK_ID, mail.getSendedFrom());
@@ -604,12 +672,14 @@ public class CardViewerActivity extends BaseActivity
 
 	private void startFacebookInviter()
 	{
+
 		Log.d(TAG, "startFacebookSender");
 		facebookManager.inviteFriend(this, null, card, facebookManager.new InviteListener()
 		{
 			@Override
 			public void onComplete(Bundle values, FacebookException error)
 			{
+
 				onFacebookInviterResult(values, error);
 			}
 
@@ -618,6 +688,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void onFacebookInviterResult(Bundle values, FacebookException error)
 	{
+
 		if (error != null)
 		{
 			Log.d(TAG, "Invite had error is " + error.getMessage());
@@ -632,6 +703,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void startContactSelector()
 	{
+
 		Intent SendContactSender = new Intent();
 		SendContactSender.setClass(this, eoc.studio.voicecard.contact.ContactActivity.class);
 		startActivityForResult(SendContactSender,
@@ -641,6 +713,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void onContactSelectorResult(Intent data)
 	{
+
 		if (data == null)
 		{
 			Log.d(TAG, "onContactSelectorResult - NO DATA");
@@ -674,15 +747,15 @@ public class CardViewerActivity extends BaseActivity
 
 				phoneString = phoneString.toString().replace("-", "");
 				Log.d(TAG, "onContactSelectorResult - (after remove minus sign)TEL: " + phoneString);
-				
-				if(phoneString.toLowerCase().startsWith("09") && phoneString.length() == 10){
-					phoneString = phoneString.replaceFirst("09","+8669");
-					
-					Log.d(TAG, "onContactSelectorResult - (after replace with +8869)TEL: " + phoneString);
+
+				if (phoneString.toLowerCase().startsWith("09") && phoneString.length() == 10)
+				{
+					phoneString = phoneString.replaceFirst("09", "+8669");
+
+					Log.d(TAG, "onContactSelectorResult - (after replace with +8869)TEL: "
+							+ phoneString);
 				}
-				
-				
-				
+
 				phoneList.add(phoneString);
 			}
 
@@ -715,6 +788,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void sendBack()
 	{
+
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(sendBackId);
 		Log.d(TAG, "sendBack to " + sendBackId);
@@ -723,6 +797,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void sendCardToServer(ArrayList<String> receivers)
 	{
+
 		Log.d(TAG, "!! sendCardToServer !!");
 		Log.d(TAG, "card: " + card);
 		Log.d(TAG, "receivers " + receivers.size());
@@ -731,6 +806,7 @@ public class CardViewerActivity extends BaseActivity
 
 	private void goBackToMainMenuAndFinish()
 	{
+
 		Log.d(TAG, "back to MainMenu and finish");
 		Intent intent = new Intent(CardViewerActivity.this, MainMenuActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

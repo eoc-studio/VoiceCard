@@ -15,8 +15,8 @@
     <string name="publish_friend">Publish to friend</string>
 
     <!-- About Contact -->
-    <string name="file_process_loading">Loading</string>
-    <string name="noData">NoData</string>
+    <string name="file_process_loading">讀取中...</string>
+    <string name="noData">沒有資料</string>
 
     <!-- About Newspaper -->
     <string name="magazine_edit_background_string">封面底圖</string>
@@ -122,5 +122,13 @@
     <!-- About Network Receiver -->
     <string name="network_connect_success">網路連接成功！</string>
     <string name="network_connect_fail">手機沒有任何網路</string>
+    
+    <!-- Sign and stamp -->
+    
+    <string name="handwriting_font_size_one">字體小</string>
+    <string name="handwriting_font_size_two">字體中</string>
+    <string name="handwriting_font_size_three">字體中</string>
+    
+    
 
 </resources>
