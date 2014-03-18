@@ -256,6 +256,7 @@ public class RecommendActivity extends Activity implements OnClickListener
 
 		Intent intent = new Intent();
 		intent.setClass(context, MainMenuActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 		finish();
 	}

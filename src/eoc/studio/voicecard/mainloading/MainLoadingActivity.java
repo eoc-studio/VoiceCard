@@ -123,13 +123,13 @@ public class MainLoadingActivity extends Activity
 	private int progress = 0;
 
 	private String facebookUserID = null;
-	
+
 	private String userName = null;
 
 	private MailsAdapterData mailsAdapterData;
 
 	private CardDatabaseHelper cardDatabaseHelper;
-	
+
 	private int mailboxUnReadCount = 0;
 
 	private String recommendBitmapUrl;
@@ -142,8 +142,8 @@ public class MainLoadingActivity extends Activity
 
 	private DownlaodCardAysncTaskListener downlaodCardAysncTaskListener;
 
-	
 	private FacebookManager facebookManager;
+
 	Handler progressHandler = new Handler()
 	{
 		@Override
@@ -154,10 +154,9 @@ public class MainLoadingActivity extends Activity
 
 			if (progress >= FACEBOOK_ID_PROGRESS + FACEBOOK_USER_PROFILE_PROGRESS
 					+ INIT_HTTP_MANAGER_PROGRESS + MAILBOX_COUNT_PROGRESS
-					+ MAILBOX_RECEIVE_PROGRESS + INIT_DATABASE_PROGRESS 
-					+ COPY_CARD_AND_CATEGORY + GET_CATEGORY_INFO_PROGRESS + GET_CARD_INFO_PROGRESS
-					+ GET_CATEGORY_IMGS_PROGRESS 
-					+ GET_CARD_IMGS_PROGRESS)
+					+ MAILBOX_RECEIVE_PROGRESS + INIT_DATABASE_PROGRESS + COPY_CARD_AND_CATEGORY
+					+ GET_CATEGORY_INFO_PROGRESS + GET_CARD_INFO_PROGRESS
+					+ GET_CATEGORY_IMGS_PROGRESS + GET_CARD_IMGS_PROGRESS)
 			{
 				goToMainActivity();
 				progress = 361;
@@ -217,7 +216,7 @@ public class MainLoadingActivity extends Activity
 
 		cardDatabaseHelper = new CardDatabaseHelper(context);
 		cardDatabaseHelper.open();
-		
+
 	}
 
 	@Override
@@ -239,8 +238,15 @@ public class MainLoadingActivity extends Activity
 		super.onResume();
 		Log.d(TAG, "onResume()");
 
-//		openFacebookSession();
+		// openFacebookSession();
 
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+
+		Log.d(TAG, "onBackPressed() diable back key !!!!");
 	}
 
 	private void copyCardAndCategoryFromAsset()
@@ -251,19 +257,25 @@ public class MainLoadingActivity extends Activity
 			@Override
 			public void run()
 			{
+
 				super.run();
-				
-				File cardFolderFile = new File(getFilesDir()+"/CardImages");
-				File cardCategoryFolderFile = new File(getFilesDir()+"/CategoryImages");
-				
-				if(!cardFolderFile.exists()   || !cardCategoryFolderFile.exists()){
+
+				File cardFolderFile = new File(getFilesDir() + "/CardImages");
+				File cardCategoryFolderFile = new File(getFilesDir() + "/CategoryImages");
+
+				if (!cardFolderFile.exists() || !cardCategoryFolderFile.exists())
+				{
 					FileUtility.copyAssetFolder(getAssets(), "files", getFilesDir()
 							.getAbsolutePath());
-					
+
 					Log.d(TAG, "copyCardAndCategoryFromAsset()");
 				}
-				else{
-					Log.d(TAG, "cardFolderFile.exists(): "+cardFolderFile.exists()+" ,cardCategoryFolderFile.exists(): "+cardCategoryFolderFile.exists());
+				else
+				{
+					Log.d(TAG,
+							"cardFolderFile.exists(): " + cardFolderFile.exists()
+									+ " ,cardCategoryFolderFile.exists(): "
+									+ cardCategoryFolderFile.exists());
 				}
 
 				addProgressWheel(COPY_CARD_AND_CATEGORY);
@@ -281,12 +293,13 @@ public class MainLoadingActivity extends Activity
 		// cardDatabaseHelper.getEnabledCategory(cardDatabaseHelper
 		// .getSystemDPI(context));
 
-//		categoryAssistantList = cardDatabaseHelper
-//				.getEnabledAndLocalIsNullCategory(cardDatabaseHelper.getSystemDPI(context));
+		// categoryAssistantList = cardDatabaseHelper
+		// .getEnabledAndLocalIsNullCategory(cardDatabaseHelper.getSystemDPI(context));
 
 		categoryAssistantList = cardDatabaseHelper
-				.getLocalDateIsNullOrLocalPathIsNullCategory(cardDatabaseHelper.getSystemDPI(context));
-		
+				.getLocalDateIsNullOrLocalPathIsNullCategory(cardDatabaseHelper
+						.getSystemDPI(context));
+
 		Log.d(TAG, "onResume() getLocalDateIsNullOrLocalPathIsNullCategory categoryAssistantList :"
 				+ categoryAssistantList);
 		if (categoryAssistantList != null)
@@ -316,8 +329,6 @@ public class MainLoadingActivity extends Activity
 			Log.d(TAG_PROGRESS, "GET_CATEGORY_IMGS_PROGRESS");
 		}
 
-		
-
 	}
 
 	private void downloadCradImages()
@@ -341,12 +352,13 @@ public class MainLoadingActivity extends Activity
 		 * cardDatabaseHelper.getEnabledCard(cardDatabaseHelper
 		 * .getSystemDPI(context));
 		 */
-//		cardAssistantList = cardDatabaseHelper.getEnabledAndLocalIsNullCard(cardDatabaseHelper
-//				.getSystemDPI(context));
-		
-		cardAssistantList = cardDatabaseHelper.getLocalDateIsNullOrLocalPathIsNullCard(cardDatabaseHelper
-				.getSystemDPI(context));
-		
+		// cardAssistantList =
+		// cardDatabaseHelper.getEnabledAndLocalIsNullCard(cardDatabaseHelper
+		// .getSystemDPI(context));
+
+		cardAssistantList = cardDatabaseHelper
+				.getLocalDateIsNullOrLocalPathIsNullCard(cardDatabaseHelper.getSystemDPI(context));
+
 		Log.d(TAG, "onResume() cardAssistantList :" + cardAssistantList);
 
 		if (cardAssistantList != null)
@@ -380,7 +392,7 @@ public class MainLoadingActivity extends Activity
 		addProgressWheel(INIT_DATABASE_PROGRESS);
 		Log.d(TAG_PROGRESS, "INIT_DATABASE_PROGRESS");
 	}
-	
+
 	private void getCategoryInfoFromServer()
 	{
 
@@ -400,7 +412,7 @@ public class MainLoadingActivity extends Activity
 										+ gsonCategoryList.get(index).toString());
 
 					}
-//					 cardDatabaseHelper.deleteCategoryTable();
+					// cardDatabaseHelper.deleteCategoryTable();
 					// write to datebase
 					for (int index = 0; index < gsonCategoryList.size(); index++)
 					{
@@ -417,7 +429,8 @@ public class MainLoadingActivity extends Activity
 									gsonCategoryList.get(index).getCategoryImageHDPI(),
 									gsonCategoryList.get(index).getCategoryImageXHDPI(),
 									gsonCategoryList.get(index).getCategoryImageXXHDPI(), null,
-									null, null, null,gsonCategoryList.get(index).getCategoryEditedDate(),null);
+									null, null, null, gsonCategoryList.get(index)
+											.getCategoryEditedDate(), null);
 						}
 						else
 						{
@@ -430,7 +443,8 @@ public class MainLoadingActivity extends Activity
 									gsonCategoryList.get(index).getCategoryImageHDPI(),
 									gsonCategoryList.get(index).getCategoryImageXHDPI(),
 									gsonCategoryList.get(index).getCategoryImageXXHDPI(), null,
-									null, null, null,gsonCategoryList.get(index).getCategoryEditedDate());
+									null, null, null, gsonCategoryList.get(index)
+											.getCategoryEditedDate());
 						}
 
 					}
@@ -462,7 +476,7 @@ public class MainLoadingActivity extends Activity
 								+ gsonCardList.get(index).toString());
 					}
 
-//					cardDatabaseHelper.deleteCardTable();
+					// cardDatabaseHelper.deleteCardTable();
 					// write to datebase
 					for (int index = 0; index < gsonCardList.size(); index++)
 					{
@@ -481,7 +495,7 @@ public class MainLoadingActivity extends Activity
 									.getCardFont(), cardImages.getCloseURL(), cardImages
 									.getCoverURL(), cardImages.getLeftURL(), cardImages
 									.getOpenURL(), cardImages.getRightURL(), null, null, null,
-									null, null,gsonCardList.get(index).getCardEditedDate(),null);
+									null, null, gsonCardList.get(index).getCardEditedDate(), null);
 						}
 						else
 						{
@@ -495,14 +509,14 @@ public class MainLoadingActivity extends Activity
 									.getCardFont(), cardImages.getCloseURL(), cardImages
 									.getCoverURL(), cardImages.getLeftURL(), cardImages
 									.getOpenURL(), cardImages.getRightURL(), null, null, null,
-									null, null, 0,gsonCardList.get(index).getCardEditedDate());
+									null, null, 0, gsonCardList.get(index).getCardEditedDate());
 						}
 
 					}
-					 addProgressWheel(GET_CARD_INFO_PROGRESS);
-					 Log.d(TAG_PROGRESS, "GET_CARD_INFO_PROGRESS");
-					 downloadCradImages();
-					 
+					addProgressWheel(GET_CARD_INFO_PROGRESS);
+					Log.d(TAG_PROGRESS, "GET_CARD_INFO_PROGRESS");
+					downloadCradImages();
+
 				}
 
 			}
@@ -514,11 +528,10 @@ public class MainLoadingActivity extends Activity
 
 		TelephonyManager tm = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
-		Log.d(TAG, "getMobile" +tm.getLine1Number());
-		return  tm.getLine1Number();
+		Log.d(TAG, "getMobile" + tm.getLine1Number());
+		return tm.getLine1Number();
 	}
-	
-	
+
 	public void openFacebookSession()
 	{
 
@@ -570,9 +583,9 @@ public class MainLoadingActivity extends Activity
 		 */
 		intent.putExtras(bundle);
 		intent.setClass(context, MainMenuActivity.class);
-//		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
-		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); 
-		
+		// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
 		String PREFS_FILENAME = "MAIN_MENU_SETTING";
 		SharedPreferences configPreferences = getSharedPreferences(PREFS_FILENAME, 0);
 		Log.d(TAG, "goToMainActivity() this.mailboxUnReadCount:" + this.mailboxUnReadCount);
@@ -653,8 +666,6 @@ public class MainLoadingActivity extends Activity
 						getFacebookUserProfile(user, response);
 					}
 
-
-
 				});
 
 				StringBuilder queryString = new StringBuilder().append(JSONTag.NAME).append(", ")
@@ -692,11 +703,11 @@ public class MainLoadingActivity extends Activity
 			if (userJSON != null)
 			{
 				userInfo = new UserInfo(userJSON);
-				
+
 				Log.d(TAG, "userInfo id is " + userInfo.getId());
 				facebookUserID = userInfo.getId();
 				Log.d(TAG, "userInfo getName is " + userInfo.getName());
-				userName =  userInfo.getName();
+				userName = userInfo.getName();
 				addProgressWheel(FACEBOOK_ID_PROGRESS);
 				Log.d(TAG_PROGRESS, "FACEBOOK_ID_PROGRESS");
 			}
@@ -704,8 +715,8 @@ public class MainLoadingActivity extends Activity
 			if (facebookUserID != null)
 			{
 				initMailDataBase(facebookUserID);
-				httpManager.init(context, facebookUserID,userName);
-				Log.d(TAG, "httpManager.getUserName is " + httpManager.getUserName()); 
+				httpManager.init(context, facebookUserID, userName);
+				Log.d(TAG, "httpManager.getUserName is " + httpManager.getUserName());
 				addProgressWheel(INIT_HTTP_MANAGER_PROGRESS);
 				Log.d(TAG_PROGRESS, "INIT_HTTP_MANAGER_PROGRESS");
 				GsonFacebookUser gsonFacebookUser = null;
@@ -796,27 +807,27 @@ public class MainLoadingActivity extends Activity
 															String information)
 													{
 
-																		Log.e(TAG,
-																				"httpManager.notifyMailsRead() isSuccess:"
-																						+ isSuccess
-																						+ ",information:"
-																						+ information);
-																	}
-																});
-
+														Log.e(TAG,
+																"httpManager.notifyMailsRead() isSuccess:"
+																		+ isSuccess
+																		+ ",information:"
+																		+ information);
 													}
+												});
 
-												}
-
-											});
-										}
-										else
-										{
-
-										}
-										addProgressWheel(MAILBOX_RECEIVE_PROGRESS);
-										Log.d(TAG_PROGRESS, "MAILBOX_RECEIVE_PROGRESS");
 									}
+
+								}
+
+							});
+						}
+						else
+						{
+
+						}
+						addProgressWheel(MAILBOX_RECEIVE_PROGRESS);
+						Log.d(TAG_PROGRESS, "MAILBOX_RECEIVE_PROGRESS");
+					}
 
 				});
 			}
@@ -832,11 +843,11 @@ public class MainLoadingActivity extends Activity
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		
+
 		super.onActivityResult(requestCode, resultCode, data);
 		Log.d(TAG, "onActivityResult() Result Code is - " + resultCode + "");
 		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);

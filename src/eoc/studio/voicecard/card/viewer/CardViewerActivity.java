@@ -672,8 +672,17 @@ public class CardViewerActivity extends BaseActivity
 				Log.d(TAG, "onContactSelectorResult - (after remove white space)TEL: "
 						+ phoneString);
 
-				phoneString = phoneNum.toString().replace("-", "");
+				phoneString = phoneString.toString().replace("-", "");
 				Log.d(TAG, "onContactSelectorResult - (after remove minus sign)TEL: " + phoneString);
+				
+				if(phoneString.toLowerCase().startsWith("09") && phoneString.length() == 10){
+					phoneString = phoneString.replaceFirst("09","+8669");
+					
+					Log.d(TAG, "onContactSelectorResult - (after replace with +8869)TEL: " + phoneString);
+				}
+				
+				
+				
 				phoneList.add(phoneString);
 			}
 
