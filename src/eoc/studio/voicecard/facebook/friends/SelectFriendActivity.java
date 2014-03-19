@@ -1,15 +1,9 @@
 package eoc.studio.voicecard.facebook.friends;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONException;
-
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.model.GraphUser;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,6 +22,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
+
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.facebook.FacebookManager;
@@ -36,379 +36,457 @@ import eoc.studio.voicecard.facebook.utils.BundleTag;
 import eoc.studio.voicecard.facebook.utils.JSONTag;
 import eoc.studio.voicecard.utils.ListUtility;
 
-public class SelectFriendActivity extends BaseActivity {
-    private static final String TAG = "SelectFriendActivity";
-    private FacebookManager facebookManager;
-    private FriendsAdapterView friendsAdapterView;
-    private FriendsAdapterData friendsAdapterData;
-    
-//    private List<FriendInfo> friendList;
-    private int firstVisiblePosition = 0;
-    private int currentListSize = 0;
-    private int lastVisiblePosition = 0;
-    private boolean isSingleOption = false;
-    private String lastSelectedId = ""; // for single option
-    
-    //Views
-    private ListView showFriends;
-    private EditText searchFriend;
-    private TextView displayMessage;
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_friend);
-        Log.d(TAG, "onCreate");
-        findViews();
-        getBundle();
-        facebookManager = FacebookManager.getInstance(SelectFriendActivity.this);
-        friendsAdapterData = new FriendsAdapterData(SelectFriendActivity.this);
-        getFriendsfromWeb();
-    }
-    
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-    
-    @Override
-    public void onPause() {
-        super.onPause();
-//        if (friendList != null) {
-//            friendList.clear();
-//        }
-        if (friendsAdapterView != null) {
-            friendsAdapterView.setPause(true);
-//            friendsAdapterView.clearList();
-        }
-        
-        if (friendsAdapterData != null) {
-            friendsAdapterData.delete();
-            friendsAdapterData.close();
-        }
-        facebookManager.cancelRequest();
-        facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
-    }
-    
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
-    }
-    
-    private void findViews() {
-        searchFriend = (EditText) findViewById(R.id.act_select_friend_et_search_bar);
-        showFriends = (ListView) findViewById(R.id.act_select_friend_lv);
-        ImageView returnButton = (ImageView) findViewById(R.id.act_select_friend_iv_button_return);
-        ImageView okButton = (ImageView) findViewById(R.id.act_select_friend_iv_button_ok);
-        ImageView searchButton = (ImageView) findViewById(R.id.act_select_friend_iv_search_button);
-        displayMessage = (TextView) findViewById(R.id.act_select_friend_tv_display_message);
-        
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        
-        showFriends.setOnItemClickListener(new UserListClickListener());
-        showFriends.setOnScrollListener(listScrollListener);
-        
-        returnButton.setOnClickListener(new View.OnClickListener() {
+public class SelectFriendActivity extends BaseActivity
+{
+	private static final String TAG = "SelectFriendActivity";
+	private FacebookManager facebookManager;
+	private FriendsAdapterView friendsAdapterView;
+	private FriendsAdapterData friendsAdapterData;
+	// private List<FriendInfo> friendList;
+	private int firstVisiblePosition = 0;
+	private int currentListSize = 0;
+	private int lastVisiblePosition = 0;
+	private boolean isSingleOption = false;
+	private String lastSelectedId = ""; // for single option
+	// Views
+	private ListView showFriends;
+	private EditText searchFriend;
+	private TextView displayMessage;
 
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        
-        okButton.setOnClickListener(new View.OnClickListener() {
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_select_friend);
+		Log.d(TAG, "onCreate");
+		findViews();
+		getBundle();
+		facebookManager = FacebookManager.getInstance(SelectFriendActivity.this);
+		friendsAdapterData = new FriendsAdapterData(SelectFriendActivity.this);
+		getFriendsfromWeb();
+	}
 
-            @Override
-            public void onClick(View v) {
-                confirmAction();
-            }
-        });
-        
-        searchButton.setOnClickListener(new View.OnClickListener() {
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+	}
 
-            @Override
-            public void onClick(View v) {
-                searchAction();
-            }
-        });
-    }
-    
-    private void getBundle() {
-        Bundle option = this.getIntent().getExtras();
-        
-        if (option != null) {
-            isSingleOption = option.getBoolean(BundleTag.SELECTED_OPTION);
-        }
-        
-        if (isSingleOption) {
-            displayMessage.setText(getResources().getString(R.string.please_select_one_friend));
-        } else {
-            displayMessage.setText(getResources().getString(R.string.please_select_friends));
-        }
-    }
-    
-    private void confirmAction() {
-        String friendId, friendName, firendBirthday, friendImgLink;
-        ArrayList<FriendInfo> selectedFriendList = new ArrayList<FriendInfo>();
-        
-        Cursor cursor = friendsAdapterData.getSelectedFriend();
-        if (cursor != null) {
-            Log.d(TAG, "confirmAction() cursor size is " + cursor.getCount());
-            while (cursor.moveToNext()) {
-                friendId = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_ID));
-                friendName = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_NAME));
-                firendBirthday = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_BIRTHDAY));
-                friendImgLink = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_IMG_LINK));
-                Log.d(TAG, "firendBirthday is " + firendBirthday);
-                selectedFriendList.add(new FriendInfo(friendId, friendName, firendBirthday, friendImgLink, null,
-                        FriendsAdapterData.UNSELECT));
-            }
-        }
-        cursor.close();
-        
-        Intent returnIntent = new Intent();
-        Bundle returnBundle = new Bundle();
-        returnBundle.putParcelableArrayList(FriendInfo.GET_FRIEND, selectedFriendList);
-        returnIntent.putExtras(returnBundle);
-        setResult(RESULT_OK, returnIntent);
-        finish();
-    }
-    
-    private void searchAction() {
-        facebookManager.dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
-        friendsAdapterView.setInterrupt(true);
-//        friendList.clear();
-        LoadDbThread loadDbThread = new LoadDbThread(searchFriend.getText().toString());
-        loadDbThread.start();
-    }
-    
-    private void getFriendsfromWeb() {
-        if (facebookManager != null)
-        {
-            facebookManager.getFriendList(SelectFriendActivity.this, new RequestGraphUserListCallback());
-        }
-    }
-    
-    private void getFriendsImgfromDB() {
-        if (friendsAdapterData != null) {
-            Log.d(TAG, "firstVisiblePosition is " + firstVisiblePosition);
-            Log.d(TAG, "lastVisiblePosition is " + lastVisiblePosition);
-            friendsAdapterView.loadImagefromPosition(firstVisiblePosition, lastVisiblePosition);
-        }
-    }
-    
-    private void processUserListReponse(List<GraphUser> users) {
-        if (users != null) {
-            Log.d(TAG, "user list size is " + users.size());
-            CreateDbThread createDbThread = new CreateDbThread(users);
-            createDbThread.start();
-        }
-    }
-    
-    private void createDb(List<GraphUser> users) {
-        String friendId = "", friendName = "", firendBirthday = "", friendImgLink = "";
-        ArrayList<FriendInfo> friendList = new ArrayList<FriendInfo>();
-        if (friendsAdapterData != null) {
-            friendsAdapterData.open();
-            currentListSize = users.size();
+	@Override
+	public void onPause()
+	{
+		super.onPause();
+		// if (friendList != null) {
+		// friendList.clear();
+		// }
+		if (friendsAdapterView != null)
+		{
+			friendsAdapterView.setPause(true);
+			// friendsAdapterView.clearList();
+		}
+		if (friendsAdapterData != null)
+		{
+			friendsAdapterData.delete();
+			friendsAdapterData.close();
+		}
+		facebookManager.cancelRequest();
+		facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
+	}
 
-            for (int i = 0; i < users.size(); i++) {
-                try {
-                    friendImgLink = users.get(i).getInnerJSONObject().getJSONObject(JSONTag.PICTURE)
-                            .getJSONObject(JSONTag.DATA).getString(JSONTag.URL);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                friendId = users.get(i).getId();
-                friendName = users.get(i).getName();
-                firendBirthday = users.get(i).getBirthday();
-                
-                friendsAdapterData.create(friendId, friendName, firendBirthday, friendImgLink, null,
-                        FriendsAdapterData.UNSELECT);
-                
-                friendList.add(new FriendInfo(friendId, friendName, firendBirthday, friendImgLink, null,
-                        FriendsAdapterData.UNSELECT));
-            }
-            Log.d(TAG, "Create Db finish() ");
-        }
-        Message msg = new Message();
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(FriendInfo.GET_FRIEND, friendList);
-        msg.what = ListUtility.CREATE_DB_COMPLETE;
-        msg.setData(bundle);
-        uiHandler.sendMessage(msg);
-    }
-    
-    private void updateView(Bundle bundle) {
-        ArrayList<FriendInfo> friendList = bundle.getParcelableArrayList(FriendInfo.GET_FRIEND);
-        if (friendList.size() > 0) {
-            friendsAdapterView = new FriendsAdapterView(SelectFriendActivity.this, friendList, friendsAdapterData,
-                    showFriends);
-            showFriends.setVisibility(View.VISIBLE);
-            showFriends.setAdapter(friendsAdapterView);
-        } else {
-            displayMessage.setText(getResources().getString(R.string.user_no_result));
-            showFriends.setVisibility(View.INVISIBLE);
-        }
-        facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
-    }
-        
-    private Handler uiHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-            case ListUtility.CREATE_DB_COMPLETE:
-                updateView(msg.getData());
-                break;
-            case ListUtility.SEARCH_COMPLETE:
-//                friendsAdapterView.clearList();
-                updateView(msg.getData());
-                break;
-            }
-        }
-    };
-    
-    private Handler downloadHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-            case ListUtility.GET_THUMBNAIL:
-                Log.d(TAG, "GET_THUMBNAIL ");
-                friendsAdapterView.setInterrupt(false);
-                getFriendsImgfromDB();
-                break;
-            }
-        }
-    };
-    
-    private AbsListView.OnScrollListener listScrollListener = new AbsListView.OnScrollListener() {
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            firstVisiblePosition = firstVisibleItem;
-            lastVisiblePosition = firstVisiblePosition + visibleItemCount - 1;
-        }
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+	}
 
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-            Log.d(TAG, "scrollState " + scrollState);
-            if (currentListSize != 0) {
-                if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && friendsAdapterView != null) {
-                    downloadHandler.sendEmptyMessageDelayed(ListUtility.GET_THUMBNAIL, 1500);
-                }
-                if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL && friendsAdapterView != null) {
-                    downloadHandler.removeMessages(ListUtility.GET_THUMBNAIL);
-                }
-                friendsAdapterView.setInterrupt(true);
-            } else {
-                Log.d(TAG, "currentListSize is zero ");
-            }
-        } 
-    };
-        
-    private class CreateDbThread extends Thread {
-        List<GraphUser> users;
-        public CreateDbThread(List<GraphUser> users) {
-            this.users = users;
-        }
-        @Override
-        public void run() {
-            createDb(users);
-        }
-    }
-    
-    private class LoadDbThread extends Thread {
-        String keyword;
-        public LoadDbThread(String keyword) {
-            this.keyword = keyword;
-        }
-        @Override
-        public void run() {
-            List<FriendInfo> friendList = new ArrayList<FriendInfo>();
-            String friendId = "", friendName = "", firendBirthday = "", friendImgLink = "";
-            byte[] friendImg = null;
-            int selectState = 0;
-            Cursor cursor = friendsAdapterData.seachResult(keyword);
-            if (cursor != null) {
-                Log.d(TAG, "cursor size is " + cursor.getCount());
-                while (cursor.moveToNext()) {
-                    friendId = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_ID));
-                    friendName = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_NAME));
-                    firendBirthday = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_BIRTHDAY));
-                    friendImgLink = cursor.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_IMG_LINK));
-                    friendImg = cursor.getBlob(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_IMG));
-                    selectState = cursor.getInt(cursor.getColumnIndex(FriendsAdapterData.KEY_SELECT_STATE));
-                    friendList.add(new FriendInfo(friendId, friendName, firendBirthday, friendImgLink, friendImg,
-                            selectState));
-                }
-            }
-            cursor.close();
-            Message msg = new Message();
-            Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList(FriendInfo.GET_FRIEND, (ArrayList<? extends Parcelable>) friendList);
-            msg.what = ListUtility.SEARCH_COMPLETE;
-            msg.setData(bundle);
-            uiHandler.sendMessage(msg);
-        }
-    }
-        
-    private class RequestGraphUserListCallback implements Request.GraphUserListCallback {
-        @Override
-        public void onCompleted(List<GraphUser> users, Response response) {
-            if (response.getError() == null) {
-                processUserListReponse(users);
-            } else {
-                Toast.makeText(SelectFriendActivity.this,
-                        getResources().getString(R.string.error_is, response.getError()), Toast.LENGTH_SHORT).show();
-                facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
-                finish();
-            }
-        }
-    }
+	private void findViews()
+	{
+		searchFriend = (EditText) findViewById(R.id.act_select_friend_et_search_bar);
+		showFriends = (ListView) findViewById(R.id.act_select_friend_lv);
+		ImageView returnButton = (ImageView) findViewById(R.id.act_select_friend_iv_button_return);
+		ImageView okButton = (ImageView) findViewById(R.id.act_select_friend_iv_button_ok);
+		ImageView searchButton = (ImageView) findViewById(R.id.act_select_friend_iv_search_button);
+		displayMessage = (TextView) findViewById(R.id.act_select_friend_tv_display_message);
+		this.getWindow()
+				.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		showFriends.setOnItemClickListener(new UserListClickListener());
+		showFriends.setOnScrollListener(listScrollListener);
+		returnButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				finish();
+			}
+		});
+		okButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				confirmAction();
+			}
+		});
+		searchButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				searchAction();
+			}
+		});
+	}
 
-    private class UserListClickListener implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (friendsAdapterData != null) {
-                ImageView selectIcon = (ImageView) view.findViewById(R.id.glb_selectfriend_list_item_check_icon);
-                int state = 0;
-                state = friendsAdapterData.getSelectedState(((FriendInfo) friendsAdapterView.getItem(position))
-                        .getFriendId());
-                Log.d(TAG, "state is === " + state);
+	private void getBundle()
+	{
+		Bundle option = this.getIntent().getExtras();
+		if (option != null)
+		{
+			isSingleOption = option.getBoolean(BundleTag.SELECTED_OPTION);
+		}
+		if (isSingleOption)
+		{
+			displayMessage.setText(getResources().getString(R.string.please_select_one_friend));
+		}
+		else
+		{
+			displayMessage.setText(getResources().getString(R.string.please_select_friends));
+		}
+	}
 
-                if (state == FriendsAdapterData.UNSELECT) {
-                    selectIcon.setImageDrawable(SelectFriendActivity.this.getResources().getDrawable(
-                            R.drawable.icon_checkbox_check));
-                    
-                    if (!isSingleOption) {
-                        friendsAdapterData.updateSelectedState(
-                                ((FriendInfo) friendsAdapterView.getItem(position)).getFriendId(),
-                                FriendsAdapterData.SELECT);
-                        friendsAdapterView.updateSelectedState(position, FriendsAdapterData.SELECT);
-                    } else {    // single option
-                        friendsAdapterView.changeSelectedState(position, FriendsAdapterData.SELECT);
-                        
-                        friendsAdapterData.updateSelectedState(
-                                ((FriendInfo) friendsAdapterView.getItem(position)).getFriendId(),
-                                FriendsAdapterData.SELECT);
-                        
-                        if (!lastSelectedId.equals("")) {
-                            friendsAdapterData.updateSelectedState(lastSelectedId, FriendsAdapterData.UNSELECT);
-                        }
-                        lastSelectedId = ((FriendInfo) friendsAdapterView.getItem(position)).getFriendId();
-                    }
-                } else {
-                    if (!isSingleOption) {
-                        selectIcon.setImageDrawable(SelectFriendActivity.this.getResources().getDrawable(
-                                R.drawable.icon_checkbox));
-                        friendsAdapterData.updateSelectedState(
-                                ((FriendInfo) friendsAdapterView.getItem(position)).getFriendId(),
-                                FriendsAdapterData.UNSELECT);
-                        friendsAdapterView.updateSelectedState(position, FriendsAdapterData.UNSELECT);
-                    } else {    // single option
-                        
-                    }
-                }
-            }
-        }
-    }
+	private void confirmAction()
+	{
+		String friendId, friendName, firendBirthday, friendImgLink;
+		ArrayList<FriendInfo> selectedFriendList = new ArrayList<FriendInfo>();
+		Cursor cursor = friendsAdapterData.getSelectedFriend();
+		if (cursor != null)
+		{
+			Log.d(TAG, "confirmAction() cursor size is " + cursor.getCount());
+			while (cursor.moveToNext())
+			{
+				friendId = cursor
+						.getString(cursor.getColumnIndex(FriendsAdapterData.KEY_FRIEND_ID));
+				friendName = cursor.getString(cursor
+						.getColumnIndex(FriendsAdapterData.KEY_FRIEND_NAME));
+				firendBirthday = cursor.getString(cursor
+						.getColumnIndex(FriendsAdapterData.KEY_FRIEND_BIRTHDAY));
+				friendImgLink = cursor.getString(cursor
+						.getColumnIndex(FriendsAdapterData.KEY_FRIEND_IMG_LINK));
+				Log.d(TAG, "firendBirthday is " + firendBirthday);
+				selectedFriendList.add(new FriendInfo(friendId, friendName, firendBirthday,
+						friendImgLink, null, FriendsAdapterData.UNSELECT));
+			}
+		}
+		cursor.close();
+		Intent returnIntent = new Intent();
+		Bundle returnBundle = new Bundle();
+		returnBundle.putParcelableArrayList(FriendInfo.GET_FRIEND, selectedFriendList);
+		returnIntent.putExtras(returnBundle);
+		setResult(RESULT_OK, returnIntent);
+		finish();
+	}
+
+	private void searchAction()
+	{
+		facebookManager.dialogHandler.sendEmptyMessage(ListUtility.SHOW_WAITING_DIALOG);
+		friendsAdapterView.setInterrupt(true);
+		// friendList.clear();
+		LoadDbThread loadDbThread = new LoadDbThread(searchFriend.getText().toString());
+		loadDbThread.start();
+	}
+
+	private void getFriendsfromWeb()
+	{
+		if (facebookManager != null)
+		{
+			facebookManager.getFriendList(SelectFriendActivity.this,
+					new RequestGraphUserListCallback());
+		}
+	}
+
+	private void getFriendsImgfromDB()
+	{
+		if (friendsAdapterData != null)
+		{
+			Log.d(TAG, "firstVisiblePosition is " + firstVisiblePosition);
+			Log.d(TAG, "lastVisiblePosition is " + lastVisiblePosition);
+			friendsAdapterView.loadImagefromPosition(firstVisiblePosition, lastVisiblePosition);
+		}
+	}
+
+	private void processUserListReponse(List<GraphUser> users)
+	{
+		if (users != null)
+		{
+			Log.d(TAG, "user list size is " + users.size());
+			CreateDbThread createDbThread = new CreateDbThread(users);
+			createDbThread.start();
+		}
+	}
+
+	private void createDb(List<GraphUser> users)
+	{
+		String friendId = "", friendName = "", firendBirthday = "", friendImgLink = "";
+		ArrayList<FriendInfo> friendList = new ArrayList<FriendInfo>();
+		if (friendsAdapterData != null)
+		{
+			friendsAdapterData.open();
+			currentListSize = users.size();
+			for (int i = 0; i < users.size(); i++)
+			{
+				try
+				{
+					friendImgLink = users.get(i).getInnerJSONObject()
+							.getJSONObject(JSONTag.PICTURE).getJSONObject(JSONTag.DATA)
+							.getString(JSONTag.URL);
+				}
+				catch (JSONException e)
+				{
+					e.printStackTrace();
+				}
+				friendId = users.get(i).getId();
+				friendName = users.get(i).getName();
+				firendBirthday = users.get(i).getBirthday();
+				friendsAdapterData.create(friendId, friendName, firendBirthday, friendImgLink,
+						null, FriendsAdapterData.UNSELECT);
+				friendList.add(new FriendInfo(friendId, friendName, firendBirthday, friendImgLink,
+						null, FriendsAdapterData.UNSELECT));
+			}
+			Log.d(TAG, "Create Db finish() ");
+		}
+		Message msg = new Message();
+		Bundle bundle = new Bundle();
+		bundle.putParcelableArrayList(FriendInfo.GET_FRIEND, friendList);
+		msg.what = ListUtility.CREATE_DB_COMPLETE;
+		msg.setData(bundle);
+		uiHandler.sendMessage(msg);
+	}
+
+	private void updateView(Bundle bundle)
+	{
+		ArrayList<FriendInfo> friendList = bundle.getParcelableArrayList(FriendInfo.GET_FRIEND);
+		if (friendList.size() > 0)
+		{
+			friendsAdapterView = new FriendsAdapterView(SelectFriendActivity.this, friendList,
+					friendsAdapterData, showFriends);
+			showFriends.setVisibility(View.VISIBLE);
+			showFriends.setAdapter(friendsAdapterView);
+		}
+		else
+		{
+			displayMessage.setText(getResources().getString(R.string.user_no_result));
+			showFriends.setVisibility(View.INVISIBLE);
+		}
+		facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
+	}
+
+	private Handler uiHandler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg)
+		{
+			switch (msg.what)
+			{
+			case ListUtility.CREATE_DB_COMPLETE:
+				updateView(msg.getData());
+				break;
+			case ListUtility.SEARCH_COMPLETE:
+				// friendsAdapterView.clearList();
+				updateView(msg.getData());
+				break;
+			}
+		}
+	};
+	private Handler downloadHandler = new Handler()
+	{
+		public void handleMessage(Message msg)
+		{
+			switch (msg.what)
+			{
+			case ListUtility.GET_THUMBNAIL:
+				Log.d(TAG, "GET_THUMBNAIL ");
+				friendsAdapterView.setInterrupt(false);
+				getFriendsImgfromDB();
+				break;
+			}
+		}
+	};
+	private AbsListView.OnScrollListener listScrollListener = new AbsListView.OnScrollListener()
+	{
+		@Override
+		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+				int totalItemCount)
+		{
+			firstVisiblePosition = firstVisibleItem;
+			lastVisiblePosition = firstVisiblePosition + visibleItemCount;
+		}
+
+		@Override
+		public void onScrollStateChanged(AbsListView view, int scrollState)
+		{
+			Log.d(TAG, "scrollState " + scrollState);
+			if (currentListSize != 0)
+			{
+				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && friendsAdapterView != null)
+				{
+					downloadHandler.sendEmptyMessageDelayed(ListUtility.GET_THUMBNAIL, 1500);
+				}
+				if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
+						&& friendsAdapterView != null)
+				{
+					downloadHandler.removeMessages(ListUtility.GET_THUMBNAIL);
+				}
+				friendsAdapterView.setInterrupt(true);
+			}
+			else
+			{
+				Log.d(TAG, "currentListSize is zero ");
+			}
+		}
+	};
+
+	private class CreateDbThread extends Thread
+	{
+		List<GraphUser> users;
+
+		public CreateDbThread(List<GraphUser> users)
+		{
+			this.users = users;
+		}
+
+		@Override
+		public void run()
+		{
+			createDb(users);
+		}
+	}
+
+	private class LoadDbThread extends Thread
+	{
+		String keyword;
+
+		public LoadDbThread(String keyword)
+		{
+			this.keyword = keyword;
+		}
+
+		@Override
+		public void run()
+		{
+			List<FriendInfo> friendList = new ArrayList<FriendInfo>();
+			String friendId = "", friendName = "", firendBirthday = "", friendImgLink = "";
+			byte[] friendImg = null;
+			int selectState = 0;
+			Cursor cursor = friendsAdapterData.seachResult(keyword);
+			if (cursor != null)
+			{
+				Log.d(TAG, "cursor size is " + cursor.getCount());
+				while (cursor.moveToNext())
+				{
+					friendId = cursor.getString(cursor
+							.getColumnIndex(FriendsAdapterData.KEY_FRIEND_ID));
+					friendName = cursor.getString(cursor
+							.getColumnIndex(FriendsAdapterData.KEY_FRIEND_NAME));
+					firendBirthday = cursor.getString(cursor
+							.getColumnIndex(FriendsAdapterData.KEY_FRIEND_BIRTHDAY));
+					friendImgLink = cursor.getString(cursor
+							.getColumnIndex(FriendsAdapterData.KEY_FRIEND_IMG_LINK));
+					friendImg = cursor.getBlob(cursor
+							.getColumnIndex(FriendsAdapterData.KEY_FRIEND_IMG));
+					selectState = cursor.getInt(cursor
+							.getColumnIndex(FriendsAdapterData.KEY_SELECT_STATE));
+					friendList.add(new FriendInfo(friendId, friendName, firendBirthday,
+							friendImgLink, friendImg, selectState));
+				}
+			}
+			cursor.close();
+			Message msg = new Message();
+			Bundle bundle = new Bundle();
+			bundle.putParcelableArrayList(FriendInfo.GET_FRIEND,
+					(ArrayList<? extends Parcelable>) friendList);
+			msg.what = ListUtility.SEARCH_COMPLETE;
+			msg.setData(bundle);
+			uiHandler.sendMessage(msg);
+		}
+	}
+
+	private class RequestGraphUserListCallback implements Request.GraphUserListCallback
+	{
+		@Override
+		public void onCompleted(List<GraphUser> users, Response response)
+		{
+			if (response.getError() == null)
+			{
+				processUserListReponse(users);
+			}
+			else
+			{
+				Toast.makeText(SelectFriendActivity.this,
+						getResources().getString(R.string.error_is, response.getError()),
+						Toast.LENGTH_SHORT).show();
+				facebookManager.dialogHandler.sendEmptyMessage(ListUtility.DISMISS_WAITING_DIALOG);
+				finish();
+			}
+		}
+	}
+
+	private class UserListClickListener implements AdapterView.OnItemClickListener
+	{
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+		{
+			if (friendsAdapterData != null)
+			{
+				ImageView selectIcon = (ImageView) view
+						.findViewById(R.id.glb_selectfriend_list_item_check_icon);
+				int state = 0;
+				state = friendsAdapterData.getSelectedState(((FriendInfo) friendsAdapterView
+						.getItem(position)).getFriendId());
+				Log.d(TAG, "state is === " + state);
+				if (state == FriendsAdapterData.UNSELECT)
+				{
+					selectIcon.setImageDrawable(SelectFriendActivity.this.getResources()
+							.getDrawable(R.drawable.icon_checkbox_check));
+					if (!isSingleOption)
+					{
+						friendsAdapterData.updateSelectedState(
+								((FriendInfo) friendsAdapterView.getItem(position)).getFriendId(),
+								FriendsAdapterData.SELECT);
+						friendsAdapterView.updateSelectedState(position, FriendsAdapterData.SELECT);
+					}
+					else
+					{    // single option
+						friendsAdapterView.changeSelectedState(position, FriendsAdapterData.SELECT);
+						friendsAdapterData.updateSelectedState(
+								((FriendInfo) friendsAdapterView.getItem(position)).getFriendId(),
+								FriendsAdapterData.SELECT);
+						if (!lastSelectedId.equals(""))
+						{
+							friendsAdapterData.updateSelectedState(lastSelectedId,
+									FriendsAdapterData.UNSELECT);
+						}
+						lastSelectedId = ((FriendInfo) friendsAdapterView.getItem(position))
+								.getFriendId();
+					}
+				}
+				else
+				{
+					if (!isSingleOption)
+					{
+						selectIcon.setImageDrawable(SelectFriendActivity.this.getResources()
+								.getDrawable(R.drawable.icon_checkbox));
+						friendsAdapterData.updateSelectedState(
+								((FriendInfo) friendsAdapterView.getItem(position)).getFriendId(),
+								FriendsAdapterData.UNSELECT);
+						friendsAdapterView.updateSelectedState(position,
+								FriendsAdapterData.UNSELECT);
+					}
+					else
+					{    // single option
+					}
+				}
+			}
+		}
+	}
 }

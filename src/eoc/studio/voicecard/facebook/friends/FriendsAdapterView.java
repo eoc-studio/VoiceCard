@@ -15,7 +15,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.facebook.enetities.FriendInfo;
 import eoc.studio.voicecard.utils.ListUtility;
@@ -33,7 +32,8 @@ public class FriendsAdapterView extends BaseAdapter
 	private boolean isPause = false;
 	private boolean isInterrupt = false;
 
-	FriendsAdapterView(Context context, List<FriendInfo> friends, FriendsAdapterData friendsAdapterData, ListView showFriendView)
+	FriendsAdapterView(Context context, List<FriendInfo> friends,
+			FriendsAdapterData friendsAdapterData, ListView showFriendView)
 	{
 		this.context = context;
 		this.friends = friends;
@@ -42,8 +42,8 @@ public class FriendsAdapterView extends BaseAdapter
 		layoutInflater = LayoutInflater.from(context);
 		isPause = false;
 		isInterrupt = false;
-		
-		DownlaodImageThread downlaodImageThread = new DownlaodImageThread(friends, 0, friends.size());
+		DownlaodImageThread downlaodImageThread = new DownlaodImageThread(friends, 0,
+				friends.size());
 		downlaodImageThread.start();
 	}
 
@@ -68,156 +68,201 @@ public class FriendsAdapterView extends BaseAdapter
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-        if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.select_friend_list_item, null);
-            viewTag = new ViewTag((ImageView) convertView.findViewById(R.id.glb_selectfriend_list_item_header),
-                    (TextView) convertView.findViewById(R.id.glb_selectfriend_list_item_name),
-                    (ImageView) convertView.findViewById(R.id.glb_selectfriend_list_item_check_icon));
-            convertView.setTag(viewTag);
-        } else {
-            viewTag = (ViewTag) convertView.getTag();
-        }
-        convertView.setId(ListUtility.BASE_INDEX + position);
-        
-        if (position < friends.size()) {
-            viewTag.name.setText(friends.get(position).getFriendName());
-
-            if (friends.get(position).getSelectedState() == FriendsAdapterData.SELECT) {
-                viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_checkbox_check));
-            } else {
-                viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_checkbox));
-            }
-
-            // set header
-            byte[] img = friends.get(position).getFriendImg();
-            if (img != null) {
-                viewTag.header.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
-            } else {
-                viewTag.header.setImageDrawable(context.getResources().getDrawable(R.drawable.dummy));
-            }
-        }
-		
+		if (convertView == null)
+		{
+			convertView = layoutInflater.inflate(R.layout.select_friend_list_item, null);
+			viewTag = new ViewTag(
+					(ImageView) convertView.findViewById(R.id.glb_selectfriend_list_item_header),
+					(TextView) convertView.findViewById(R.id.glb_selectfriend_list_item_name),
+					(ImageView) convertView
+							.findViewById(R.id.glb_selectfriend_list_item_check_icon));
+			convertView.setTag(viewTag);
+		}
+		else
+		{
+			viewTag = (ViewTag) convertView.getTag();
+		}
+		convertView.setId(ListUtility.BASE_INDEX + position);
+		if (position < friends.size())
+		{
+			viewTag.name.setText(friends.get(position).getFriendName());
+			if (friends.get(position).getSelectedState() == FriendsAdapterData.SELECT)
+			{
+				viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(
+						R.drawable.icon_checkbox_check));
+			}
+			else
+			{
+				viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(
+						R.drawable.icon_checkbox));
+			}
+			// set header
+			byte[] img = friends.get(position).getFriendImg();
+			if (img != null)
+			{
+				viewTag.header.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
+			}
+			else
+			{
+				viewTag.header.setImageDrawable(context.getResources()
+						.getDrawable(R.drawable.dummy));
+			}
+		}
 		return convertView;
 	}
-	
-	public void updateSelectedState(int position, int selectedState) {
-	    friends.get(position).setSelecedState(selectedState);
-	    notifyDataSetChanged();
+
+	public void updateSelectedState(int position, int selectedState)
+	{
+		friends.get(position).setSelecedState(selectedState);
+		notifyDataSetChanged();
 	}
-	
-	public void changeSelectedState(int position, int selectedState) {
-	    for (FriendInfo friendInfo : friends) {
-	        friendInfo.setSelecedState(FriendsAdapterData.UNSELECT);
-	    }
-        friends.get(position).setSelecedState(selectedState);
-        notifyDataSetChanged();
-    }
-	
-	public void setPause(boolean isPause) {
-	    this.isPause = isPause;
+
+	public void changeSelectedState(int position, int selectedState)
+	{
+		for (FriendInfo friendInfo : friends)
+		{
+			friendInfo.setSelecedState(FriendsAdapterData.UNSELECT);
+		}
+		friends.get(position).setSelecedState(selectedState);
+		notifyDataSetChanged();
 	}
-	
-	public void setInterrupt(boolean isInterrupt) {
-	    this.isInterrupt = isInterrupt;
+
+	public void setPause(boolean isPause)
+	{
+		this.isPause = isPause;
 	}
-	
-	public void loadImagefromPosition(int startPostion, int endPosition) {
-		if (startPostion > 0 && endPosition < friends.size())
+
+	public void setInterrupt(boolean isInterrupt)
+	{
+		this.isInterrupt = isInterrupt;
+	}
+
+	public void loadImagefromPosition(int startPostion, int endPosition)
+	{
+		if (startPostion > 0 && endPosition <= friends.size())
 		{
 			DownlaodImageThread downlaodImageThread = new DownlaodImageThread(friends.subList(
 					startPostion, endPosition), startPostion, endPosition);
 			downlaodImageThread.start();
 		}
 	}
-	
-    private Handler showImgHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Log.d(TAG, "showImgHandler === msg.what === " + msg.what);
-            if (msg.what < friends.size()) {
-                if (friends.get(msg.what).getFriendImg() == null) {
-                    Log.d(TAG, "friends is null");
-                    if (showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
-                        viewTag = (ViewTag) showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
-                    } else {
-                        Log.d(TAG, "friends.get(msg.what) is null");
-                    }
-                } else {
-                    Log.d(TAG, "friends not null");
-                    if (showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what) != null) {
-                        viewTag = (ViewTag) showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what).getTag();
-                        byte[] img = friends.get(msg.what).getFriendImg();
-                        viewTag.header.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
-                    } else {
-                        Log.d(TAG, "friends.get(msg.what) not null but findView is null");
-                    }
-                }
-            }
-        }
-    };
-    
-    public void clearList() {
-        for(Iterator it = friends.iterator(); it.hasNext();){
-            it.remove();
-        }
-        friends.clear();
-    }
+
+	private Handler showImgHandler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg)
+		{
+			Log.d(TAG, "showImgHandler === msg.what === " + msg.what);
+			if (msg.what < friends.size())
+			{
+				if (friends.get(msg.what).getFriendImg() == null)
+				{
+					Log.d(TAG, "friends is null");
+					if (showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what) != null)
+					{
+						viewTag = (ViewTag) showFriendView.findViewById(
+								ListUtility.BASE_INDEX + msg.what).getTag();
+					}
+					else
+					{
+						Log.d(TAG, "friends.get(msg.what) is null");
+					}
+				}
+				else
+				{
+					Log.d(TAG, "friends not null");
+					if (showFriendView.findViewById(ListUtility.BASE_INDEX + msg.what) != null)
+					{
+						viewTag = (ViewTag) showFriendView.findViewById(
+								ListUtility.BASE_INDEX + msg.what).getTag();
+						byte[] img = friends.get(msg.what).getFriendImg();
+						viewTag.header.setImageBitmap(BitmapFactory.decodeByteArray(img, 0,
+								img.length));
+					}
+					else
+					{
+						Log.d(TAG, "friends.get(msg.what) not null but findView is null");
+					}
+				}
+			}
+		}
+	};
+
+	public void clearList()
+	{
+		for (Iterator it = friends.iterator(); it.hasNext();)
+		{
+			it.remove();
+		}
+		friends.clear();
+	}
 
 	class ViewTag
 	{
-	    ImageView header;
+		ImageView header;
 		TextView name;
 		ImageView checkIcon;
 
 		public ViewTag(ImageView header, TextView name, ImageView checkIcon)
 		{
-		    this.header = header;
+			this.header = header;
 			this.name = name;
 			this.checkIcon = checkIcon;
 		}
 	}
-	
-    private class DownlaodImageThread extends Thread {
-        List<FriendInfo> friendList;
-        int startPosition;
-        int endPosition;
 
-        public DownlaodImageThread(List<FriendInfo> friendList, int startPosition, int endPosition) {
-            this.friendList = friendList;
-            this.startPosition = startPosition;
-            this.endPosition = endPosition;
-        }
+	private class DownlaodImageThread extends Thread
+	{
+		List<FriendInfo> friendList;
+		int startPosition;
+		int endPosition;
 
-        @Override
-        public void run() {
-            Log.d(TAG, "friendList size === " + friendList.size());
-            Log.d(TAG, "startPosition === " + startPosition);
-            Log.d(TAG, "endPosition === " + endPosition);
-            for (int i = startPosition; i < endPosition; i++) {
-                if (isInterrupt) {
-                    break;
-                }
-                if (!isPause) {
-                    int position = i - startPosition;
-                    if (position < friendList.size()) {
-                        FriendInfo friendInfo = friendList.get(position);
-                        byte[] friendImg = friendInfo.getFriendImg();
+		public DownlaodImageThread(List<FriendInfo> friendList, int startPosition, int endPosition)
+		{
+			this.friendList = friendList;
+			this.startPosition = startPosition;
+			this.endPosition = endPosition;
+		}
 
-                        if (friendImg == null) {
-                            friendImg = NetworkUtility.getWebImage(friendInfo.getFriendImgLink());
-                            friendsAdapterData.updateFriendImg(friendInfo.getFriendId(), friendImg);
-                            if (position < friendList.size())
-                                friendList.get(position).setFriendImg(friendImg);
-                        }
-                        showImgHandler.sendMessage(showImgHandler.obtainMessage(i));
-                    } else {
-                        break;
-                    }
-                } else {
-                    break;
-                }
-            }
-            Log.d(TAG, "Download img finish() ");
-        }
-    }
+		@Override
+		public void run()
+		{
+			Log.d(TAG, "friendList size === " + friendList.size());
+			Log.d(TAG, "startPosition === " + startPosition);
+			Log.d(TAG, "endPosition === " + endPosition);
+			for (int i = startPosition; i < endPosition; i++)
+			{
+				if (isInterrupt)
+				{
+					break;
+				}
+				if (!isPause)
+				{
+					int position = i - startPosition;
+					if (position < friendList.size())
+					{
+						FriendInfo friendInfo = friendList.get(position);
+						byte[] friendImg = friendInfo.getFriendImg();
+						if (friendImg == null)
+						{
+							friendImg = NetworkUtility.getWebImage(friendInfo.getFriendImgLink());
+							friendsAdapterData.updateFriendImg(friendInfo.getFriendId(), friendImg);
+							if (position < friendList.size())
+								friendList.get(position).setFriendImg(friendImg);
+						}
+						showImgHandler.sendMessage(showImgHandler.obtainMessage(i));
+					}
+					else
+					{
+						break;
+					}
+				}
+				else
+				{
+					break;
+				}
+			}
+			Log.d(TAG, "Download img finish() ");
+		}
+	}
 }
