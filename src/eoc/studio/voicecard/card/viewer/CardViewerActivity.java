@@ -750,7 +750,7 @@ public class CardViewerActivity extends BaseActivity
 
 				if (phoneString.toLowerCase().startsWith("09") && phoneString.length() == 10)
 				{
-					phoneString = phoneString.replaceFirst("09", "+8669");
+					phoneString = phoneString.replaceFirst("09", "+8869");
 
 					Log.d(TAG, "onContactSelectorResult - (after replace with +8869)TEL: "
 							+ phoneString);

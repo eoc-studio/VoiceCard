@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -744,7 +745,8 @@ public class HttpManager
 		{
 			uriMailReceiveCount = String
 					.format("http://www.charliefind.com/api.php?op=mailbox_rece&auth=%1$s&id=%2$s&mobile=%3$s&imei=%4$s",
-							hash_auth, facebookID, mobile, deviceIMEI);
+							hash_auth, facebookID,  URLEncoder.encode(mobile), deviceIMEI);
+			
 		}
 		else
 		{
@@ -860,7 +862,7 @@ public class HttpManager
 		{
 			uri_getMail = String
 					.format("http://www.charliefind.com/api.php?op=mailbox&auth=%1$s&id=%2$s&mobile=%3$s&imei=%4$s",
-							hash_auth, facebookID, mobile, deviceIMEI);
+							hash_auth, facebookID, URLEncoder.encode(mobile), deviceIMEI);
 		}
 		else
 		{

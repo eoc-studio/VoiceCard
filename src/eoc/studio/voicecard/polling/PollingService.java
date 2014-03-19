@@ -96,6 +96,13 @@ public class PollingService extends Service
 							Log.e(TAG, "httpManager.getUnreadMailCount() isSuccess:" + isSuccess
 									+ ",information:" + String.valueOf(count));
 
+							Log.d(TAG, "PollingThread() unreadCount: " + unreadCount);
+ 
+							if (count == 0)
+							{
+								unreadCount = count;
+							}
+
 							if (isSuccess && count > 0 && unreadCount != count)
 							{
 								unreadCount = count;
