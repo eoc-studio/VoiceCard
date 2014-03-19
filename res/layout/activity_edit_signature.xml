@@ -91,11 +91,9 @@
 														android:id="@+id/act_edit_signature_rb_paint_size_one"
 														android:layout_width="34dp"
 														android:layout_height="34dp"
-														android:layout_gravity="center"
 														android:background="@drawable/selector_paint_size_background"
 														android:button="@drawable/icon_brush_size_one"
 														android:checked="true"
-														android:gravity="center"
 														android:text="SIZE_ONE"
 														android:textColor="@color/transparent_text" />
 
