@@ -286,7 +286,7 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		setContentView(R.layout.activity_mainmenu);
 		findViews();
 		setListeners();
-	}
+	} 
 
 	private void findViews()
 	{

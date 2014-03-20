@@ -38,6 +38,9 @@ public class MemorialDayNotificationView extends RelativeLayout
 		dateDigitTens = (ImageView) findViewById(R.id.glb_memorial_day_notification_iv_date_digit_in_tens_place);
 		descriptionOfNormalDay = (TextView) findViewById(R.id.glb_memorial_day_notification_tv_normal_description);
 		descriptionOfMemorialDay = (TextView) findViewById(R.id.glb_memorial_day_notification_tv_special_description);
+		
+		descriptionOfMemorialDay.setMaxLines(4); 
+		descriptionOfMemorialDay.setMaxWidth((int) (descriptionOfMemorialDay.getTextSize()*15)); 
 	}
 
 	public void setDate(Calendar calendar)
