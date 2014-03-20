@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import android.R.integer;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -15,7 +14,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -34,10 +32,9 @@ import eoc.studio.voicecard.audio.AudioRecorderActivity;
 import eoc.studio.voicecard.card.Card;
 import eoc.studio.voicecard.card.CardDraft;
 import eoc.studio.voicecard.card.Constant;
-import eoc.studio.voicecard.card.FakeData;
+import eoc.studio.voicecard.card.database.CardDatabaseHelper;
 import eoc.studio.voicecard.card.viewer.AudioMessageView;
 import eoc.studio.voicecard.card.viewer.CardViewerActivity;
-import eoc.studio.voicecard.card.database.CardDatabaseHelper;
 import eoc.studio.voicecard.manufacture.EditSignatureActivity;
 import eoc.studio.voicecard.menu.OpenDraft;
 import eoc.studio.voicecard.menu.SaveDraft;
@@ -86,7 +83,7 @@ public class CardEditorActivity extends BaseActivity
 	private static final float TEXT_SIZE_SMALL = TEXT_SIZE_NORMAL * 0.8f;
 
 	private static final float TEXT_SIZE_LARGE = TEXT_SIZE_NORMAL * 1.2f;
-	
+
 	private static final int EDIT_COLOR = 0xFF594937;
 
 	private static final int EDIT_BACKGROUD_COLOR = 0x90FFFFFF;
@@ -163,6 +160,8 @@ public class CardEditorActivity extends BaseActivity
 
 	private String sendBackId;
 
+	private File cardDir;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -190,6 +189,7 @@ public class CardEditorActivity extends BaseActivity
 				Log.d(TAG, "from intent");
 				card = getEmptyCardFromIntent(getIntent());
 			}
+			initCardDir(card.getId());
 		}
 		initCardDraftManager();
 		initLayout();
@@ -208,6 +208,17 @@ public class CardEditorActivity extends BaseActivity
 
 		cardDatabaseHelper = new CardDatabaseHelper(getApplicationContext());
 		cardDatabaseHelper.open();
+	}
+
+	private void initCardDir(int cardId)
+	{
+		File appDir = new File(Environment.getExternalStorageDirectory(), "eoc.studio.voicecard");
+		if (!appDir.exists())
+		{
+			appDir.mkdir();
+		}
+		cardDir = new File(appDir, cardId + "_" + System.currentTimeMillis());
+		cardDir.mkdir();
 	}
 
 	private void saveCardInformation()
@@ -484,12 +495,12 @@ public class CardEditorActivity extends BaseActivity
 			editableTextFrame.setBackgroundResource(R.drawable.dash_border);
 			editableSignatureFrame.setBackgroundResource(R.drawable.dash_border);
 		}
-		((GradientDrawable) editableImageFrame.getBackground()).setStroke(width,  EDIT_COLOR, dashWidth,
-				dashGap);
-		((GradientDrawable) editableVoiceFrame.getBackground()).setStroke(width, EDIT_COLOR, dashWidth,
-				dashGap);
-		((GradientDrawable) editableTextFrame.getBackground()).setStroke(width, EDIT_COLOR, dashWidth,
-				dashGap);
+		((GradientDrawable) editableImageFrame.getBackground()).setStroke(width, EDIT_COLOR,
+				dashWidth, dashGap);
+		((GradientDrawable) editableVoiceFrame.getBackground()).setStroke(width, EDIT_COLOR,
+				dashWidth, dashGap);
+		((GradientDrawable) editableTextFrame.getBackground()).setStroke(width, EDIT_COLOR,
+				dashWidth, dashGap);
 		((GradientDrawable) editableSignatureFrame.getBackground()).setStroke(width, EDIT_COLOR,
 				dashWidth, dashGap);
 		editableImageTip.setTextColor(EDIT_COLOR);
@@ -620,19 +631,21 @@ public class CardEditorActivity extends BaseActivity
 			{
 
 				Log.d(TAG, "saveDraft - onClick()");
-				boolean isSuccess = cardDraftManager.saveDraft(new CardDraft(card.getId(), userVoice,
-						userVoiceDuration, userImage, userTextContent, userTextColor,
+				boolean isSuccess = cardDraftManager.saveDraft(new CardDraft(card.getId(),
+						userVoice, userVoiceDuration, userImage, userTextContent, userTextColor,
 						userTextSizeType, userSignHandwritingUri, userSignPositionInfoUri,
 						userSignDraftImageUri));
-				
-				if(isSuccess){
+
+				if (isSuccess)
+				{
 					Toast.makeText(CardEditorActivity.this, getString(R.string.save_draft_success),
 							Toast.LENGTH_LONG).show();
 				}
-				else{
+				else
+				{
 					Toast.makeText(CardEditorActivity.this, getString(R.string.save_draft_fail),
 							Toast.LENGTH_LONG).show();
-				}		
+				}
 			}
 
 		});
@@ -713,7 +726,7 @@ public class CardEditorActivity extends BaseActivity
 		Log.d(TAG, "updateImageRegion()");
 		if (userImage != null && Bitmap.createBitmap(getBitmapFromUri(userImage)) != null)
 		{
-			
+
 			userImageBitmap = Bitmap.createBitmap(getBitmapFromUri(userImage));
 			editableImage.setImageBitmap(userImageBitmap);
 			editableImage.invalidate();
@@ -787,6 +800,11 @@ public class CardEditorActivity extends BaseActivity
 	private void startImageCropper(Uri photoUri)
 	{
 
+		String fileName = FileUtility.getRandomImageName("png");
+		File file = new File(cardDir, fileName);
+		Uri imageUri = Uri.fromFile(file);
+		Log.d(TAG, "startImageCropper -- return to " + file.getAbsolutePath());
+
 		int w = editableImage.getWidth();
 		int h = editableImage.getHeight();
 		Intent intent = new Intent("com.android.camera.action.CROP");
@@ -796,28 +814,64 @@ public class CardEditorActivity extends BaseActivity
 		intent.putExtra("aspectX", w);
 		intent.putExtra("aspectY", h);
 		intent.putExtra("scale", true);
-		intent.putExtra("return-data", true);
+		intent.putExtra("return-data", false);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 		startActivityForResult(intent, REQ_CROP_IMAGE);
 	}
 
 	private void onImageCropperResult(int resultCode, Intent data)
 	{
 
-		Bundle extras = data.getExtras();
+		final Bundle extras = data.getExtras();
 		if (extras != null)
 		{
-			Bitmap cropped = extras.getParcelable("data");
-			userImageBitmap = cropped;
-			editableImage.setImageBitmap(cropped);
-			new SaveCardImageThread(cropped).start();
+			String path = data.getAction();
+			if (path != null)
+			{
+				progressDialog = ProgressDialog.show(CardEditorActivity.this,
+						getString(R.string.processing), getString(R.string.please_wait), true,
+						false);
+
+				userImage = Uri.parse(path);
+				card.setImage(userImage);
+				Log.d(TAG, "Card image set:" + card.getImage().toString());
+				new Thread()
+				{
+					@Override
+					public void run()
+					{
+						Log.d(TAG, "going get bitmap");
+						userImageBitmap = FileUtility.getBitmapFromPath(userImage.getPath());
+						runOnUiThread(new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								Log.d(TAG, "going set ImageView");
+								editableImage.setImageBitmap(userImageBitmap);
+
+								progressDialog.dismiss();
+							}
+						});
+					}
+				}.start();
+
+			}
 		}
+		// Bundle extras = data.getExtras();
+		// if (extras != null)
+		// {
+		// Bitmap cropped = extras.getParcelable("data");
+		// userImageBitmap = cropped;
+		// editableImage.setImageBitmap(cropped);
+		// new SaveCardImageThread(cropped).start();
+		// }
 	}
 
 	private void startVoiceRecorder()
 	{
-		File extDir = Environment.getExternalStorageDirectory();
 		String fileName = FileUtility.getRandomSpeechName("3gp");
-		String filePath = extDir.getAbsolutePath() + "/" + fileName;
+		String filePath = cardDir.getAbsolutePath() + "/" + fileName;
 		Log.d(TAG, "startVoiceRecorder - filePath: " + filePath);
 
 		Intent intent = new Intent(this, AudioRecorderActivity.class);
@@ -953,45 +1007,45 @@ public class CardEditorActivity extends BaseActivity
 		}
 	}
 
-	private class SaveCardImageThread extends Thread
-	{
-		private Bitmap bitmap;
-
-		public SaveCardImageThread(Bitmap bitmap)
-		{
-
-			this.bitmap = bitmap;
-		}
-
-		@Override
-		public void run()
-		{
-
-			String fileName = FileUtility.getRandomImageName("png");
-			File file = new File(getCacheDir(), fileName);
-			if (saveBitmapToFile(bitmap, file))
-			{
-				userImage = Uri.fromFile(file);
-				card.setImage(userImage);
-				Log.d(TAG, "Card image set:" + card.getImage().toString());
-
-				CardEditorActivity.this.runOnUiThread(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-
-						updateImageRegion();
-					}
-				});
-
-			}
-			else
-			{
-				Log.e(TAG, "Failed to save bitmap");
-			}
-		}
-	}
+	// private class SaveCardImageThread extends Thread
+	// {
+	// private Bitmap bitmap;
+	//
+	// public SaveCardImageThread(Bitmap bitmap)
+	// {
+	//
+	// this.bitmap = bitmap;
+	// }
+	//
+	// @Override
+	// public void run()
+	// {
+	//
+	// String fileName = FileUtility.getRandomImageName("png");
+	// File file = new File(getCacheDir(), fileName);
+	// if (saveBitmapToFile(bitmap, file))
+	// {
+	// userImage = Uri.fromFile(file);
+	// card.setImage(userImage);
+	// Log.d(TAG, "Card image set:" + card.getImage().toString());
+	//
+	// CardEditorActivity.this.runOnUiThread(new Runnable()
+	// {
+	// @Override
+	// public void run()
+	// {
+	//
+	// updateImageRegion();
+	// }
+	// });
+	//
+	// }
+	// else
+	// {
+	// Log.e(TAG, "Failed to save bitmap");
+	// }
+	// }
+	// }
 
 	/**
 	 * 
@@ -1068,8 +1122,20 @@ public class CardEditorActivity extends BaseActivity
 
 		try
 		{
-			Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-			return bitmap;
+			String scheme = uri.getScheme();
+			if ("content".equalsIgnoreCase(scheme))
+			{
+				return FileUtility.getBitmapFromUri(uri, this);
+			}
+			else if ("file".equalsIgnoreCase(scheme))
+			{
+				return FileUtility.getBitmapFromPath(uri.getPath());
+			}
+			else
+			{
+				Log.d(TAG, "getBitmapFromUri returns null from " + uri);
+				return null;
+			}
 		}
 		catch (Exception e)
 		{

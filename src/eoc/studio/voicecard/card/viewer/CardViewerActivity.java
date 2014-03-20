@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -287,6 +288,7 @@ public class CardViewerActivity extends BaseActivity
 	{
 
 		initCardView();
+		setRightBlockWidth();
 		initFlipAndShadow();
 		setListenersForSenderMode();
 	}
@@ -296,6 +298,7 @@ public class CardViewerActivity extends BaseActivity
 
 		initCardView();
 		generateScreenshotBitmap();
+		setRightBlockWidth();
 		initFlipAndShadow();
 		setListenersForViewerMode();
 	}
@@ -423,6 +426,23 @@ public class CardViewerActivity extends BaseActivity
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private void setRightBlockWidth()
+	{ // TODO find another way to handle this
+//		DisplayMetrics metrics = new DisplayMetrics();
+//		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//		int screenwWidth = metrics.widthPixels;
+//		Log.d(TAG, ">>> screenwWidth? " + screenwWidth);
+//
+//		int cardSinglePageWidth = (int) getResources().getDimensionPixelSize(
+//				R.dimen.card_single_page_width);
+//		Log.d(TAG, ">>>> cardSinglePageWidth? " + cardSinglePageWidth);
+//
+//		LayoutParams params = rightBlock.getLayoutParams();
+//		params.width = 0;//(screenwWidth - cardSinglePageWidth) / 4;
+//Log.d(TAG, "w   " + params.width);
+//		rightBlock.setLayoutParams(params);
 	}
 
 	private void generateScreenshotBitmap()
