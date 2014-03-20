@@ -55,13 +55,15 @@ public class CardSelectorActivity extends BaseActivity
 	private ImageView title;
 
 	private ImageView back;
+
 	private TextView centerCardName;
+
 	private AddToFavorite addToFavorite;
 
 	private CardDatabaseHelper cardDatabaseHelper;
 
 	private Context context;
-	
+
 	private String sendBackId;
 
 	@Override
@@ -86,6 +88,7 @@ public class CardSelectorActivity extends BaseActivity
 	@Override
 	protected void onDestroy()
 	{
+
 		// TODO Auto-generated method stub
 		super.onDestroy();
 	}
@@ -93,6 +96,7 @@ public class CardSelectorActivity extends BaseActivity
 	@Override
 	protected void onPause()
 	{
+
 		// TODO Auto-generated method stub
 		super.onPause();
 	}
@@ -100,6 +104,7 @@ public class CardSelectorActivity extends BaseActivity
 	@Override
 	protected void onResume()
 	{
+
 		// TODO Auto-generated method stub
 		super.onResume();
 	}
@@ -116,11 +121,13 @@ public class CardSelectorActivity extends BaseActivity
 		Log.d(TAG,
 				"list card for category id: " + category.getCategoryID() + ",name: "
 						+ category.getCategoryName());
-//		Toast.makeText(this, "CATEGORY: " + category.getCategoryName(), Toast.LENGTH_LONG).show();
+		// Toast.makeText(this, "CATEGORY: " + category.getCategoryName(),
+		// Toast.LENGTH_LONG).show();
 	}
-	
+
 	private void initSendBackId()
 	{
+
 		Intent intent = getIntent();
 		sendBackId = intent.getStringExtra(Constant.EXTRA_KEY_SENDBACK_ID);
 	}
@@ -137,12 +144,14 @@ public class CardSelectorActivity extends BaseActivity
 
 	private void setListener()
 	{
+
 		back.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
 			public void onClick(View v)
 			{
+
 				finish();
 			}
 		});
@@ -152,6 +161,7 @@ public class CardSelectorActivity extends BaseActivity
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 			{
+
 				currentCenteredCard = (Card) list.getItemAtPosition(position);
 				centerCardName.setText(currentCenteredCard.getName());
 			}
@@ -159,6 +169,7 @@ public class CardSelectorActivity extends BaseActivity
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0)
 			{
+
 				// TODO Auto-generated method stub
 
 			}
@@ -169,6 +180,7 @@ public class CardSelectorActivity extends BaseActivity
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
+
 				Card card = (Card) list.getItemAtPosition(position);
 				if (card == currentCenteredCard)
 				{
@@ -183,6 +195,7 @@ public class CardSelectorActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
+
 				addToFavorite(currentCenteredCard);
 			}
 
@@ -279,13 +292,13 @@ public class CardSelectorActivity extends BaseActivity
 						list.setEmptyView(empty);
 						list.setAdapter(null);
 
-					centerCardName.setText("");
-					centerCardName.invalidate();
-				}
-				else
-				{
-					CardAdapter adapter = new CardAdapter(cards);
-					list.setAdapter(adapter);
+						centerCardName.setText("");
+						centerCardName.invalidate();
+					}
+					else
+					{
+						CardAdapter adapter = new CardAdapter(cards);
+						list.setAdapter(adapter);
 
 					}
 					list.invalidate();
@@ -297,8 +310,13 @@ public class CardSelectorActivity extends BaseActivity
 				boolean isOK = cardDatabaseHelper.setFavoriteCardByCardID(card.getId());
 				if (isOK)
 				{
-					Log.d(TAG, "add " + card.getName() + " to favorite successful!");
-					Toast.makeText(context, "add " + card.getName() + " to favorite successful!",
+					Log.d(TAG,
+							getResources().getString(R.string.add_favorite) + " " + card.getName()
+									+ " " + getResources().getString(R.string.add_favorite_success));
+					Toast.makeText(
+							context,
+							getResources().getString(R.string.add_favorite) + " " + card.getName()
+									+ " " + getResources().getString(R.string.add_favorite_success),
 							Toast.LENGTH_LONG).show();
 				}
 			}
@@ -308,6 +326,7 @@ public class CardSelectorActivity extends BaseActivity
 
 	private void startCardEditor(Card card)
 	{
+
 		Log.d(TAG, "start editor for " + card.getName());
 		Intent intent = new Intent(this, CardEditorActivity.class);
 
@@ -324,30 +343,35 @@ public class CardSelectorActivity extends BaseActivity
 
 		public CardAdapter(List<Card> cards)
 		{
+
 			list = cards;
 		}
 
 		@Override
 		public int getCount()
 		{
+
 			return list.size();
 		}
 
 		@Override
 		public Card getItem(int position)
 		{
+
 			return list.get(position);
 		}
 
 		@Override
 		public long getItemId(int position)
 		{
+
 			return list.get(position).getId();
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
+
 			ViewHolder holder;
 			if (convertView == null)
 			{

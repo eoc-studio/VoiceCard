@@ -181,7 +181,7 @@ public class CardCategorySelectorActivity extends BaseActivity implements OnItem
 					}
 					else
 					{
-						Toast.makeText(context, "There is no favorite card!", Toast.LENGTH_LONG)
+						Toast.makeText(context, getResources().getString(R.string.no_favorite_exist), Toast.LENGTH_LONG)
 								.show();
 					}
 

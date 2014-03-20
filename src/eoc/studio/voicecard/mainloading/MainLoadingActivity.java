@@ -28,6 +28,8 @@ import eoc.studio.voicecard.manager.HttpManager;
 import eoc.studio.voicecard.manager.LoginListener;
 import eoc.studio.voicecard.manager.MailCountListener;
 import eoc.studio.voicecard.manager.NotifyMailReadListener;
+import eoc.studio.voicecard.manager.NotifyPatchListener;
+import eoc.studio.voicecard.manager.PatchStateListener;
 import eoc.studio.voicecard.progresswheel.ProgressWheel;
 import eoc.studio.voicecard.utils.FileUtility;
 
@@ -201,13 +203,46 @@ public class MainLoadingActivity extends Activity
 					});
 		}
 
-		httpManager = new HttpManager();
+		httpManager = new HttpManager(getApplicationContext());
 		startProgressWheel();
 
 		initCardDataBase();
-		getCategoryInfoFromServer();
-		getCardInfoFromServer();
+		checkPatchAndUpdateFromServer();
 		copyCardAndCategoryFromAsset();
+
+	}
+
+	private void checkPatchAndUpdateFromServer()
+	{
+
+		httpManager.getPatchState(context, new PatchStateListener()
+		{
+			
+			@Override
+			public void onResult(Boolean isSuccess, Boolean isNeedPatched)
+			{
+			Log.d(TAG, "getPatchState isSuccess: "+isSuccess +",isNeedPatched: "+isNeedPatched);
+				if(isSuccess&isNeedPatched){
+					Log.d(TAG, "getPatchState try to download card and category from server");
+					
+					getCategoryInfoFromServer();
+					getCardInfoFromServer();
+				}
+				else{
+					Log.d(TAG, "Direct pass the progress of [download card and category]");
+					
+					addProgressWheel(GET_CATEGORY_INFO_PROGRESS);
+					Log.d(TAG_PROGRESS, "GET_CATEGORY_INFO_PROGRESS [pass]");
+					addProgressWheel(GET_CARD_INFO_PROGRESS);
+					Log.d(TAG_PROGRESS, "GET_CARD_INFO_PROGRESS [pass]");
+					addProgressWheel(GET_CATEGORY_IMGS_PROGRESS);
+					Log.d(TAG_PROGRESS, "GET_CATEGORY_IMGS_PROGRESS [pass]");
+					addProgressWheel(GET_CARD_IMGS_PROGRESS);
+					Log.d(TAG_PROGRESS, "GET_CARD_IMGS_PROGRESS [pass]");
+				}
+			}
+		});
+		
 
 	}
 
@@ -344,6 +379,8 @@ public class MainLoadingActivity extends Activity
 						cardDatabaseHelper.getSystemDPI(context));
 				addProgressWheel(GET_CARD_IMGS_PROGRESS);
 				Log.d(TAG_PROGRESS, "GET_CARD_IMGS_PROGRESS");
+				
+				notifyPatchIsDone();
 			}
 		};
 		ArrayList<CardAssistant> cardAssistantList = new ArrayList<CardAssistant>();
@@ -378,8 +415,26 @@ public class MainLoadingActivity extends Activity
 		else
 		{
 			addProgressWheel(GET_CARD_IMGS_PROGRESS);
-			Log.d(TAG_PROGRESS, "GET_CARD_IMGS_PROGRESS");
+			Log.d(TAG_PROGRESS, "GET_CARD_IMGS_PROGRESS [pass] because (cardAssistantList == null)");
+			
+			notifyPatchIsDone();
 		}
+	}
+
+	public void notifyPatchIsDone()
+	{
+
+		httpManager.notifyPatchUpdate(context, new NotifyPatchListener()
+		{
+			
+			@Override
+			public void onResult(Boolean isSuccess, String information)
+			{
+			
+				Log.d(TAG, "notifyPatchUpdate() isSuccess: "+isSuccess+",information is "+information);
+				
+			}
+		});
 	}
 
 	private void initMailDataBase(String owerId)

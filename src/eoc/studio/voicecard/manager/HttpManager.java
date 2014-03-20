@@ -81,9 +81,24 @@ public class HttpManager
 
 	// LoginListener loginListener;
 	// PostMailListener postMailListener;
+	
 	public HttpManager()
 	{
 
+	}
+	
+	public HttpManager(Context context)
+	{
+		TelephonyManager tm = (TelephonyManager) context
+				.getSystemService(Context.TELEPHONY_SERVICE);
+		if (tm.getDeviceId() != null)
+		{
+			HttpManager.deviceIMEI = tm.getDeviceId();
+		}
+		else
+		{
+			HttpManager.deviceIMEI = android.os.Build.SERIAL;
+		}
 	}
 
 	public void init(Context context, String facebookID)

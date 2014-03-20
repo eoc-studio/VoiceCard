@@ -131,5 +131,9 @@
     
     <!-- exit app -->
     <string name="exit_app_to_home">再按一次返回鍵，即將離開留聲卡卡。</string>
-
+    
+    <!-- add favorite -->
+    <string name="add_favorite">增加</string>
+	<string name="add_favorite_success">到我的收藏成功</string>
+	<string name="no_favorite_exist">沒有收藏的卡片</string>
 </resources>
