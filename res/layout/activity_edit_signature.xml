@@ -18,7 +18,7 @@
 				<LinearLayout
 						android:id="@+id/act_edit_signature_llyt_header"
 						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
+						android:layout_height="@dimen/act_edit_signature_llyt_header_height"
 						android:layout_gravity="center"
 						android:background="@drawable/header_bg2"
 						android:clipToPadding="false"
@@ -27,38 +27,38 @@
 
 						<ImageView
 								android:id="@+id/act_edit_signature_iv_title"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
+								android:layout_width="@dimen/act_edit_signature_iv_title_width"
+								android:layout_height="@dimen/act_edit_signature_iv_title_height"
 								android:src="@drawable/title_signature" />
 				</LinearLayout>
 
 				<RelativeLayout
 						android:id="@+id/act_edit_signature_rlyt_middle"
 						android:layout_width="match_parent"
-						android:layout_height="435dp"
-						android:layout_marginTop="6dp"
+						android:layout_height="@dimen/act_edit_signature_rlyt_middle_height"
+						android:layout_marginTop="@dimen/act_edit_signature_rlyt_middle_marginTop"
 						android:clipChildren="false"
 						android:clipToPadding="false">
 
 						<LinearLayout
 								android:id="@+id/act_edit_signature_llyt_sketchpad"
 								android:layout_width="match_parent"
-								android:layout_height="270dp"
+								android:layout_height="@dimen/act_edit_signature_llyt_sketchpad_height"
 								android:clipToPadding="false"
 								android:orientation="horizontal">
 
 								<LinearLayout
 										android:id="@+id/act_edit_signature_llyt_sketchpad_painting_area"
-										android:layout_width="318dp"
+										android:layout_width="@dimen/act_edit_signature_llyt_sketchpad_painting_area_width"
 										android:layout_height="match_parent"
 										android:clipToPadding="false"
 										android:orientation="vertical">
 
 										<RelativeLayout
 												android:id="@+id/act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud"
-												android:layout_width="297dp"
-												android:layout_height="234dp"
-												android:layout_margin="10dp"
+												android:layout_width="@dimen/act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud_width"
+												android:layout_height="@dimen/act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud_height"
+												android:layout_margin="@dimen/act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud_margin"
 												android:background="@color/sketchpad_color">
 
 												<!-- add this view by programming <eoc.studio.voicecard.handwriting.HandWritingView 
@@ -69,46 +69,47 @@
 
 								<LinearLayout
 										android:id="@+id/act_edit_signature_llyt_sketchpad_painting_toolbox"
-										android:layout_width="45dp"
+										android:layout_width="@dimen/act_edit_signature_llyt_sketchpad_painting_toolbox_width"
 										android:layout_height="match_parent"
 										android:clipToPadding="false"
 										android:orientation="vertical">
 
 										<ImageButton
 												android:id="@+id/act_edit_signature_ib_mode"
-												android:layout_width="34dp"
-												android:layout_height="34dp"
-												android:layout_marginTop="10dp"
+												android:layout_width="@dimen/act_edit_signature_function_object_mode_width"
+												android:layout_height="@dimen/act_edit_signature_function_object_mode_height"
+												android:layout_marginTop="@dimen/act_edit_signature_function_object_mode_marginTop"
 												android:background="@drawable/icon_editor_draw" />
 
 										<RadioGroup
 												android:id="@+id/act_edit_signature_rgrp_paint_size"
 												android:layout_width="wrap_content"
 												android:layout_height="wrap_content"
-												android:layout_marginTop="10dp">
+												android:layout_marginTop="@dimen/act_edit_signature_rgrp_paint_size_marginTop">
 
-												<RadioButton
+  
+												<eoc.studio.voicecard.view.RadioButtonCenter
 														android:id="@+id/act_edit_signature_rb_paint_size_one"
-														android:layout_width="34dp"
-														android:layout_height="34dp"
+														android:layout_width="@dimen/act_edit_signature_function_object_mode_width"
+														android:layout_height="@dimen/act_edit_signature_function_object_mode_height"
 														android:background="@drawable/selector_paint_size_background"
 														android:button="@drawable/icon_brush_size_one"
 														android:checked="true"
 														android:text="SIZE_ONE"
 														android:textColor="@color/transparent_text" />
-
-												<RadioButton
+ 
+												<eoc.studio.voicecard.view.RadioButtonCenter
 														android:id="@+id/act_edit_signature_rb_paint_size_two"
-														android:layout_width="34dp"
-														android:layout_height="34dp"
+														android:layout_width="@dimen/act_edit_signature_function_object_mode_width"
+														android:layout_height="@dimen/act_edit_signature_function_object_mode_height"
 														android:background="@drawable/selector_paint_size_background"
 														android:button="@drawable/icon_brush_size_two"
 														android:text="SIZE_TWO"
 														android:textColor="@color/transparent_text" />
-												<RadioButton
+												<eoc.studio.voicecard.view.RadioButtonCenter
 														android:id="@+id/act_edit_signature_rb_paint_size_three"
-														android:layout_width="34dp"
-														android:layout_height="34dp"
+														android:layout_width="@dimen/act_edit_signature_function_object_mode_width"
+														android:layout_height="@dimen/act_edit_signature_function_object_mode_height"
 														android:background="@drawable/selector_paint_size_background"
 														android:button="@drawable/icon_brush_size_three"
 														android:text="SIZE_THREE"
@@ -118,24 +119,24 @@
 
 										<LinearLayout
 												android:id="@+id/act_edit_signature_llyt_choose_color"
-												android:layout_width="34dp"
-												android:layout_height="34dp"
-												android:layout_marginTop="10dp"
+												android:layout_width="@dimen/act_edit_signature_function_object_mode_width"
+												android:layout_height="@dimen/act_edit_signature_function_object_mode_height"
+												android:layout_marginTop="@dimen/act_edit_signature_rgrp_paint_size_marginTop"
 												android:background="@drawable/icon_editor_bg1"
 												android:orientation="vertical">
 
 												<ImageView
 														android:id="@+id/act_edit_signature_iv_choose_color"
-														android:layout_width="fill_parent"
-														android:layout_height="fill_parent"
+														android:layout_width="@dimen/act_edit_signature_function_object_mode_width"
+														android:layout_height="@dimen/act_edit_signature_function_object_mode_height"
 														android:background="@color/black" />
 										</LinearLayout>
 
 										<ImageButton
 												android:id="@+id/act_edit_signature_tb_eraser"
-												android:layout_width="34dp"
-												android:layout_height="34dp"
-												android:layout_marginTop="10dp"
+												android:layout_width="@dimen/act_edit_signature_function_object_mode_width"
+												android:layout_height="@dimen/act_edit_signature_function_object_mode_height"
+												android:layout_marginTop="@dimen/act_edit_signature_rgrp_paint_size_marginTop"
 												android:background="@drawable/btn_clear_all_selector"
 												android:checked="false"
 												android:text=""
@@ -164,12 +165,12 @@
 								<LinearLayout
 										android:id="@+id/act_edit_signature_llyt_drag_and_stamps_middle"
 										android:layout_width="match_parent"
-										android:layout_height="163dp"
+										android:layout_height="@dimen/act_edit_signature_llyt_drag_and_stamps_middle_height"
 										android:orientation="horizontal">
 
 										<LinearLayout
 												android:id="@+id/act_edit_signature_llyt_drag_trash"
-												android:layout_width="105dp"
+												android:layout_width="@dimen/act_edit_signature_llyt_drag_trash_width"
 												android:layout_height="match_parent"
 												android:background="@color/trash_drag_stamps_background"
 												android:clipToPadding="false"
@@ -178,8 +179,8 @@
 
 												<ImageView
 														android:id="@+id/act_edit_signature_iv_trash"
-														android:layout_width="wrap_content"
-														android:layout_height="wrap_content"
+														android:layout_width="@dimen/act_edit_signature_iv_trash_width"
+														android:layout_height="@dimen/act_edit_signature_iv_trash_height"
 														android:background="@drawable/trash" />
 
 												<LinearLayout
@@ -194,16 +195,16 @@
 
 										<RelativeLayout
 												android:id="@+id/act_edit_signature_rlyt_stamps_area"
-												android:layout_width="255dp"
-												android:layout_height="163dp"
+												android:layout_width="@dimen/act_edit_signature_rlyt_stamps_area_width"
+												android:layout_height="@dimen/act_edit_signature_rlyt_stamps_area_height"
 												android:background="@color/trash_drag_stamps_background"
 												android:clipChildren="false"
 												android:clipToPadding="false">
 
 												<LinearLayout
 														android:id="@+id/act_edit_signature_rlyt_stamps_area_left"
-														android:layout_width="30dp"
-														android:layout_height="165dp"
+														android:layout_width="@dimen/act_edit_signature_rlyt_stamps_area_left_width"
+														android:layout_height="@dimen/act_edit_signature_rlyt_stamps_area_left_height"
 														android:layout_alignParentLeft="true"
 														android:layout_centerVertical="true"
 														android:background="@color/trash_drag_stamps_background"
@@ -212,15 +213,15 @@
 
 														<ImageView
 																android:id="@+id/act_edit_signature_iv_arrow_left"
-																android:layout_width="wrap_content"
-																android:layout_height="wrap_content"
+																android:layout_width="@dimen/act_edit_signature_iv_arrow_left_width"
+																android:layout_height="@dimen/act_edit_signature_iv_arrow_left_height"
 																android:src="@drawable/icon_ar2_left" />
 												</LinearLayout>
 
 												<LinearLayout
 														android:id="@+id/act_edit_signature_rlyt_stamps_area_center"
-														android:layout_width="195dp"
-														android:layout_height="165dp"
+														android:layout_width="@dimen/act_edit_signature_rlyt_stamps_area_center_width"
+														android:layout_height="@dimen/act_edit_signature_rlyt_stamps_area_center_height"
 														android:layout_centerVertical="true"
 														android:layout_toRightOf="@+id/act_edit_signature_rlyt_stamps_area_left"
 														android:background="@color/trash_drag_stamps_background"
@@ -231,18 +232,18 @@
 																android:id="@+id/act_edit_signature_gv_stamps"
 																android:layout_width="match_parent"
 																android:layout_height="match_parent"
-																android:layout_marginTop="6dp"
-																android:columnWidth="50dp"
-																android:horizontalSpacing="2dp"
-																android:numColumns="4"
-																android:verticalSpacing="2dp">
+																android:layout_marginTop="@dimen/act_edit_signature_gv_stamps_marginTop"
+																android:columnWidth="@dimen/act_edit_signature_gv_stamps_columnWidth"
+																android:horizontalSpacing="@dimen/act_edit_signature_gv_stamps_horizontalSpacing"
+																android:verticalSpacing="@dimen/act_edit_signature_gv_stamps_verticalSpacing"
+																android:numColumns="4">
 														</GridView>
 												</LinearLayout>
 
 												<LinearLayout
 														android:id="@+id/act_edit_signature_rlyt_stamps_area_right"
-														android:layout_width="30dp"
-														android:layout_height="165dp"
+														android:layout_width="@dimen/act_edit_signature_rlyt_stamps_area_right_width"
+														android:layout_height="@dimen/act_edit_signature_rlyt_stamps_area_right_height"
 														android:layout_centerVertical="true"
 														android:layout_toRightOf="@+id/act_edit_signature_rlyt_stamps_area_center"
 														android:background="@color/trash_drag_stamps_background"
@@ -251,8 +252,8 @@
 
 														<ImageView
 																android:id="@+id/act_edit_signature_iv_arrow_right"
-																android:layout_width="wrap_content"
-																android:layout_height="wrap_content"
+																android:layout_width="@dimen/act_edit_signature_iv_arrow_right_width"
+																android:layout_height="@dimen/act_edit_signature_iv_arrow_right_height"
 																android:src="@drawable/icon_ar2_right" />
 												</LinearLayout>
 										</RelativeLayout>
@@ -270,11 +271,11 @@
 
 						<ImageView
 								android:id="@+id/act_edit_signature_iv_drag"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
+								android:layout_width="@dimen/act_edit_signature_iv_drag_width"
+								android:layout_height="@dimen/act_edit_signature_iv_drag_height"
 								android:layout_below="@id/act_edit_signature_llyt_sketchpad"
-								android:layout_marginLeft="103dp"
-								android:layout_marginTop="-16dp"
+								android:layout_marginLeft="@dimen/act_edit_signature_iv_drag_marginLeft"
+								android:layout_marginTop="@dimen/act_edit_signature_iv_drag_marginTop"
 								android:src="@drawable/handwrite_05" />
 				</RelativeLayout>
 
@@ -287,14 +288,14 @@
 
 						<ImageButton
 								android:id="@+id/act_edit_signature_ib_button_return"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
+								android:layout_width="@dimen/act_edit_signature_ib_button_return_width"
+								android:layout_height="@dimen/act_edit_signature_ib_button_return_height"
 								android:background="@drawable/btn_return_selector" />
 
 						<ImageButton
 								android:id="@+id/act_edit_signature_ib_button_ok"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
+								android:layout_width="@dimen/act_edit_signature_ib_button_ok_width"
+								android:layout_height="@dimen/act_edit_signature_ib_button_ok_height"
 								android:background="@drawable/btn_sure_selector" />
 				</LinearLayout>
 		</LinearLayout>

@@ -15,6 +15,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -23,12 +24,15 @@ import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.DragShadowBuilder;
 import android.view.View.OnClickListener;
 import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -36,6 +40,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -62,6 +67,10 @@ public class EditSignatureActivity extends Activity
 	private StampSortView stampSorterView = null;
 
 	private ImageButton changeModeButton = null;
+
+	private LinearLayout headerLayout = null;
+
+	private ImageView titleImageView = null;
 
 	private RelativeLayout sketchpadLayout = null;
 
@@ -230,6 +239,7 @@ public class EditSignatureActivity extends Activity
 	public void initializeAllView()
 	{
 
+		initHeaderLayoutHeight();
 		initSketchLayout();
 		initTrashImageView();
 		initChangeModeButton();
@@ -240,6 +250,36 @@ public class EditSignatureActivity extends Activity
 		initChooseColorImageView();
 		InitReturnButton();
 		InitOkButton();
+	}
+
+	public void initHeaderLayoutHeight()
+	{
+
+		boolean hasMenuKey = ViewConfiguration.get(context).hasPermanentMenuKey();
+		Log.d(TAG, "hasMenuKey: " + hasMenuKey);
+
+		if (!hasMenuKey)
+		{
+			//this device has a navigation bar
+			BitmapDrawable bdHeader = (BitmapDrawable) this.getResources().getDrawable(
+					R.drawable.header_bg2);
+			int theLayoutResizeHeight = bdHeader.getBitmap().getHeight();
+
+			headerLayout = (LinearLayout) findViewById(R.id.act_edit_signature_llyt_header);
+
+			Log.d(TAG, "theLayoutResizeHeight: " + theLayoutResizeHeight);
+			headerLayout.getLayoutParams().height = (int) (theLayoutResizeHeight * 0.5);
+
+			titleImageView = (ImageView) findViewById(R.id.act_edit_signature_iv_title);
+
+			BitmapDrawable bdTitle = (BitmapDrawable) this.getResources().getDrawable(
+					R.drawable.title_signature);
+			int theImageResizeHeight = bdTitle.getBitmap().getHeight();
+
+			Log.d(TAG, "theImageResizeHeight: " + theImageResizeHeight);
+			titleImageView.getLayoutParams().height = (int) (theImageResizeHeight * 0.5);
+
+		}
 	}
 
 	private void initArrowVIews()

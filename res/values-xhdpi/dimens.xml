@@ -1,101 +1,176 @@
 <resources>
 
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">12dp</dimen>
-    <dimen name="activity_vertical_margin">12dp</dimen>
+		<!-- Default screen margins, per the Android Design guidelines. -->
+		<dimen name="activity_horizontal_margin">12dp</dimen>
+		<dimen name="activity_vertical_margin">12dp</dimen>
 
-    <!-- Common UI layout -->
-    <dimen name="common_font_size">20sp</dimen>
-    <dimen name="common_font_small_size">17sp</dimen>
-    <dimen name="common_txt_width">300dp</dimen>
-    <dimen name="common_txt_height">40dp</dimen>
-    <dimen name="common_txt_height_long">60dp</dimen>
-    <dimen name="common_input_padding">12dp</dimen>
-    <dimen name="common_check_icon_edge">20dp</dimen>
-    <dimen name="common_check_icon_margin">20dp</dimen>
+		<!-- Common UI layout -->
+		<dimen name="common_font_size">20sp</dimen>
+		<dimen name="common_font_small_size">17sp</dimen>
+		<dimen name="common_txt_width">300dp</dimen>
+		<dimen name="common_txt_height">40dp</dimen>
+		<dimen name="common_txt_height_long">60dp</dimen>
+		<dimen name="common_input_padding">12dp</dimen>
+		<dimen name="common_check_icon_edge">20dp</dimen>
+		<dimen name="common_check_icon_margin">20dp</dimen>
 
-    <!-- About Select Friend -->
-    <dimen name="act_select_friend_margin_top">30dp</dimen>
-    <dimen name="act_select_friend_margin_top_small">15dp</dimen>
-    <dimen name="act_select_friend_list_height">200dp</dimen>
-    <dimen name="act_select_friend_divider_height">1dp</dimen>
-    <dimen name="act_select_friend_dash_horizontal_height">1dp</dimen>
-    <dimen name="act_select_friend_iv_search_button_margin_top">4dp</dimen>
-    <dimen name="act_select_friend_iv_search_button_margin_right">30dp</dimen>
+		<!-- About Select Friend -->
+		<dimen name="act_select_friend_margin_top">30dp</dimen>
+		<dimen name="act_select_friend_margin_top_small">15dp</dimen>
+		<dimen name="act_select_friend_list_height">200dp</dimen>
+		<dimen name="act_select_friend_divider_height">1dp</dimen>
+		<dimen name="act_select_friend_dash_horizontal_height">1dp</dimen>
+		<dimen name="act_select_friend_iv_search_button_margin_top">4dp</dimen>
+		<dimen name="act_select_friend_iv_search_button_margin_right">30dp</dimen>
 
-    <!-- About Friend Info -->
-    <dimen name="user_info_header_edge">50dp</dimen>
-    <dimen name="user_info_name_width">100dp</dimen>
-    <dimen name="user_info_name_height">80dp</dimen>
-    <dimen name="user_info_name_margin_left">20dp</dimen>
+		<!-- About Friend Info -->
+		<dimen name="user_info_header_edge">50dp</dimen>
+		<dimen name="user_info_name_width">100dp</dimen>
+		<dimen name="user_info_name_height">80dp</dimen>
+		<dimen name="user_info_name_margin_left">20dp</dimen>
 
-    <!-- About Mailbox -->
-    <dimen name="act_mailbox_rlyt_menu_marginBottom">10dp</dimen>
-    <dimen name="act_mailbox_v_menu_divider_width">1dp</dimen>
-    <dimen name="act_mailbox_v_menu_divider_height">40dp</dimen>
-    <dimen name="act_mailbox_v_menu_margin">20dp</dimen>
-    <dimen name="act_mailbox_rlyt_titlebar_height">30dp</dimen>
-    <dimen name="act_mailbox_iv_titlebar_margin_left">10dp</dimen>
-    <dimen name="act_mailbox_v_titlebar_divider_width">1dp</dimen>
-    <dimen name="act_mailbox_v_titlebar_divider_height">20dp</dimen>
-    <dimen name="act_mailbox_v_titlebar_margin_left_right">10dp</dimen>
-    <dimen name="act_mailbox_rlyt_content_height">360dp</dimen>
-    <dimen name="act_mailbox_v_titlebar_margin_top">5dp</dimen>
-    <dimen name="act_mailbox_tv_errorMsg_height">40dp</dimen>
-    <dimen name="act_mailbox_tv_errorMsg_text_size">30dp</dimen>
+		<!-- About Mailbox -->
+		<dimen name="act_mailbox_rlyt_menu_marginBottom">10dp</dimen>
+		<dimen name="act_mailbox_v_menu_divider_width">1dp</dimen>
+		<dimen name="act_mailbox_v_menu_divider_height">40dp</dimen>
+		<dimen name="act_mailbox_v_menu_margin">20dp</dimen>
+		<dimen name="act_mailbox_rlyt_titlebar_height">30dp</dimen>
+		<dimen name="act_mailbox_iv_titlebar_margin_left">10dp</dimen>
+		<dimen name="act_mailbox_v_titlebar_divider_width">1dp</dimen>
+		<dimen name="act_mailbox_v_titlebar_divider_height">20dp</dimen>
+		<dimen name="act_mailbox_v_titlebar_margin_left_right">10dp</dimen>
+		<dimen name="act_mailbox_rlyt_content_height">360dp</dimen>
+		<dimen name="act_mailbox_v_titlebar_margin_top">5dp</dimen>
+		<dimen name="act_mailbox_tv_errorMsg_height">40dp</dimen>
+		<dimen name="act_mailbox_tv_errorMsg_text_size">30dp</dimen>
 
-    <!-- About Mailbox Item -->
-    <dimen name="glb_mailbox_list_item_llyt_check_icon_width">60dp</dimen>
-    <dimen name="glb_mailbox_list_item_llyt_check_icon_height">60dp</dimen>
-    <dimen name="glb_mailbox_list_item_img_edge">60dp</dimen>
-    <dimen name="glb_mailbox_list_item_llyt_info_height">60dp</dimen>
-    <dimen name="glb_mailbox_list_item_llyt_info_marginLeft">10dp</dimen>
-    <dimen name="glb_mailbox_list_item_tv_info_height">20dp</dimen>
-    <dimen name="glb_mailbox_list_item_tv_subject_text_size">16dp</dimen>
-    <dimen name="glb_mailbox_list_item_tv_sendtime_text_size">12dp</dimen>
-    <dimen name="glb_mailbox_list_item_new_icon_width">60dp</dimen>
-    <dimen name="glb_mailbox_list_item_new_icon_height">20dp</dimen>
-    <dimen name="glb_mailbox_list_item_new_icon_marginRight">10dp</dimen>
+		<!-- About Mailbox Item -->
+		<dimen name="glb_mailbox_list_item_llyt_check_icon_width">60dp</dimen>
+		<dimen name="glb_mailbox_list_item_llyt_check_icon_height">60dp</dimen>
+		<dimen name="glb_mailbox_list_item_img_edge">60dp</dimen>
+		<dimen name="glb_mailbox_list_item_llyt_info_height">60dp</dimen>
+		<dimen name="glb_mailbox_list_item_llyt_info_marginLeft">10dp</dimen>
+		<dimen name="glb_mailbox_list_item_tv_info_height">20dp</dimen>
+		<dimen name="glb_mailbox_list_item_tv_subject_text_size">16dp</dimen>
+		<dimen name="glb_mailbox_list_item_tv_sendtime_text_size">12dp</dimen>
+		<dimen name="glb_mailbox_list_item_new_icon_width">60dp</dimen>
+		<dimen name="glb_mailbox_list_item_new_icon_height">20dp</dimen>
+		<dimen name="glb_mailbox_list_item_new_icon_marginRight">10dp</dimen>
 
-    <!-- Card Selector Gallery Item -->
-    <dimen name="card_list_item_card_width">217.5dip</dimen>
-    <dimen name="card_list_item_card_height">280dip</dimen>
-    <dimen name="card_list_item_wrapper_width">250dip</dimen>
-    <dimen name="card_list_item_wrapper_height">280dip</dimen>
+		<!-- Card Selector Gallery Item -->
+		<dimen name="card_list_item_card_width">217.5dip</dimen>
+		<dimen name="card_list_item_card_height">280dip</dimen>
+		<dimen name="card_list_item_wrapper_width">250dip</dimen>
+		<dimen name="card_list_item_wrapper_height">280dip</dimen>
 
-    <!-- Card Editor/Viewer -->
-    <dimen name="card_open_shadow_width">485.5dip</dimen>
-    <dimen name="card_open_shadow_height">290.5dip</dimen>
-    <dimen name="card_open_page_width">474dip</dimen>
-    <dimen name="card_open_page_height">280dip</dimen>
-    <dimen name="card_open_page_margin_left">6dip</dimen>
-    <dimen name="card_open_page_margin_right">5.5dip</dimen>
-    <dimen name="card_open_page_margin_top">0dip</dimen>
-    <dimen name="card_close_shadow_width">248dip</dimen>
-    <dimen name="card_close_shadow_height">291dip</dimen>
-    <dimen name="card_editor_land_card_margin_top">50dip</dimen>
-    <dimen name="card_animation_wrapper_width">500dip</dimen>
-    <dimen name="card_single_page_width">237dip</dimen>
-    <dimen name="card_single_page_height">280dip</dimen>
-    <dimen name="card_single_page_margin_top">4.5dip</dimen>
-    <dimen name="card_single_page_margin_left">4.5dip</dimen>
-    
-    <!-- Card Editable Frames -->
-    <dimen name="card_editable_frames_image_width">175dip</dimen>
-    <dimen name="card_editable_frames_image_height">175dip</dimen>
-    <dimen name="card_editable_frames_image_top">21.5dip</dimen>
-    <dimen name="card_editable_frames_image_left">37dip</dimen>
-    <dimen name="card_editable_frames_voice_width">175dip</dimen>
-    <dimen name="card_editable_frames_voice_height">50dip</dimen>
-    <dimen name="card_editable_frames_voice_top">208dip</dimen>
-    <dimen name="card_editable_frames_voice_left">37dip</dimen>
-    <dimen name="card_editable_frames_text_width">175dip</dimen>
-    <dimen name="card_editable_frames_text_height">160dip</dimen>
-    <dimen name="card_editable_frames_text_top">21.5dip</dimen>
-    <dimen name="card_editable_frames_text_left">275dip</dimen>
-    <dimen name="card_editable_frames_sign_width">175dip</dimen>
-    <dimen name="card_editable_frames_sign_height">65dip</dimen>
-    <dimen name="card_editable_frames_sign_top">193dip</dimen>
-    <dimen name="card_editable_frames_sign_left">275dip</dimen>
-    
+		<!-- Card Editor/Viewer -->
+		<dimen name="card_open_shadow_width">485.5dip</dimen>
+		<dimen name="card_open_shadow_height">290.5dip</dimen>
+		<dimen name="card_open_page_width">474dip</dimen>
+		<dimen name="card_open_page_height">280dip</dimen>
+		<dimen name="card_open_page_margin_left">6dip</dimen>
+		<dimen name="card_open_page_margin_right">5.5dip</dimen>
+		<dimen name="card_open_page_margin_top">0dip</dimen>
+		<dimen name="card_close_shadow_width">248dip</dimen>
+		<dimen name="card_close_shadow_height">291dip</dimen>
+		<dimen name="card_editor_land_card_margin_top">50dip</dimen>
+		<dimen name="card_animation_wrapper_width">500dip</dimen>
+		<dimen name="card_single_page_width">237dip</dimen>
+		<dimen name="card_single_page_height">280dip</dimen>
+		<dimen name="card_single_page_margin_top">4.5dip</dimen>
+		<dimen name="card_single_page_margin_left">4.5dip</dimen>
+
+		<!-- Card Editable Frames -->
+		<dimen name="card_editable_frames_image_width">175dip</dimen>
+		<dimen name="card_editable_frames_image_height">175dip</dimen>
+		<dimen name="card_editable_frames_image_top">21.5dip</dimen>
+		<dimen name="card_editable_frames_image_left">37dip</dimen>
+		<dimen name="card_editable_frames_voice_width">175dip</dimen>
+		<dimen name="card_editable_frames_voice_height">50dip</dimen>
+		<dimen name="card_editable_frames_voice_top">208dip</dimen>
+		<dimen name="card_editable_frames_voice_left">37dip</dimen>
+		<dimen name="card_editable_frames_text_width">175dip</dimen>
+		<dimen name="card_editable_frames_text_height">160dip</dimen>
+		<dimen name="card_editable_frames_text_top">21.5dip</dimen>
+		<dimen name="card_editable_frames_text_left">275dip</dimen>
+		<dimen name="card_editable_frames_sign_width">175dip</dimen>
+		<dimen name="card_editable_frames_sign_height">65dip</dimen>
+		<dimen name="card_editable_frames_sign_top">193dip</dimen>
+		<dimen name="card_editable_frames_sign_left">275dip</dimen>
+
+		<!-- Edit Signature -->
+		<dimen name="act_edit_signature_llyt_header_height">94dp</dimen>
+
+		<dimen name="act_edit_signature_iv_title_width">125dp</dimen>
+		<dimen name="act_edit_signature_iv_title_height">43dp</dimen>
+
+		<dimen name="act_edit_signature_rlyt_middle_height">435dp</dimen>
+		<dimen name="act_edit_signature_rlyt_middle_marginTop">6dp</dimen>
+
+		<dimen name="act_edit_signature_llyt_sketchpad_height">270dp</dimen>
+
+		<dimen name="act_edit_signature_llyt_sketchpad_painting_area_width">318dp</dimen>
+		<dimen
+				name="act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud_width">297dp</dimen>
+		<dimen
+				name="act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud_height">234dp</dimen>
+		<dimen
+				name="act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud_margin">10dp</dimen>
+
+		<dimen name="act_edit_signature_llyt_sketchpad_painting_toolbox_width">45dp</dimen>
+
+		<dimen name="act_edit_signature_function_object_mode_width">34dp</dimen>
+		<dimen name="act_edit_signature_function_object_mode_height">34dp</dimen>
+		<dimen name="act_edit_signature_function_object_mode_marginTop">10dp</dimen>
+
+		<dimen name="act_edit_signature_rgrp_paint_size_marginTop">10dp</dimen>
+
+		<dimen name="act_edit_signature_llyt_drag_and_stamps_middle_height">163dp</dimen>
+
+		<dimen name="act_edit_signature_llyt_drag_trash_width">105dp</dimen>
+
+
+		<dimen name="act_edit_signature_iv_trash_width">80dp</dimen>
+		<dimen name="act_edit_signature_iv_trash_height">66dp</dimen>
+
+
+		<dimen name="act_edit_signature_iv_arrow_left_width">15dp</dimen>
+		<dimen name="act_edit_signature_iv_arrow_left_height">16dp</dimen>
+
+		<dimen name="act_edit_signature_iv_arrow_right_width">15dp</dimen>
+		<dimen name="act_edit_signature_iv_arrow_right_height">16dp</dimen>
+
+		<dimen name="act_edit_signature_rlyt_stamps_area_width">255dp</dimen>
+		<dimen name="act_edit_signature_rlyt_stamps_area_height">163dp</dimen>
+
+		<dimen name="act_edit_signature_rlyt_stamps_area_left_width">30dp</dimen>
+		<dimen name="act_edit_signature_rlyt_stamps_area_left_height">165dp</dimen>
+
+		<dimen name="act_edit_signature_rlyt_stamps_area_center_width">195dp</dimen>
+		<dimen name="act_edit_signature_rlyt_stamps_area_center_height">165dp</dimen>
+
+
+		<dimen name="act_edit_signature_gv_stamps_marginTop">6dp</dimen>
+
+		<dimen name="act_edit_signature_gv_stamps_width_height">45dp</dimen>
+		<dimen name="act_edit_signature_gv_stamps_columnWidth">50dp</dimen>
+
+		<dimen name="act_edit_signature_gv_stamps_horizontalSpacing">2dp</dimen>
+		<dimen name="act_edit_signature_gv_stamps_verticalSpacing">2dp</dimen>
+
+
+		<dimen name="act_edit_signature_rlyt_stamps_area_right_width">30dp</dimen>
+		<dimen name="act_edit_signature_rlyt_stamps_area_right_height">165dp</dimen>
+
+		<dimen name="act_edit_signature_iv_drag_marginLeft">103dp</dimen>
+		<dimen name="act_edit_signature_iv_drag_marginTop">-16dp</dimen>
+
+		<dimen name="act_edit_signature_iv_drag_width">32dp</dimen>
+		<dimen name="act_edit_signature_iv_drag_height">38dp</dimen>
+		
+		<dimen name="act_edit_signature_ib_button_return_width">117dp</dimen>
+		<dimen name="act_edit_signature_ib_button_return_height">39dp</dimen>
+		<dimen name="act_edit_signature_ib_button_ok_width">117dp</dimen>
+		<dimen name="act_edit_signature_ib_button_ok_height">39dp</dimen>
+
 </resources>

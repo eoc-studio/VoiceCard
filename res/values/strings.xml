@@ -22,7 +22,7 @@
 
     <!-- About Newspaper -->
     <string name="magazine_edit_background_string">封面底圖</string>
-    <string name="newspaper_edit_title_string">Select title</string>
+    <string name="newspaper_edit_title_string">選擇標題</string>
     <string name="newspaper_edit_main_photo_string">圖片</string>
     <string name="newspaper_edit_photo_and_text_string">圖文</string>
     <string name="set_dilog_ok">確定</string>
