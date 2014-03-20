@@ -8,9 +8,31 @@ public class PaintUtility
 	private PaintUtility() {
 
 	}
-    public static final class SKETTCHPAD{
-    	public static final int WIDTH = 700;
-    	public static final int HEIGHT = 500;
+    public static class SKETTCHPAD{
+    	public static  int WIDTH = 700;
+    	public static  int HEIGHT = 500;
+    	
+		public static int getWIDTH()
+		{
+		
+			return WIDTH;
+		}
+		public static void setWIDTH(int wIDTH)
+		{
+		
+			WIDTH = wIDTH;
+		}
+		public static int getHEIGHT()
+		{
+		
+			return HEIGHT;
+		}
+		public static void setHEIGHT(int hEIGHT)
+		{
+		
+			HEIGHT = hEIGHT;
+		}
+
     }
 	public static final class ERASER_SIZE {
 		public static final int SIZE_1 = 5;

@@ -377,8 +377,7 @@ public class EditSignatureActivity extends Activity
 	public void initSketchLayout()
 	{
 
-		handWritingView = new HandWritingView(this);
-		handWritingView.disableEraser(); // turn off Eraser function
+
 
 		stampSorterView = new StampSortView(this);
 
@@ -387,6 +386,12 @@ public class EditSignatureActivity extends Activity
 
 		sketchpadLayout.addView(stampSorterView, new LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.FILL_PARENT));
+/*		android:layout_width="297dp"
+		android:layout_height="234dp"*/
+		PaintUtility.SKETTCHPAD.setHEIGHT((int)DragUtility.convertDpToPixel(234, context));
+		PaintUtility.SKETTCHPAD.setWIDTH((int)DragUtility.convertDpToPixel(297, context)); 
+		handWritingView = new HandWritingView(this);
+		handWritingView.disableEraser(); // turn off Eraser function
 		sketchpadLayout.addView(handWritingView);
 
 		// stampSorterView.setBackgroundColor(R.color.sketchpad_color);

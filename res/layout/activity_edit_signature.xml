@@ -2,8 +2,8 @@
 <RelativeLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:id="@+id/act_edit_signature_rlyt_main"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
 		android:clipChildren="false"
 		android:clipToPadding="false">
 
@@ -147,7 +147,7 @@
 						<LinearLayout
 								android:id="@+id/act_edit_signature_llyt_drag_and_stamps"
 								android:layout_width="match_parent"
-								android:layout_height="165dp"
+								android:layout_height="wrap_content"
 								android:layout_below="@+id/act_edit_signature_llyt_sketchpad"
 								android:background="@color/gold"
 								android:clipToPadding="false"
@@ -281,7 +281,7 @@
 				<LinearLayout
 						android:id="@+id/act_edit_signature_llyt_bottom"
 						android:layout_width="match_parent"
-						android:layout_height="86dp"
+						android:layout_height="match_parent"
 						android:gravity="center"
 						android:orientation="horizontal">
 
