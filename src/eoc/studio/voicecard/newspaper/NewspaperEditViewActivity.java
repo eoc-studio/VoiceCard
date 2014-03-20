@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class NewspaperEditViewActivity extends Activity implements OnClickListener
 {
@@ -28,6 +29,8 @@ public class NewspaperEditViewActivity extends Activity implements OnClickListen
             mSetLeftBottomEditTextIconView3, mSetLeftBottomEditTextIconView4;
     private static TextView mSetLeftBottomEditTextView, mSetLeftBottomEditTextView2, mSetLeftBottomEditTextView3,
             mSetLeftBottomEditTextView4;
+
+    private static boolean leftPhotoView = false, leftBottonPhotoView = false, leftBottonPhotoView2 = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
@@ -205,7 +208,17 @@ public class NewspaperEditViewActivity extends Activity implements OnClickListen
                 break;
             case R.id.setButtonConfirmView:
             {
-                runButtonConfirmFunction();
+                if (!leftPhotoView && !leftBottonPhotoView && !leftBottonPhotoView2)
+                {
+                    Toast.makeText(this, getResources().getString(R.string.news_no_setted), Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    leftPhotoView = false;
+                    leftBottonPhotoView = false;
+                    leftBottonPhotoView2 = false;
+                    runButtonConfirmFunction();
+                }
             }
                 break;
         }
@@ -263,6 +276,7 @@ public class NewspaperEditViewActivity extends Activity implements OnClickListen
                                 DrawableProcess.imageUri);
                         mSetLeftPhotoView.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
                                 ValueCacheProcessCenter.LEFT_PHOTO_BITMAP_CATCHE));
+                        leftPhotoView = true;
                     }
                     break;
                 case DrawableProcess.PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW1:
@@ -273,6 +287,7 @@ public class NewspaperEditViewActivity extends Activity implements OnClickListen
                                 this, DrawableProcess.imageUri);
                         mSetLeftBottomEditPhotoView1.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
                                 ValueCacheProcessCenter.LEFT_BOTTON_PHOTO_BITMAP_CATCHE1));
+                        leftBottonPhotoView = true;
                     }
                     break;
                 case DrawableProcess.PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW2:
@@ -283,6 +298,7 @@ public class NewspaperEditViewActivity extends Activity implements OnClickListen
                                 this, DrawableProcess.imageUri);
                         mSetLeftBottomEditPhotoView2.setBackgroundDrawable(DrawableProcess.getBitmapToDrawable(this,
                                 ValueCacheProcessCenter.LEFT_BOTTON_PHOTO_BITMAP_CATCHE2));
+                        leftBottonPhotoView2 = true;
                     }
                     break;
             }

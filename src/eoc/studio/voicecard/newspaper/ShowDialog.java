@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ public class ShowDialog
 {
     private static AlertDialog alert;
     private static EditText input;
+    private static final int maxInputLength = 11;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected static void showSetValueDialog(final Context context, final TextView view, final ImageView imgView,
@@ -23,6 +25,9 @@ public class ShowDialog
         input = new EditText(context);
         input.setSingleLine();
         input.setTextSize(24);
+        input.setFilters(new InputFilter[]
+        { new InputFilter.LengthFilter(maxInputLength) });
+
         setEditText(orderValue);
 
         alert = new AlertDialog.Builder(context).create();

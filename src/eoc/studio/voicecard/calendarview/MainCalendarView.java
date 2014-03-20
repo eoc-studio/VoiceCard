@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainCalendarView extends FragmentActivity implements OnClickListener
 {
@@ -112,6 +113,8 @@ public class MainCalendarView extends FragmentActivity implements OnClickListene
                                 }
                             }
                         }
+                        Toast.makeText(mContext, getResources().getString(R.string.import_completion_message),
+                                Toast.LENGTH_LONG).show();
                     }
                 }
                 break;

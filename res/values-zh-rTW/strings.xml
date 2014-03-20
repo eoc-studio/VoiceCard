@@ -37,8 +37,11 @@
 
     <!-- About MemorialDay -->
     <string name="current_month_placeholder">1970-January</string>
-    <string name="previous_month_placeholder">&lt;&lt;</string>
-    <string name="next_month_placeholder">&gt;&gt;</string>
+    <string name="cancelBtn">取消</string>
+    <string name="yesBtn">確定</string>
+    <string name="delete_confirm_title">資料刪除</string>
+    <string name="delete_confirm_message">確定刪除</string>
+    <string name="import_completion_message">匯入完成</string>
 
     <!-- MailBoxIconView -->
     <string name="mail">郵件</string>
