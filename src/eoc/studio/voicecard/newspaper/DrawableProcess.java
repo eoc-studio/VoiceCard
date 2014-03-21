@@ -187,6 +187,23 @@ public class DrawableProcess
         activity.startActivityForResult(intent, requestCode);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static void getImage(final Activity activity, final int requestCode, Uri uri, int width, int height) {
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setType("image/*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("outputX", width);
+        intent.putExtra("outputY", height);
+        intent.putExtra("aspectX", width);
+        intent.putExtra("aspectY", height);
+        intent.putExtra("scale", true);
+        intent.putExtra("return-data", false);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("noFaceDetection", false);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected static Bitmap decodeUriAsBitmap(Context context, Uri uri)
     {
