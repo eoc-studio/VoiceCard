@@ -1,0 +1,78 @@
+<resources>
+ <!-- HDPI -->
+
+    <!-- Edit Signature -->
+		<dimen name="act_edit_signature_llyt_header_height">72dp</dimen>
+
+		<dimen name="act_edit_signature_iv_title_width">124dp</dimen>
+		<dimen name="act_edit_signature_iv_title_height">37dp</dimen>
+
+		<dimen name="act_edit_signature_rlyt_middle_height">371dp</dimen>
+		<dimen name="act_edit_signature_rlyt_middle_marginTop">4dp</dimen>
+
+		<dimen name="act_edit_signature_llyt_sketchpad_height">225dp</dimen>
+
+		<dimen name="act_edit_signature_llyt_sketchpad_painting_area_width">282dp</dimen>
+		<dimen
+				name="act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud_width">264dp</dimen>
+		<dimen
+				name="act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud_height">189dp</dimen>
+		<dimen
+				name="act_edit_signature_rlyt_sketchpad_painting_area_with_backgroud_margin">7dp</dimen>
+
+		<dimen name="act_edit_signature_llyt_sketchpad_painting_toolbox_width">37dp</dimen>
+
+		<dimen name="act_edit_signature_function_object_mode_width">27dp</dimen>
+		<dimen name="act_edit_signature_function_object_mode_height">27dp</dimen>
+		<dimen name="act_edit_signature_function_object_mode_marginTop">7dp</dimen>
+
+		<dimen name="act_edit_signature_rgrp_paint_size_marginTop">7dp</dimen>
+
+		<dimen name="act_edit_signature_llyt_drag_and_stamps_middle_height">134dp</dimen>
+
+		<dimen name="act_edit_signature_llyt_drag_trash_width">101dp</dimen>
+
+
+		<dimen name="act_edit_signature_iv_trash_width">78dp</dimen>
+		<dimen name="act_edit_signature_iv_trash_height">59dp</dimen>
+
+
+		<dimen name="act_edit_signature_iv_arrow_left_width">16dp</dimen>
+		<dimen name="act_edit_signature_iv_arrow_left_height">16dp</dimen>
+
+		<dimen name="act_edit_signature_iv_arrow_right_width">16dp</dimen>
+		<dimen name="act_edit_signature_iv_arrow_right_height">16dp</dimen>
+
+		<dimen name="act_edit_signature_rlyt_stamps_area_width">219dp</dimen>
+		<dimen name="act_edit_signature_rlyt_stamps_area_height">134dp</dimen>
+
+		<dimen name="act_edit_signature_rlyt_stamps_area_left_width">27dp</dimen>
+		<dimen name="act_edit_signature_rlyt_stamps_area_left_height">134dp</dimen>
+
+		<dimen name="act_edit_signature_rlyt_stamps_area_center_width">141dp</dimen>
+		<dimen name="act_edit_signature_rlyt_stamps_area_center_height">134dp</dimen>
+
+
+		<dimen name="act_edit_signature_gv_stamps_marginTop">4dp</dimen>
+
+		<dimen name="act_edit_signature_gv_stamps_width_height">33dp</dimen>
+		<dimen name="act_edit_signature_gv_stamps_columnWidth">37dp</dimen>
+
+		<dimen name="act_edit_signature_gv_stamps_horizontalSpacing">1dp</dimen>
+		<dimen name="act_edit_signature_gv_stamps_verticalSpacing">1dp</dimen>
+
+
+		<dimen name="act_edit_signature_rlyt_stamps_area_right_width">27dp</dimen>
+		<dimen name="act_edit_signature_rlyt_stamps_area_right_height">134dp</dimen>
+
+		<dimen name="act_edit_signature_iv_drag_marginLeft">94dp</dimen>
+		<dimen name="act_edit_signature_iv_drag_marginTop">-17dp</dimen>
+
+		<dimen name="act_edit_signature_iv_drag_width">32dp</dimen>
+		<dimen name="act_edit_signature_iv_drag_height">36dp</dimen>
+		
+		<dimen name="act_edit_signature_ib_button_return_width">95dp</dimen>
+		<dimen name="act_edit_signature_ib_button_return_height">28dp</dimen>
+		<dimen name="act_edit_signature_ib_button_ok_width">95dp</dimen>
+		<dimen name="act_edit_signature_ib_button_ok_height">28dp</dimen>
+</resources>
