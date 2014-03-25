@@ -13,21 +13,21 @@
 				android:orientation="vertical"
 				android:gravity="center">
 				<RelativeLayout
-						android:layout_width="250dp"
-						android:layout_height="250dp">
+						android:layout_width="@dimen/act_main_loading_llyt_up_width"
+						android:layout_height="@dimen/act_main_loading_llyt_up_height">
 						<ImageView
 								android:id="@+id/act_main_loading_iv_logo"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
+								android:layout_width="@dimen/act_main_loading_iv_logo_width"
+								android:layout_height="@dimen/act_main_loading_iv_logo_height"
 								android:layout_centerHorizontal="true"
 								android:layout_centerVertical="true"
 								android:src="@drawable/loading_logo" />
 						<eoc.studio.voicecard.progresswheel.ProgressWheel
 								android:id="@+id/act_main_loading_progresswheel_main"
-								android:layout_width="250dp"
-								android:layout_height="250dp"
+								android:layout_width="@dimen/act_main_loading_progresswheel_main_width"
+								android:layout_height="@dimen/act_main_loading_progresswheel_main_height"
 								ProgressWheel:barColor="#ffd92e"
-								ProgressWheel:barLength="60dp"
+								ProgressWheel:barLength="@dimen/act_main_loading_progresswheel_main_barLength"
 								ProgressWheel:barWidth="5dp"
 								ProgressWheel:rimColor="#a37655"
 								ProgressWheel:rimWidth="5dp"

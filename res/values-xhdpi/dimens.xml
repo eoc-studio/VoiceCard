@@ -172,5 +172,24 @@
 		<dimen name="act_edit_signature_ib_button_return_height">39dp</dimen>
 		<dimen name="act_edit_signature_ib_button_ok_width">117dp</dimen>
 		<dimen name="act_edit_signature_ib_button_ok_height">39dp</dimen>
-
+		
+		<!-- Main Loading -->
+		<dimen name="act_main_loading_llyt_up_width">250dp</dimen>
+		<dimen name="act_main_loading_llyt_up_height">250dp</dimen>	
+		<dimen name="act_main_loading_iv_logo_width">193dp</dimen>
+		<dimen name="act_main_loading_iv_logo_height">112dp</dimen>
+		<dimen name="act_main_loading_progresswheel_main_width">250dp</dimen>
+		<dimen name="act_main_loading_progresswheel_main_height">250dp</dimen>
+		<dimen name="act_main_loading_progresswheel_main_barLength">60dp</dimen>
+		
+		<!-- Card Category Selector Gallery Item -->
+		<dimen name="glb_card_category_grid_item_iv_image_width">80dp</dimen>
+		<dimen name="glb_card_category_grid_item_iv_image_height">80dp</dimen>
+		<dimen name="glb_card_category_grid_item_tv_name_width">80dp</dimen>
+		<dimen name="glb_card_category_grid_item_tv_name_height">27dp</dimen>
+		
+		<dimen name="glb_card_category_grid_item_tv_name_textsize">14sp</dimen>
+		
+		<dimen name="act_card_category_selector_gv_categories_verticalSpacing">15dp</dimen>
+		
 </resources>

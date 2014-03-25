@@ -21,7 +21,7 @@
         android:cacheColorHint="@android:color/transparent"
         android:listSelector="@android:color/transparent"
         android:numColumns="3"
-        android:verticalSpacing="15dip" />
+        android:verticalSpacing="@dimen/act_card_category_selector_gv_categories_verticalSpacing" />
 
     <ImageView
         android:id="@+id/act_card_category_selector_iv_menu_background"
