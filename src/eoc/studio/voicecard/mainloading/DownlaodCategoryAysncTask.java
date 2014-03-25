@@ -10,6 +10,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 
 import eoc.studio.voicecard.card.database.CategoryAssistant;
+import eoc.studio.voicecard.utils.FileUtility;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -132,12 +133,21 @@ public class DownlaodCategoryAysncTask extends
 				+ this.context.getFilesDir().getPath());
 		Log.d(TAG, "getFileName() catId:" + catId);
 
-		File pathDir = new File(context.getFilesDir().getPath() + "/CategoryImages/" + catId);
+		
+		
+		String dpiFolderName = FileUtility.getFolderNameUsingSystemDPI(this.context);
+
+		File pathDir = new File(context.getFilesDir().getPath() + "/CategoryImages/"
+				+ dpiFolderName + "/" + catId);
 		if (!pathDir.exists()) pathDir.mkdirs();
 
-		name = context.getFilesDir().getPath() + "/CategoryImages/" + catId + "/" + name;
-
-		Log.d(TAG, "getFileName() return valuse:" + name);
+		name = context.getFilesDir().getPath() + "/CategoryImages/" + dpiFolderName + "/" + catId
+				+ "/" + name;
+//		File pathDir = new File(context.getFilesDir().getPath() + "/CategoryImages/" + catId);
+//		if (!pathDir.exists()) pathDir.mkdirs(); 
+//
+//		name = context.getFilesDir().getPath() + "/CategoryImages/" + catId + "/" + name;
+//		Log.d(TAG, "getFileName() return valuse:" + name);
 
 		return name;
 	}

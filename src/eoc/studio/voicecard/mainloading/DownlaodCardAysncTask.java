@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import eoc.studio.voicecard.card.database.CardAssistant;
 import eoc.studio.voicecard.menu.SaveDraft;
+import eoc.studio.voicecard.utils.FileUtility;
 
 import android.R.integer;
 import android.content.Context;
@@ -24,7 +25,6 @@ public class DownlaodCardAysncTask extends
 	private final static String TAG = "DownlaodCardAysncTask";
 
 	public DownlaodCardAysncTaskListener delegate;
-
 
 	Context context;
 
@@ -53,50 +53,71 @@ public class DownlaodCardAysncTask extends
 
 		for (int index = 0; index < cardAssistantList.size(); index++)
 		{
-			try
+			Log.d(TAG, "cardAssistantList[" + index + "]: " + cardAssistantList.get(index));
+		}
+
+		for (int index = 0; index < cardAssistantList.size(); index++)
+		{
+
+			boolean isCloseURLNotNull = cardAssistantList.get(index).getCloseURL() != null  && !cardAssistantList.get(index).getCloseURL().equals("");
+			boolean isCoverURLNotNull = cardAssistantList.get(index).getCoverURL() != null && !cardAssistantList.get(index).getCoverURL().equals("");
+			boolean isLeftURLNotNull = cardAssistantList.get(index).getLeftURL() != null && !cardAssistantList.get(index).getLeftURL().equals("");
+			boolean isOpenURLNotNull = cardAssistantList.get(index).getOpenURL() != null && !cardAssistantList.get(index).getOpenURL().equals("");
+			boolean isRightURLNotNull = cardAssistantList.get(index).getRightURL() != null && !cardAssistantList.get(index).getRightURL().equals("");
+
+			if (isCloseURLNotNull && isCoverURLNotNull && isLeftURLNotNull && isOpenURLNotNull
+					&& isRightURLNotNull)
 			{
-				String closeLocalPath = downloadFile(cardAssistantList.get(index).getCloseURL(),
-						cardAssistantList.get(index).getCardID());
 
-				cardAssistantList.get(index).setCloseLocalPath(closeLocalPath);
-				
-			
-				String coverLocalPath = downloadFile(cardAssistantList.get(index).getCoverURL(),
-						cardAssistantList.get(index).getCardID());
+				try
+				{
+					String closeLocalPath = downloadFile(
+							cardAssistantList.get(index).getCloseURL(), cardAssistantList
+									.get(index).getCardID());
 
-				cardAssistantList.get(index).setCoverLocalPath(coverLocalPath);
+					cardAssistantList.get(index).setCloseLocalPath(closeLocalPath);
 
-				String leftLocalPath = downloadFile(cardAssistantList.get(index).getLeftURL(),
-						cardAssistantList.get(index).getCardID());
+					String coverLocalPath = downloadFile(
+							cardAssistantList.get(index).getCoverURL(), cardAssistantList
+									.get(index).getCardID());
 
-				cardAssistantList.get(index).setLeftLocalPath(leftLocalPath);
-				
-				String openLocalPath = downloadFile(cardAssistantList.get(index).getOpenURL(),
-						cardAssistantList.get(index).getCardID());
+					cardAssistantList.get(index).setCoverLocalPath(coverLocalPath);
 
-				cardAssistantList.get(index).setOpenLocalPath(openLocalPath);
-				
-				String rightLocalPath = downloadFile(cardAssistantList.get(index).getRightURL(),
-						cardAssistantList.get(index).getCardID());
+					String leftLocalPath = downloadFile(cardAssistantList.get(index).getLeftURL(),
+							cardAssistantList.get(index).getCardID());
 
-				cardAssistantList.get(index).setRightLocalPath(rightLocalPath);
-								
-				cardAssistantList.get(index).setCardLocalEditedDate(cardAssistantList.get(index).getCardEditedDate());
-				
-			}
-			catch (Exception e)
-			{
-				Log.d(TAG, "doInBackground() Exception:" + e.getMessage());
-				e.printStackTrace();
+					cardAssistantList.get(index).setLeftLocalPath(leftLocalPath);
 
-				return null;
+					String openLocalPath = downloadFile(cardAssistantList.get(index).getOpenURL(),
+							cardAssistantList.get(index).getCardID());
+
+					cardAssistantList.get(index).setOpenLocalPath(openLocalPath);
+
+					String rightLocalPath = downloadFile(
+							cardAssistantList.get(index).getRightURL(), cardAssistantList
+									.get(index).getCardID());
+
+					cardAssistantList.get(index).setRightLocalPath(rightLocalPath);
+
+					cardAssistantList.get(index).setCardLocalEditedDate(
+							cardAssistantList.get(index).getCardEditedDate());
+
+				}
+				catch (Exception e)
+				{
+					Log.d(TAG, "doInBackground() Exception:" + e.getMessage());
+					e.printStackTrace();
+
+					return null;
+				}
+
 			}
 		}
 		return cardAssistantList;
 
 	}
 
-	private String downloadFile(String URL,int cardId) throws Exception
+	private String downloadFile(String URL, int cardId) throws Exception
 	{
 
 		int count;
@@ -105,7 +126,7 @@ public class DownlaodCardAysncTask extends
 		conexion.connect();
 
 		InputStream input = new BufferedInputStream(url.openStream(), 512);
-		OutputStream output = new FileOutputStream(getSaveFileName(cardId,URL));
+		OutputStream output = new FileOutputStream(getSaveFileName(cardId, URL));
 		byte data[] = new byte[512];
 		long total = 0;
 		while ((count = input.read(data)) != -1)
@@ -118,7 +139,7 @@ public class DownlaodCardAysncTask extends
 		output.close();
 		input.close();
 
-		return getSaveFileName(cardId,URL);
+		return getSaveFileName(cardId, URL);
 	}
 
 	@Override
@@ -140,41 +161,22 @@ public class DownlaodCardAysncTask extends
 		start = wholePath.lastIndexOf('/');
 		end = wholePath.length();     // lastIndexOf('.');
 		name = wholePath.substring((start + 1), end);
-
-		File pathDir = new File(context.getFilesDir().getPath() + "/CardImages/" + cardID);
+		String dpiFolderName = FileUtility.getFolderNameUsingSystemDPI(this.context);
+		File pathDir = new File(context.getFilesDir().getPath() + "/CardImages/" + dpiFolderName
+				+ "/" + cardID);
 		if (!pathDir.exists()) pathDir.mkdirs();
 
-		name = context.getFilesDir().getPath() + "/CardImages/" + cardID + "/" + name;
+		name = context.getFilesDir().getPath() + "/CardImages/" + dpiFolderName + "/" + cardID
+				+ "/" + name;
+		// File pathDir = new File(context.getFilesDir().getPath()
+		// + "/CardImages/" + cardID);
+		// if (!pathDir.exists()) pathDir.mkdirs();
+		//
+		// name = context.getFilesDir().getPath() + "/CardImages/" + cardID
+		// + "/" + name;
+
 		Log.d(TAG, "getFileName() return valuse:" + name);
 		return name;
 	}
-
-//	public String getFileName(CardAssistant categoryAssistant)
-//	{
-//
-//		String catId = String.valueOf(categoryAssistant.getCategoryID());
-//
-//		String wholePath = categoryAssistant.getCategoryURL();
-//		String name = null;
-//
-//		int start, end;
-//		start = wholePath.lastIndexOf('/');
-//		end = wholePath.length();     // lastIndexOf('.');
-//		name = wholePath.substring((start + 1), end);
-//
-//		Log.d(TAG, "getFileName() name:" + name);
-//		Log.d(TAG, "getFileName() context.getFilesDir().getPath():"
-//				+ this.context.getFilesDir().getPath());
-//		Log.d(TAG, "getFileName() catId:" + catId);
-//
-//		File pathDir = new File(context.getFilesDir().getPath() + "/CategoryImages/" + catId);
-//		if (!pathDir.exists()) pathDir.mkdirs();
-//
-//		name = context.getFilesDir().getPath() + "/CategoryImages/" + catId + "/" + name;
-//
-//		Log.d(TAG, "getFileName() return valuse:" + name);
-//
-//		return name;
-//	}
 
 }

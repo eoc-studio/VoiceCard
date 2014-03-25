@@ -26,6 +26,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -525,4 +526,39 @@ public class FileUtility
 		}
 		return result;
 	}
+	
+	public static String getFolderNameUsingSystemDPI(Context context)
+	{
+
+		int density = context.getResources().getDisplayMetrics().densityDpi;
+
+		String result = "xhdpi";
+		switch (density)
+		{
+		case DisplayMetrics.DENSITY_LOW:
+			result = "hdpi";
+			break;
+		case DisplayMetrics.DENSITY_MEDIUM:
+			result = "hdpi";
+			break;
+		case DisplayMetrics.DENSITY_HIGH:
+			result = "hdpi";
+			break;
+		case DisplayMetrics.DENSITY_XHIGH:
+			result = "xhdpi";
+			break;
+		case DisplayMetrics.DENSITY_TV:
+			result = "xhdpi";
+			break;
+		default:
+			result = "xhdpi";
+			break;
+		}
+
+		return result;
+
+	}
+	
+	
+	
 }

@@ -249,11 +249,15 @@ public class CardSelectorActivity extends BaseActivity
 		{
 			cardAssistantList = cardDatabaseHelper.getEnabledFavoriteCardList(cardDatabaseHelper
 					.getSystemDPI(context));
+//			cardAssistantList = cardDatabaseHelper.getEnabledFavoriteCardList(CardDatabaseHelper.DPI_XHDPI);
 		}
 		else
 		{
 			cardAssistantList = cardDatabaseHelper.getEnabledCardListByCategory(category,
 					cardDatabaseHelper.getSystemDPI(context));
+			
+//			cardAssistantList = cardDatabaseHelper.getEnabledCardListByCategory(category,
+//					CardDatabaseHelper.DPI_XHDPI);
 		}
 
 		if (cardAssistantList != null)

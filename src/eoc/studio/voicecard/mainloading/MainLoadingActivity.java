@@ -217,20 +217,24 @@ public class MainLoadingActivity extends Activity
 
 		httpManager.getPatchState(context, new PatchStateListener()
 		{
-			
+
 			@Override
 			public void onResult(Boolean isSuccess, Boolean isNeedPatched)
 			{
-			Log.d(TAG, "getPatchState isSuccess: "+isSuccess +",isNeedPatched: "+isNeedPatched);
+
+				Log.d(TAG, "getPatchState isSuccess: " + isSuccess + ",isNeedPatched: "
+						+ isNeedPatched);
 				if(isSuccess&isNeedPatched){
+
 					Log.d(TAG, "getPatchState try to download card and category from server");
-					
+
 					getCategoryInfoFromServer();
 					getCardInfoFromServer();
 				}
-				else{
+				else
+				{
 					Log.d(TAG, "Direct pass the progress of [download card and category]");
-					
+
 					addProgressWheel(GET_CATEGORY_INFO_PROGRESS);
 					Log.d(TAG_PROGRESS, "GET_CATEGORY_INFO_PROGRESS [pass]");
 					addProgressWheel(GET_CARD_INFO_PROGRESS);
@@ -242,7 +246,6 @@ public class MainLoadingActivity extends Activity
 				}
 			}
 		});
-		
 
 	}
 
@@ -375,11 +378,16 @@ public class MainLoadingActivity extends Activity
 			public void processFinish(ArrayList<CardAssistant> result)
 			{
 
-				cardDatabaseHelper.updateCardImgLocalPath(result,
-						cardDatabaseHelper.getSystemDPI(context));
+				Log.d(TAG, "downloadCradImages result is " + result);
+
+				if(result!=null)
+				{
+					cardDatabaseHelper.updateCardImgLocalPath(result,
+							cardDatabaseHelper.getSystemDPI(context));
+				}				
 				addProgressWheel(GET_CARD_IMGS_PROGRESS);
 				Log.d(TAG_PROGRESS, "GET_CARD_IMGS_PROGRESS");
-				
+
 				notifyPatchIsDone();
 			}
 		};
@@ -392,9 +400,12 @@ public class MainLoadingActivity extends Activity
 		// cardAssistantList =
 		// cardDatabaseHelper.getEnabledAndLocalIsNullCard(cardDatabaseHelper
 		// .getSystemDPI(context));
-
+		//
 		cardAssistantList = cardDatabaseHelper
 				.getLocalDateIsNullOrLocalPathIsNullCard(cardDatabaseHelper.getSystemDPI(context));
+
+		// cardAssistantList = cardDatabaseHelper
+		// .getLocalDateIsNullOrLocalPathIsNullCard(CardDatabaseHelper.DPI_XHDPI);
 
 		Log.d(TAG, "onResume() cardAssistantList :" + cardAssistantList);
 
@@ -416,7 +427,7 @@ public class MainLoadingActivity extends Activity
 		{
 			addProgressWheel(GET_CARD_IMGS_PROGRESS);
 			Log.d(TAG_PROGRESS, "GET_CARD_IMGS_PROGRESS [pass] because (cardAssistantList == null)");
-			
+
 			notifyPatchIsDone();
 		}
 	}
@@ -426,13 +437,14 @@ public class MainLoadingActivity extends Activity
 
 		httpManager.notifyPatchUpdate(context, new NotifyPatchListener()
 		{
-			
+
 			@Override
 			public void onResult(Boolean isSuccess, String information)
 			{
-			
-				Log.d(TAG, "notifyPatchUpdate() isSuccess: "+isSuccess+",information is "+information);
-				
+
+				Log.d(TAG, "notifyPatchUpdate() isSuccess: " + isSuccess + ",information is "
+						+ information);
+
 			}
 		});
 	}
@@ -585,7 +597,6 @@ public class MainLoadingActivity extends Activity
 				.getSystemService(Context.TELEPHONY_SERVICE);
 		Log.d(TAG, "getMobile" + tm.getLine1Number());
 		String phone = tm.getLine1Number();
-		
 
 		return phone;
 	}

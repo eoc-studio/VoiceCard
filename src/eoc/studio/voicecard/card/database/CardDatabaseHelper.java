@@ -39,7 +39,7 @@ public class CardDatabaseHelper
 
 	public static final int DPI_MDPI = 0;
 
-	public static final int DPI_HPPI = 1;
+	public static final int DPI_HDPI = 1;
 
 	public static final int DPI_XHDPI = 2;
 
@@ -401,7 +401,7 @@ public class CardDatabaseHelper
 			rightURLColumn = CARD_MDPI_RIGHT;
 			rightLocalPathColumn = CARD_MDPI_RIGHT_LOCAL_PATH;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			closeURLColumn = CARD_HDPI_CLOSE;
 			closeLocalPathColumn = CARD_HDPI_CLOSE_LOCAL_PATH;
 			coverURLColumn = CARD_HDPI_COVER;
@@ -514,7 +514,7 @@ public class CardDatabaseHelper
 			urlColumn = CAT_IMG_MDPI;
 			localPathColumn = CAT_IMG_MDPI_LOCAL_PATH;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			urlColumn = CAT_IMG_HDPI;
 			localPathColumn = CAT_IMG_HDPI_LOCAL_PATH;
 			break;
@@ -621,7 +621,7 @@ public class CardDatabaseHelper
 			rightURLColumn = CARD_MDPI_RIGHT;
 			rightLocalPathColumn = CARD_MDPI_RIGHT_LOCAL_PATH;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			closeURLColumn = CARD_HDPI_CLOSE;
 			closeLocalPathColumn = CARD_HDPI_CLOSE_LOCAL_PATH;
 			coverURLColumn = CARD_HDPI_COVER;
@@ -772,7 +772,7 @@ public class CardDatabaseHelper
 			rightURLColumn = CARD_MDPI_RIGHT;
 			rightLocalPathColumn = CARD_MDPI_RIGHT_LOCAL_PATH;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			closeURLColumn = CARD_HDPI_CLOSE;
 			closeLocalPathColumn = CARD_HDPI_CLOSE_LOCAL_PATH;
 			coverURLColumn = CARD_HDPI_COVER;
@@ -924,7 +924,7 @@ public class CardDatabaseHelper
 			rightURLColumn = CARD_MDPI_RIGHT;
 			rightLocalPathColumn = CARD_MDPI_RIGHT_LOCAL_PATH;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			closeURLColumn = CARD_HDPI_CLOSE;
 			closeLocalPathColumn = CARD_HDPI_CLOSE_LOCAL_PATH;
 			coverURLColumn = CARD_HDPI_COVER;
@@ -1074,7 +1074,7 @@ public class CardDatabaseHelper
 			rightURLColumn = CARD_MDPI_RIGHT;
 			rightLocalPathColumn = CARD_MDPI_RIGHT_LOCAL_PATH;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			closeURLColumn = CARD_HDPI_CLOSE;
 			closeLocalPathColumn = CARD_HDPI_CLOSE_LOCAL_PATH;
 			coverURLColumn = CARD_HDPI_COVER;
@@ -1228,7 +1228,7 @@ public class CardDatabaseHelper
 			rightURLColumn = CARD_MDPI_RIGHT;
 			rightLocalPathColumn = CARD_MDPI_RIGHT_LOCAL_PATH;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			closeURLColumn = CARD_HDPI_CLOSE;
 			closeLocalPathColumn = CARD_HDPI_CLOSE_LOCAL_PATH;
 			coverURLColumn = CARD_HDPI_COVER;
@@ -1374,7 +1374,7 @@ public class CardDatabaseHelper
 			urlColumn = CAT_IMG_MDPI;
 			localPathColumn = CAT_IMG_MDPI_LOCAL_PATH;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			urlColumn = CAT_IMG_HDPI;
 			localPathColumn = CAT_IMG_HDPI_LOCAL_PATH;
 			break;
@@ -1456,7 +1456,7 @@ public class CardDatabaseHelper
 			urlColumn = CAT_IMG_MDPI;
 			localPathColumn = CAT_IMG_MDPI_LOCAL_PATH;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			urlColumn = CAT_IMG_HDPI;
 			localPathColumn = CAT_IMG_HDPI_LOCAL_PATH;
 			break;
@@ -1538,7 +1538,7 @@ public class CardDatabaseHelper
 			urlColumn = CAT_IMG_MDPI;
 			localPathColumn = CAT_IMG_MDPI_LOCAL_PATH;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			urlColumn = CAT_IMG_HDPI;
 			localPathColumn = CAT_IMG_HDPI_LOCAL_PATH;
 			break;
@@ -1713,7 +1713,7 @@ public class CardDatabaseHelper
 						null, null, null, null, list.get(index).getCategoryLoocalPath(), null,
 						null, null, null, list.get(index).getCategoryLocalEditedDate());
 				break;
-			case DPI_HPPI:
+			case DPI_HDPI:
 				updateCategoryRow(String.valueOf(list.get(index).getCategoryID()), null, null,
 						null, null, null, null, null, list.get(index).getCategoryLoocalPath(),
 						null, null, null, list.get(index).getCategoryLocalEditedDate());
@@ -1785,7 +1785,7 @@ public class CardDatabaseHelper
 			rightURLColumn = CARD_MDPI_RIGHT;
 			rightLocalPathColumn = CARD_MDPI_RIGHT_LOCAL_PATH;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			closeURLColumn = CARD_HDPI_CLOSE;
 			closeLocalPathColumn = CARD_HDPI_CLOSE_LOCAL_PATH;
 			coverURLColumn = CARD_HDPI_COVER;
@@ -1958,7 +1958,7 @@ public class CardDatabaseHelper
 			rightURLColumn = CARD_MDPI_RIGHT;
 			rightLocalPathColumn = CARD_MDPI_RIGHT_LOCAL_PATH;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			closeURLColumn = CARD_HDPI_CLOSE;
 			closeLocalPathColumn = CARD_HDPI_CLOSE_LOCAL_PATH;
 			coverURLColumn = CARD_HDPI_COVER;
@@ -2128,7 +2128,7 @@ public class CardDatabaseHelper
 		case DPI_MDPI:
 			localPathColumn = CAT_IMG_MDPI_LOCAL_PATH;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			localPathColumn = CAT_IMG_HDPI_LOCAL_PATH;
 			break;
 		case DPI_XHDPI:
@@ -2170,7 +2170,7 @@ public class CardDatabaseHelper
 		case DPI_MDPI:
 			urlColumn = CAT_IMG_MDPI;
 			break;
-		case DPI_HPPI:
+		case DPI_HDPI:
 			urlColumn = CAT_IMG_HDPI;
 			break;
 		case DPI_XHDPI:
@@ -2257,7 +2257,7 @@ public class CardDatabaseHelper
 			result = DPI_XHDPI;
 			break;
 		case DisplayMetrics.DENSITY_HIGH:
-			result = DPI_XHDPI;
+			result = DPI_HDPI;
 			break;
 		case DisplayMetrics.DENSITY_XHIGH:
 			result = DPI_XHDPI;
