@@ -9,6 +9,13 @@
 		<uses-sdk
 				android:minSdkVersion="15"
 				android:targetSdkVersion="15" />
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
 
 		<uses-permission android:name="android.permission.READ_CALENDAR" />
 		<uses-permission android:name="android.permission.WRITE_CALENDAR" />
