@@ -15,10 +15,6 @@
     <string name="publish_friend">Publish to friend</string>
 
     <!-- About Contact -->
-    <string name="file_process_loading">Loading</string>
-    <string name="noData">NoData</string>
-
-    <!-- About Contact -->
     <string name="file_process_loading">讀取中...</string>
     <string name="noData">沒有資料</string>
 
