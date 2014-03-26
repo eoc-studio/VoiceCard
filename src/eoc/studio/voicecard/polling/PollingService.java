@@ -66,7 +66,7 @@ public class PollingService extends Service
 		// Navigator to the new activity when click the notification title
 		Intent i = new Intent(this, MainLoadingActivity.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i,
-				Intent.FLAG_ACTIVITY_NEW_TASK);
+				Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		mNotification.setLatestEventInfo(this, getResources().getString(R.string.app_name),
 				"You have new message!", pendingIntent);
 		mManager.notify(0, mNotification);
