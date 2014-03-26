@@ -140,6 +140,7 @@ public class FlipView extends RelativeLayout
 	{
 		innerPage.removeAllViews();
 		innerPage.addView(v);
+		innerPage.setTranslationX(-1);
 	}
 
 	public View getInnerPage()

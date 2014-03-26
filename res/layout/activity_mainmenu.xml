@@ -51,7 +51,7 @@
 				android:layout_height="match_parent"
 				android:layout_above="@+id/act_mainmenu_rlyt_bottom_background"
 				android:layout_below="@id/act_mainmenu_iv_logo"
-				android:layout_marginTop="30dip">
+				android:layout_marginTop="@dimen/main_menu_item_list_margin_top">
 
 				<RelativeLayout
 						android:layout_width="match_parent"
@@ -70,7 +70,7 @@
 								android:layout_height="wrap_content"
 								android:layout_below="@id/act_mainmenu_iv_card_editor"
 								android:layout_centerHorizontal="true"
-								android:layout_marginTop="20dip"
+								android:layout_marginTop="@dimen/main_menu_item_margin"
 								android:src="@drawable/nav2" />
  
 						<ImageView
@@ -79,8 +79,7 @@
 								android:layout_height="wrap_content"
 								android:layout_below="@id/act_mainmenu_iv_news_editor"
 								android:layout_centerHorizontal="true"
-								
-								android:layout_marginTop="20dip"
+								android:layout_marginTop="@dimen/main_menu_item_margin"
 								android:src="@drawable/nav3" />
 
 						<ImageView
@@ -89,8 +88,7 @@
 								android:layout_height="wrap_content"
 								android:layout_below="@id/act_mainmenu_iv_memorial_day_editor"
 								android:layout_centerHorizontal="true"
-								
-								android:layout_marginTop="20dip"
+								android:layout_marginTop="@dimen/main_menu_item_margin"
 								android:src="@drawable/nav4" />
 						<ImageView
 								android:id="@+id/act_mainmenu_iv_facebook_logout"
@@ -98,8 +96,7 @@
 								android:layout_height="wrap_content"
 								android:layout_below="@id/act_mainmenu_iv_memorial_day_editor"
 								android:layout_centerHorizontal="true"
-							
-								android:layout_marginTop="20dip"
+								android:layout_marginTop="@dimen/main_menu_item_margin"
 								android:src="@drawable/nav5" />
 				</RelativeLayout>
 		</ScrollView>

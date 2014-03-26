@@ -67,7 +67,7 @@
 
     <View
         android:id="@+id/act_card_viewer_v_right_block"
-        android:layout_width="25dip"
+        android:layout_width="@dimen/card_animation_right_block_width"
         android:layout_height="40dip"
         android:layout_alignParentRight="true"
         android:layout_below="@id/act_card_viewer_rlyt_tip_and_mail_info_wrapper" />
@@ -124,7 +124,7 @@
     <FrameLayout
         android:id="@+id/act_card_viewer_flyt_card_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="370dip"
+        android:layout_height="@dimen/card_viewer_card_wrapper_height"
         android:layout_below="@id/act_card_viewer_rlyt_tip_and_mail_info_wrapper"
         android:layout_toLeftOf="@id/act_card_viewer_v_right_block" >
 

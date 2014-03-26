@@ -288,7 +288,6 @@ public class CardViewerActivity extends BaseActivity
 	{
 
 		initCardView();
-		setRightBlockWidth();
 		initFlipAndShadow();
 		setListenersForSenderMode();
 	}
@@ -298,7 +297,6 @@ public class CardViewerActivity extends BaseActivity
 
 		initCardView();
 		generateScreenshotBitmap();
-		setRightBlockWidth();
 		initFlipAndShadow();
 		setListenersForViewerMode();
 	}
@@ -308,16 +306,18 @@ public class CardViewerActivity extends BaseActivity
 
 		if (sendBackId != null)
 		{
-			if (sendBackId.startsWith("0") && sendBackId.length() == 10)
-			{
-				Log.d(TAG, "hide Send Facebook button");
-				sendFacebook.setVisibility(View.GONE);
-			}
-			else
-			{
-				Log.d(TAG, "hide Send Contact button");
-				sendContact.setVisibility(View.GONE);
-			}
+//			if (sendBackId.startsWith("0") && sendBackId.length() == 10)
+//			{
+//				Log.d(TAG, "hide Send Facebook button");
+//				sendFacebook.setVisibility(View.GONE);
+//			}
+//			else
+//			{
+//				Log.d(TAG, "hide Send Contact button");
+//				sendContact.setVisibility(View.GONE);
+//			}
+			sendFacebook.setVisibility(View.GONE);
+			sendContact.setImageResource(R.drawable.btn_send_card_back_selector);
 		}
 	}
 
@@ -426,23 +426,6 @@ public class CardViewerActivity extends BaseActivity
 				e.printStackTrace();
 			}
 		}
-	}
-
-	private void setRightBlockWidth()
-	{ // TODO find another way to handle this
-//		DisplayMetrics metrics = new DisplayMetrics();
-//		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//		int screenwWidth = metrics.widthPixels;
-//		Log.d(TAG, ">>> screenwWidth? " + screenwWidth);
-//
-//		int cardSinglePageWidth = (int) getResources().getDimensionPixelSize(
-//				R.dimen.card_single_page_width);
-//		Log.d(TAG, ">>>> cardSinglePageWidth? " + cardSinglePageWidth);
-//
-//		LayoutParams params = rightBlock.getLayoutParams();
-//		params.width = 0;//(screenwWidth - cardSinglePageWidth) / 4;
-//Log.d(TAG, "w   " + params.width);
-//		rightBlock.setLayoutParams(params);
 	}
 
 	private void generateScreenshotBitmap()

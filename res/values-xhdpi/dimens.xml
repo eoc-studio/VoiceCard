@@ -79,6 +79,8 @@
 		<dimen name="card_single_page_height">280dip</dimen>
 		<dimen name="card_single_page_margin_top">4.5dip</dimen>
 		<dimen name="card_single_page_margin_left">4.5dip</dimen>
+		<dimen name="card_animation_right_block_width">25dip</dimen>
+		<dimen name="card_viewer_card_wrapper_height">370dip</dimen>
 
 		<!-- Card Editable Frames -->
 		<dimen name="card_editable_frames_image_width">175dip</dimen>
@@ -191,5 +193,9 @@
 		<dimen name="glb_card_category_grid_item_tv_name_textsize">14sp</dimen>
 		
 		<dimen name="act_card_category_selector_gv_categories_verticalSpacing">15dp</dimen>
+		
+		<!-- Main Menu -->
+		<dimen name="main_menu_item_margin">20dip</dimen>
+		<dimen name="main_menu_item_list_margin_top">30dip</dimen>
 		
 </resources>

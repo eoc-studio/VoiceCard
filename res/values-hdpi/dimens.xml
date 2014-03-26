@@ -121,4 +121,51 @@
 		<dimen name="glb_card_category_grid_item_tv_name_textsize">10sp</dimen>
 		<dimen name="act_card_category_selector_gv_categories_verticalSpacing">11dp</dimen>
 		
+		
+		<!-- Card Selector Gallery Item -->
+		<dimen name="card_list_item_card_width">163.125dip</dimen>
+		<dimen name="card_list_item_card_height">210dip</dimen>
+		<dimen name="card_list_item_wrapper_width">187.5dip</dimen>
+		<dimen name="card_list_item_wrapper_height">210dip</dimen>
+
+		<!-- Card Editor/Viewer -->
+		<dimen name="card_open_shadow_width">364.125dip</dimen>
+		<dimen name="card_open_shadow_height">217.875dip</dimen>
+		<dimen name="card_open_page_width">355.5dip</dimen>
+		<dimen name="card_open_page_height">210dip</dimen>
+		<dimen name="card_open_page_margin_left">4.5dip</dimen>
+		<dimen name="card_open_page_margin_right">4.125dip</dimen>
+		<dimen name="card_open_page_margin_top">0dip</dimen>
+		<dimen name="card_close_shadow_width">186dip</dimen>
+		<dimen name="card_close_shadow_height">218.25dip</dimen>
+		<dimen name="card_editor_land_card_margin_top">37.5dip</dimen>
+		<dimen name="card_animation_wrapper_width">375dip</dimen>
+		<dimen name="card_single_page_width">177.75dip</dimen>
+		<dimen name="card_single_page_height">210dip</dimen>
+		<dimen name="card_single_page_margin_top">3.375dip</dimen>
+		<dimen name="card_single_page_margin_left">3.375dip</dimen>
+		<dimen name="card_animation_right_block_width">18.75dip</dimen>
+		<dimen name="card_viewer_card_wrapper_height">277.5dip</dimen>
+
+		<!-- Card Editable Frames -->
+		<dimen name="card_editable_frames_image_width">131.25dip</dimen>
+		<dimen name="card_editable_frames_image_height">131.25dip</dimen>
+		<dimen name="card_editable_frames_image_top">16.125dip</dimen>
+		<dimen name="card_editable_frames_image_left">27.75dip</dimen>
+		<dimen name="card_editable_frames_voice_width">131.25dip</dimen>
+		<dimen name="card_editable_frames_voice_height">37.5dip</dimen>
+		<dimen name="card_editable_frames_voice_top">156dip</dimen>
+		<dimen name="card_editable_frames_voice_left">27.75dip</dimen>
+		<dimen name="card_editable_frames_text_width">131.25dip</dimen>
+		<dimen name="card_editable_frames_text_height">120dip</dimen>
+		<dimen name="card_editable_frames_text_top">16.125dip</dimen>
+		<dimen name="card_editable_frames_text_left">206.25dip</dimen>
+		<dimen name="card_editable_frames_sign_width">131.25dip</dimen>
+		<dimen name="card_editable_frames_sign_height">48.75dip</dimen>
+		<dimen name="card_editable_frames_sign_top">144.75dip</dimen>
+		<dimen name="card_editable_frames_sign_left">206.25dip</dimen>
+		
+		<!-- Main Menu -->
+		<dimen name="main_menu_item_margin">15dip</dimen>
+		<dimen name="main_menu_item_list_margin_top">22.5dip</dimen>
 </resources>
