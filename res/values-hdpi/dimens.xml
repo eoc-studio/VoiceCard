@@ -168,4 +168,27 @@
 		<!-- Main Menu -->
 		<dimen name="main_menu_item_margin">15dip</dimen>
 		<dimen name="main_menu_item_list_margin_top">22.5dip</dimen>
+		
+                <!-- About Select Friend -->
+		<dimen name="act_select_friend_margin_top">22.5dp</dimen>
+		<dimen name="act_select_friend_list_height">150dp</dimen>
+		<dimen name="act_select_friend_divider_height">0.75dp</dimen>
+		<dimen name="act_select_friend_dash_horizontal_height">0.75dp</dimen>
+		<dimen name="act_select_friend_iv_search_button_margin_top">3dp</dimen>
+		<dimen name="act_select_friend_iv_search_button_margin_right">22.5dp</dimen>
+
+		<!-- About Friend Info -->
+		<dimen name="user_info_header_edge">37.5dp</dimen>
+		<dimen name="user_info_name_width">75dp</dimen>
+		<dimen name="user_info_name_height">60dp</dimen>
+		<dimen name="user_info_name_margin_left">15dp</dimen>
+		
+		<!-- Common UI layout -->
+		<dimen name="common_font_size">15sp</dimen>
+		<dimen name="common_font_small_size">12.75sp</dimen>
+		<dimen name="common_txt_width">280dp</dimen>
+		<dimen name="common_txt_height">37dp</dimen>
+		<dimen name="common_txt_height_long">45dp</dimen>
+		<dimen name="common_input_padding">9dp</dimen>
+		<dimen name="common_check_icon_edge">15dp</dimen>
 </resources>

@@ -7,7 +7,7 @@
 		<!-- Common UI layout -->
 		<dimen name="common_font_size">20sp</dimen>
 		<dimen name="common_font_small_size">17sp</dimen>
-		<dimen name="common_txt_width">300dp</dimen>
+		<dimen name="common_txt_width">318dp</dimen>
 		<dimen name="common_txt_height">40dp</dimen>
 		<dimen name="common_txt_height_long">60dp</dimen>
 		<dimen name="common_input_padding">12dp</dimen>
@@ -16,7 +16,6 @@
 
 		<!-- About Select Friend -->
 		<dimen name="act_select_friend_margin_top">30dp</dimen>
-		<dimen name="act_select_friend_margin_top_small">15dp</dimen>
 		<dimen name="act_select_friend_list_height">200dp</dimen>
 		<dimen name="act_select_friend_divider_height">1dp</dimen>
 		<dimen name="act_select_friend_dash_horizontal_height">1dp</dimen>
