@@ -225,7 +225,6 @@ public class MainLoadingActivity extends Activity
 				Log.d(TAG, "getPatchState isSuccess: " + isSuccess + ",isNeedPatched: "
 						+ isNeedPatched);
 				if(isSuccess&isNeedPatched){
-
 					Log.d(TAG, "getPatchState try to download card and category from server");
 
 					getCategoryInfoFromServer();
