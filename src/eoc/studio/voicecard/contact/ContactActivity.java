@@ -324,22 +324,29 @@ public class ContactActivity extends Activity implements OnClickListener, OnItem
                         {
                             break;
                         }
-
-                        id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-                        name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                        sort_key_alt = cur.getString(cur.getColumnIndex("sort_key_alt")).toUpperCase();
-                        lookupKey = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
-                        if (sort_key_alt.indexOf(searchEditText.getText().toString().toUpperCase()) != -1
-                                || name.indexOf(searchEditText.getText().toString()) != -1)
-                        {
-                            item = new HashMap<String, String>();
-                            item.put(DataProcess.USER_ID_INDEX, id);
-                            item.put(DataProcess.USER_NAME_INDEX, name);
-                            item.put(DataProcess.LOOK_UP_KEY_INDEX, lookupKey);
-                            item.put(DataProcess.PHONE_NUMBER_INDEX, "");
-                            item.put(DataProcess.TEL_TYPE_INDEX, "");
-                            data.add(item);
-                        }
+                        
+						if (cur.getString(cur.getColumnIndex("sort_key_alt")) != null)
+						{
+							id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+							name = cur.getString(cur
+									.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+							sort_key_alt = cur.getString(cur.getColumnIndex("sort_key_alt"))
+									.toUpperCase();
+							lookupKey = cur.getString(cur
+									.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
+							if (sort_key_alt.indexOf(searchEditText.getText().toString()
+									.toUpperCase()) != -1
+									|| name.indexOf(searchEditText.getText().toString()) != -1)
+							{
+								item = new HashMap<String, String>();
+								item.put(DataProcess.USER_ID_INDEX, id);
+								item.put(DataProcess.USER_NAME_INDEX, name);
+								item.put(DataProcess.LOOK_UP_KEY_INDEX, lookupKey);
+								item.put(DataProcess.PHONE_NUMBER_INDEX, "");
+								item.put(DataProcess.TEL_TYPE_INDEX, "");
+								data.add(item);
+							}
+						}
                     }
                 }
             }

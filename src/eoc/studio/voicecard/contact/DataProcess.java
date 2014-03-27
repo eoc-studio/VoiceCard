@@ -18,7 +18,7 @@ public class DataProcess
     protected static final String[] getPhoneNumberAndType(Context context, String id)
     {
         String where = null, selection[] = null, getNumberAndType[] = null;
-        String phoneNo1 = "", phoneNo2 = "", phoneNo3 = "", phoneNo4 = "";
+		String phoneNo1 = "", phoneNo2 = "", phoneNo3 = "", phoneNo4 = "", phoneOther = "";
 
         try
         {
@@ -58,6 +58,12 @@ public class DataProcess
                                 .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                         phoneNo4 = DataProcess.removeInsignia(phoneNo4);
                     }
+					else if (i == ContactsContract.CommonDataKinds.Phone.TYPE_OTHER)
+					{
+						phoneOther = getPhoneTypeCur.getString(getPhoneTypeCur
+								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+						phoneOther = DataProcess.removeInsignia(phoneOther);
+					}
                 }
             }
         }
@@ -97,6 +103,10 @@ public class DataProcess
             getNumberAndType = new String[]
             { phoneNo4, "Fax" };
         }
+		else if (!phoneOther.equals(""))
+		{
+			getNumberAndType = new String[] { phoneOther, "Other" };
+		}	
         return getNumberAndType;
     }
 
