@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="wrap_content"
-        android:layout_height="90dip"
+        android:layout_height="90dp"
         android:background="@drawable/header_bg1" >
 
         <ImageView
@@ -23,16 +23,15 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/imageView1"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
             android:layout_marginBottom="6dp"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/icon_ar1_left" />
-
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="wrap_content"
-        android:layout_height="33dip"
+        android:layout_height="33dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/relativeLayout1" >
@@ -48,18 +47,17 @@
     <RelativeLayout
         android:id="@+id/relativeLayout3"
         android:layout_width="wrap_content"
-        android:layout_height="325dip"
+        android:layout_height="@dimen/calendar_relativeLayout3_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/relativeLayout2" >
 
         <fragment
             android:name="eoc.studio.voicecard.calendarview.CalendarView"
-            android:layout_width="310dip"
+            android:layout_width="@dimen/calendar_calendarView_height"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dip" />
-
+            android:layout_marginBottom="10dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -89,7 +87,7 @@
         <FrameLayout
             android:id="@+id/frameLayout1"
             android:layout_width="wrap_content"
-            android:layout_height="50dip"
+            android:layout_height="50dp"
             android:layout_centerHorizontal="true" >
         </FrameLayout>
 

@@ -15,8 +15,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="15.0dip"
-            android:layout_marginTop="14.0dip"
+            android:layout_marginLeft="@dimen/newspaper_type_backBtnViewOfNewspaper_marginLeft"
+            android:layout_marginTop="@dimen/newspaper_type_backBtnViewOfNewspaper_marginTop"
             android:background="@drawable/icon_ar1_left" />
 
         <Button
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="18.0dip"
+            android:layout_marginRight="@dimen/newspaper_type_nextBtnViewOfNewspaper_marginRight"
             android:background="@drawable/icon_ar1_right" />
 
         <ImageView
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="13.0dip"
+            android:layout_marginLeft="@dimen/newspaper_type_imageView1_marginLeft"
             android:layout_toRightOf="@+id/backBtnViewOfNewspaper"
             android:src="@drawable/title_edit_news2" />
     </RelativeLayout>
@@ -66,26 +66,26 @@
             android:layout_height="wrap_content"
             android:layout_alignRight="@+id/textView2"
             android:layout_alignTop="@+id/imageTitleViewOfNewspaper"
-            android:layout_marginTop="10.0dip"
+            android:layout_marginTop="@dimen/newspaper_type_titleTextViewOfNewspaper_marginTop"
             android:text="@string/newspaper_edit_title_string" />
 
         <ImageView
             android:id="@+id/imageTitleViewOfNewspaper"
-            android:layout_width="260.0dip"
+            android:layout_width="@dimen/newspaper_type_imageTitleViewOfNewspaper_width"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="27.0dip"
-            android:layout_marginTop="28.0dip"
+            android:layout_marginLeft="@dimen/newspaper_type_imageTitleViewOfNewspaper_marginLeft"
+            android:layout_marginTop="@dimen/newspaper_type_imageTitleViewOfNewspaper_marginTop"
             android:background="@drawable/news_frame1" />
 
         <ImageView
             android:id="@+id/imageMainPhotoViewOfNewspaper"
-            android:layout_width="260.0dip"
-            android:layout_height="130.0dip"
+            android:layout_width="@dimen/newspaper_type_imageMainPhotoViewOfNewspaper_width"
+            android:layout_height="@dimen/newspaper_type_imageMainPhotoViewOfNewspaper_height"
             android:layout_alignLeft="@+id/imageTitleViewOfNewspaper"
             android:layout_below="@+id/imageTitleViewOfNewspaper"
-            android:layout_marginTop="4.0dip"
+            android:layout_marginTop="@dimen/newspaper_type_imageMainPhotoViewOfNewspaper_marginTop"
             android:background="@drawable/news_frame2" />
 
         <TextView
@@ -94,18 +94,18 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/imageSmailMainPhotoView"
             android:layout_alignLeft="@+id/textView3"
-            android:layout_marginBottom="15.0dip"
-            android:layout_marginLeft="15.0dip"
+            android:layout_marginBottom="@dimen/newspaper_type_textView4_marginBottom"
+            android:layout_marginLeft="@dimen/newspaper_type_textView4_marginLeft"
             android:text="@string/newspaper_edit_photo_and_text_string" />
 
         <ImageView
             android:id="@+id/imageSmailMainPhotoView"
-            android:layout_width="65.0dip"
-            android:layout_height="48.0dip"
+            android:layout_width="@dimen/newspaper_type_imageSmailMainPhotoView_width"
+            android:layout_height="@dimen/newspaper_type_imageSmailMainPhotoView_height"
             android:layout_alignLeft="@+id/imageMainPhotoViewOfNewspaper"
             android:layout_alignTop="@+id/imageMainPhotoViewOfNewspaper"
-            android:layout_marginLeft="4.0dip"
-            android:layout_marginTop="4.0dip"
+            android:layout_marginLeft="@dimen/newspaper_type_imageSmailMainPhotoView_marginLeft"
+            android:layout_marginTop="@dimen/newspaper_type_imageSmailMainPhotoView_marginTop"
             android:background="@drawable/news_frame3" />
 
         <TextView
@@ -114,18 +114,18 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/imageBottomLeftView"
             android:layout_alignRight="@+id/imageBottomLeftView"
-            android:layout_marginBottom="10.0dip"
-            android:layout_marginRight="5.5dip"
+            android:layout_marginBottom="@dimen/newspaper_type_textView3_marginBottom"
+            android:layout_marginRight="@dimen/newspaper_type_textView3_marginRight"
             android:text="@string/newspaper_edit_photo_and_text_string" />
 
         <ImageView
             android:id="@+id/imageBottomLeftView"
-            android:layout_width="37.0dip"
-            android:layout_height="38.0dip"
+            android:layout_width="@dimen/newspaper_type_imageBottomLeftView_width"
+            android:layout_height="@dimen/newspaper_type_imageBottomLeftView_height"
             android:layout_alignLeft="@+id/imageMainPhotoViewOfNewspaper"
             android:layout_below="@+id/imageMainPhotoViewOfNewspaper"
-            android:layout_marginLeft="2.7999878dip"
-            android:layout_marginTop="7.5dip"
+            android:layout_marginLeft="@dimen/newspaper_type_imageBottomLeftView_marginLeft"
+            android:layout_marginTop="@dimen/newspaper_type_imageBottomLeftView_marginTop"
             android:background="@drawable/news_frame4" />
     </RelativeLayout>
 

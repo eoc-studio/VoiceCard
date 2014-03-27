@@ -32,13 +32,13 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:textSize="34sp" />
+            android:textSize="@dimen/calendar_titleTextView_textSize" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayout3"
+        android:id="@+id/relativeLayout4"
         android:layout_width="wrap_content"
-        android:layout_height="300dp"
+        android:layout_height="@dimen/calendar_relativeLayout4_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/relativeLayout2" >
@@ -50,39 +50,37 @@
             android:layout_alignParentTop="true"
             android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/ImageView01"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:text="--------------------------------------"
-                android:textSize="20sp" />
+                android:src="@drawable/dotted_line1" />
 
             <fragment
                 android:id="@+id/fragment_view"
                 android:name="eoc.studio.voicecard.calendarview.SetOfCalendarView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/textView2"
+                android:layout_below="@+id/ImageView01"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/ImageView02"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayout3"
+        android:layout_below="@+id/relativeLayout4"
         android:layout_centerHorizontal="true"
-        android:text="--------------------------------------"
-        android:textSize="20sp" />
+        android:src="@drawable/dotted_line1" />
 
     <Button
         android:id="@+id/buttonAddView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/ImageView02"
         android:layout_marginTop="12dp"
         android:layout_toRightOf="@+id/buttonBackView"
         android:background="@drawable/btn_add_selector" />
@@ -93,7 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/buttonAddView"
         android:layout_alignBottom="@+id/buttonAddView"
-        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignLeft="@+id/ImageView02"
         android:layout_marginLeft="55dp"
         android:background="@drawable/btn_return_selector" />
 

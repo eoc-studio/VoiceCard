@@ -5,7 +5,7 @@
 
     <RelativeLayout
         android:id="@+id/hideView"
-        android:layout_width="45dp"
+        android:layout_width="@dimen/calendar_hideView_height"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true" >
     </RelativeLayout>

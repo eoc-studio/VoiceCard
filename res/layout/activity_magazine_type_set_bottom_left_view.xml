@@ -6,20 +6,20 @@
 
     <RelativeLayout
         android:id="@+id/setLeftBottomMainLayoutView"
-        android:layout_width="270.0dip"
-        android:layout_height="220.0dip"
+        android:layout_width="@dimen/magazine_type_setLeftBottomMainLayoutView_width"
+        android:layout_height="@dimen/magazine_type_setLeftBottomMainLayoutView_height"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:background="#ffff0000" >
 
         <RelativeLayout
             android:id="@+id/setLeftBottomEditPhotoView1"
-            android:layout_width="122.0dip"
-            android:layout_height="140.0dip"
+            android:layout_width="@dimen/magazine_type_setLeftBottomEditPhotoView1_width"
+            android:layout_height="@dimen/magazine_type_setLeftBottomEditPhotoView1_height"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="8.0dip"
-            android:layout_marginTop="8.0dip"
+            android:layout_marginLeft="@dimen/magazine_type_setLeftBottomEditPhotoView1_marginLeft"
+            android:layout_marginTop="@dimen/magazine_type_setLeftBottomEditPhotoView1_marginTop"
             android:background="@drawable/newspaper_layout_style" >
 
             <ImageView
@@ -33,10 +33,10 @@
 
         <RelativeLayout
             android:id="@+id/setLeftBottomEditPhotoView2"
-            android:layout_width="122.0dip"
-            android:layout_height="140.0dip"
+            android:layout_width="@dimen/magazine_type_setLeftBottomEditPhotoView1_width"
+            android:layout_height="@dimen/magazine_type_setLeftBottomEditPhotoView1_height"
             android:layout_alignTop="@+id/setLeftBottomEditPhotoView1"
-            android:layout_marginLeft="11.0dip"
+            android:layout_marginLeft="@dimen/magazine_type_setLeftBottomEditPhotoView2_marginLeft"
             android:layout_toRightOf="@+id/setLeftBottomEditPhotoView1"
             android:background="@drawable/newspaper_layout_style" >
 
@@ -51,11 +51,11 @@
 
         <RelativeLayout
             android:id="@+id/relativeLayout2"
-            android:layout_width="122.0dip"
-            android:layout_height="22.0dip"
+            android:layout_width="@dimen/magazine_type_setLeftBottomEditPhotoView1_width"
+            android:layout_height="@dimen/magazine_type_relativeLayout_height"
             android:layout_alignLeft="@+id/setLeftBottomEditPhotoView1"
             android:layout_below="@+id/setLeftBottomEditPhotoView1"
-            android:layout_marginTop="10.0dip"
+            android:layout_marginTop="@dimen/magazine_type_relativeLayout_marginTop"
             android:background="@drawable/newspaper_layout_style" >
 
             <ImageView
@@ -75,14 +75,14 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:textColor="#ffffffff"
-                android:textSize="18.0sp"
+                android:textSize="@dimen/magazine_type_setLeftBottomEditTextView_textSize"
                 android:textStyle="bold" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/relativeLayout4"
-            android:layout_width="122.0dip"
-            android:layout_height="22.0dip"
+            android:layout_width="@dimen/magazine_type_setLeftBottomEditPhotoView1_width"
+            android:layout_height="@dimen/magazine_type_relativeLayout_height"
             android:layout_alignLeft="@+id/setLeftBottomEditPhotoView2"
             android:layout_alignTop="@+id/relativeLayout2"
             android:background="@drawable/newspaper_layout_style" >
@@ -104,17 +104,17 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:textColor="#ffffffff"
-                android:textSize="18.0sp"
+                android:textSize="@dimen/magazine_type_setLeftBottomEditTextView_textSize"
                 android:textStyle="bold" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/relativeLayout3"
-            android:layout_width="122.0dip"
-            android:layout_height="22.0dip"
+            android:layout_width="@dimen/magazine_type_setLeftBottomEditPhotoView1_width"
+            android:layout_height="@dimen/magazine_type_relativeLayout_height"
             android:layout_alignLeft="@+id/relativeLayout2"
             android:layout_below="@+id/relativeLayout2"
-            android:layout_marginTop="10.0dip"
+            android:layout_marginTop="@dimen/magazine_type_relativeLayout_marginTop"
             android:background="@drawable/newspaper_layout_style" >
 
             <ImageView
@@ -134,13 +134,13 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:textColor="#ffffffff"
-                android:textSize="20.0sp"
+                android:textSize="@dimen/magazine_type_setLeftBottomEditTextView3_textSize"
                 android:textStyle="bold" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="122.0dip"
-            android:layout_height="22.0dip"
+            android:layout_width="@dimen/magazine_type_setLeftBottomEditPhotoView1_width"
+            android:layout_height="@dimen/magazine_type_relativeLayout_height"
             android:layout_alignLeft="@+id/relativeLayout4"
             android:layout_alignTop="@+id/relativeLayout3"
             android:background="@drawable/newspaper_layout_style" >
@@ -162,7 +162,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:textColor="#ffffffff"
-                android:textSize="20.0sp"
+                android:textSize="@dimen/magazine_type_setLeftBottomEditTextView3_textSize"
                 android:textStyle="bold" />
         </RelativeLayout>
     </RelativeLayout>
@@ -172,14 +172,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="-3.0dip"
+        android:layout_marginLeft="@dimen/magazine_type_imageView5_marginLeft"
         android:layout_toRightOf="@+id/setLeftBottomMainLayoutView"
         android:src="@drawable/dotted_line2" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout10"
         android:layout_width="wrap_content"
-        android:layout_height="106.0dip"
+        android:layout_height="@dimen/magazine_type_relativeLayout10_height"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/relativeLayout1" >
 
@@ -189,7 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/imageView3"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="29.0dip"
+            android:layout_marginBottom="@dimen/magazine_type_imageView8_marginBottom"
             android:src="@drawable/handwrite_07" />
 
         <ImageView
@@ -201,10 +201,19 @@
             android:src="@drawable/dotted_line1" />
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/setLeftBottomMainLayoutView"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="@dimen/magazine_type_imageView4_marginLeft"
+        android:src="@drawable/dotted_line2" />
+
     <RelativeLayout
-        android:id="@+id/setLeftBottomEditPhotoView1"
+        android:id="@+id/setLeftBottomEditPhotoView3"
         android:layout_width="fill_parent"
-        android:layout_height="200.0dip"
+        android:layout_height="@dimen/magazine_type_setLeftBottomEditPhotoView3_height"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true" >
 
@@ -219,7 +228,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ImageView01"
-            android:layout_marginTop="35.0dip"
+            android:layout_marginTop="@dimen/magazine_type_setButtonConfirmView_marginTop"
             android:layout_toRightOf="@+id/setButtonBackView"
             android:background="@drawable/btn_sure_selector" />
 
@@ -230,18 +239,9 @@
             android:layout_alignBaseline="@+id/setButtonConfirmView"
             android:layout_alignBottom="@+id/setButtonConfirmView"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="71.0dip"
+            android:layout_marginLeft="@dimen/magazine_type_setButtonBackView_marginLeft"
             android:background="@drawable/btn_return_selector" />
     </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/setLeftBottomMainLayoutView"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="-5.0dip"
-        android:src="@drawable/dotted_line2" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"

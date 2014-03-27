@@ -22,8 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15.0dip"
-            android:layout_marginTop="14.0dip"
+            android:layout_marginLeft="@dimen/send_news_backBtnView_marginLeft"
+            android:layout_marginTop="@dimen/send_news_backBtnView_marginTop"
             android:background="@drawable/icon_ar1_left" />
     </RelativeLayout>
 
@@ -36,25 +36,26 @@
 
         <RelativeLayout
             android:id="@+id/saveButton"
-            android:layout_width="120.0dip"
-            android:layout_height="60.0dip"
-            android:layout_alignParentLeft="true" >
+            android:layout_width="@dimen/send_news_button_width"
+            android:layout_height="@dimen/send_news_button_height"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
 
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="23.0dip"
+                android:layout_marginTop="@dimen/send_news_textView1_marginTop"
                 android:text="@string/save_image"
                 android:textColor="#ffffffff"
-                android:textSize="20.0sp" />
+                android:textSize="@dimen/send_news_button_textSize" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/selectFriendButton"
-            android:layout_width="120.0dip"
-            android:layout_height="60.0dip"
+            android:layout_width="@dimen/send_news_button_width"
+            android:layout_height="@dimen/send_news_button_height"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true" >
 
@@ -63,28 +64,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20.0dip"
+                android:layout_marginTop="@dimen/send_news_textView2_marginTop"
                 android:text="@string/select_friend"
                 android:textColor="#ffffffff"
-                android:textSize="20.0sp" />
+                android:textSize="@dimen/send_news_button_textSize" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/sendButton"
-            android:layout_width="120.0dip"
-            android:layout_height="60.0dip"
+            android:layout_width="@dimen/send_news_button_width"
+            android:layout_height="@dimen/send_news_button_height"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" >
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true" >
 
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="23.0dip"
+                android:layout_marginTop="@dimen/send_news_textView3_marginTop"
                 android:text="@string/send_news"
                 android:textColor="#ffffffff"
-                android:textSize="20.0sp" />
+                android:textSize="@dimen/send_news_button_textSize" />
         </RelativeLayout>
     </RelativeLayout>
 

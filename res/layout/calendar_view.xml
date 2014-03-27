@@ -3,15 +3,15 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
-    android:background="@drawable/calendar_bg">
+    android:background="@drawable/calendar_bg" >
 
     <RelativeLayout
         android:id="@+id/calendar_header"
-        android:layout_width="160dp"
-        android:layout_height="44dp"
+        android:layout_width="@dimen/calendar_calendar_header_width"
+        android:layout_height="@dimen/calendar_calendar_header_height"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="23dip" >
+        android:layout_marginTop="@dimen/calendar_calendar_header_marginTop" >
 
         <Button
             android:id="@+id/previous_month"
@@ -40,7 +40,7 @@
             android:gravity="center"
             android:text="@string/current_month_placeholder"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="@dimen/calendar_current_month_textSize"
             android:textStyle="bold" />
     </RelativeLayout>
 
@@ -51,7 +51,7 @@
         android:layout_below="@id/calendar_header"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:padding="20dip" >
+        android:padding="@dimen/calendar_calendar_switcher_padding" >
 
         <GridView
             android:id="@+id/calendar_grid"

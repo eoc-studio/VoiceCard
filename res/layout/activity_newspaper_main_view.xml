@@ -11,28 +11,28 @@
 
         <ImageButton
             android:id="@+id/newspaperImageButton"
-            android:layout_width="180.0dip"
+            android:layout_width="@dimen/news_main_activity_imageButton_width"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="60.0dip"
-            android:layout_marginLeft="0.0dip"
-            android:layout_marginTop="60.0dip"
+            android:layout_marginBottom="@dimen/news_main_activity_imageButton_marginBottom"
+            android:layout_marginLeft="@dimen/news_main_activity_imageButton_marginLeft"
+            android:layout_marginTop="@dimen/news_main_activity_imageButton_marginTop"
             android:src="@drawable/type_newspaper" />
 
         <ImageButton
             android:id="@+id/magazineImageButton"
-            android:layout_width="180.0dip"
+            android:layout_width="@dimen/news_main_activity_imageButton_width"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="60.0dip"
-            android:layout_marginRight="0.0dip"
-            android:layout_marginTop="60.0dip"
+            android:layout_marginBottom="@dimen/news_main_activity_imageButton_marginBottom"
+            android:layout_marginRight="@dimen/news_main_activity_imageButton_marginLeft"
+            android:layout_marginTop="@dimen/news_main_activity_imageButton_marginTop"
             android:src="@drawable/type_magazine" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="wrap_content"
-        android:layout_height="90.0dip"
+        android:layout_height="@dimen/news_main_activity_relativeLayout1_height"
         android:background="@drawable/header_bg1" >
 
         <ImageView
@@ -54,7 +54,7 @@
         <FrameLayout
             android:id="@+id/frameLayout1"
             android:layout_width="wrap_content"
-            android:layout_height="50.0dip"
+            android:layout_height="@dimen/news_main_activity_frameLayout1_height"
             android:layout_centerHorizontal="true" />
 
         <Button
