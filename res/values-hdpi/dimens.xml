@@ -174,14 +174,14 @@
 
     <!-- NewsMagazineType -->
     <dimen name="magazine_type_setLeftBottomEditTextView_textSize">10sp</dimen>
-    <dimen name="magazine_type_setLeftBottomEditTextView3_textSize">15sp</dimen>
+    <dimen name="magazine_type_setLeftBottomEditTextView3_textSize">10sp</dimen>
     <dimen name="magazine_type_imageTitleViewOfMagazine_width">135dp</dimen>
     <dimen name="magazine_type_imageTitleViewOfMagazine_heigh">165dp</dimen>
     <dimen name="magazine_type_countViewOfMagazine_marginBottom">15.75dp</dimen>
     <dimen name="magazine_type_relativeLayout10_height">79.5dp</dimen>
     <dimen name="magazine_type_relativeLayout2_height">176dp</dimen>
     <dimen name="magazine_type_imageView5_marginLeft">-2.25dp</dimen>
-    <dimen name="magazine_type_imageView4_marginLeft">-3.75dp</dimen>
+    <dimen name="magazine_type_imageView4_marginLeft">-6dp</dimen>
     <dimen name="magazine_type_setTitleOkBtnViewOfMagazine_marginTop">26.25dp</dimen>
     <dimen name="magazine_type_setTitleBackBtnViewOfMagazine_marginLeft">53.25dp</dimen>
     <dimen name="magazine_type_setLeftBottomMainLayoutView_width">202.5dp</dimen>
@@ -197,12 +197,12 @@
     <dimen name="magazine_type_relativeLayout_height">11dp</dimen>
     <dimen name="magazine_type_relativeLayout_marginTop">7.5dp</dimen>
     <dimen name="magazine_type_imageView5_marginLeft">-2.25dp</dimen>
-    <dimen name="magazine_type_relativeLayout10_height">59.5dp</dimen>
+    <dimen name="magazine_type_relativeLayout101_height">79.5dp</dimen>
     <dimen name="magazine_type_imageView8_marginBottom">21.75dp</dimen>
-    <dimen name="magazine_type_setLeftBottomEditPhotoView3_height">150dp</dimen>
+    <dimen name="magazine_type_setLeftBottomEditPhotoView3_height">174dp</dimen>
     <dimen name="magazine_type_setButtonConfirmView_marginTop">26.25dp</dimen>
     <dimen name="magazine_type_setButtonBackView_marginLeft">53.25dp</dimen>
-    <dimen name="magazine_type_imageView4_marginLeft">-3.75dp</dimen>
+
 
     <!-- NewsNewspaperType -->
     <dimen name="newspaper_type_backBtnViewOfNewspaper_marginLeft">15dp</dimen>

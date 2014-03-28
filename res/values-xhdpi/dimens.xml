@@ -199,7 +199,7 @@
     <dimen name="magazine_type_relativeLayout_height">22dp</dimen>
     <dimen name="magazine_type_relativeLayout_marginTop">10dp</dimen>
     <dimen name="magazine_type_imageView5_marginLeft">-3dp</dimen>
-    <dimen name="magazine_type_relativeLayout10_height">106.0dp</dimen>
+    <dimen name="magazine_type_relativeLayout101_height">106dp</dimen>
     <dimen name="magazine_type_imageView8_marginBottom">29dp</dimen>
     <dimen name="magazine_type_setLeftBottomEditPhotoView3_height">200dp</dimen>
     <dimen name="magazine_type_setButtonConfirmView_marginTop">35dp</dimen>
