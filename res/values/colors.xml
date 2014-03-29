@@ -53,13 +53,15 @@
 		<color name="voice_message_controller_background">#090a09</color>
 		
 		<!-- About Mailbox -->
-		<color name="mail_box_titlebar_background">#F8D4D4</color>
-		<color name="mail_box_select_all_btn_background">#693837</color>
+		<color name="mail_box_titlebar_edge_divider_background">#352A1D</color>
+		<color name="mail_box_titlebar_background">#E2D3BC</color>
+		<color name="mail_box_select_all_btn_background">#63503E</color>
 		<color name="mail_box_titlebar_divider_background">#D0A3A2</color>
 		
 		<!-- About Mailbox item -->
-		<color name="mail_box_list_item_subject_text_color">#693837</color>
-		<color name="mail_box_list_item_date_text_color">#D0A3A2</color>
+		<color name="mail_box_list_item_subject_text_color">#352A1D</color>
+		<color name="mail_box_list_item_date_text_color">#897662</color>
+		<color name="mail_box_list_item_selected_bg_color">#D1BFA7</color>
 		
 		<color name="mail_sender_receiver_counter">#f77f0c</color>
 		

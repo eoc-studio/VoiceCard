@@ -18,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import eoc.studio.voicecard.R;
 import eoc.studio.voicecard.utils.ListUtility;
@@ -80,6 +81,7 @@ public class MailsAdapterView extends BaseAdapter
 		{
 			convertView = layoutInflater.inflate(R.layout.mailbox_list_item, null);
 			viewTag = new ViewTag(
+					(RelativeLayout) convertView.findViewById(R.id.glb_mailbox_list_item_rlyt),
 					(ImageView) convertView.findViewById(R.id.glb_mailbox_list_item_check_icon),
 					(ImageView) convertView.findViewById(R.id.glb_mailbox_list_item_img),
 					(TextView) convertView.findViewById(R.id.glb_mailbox_list_item_tv_subject),
@@ -103,11 +105,15 @@ public class MailsAdapterView extends BaseAdapter
 			{
 				viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(
 						R.drawable.icon_checkbox_check));
+				viewTag.itemLayout.setBackgroundColor(context.getResources().getColor(
+						R.color.mail_box_list_item_selected_bg_color));
 			}
 			else
 			{
 				viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(
 						R.drawable.icon_checkbox));
+				viewTag.itemLayout.setBackgroundColor(context.getResources().getColor(
+						R.color.transparent_text));
 			}
 			// itemImg
 			byte[] img = mails.get(position).getSenderImg();
@@ -153,6 +159,8 @@ public class MailsAdapterView extends BaseAdapter
 				{
 					viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(
 							R.drawable.icon_checkbox));
+					viewTag.itemLayout.setBackgroundColor(context.getResources().getColor(
+							R.color.mail_box_list_item_selected_bg_color));
 					mails.get(position).setCheckState(NOCHECKED);
 					selecedMail.remove(mails.get(position).getRowId());
 					if (count > 0)
@@ -166,6 +174,8 @@ public class MailsAdapterView extends BaseAdapter
 				{
 					viewTag.checkIcon.setImageDrawable(context.getResources().getDrawable(
 							R.drawable.icon_checkbox_check));
+					viewTag.itemLayout.setBackgroundColor(context.getResources().getColor(
+							R.color.transparent_text));
 					mails.get(position).setCheckState(CHECKED);
 					selecedMail.add(mails.get(position).getRowId());
 					if (count < mails.size())
@@ -286,6 +296,7 @@ public class MailsAdapterView extends BaseAdapter
 
 	class ViewTag
 	{
+		RelativeLayout itemLayout;
 		ImageView checkIcon;
 		ImageView itemImg;
 		TextView subject;
@@ -293,8 +304,8 @@ public class MailsAdapterView extends BaseAdapter
 		ImageView newIcon;
 		LinearLayout checkIconLayout;
 
-		public ViewTag(ImageView checkIcon, ImageView itemImg, TextView subject, TextView sendTime,
-				ImageView newIcon, LinearLayout checkIconLayout)
+		public ViewTag(RelativeLayout itemLayout, ImageView checkIcon, ImageView itemImg,
+				TextView subject, TextView sendTime, ImageView newIcon, LinearLayout checkIconLayout)
 		{
 			this.checkIcon = checkIcon;
 			this.itemImg = itemImg;
@@ -302,6 +313,7 @@ public class MailsAdapterView extends BaseAdapter
 			this.sendTime = sendTime;
 			this.newIcon = newIcon;
 			this.checkIconLayout = checkIconLayout;
+			this.itemLayout = itemLayout;
 		}
 	}
 

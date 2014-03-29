@@ -268,6 +268,14 @@ public class SelectFriendActivity extends BaseActivity
 		ArrayList<FriendInfo> friendList = bundle.getParcelableArrayList(FriendInfo.GET_FRIEND);
 		if (friendList.size() > 0)
 		{
+			if (isSingleOption)
+			{
+				displayMessage.setText(getResources().getString(R.string.please_select_one_friend));
+			}
+			else
+			{
+				displayMessage.setText(getResources().getString(R.string.please_select_friends));
+			}
 			friendsAdapterView = new FriendsAdapterView(SelectFriendActivity.this, friendList,
 					friendsAdapterData, showFriends);
 			showFriends.setVisibility(View.VISIBLE);

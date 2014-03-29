@@ -146,7 +146,7 @@
 
     <!-- About Select Friend -->
     <dimen name="act_select_friend_margin_top">22.5dp</dimen>
-    <dimen name="act_select_friend_list_height">150dp</dimen>
+    <dimen name="act_select_friend_list_height">187.5dp</dimen>
     <dimen name="act_select_friend_divider_height">0.75dp</dimen>
     <dimen name="act_select_friend_dash_horizontal_height">0.75dp</dimen>
     <dimen name="act_select_friend_iv_search_button_margin_top">3dp</dimen>

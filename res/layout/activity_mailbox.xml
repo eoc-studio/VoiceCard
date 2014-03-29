@@ -11,77 +11,82 @@
         android:scaleType="center"
         android:src="@drawable/title_mail" />
 
+    <View
+        android:id="@+id/act_mailbox_v_edge_divider"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/act_mailbox_iv_header"
+        android:background="@color/mail_box_titlebar_edge_divider_background" />
+
     <RelativeLayout
         android:id="@+id/act_mailbox_rlyt_title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/act_mailbox_rlyt_titlebar_height"
-        android:background="@color/mail_box_titlebar_background"
-        android:layout_below="@+id/act_mailbox_iv_header"
-        >
+        android:layout_below="@+id/act_mailbox_v_edge_divider"
+        android:background="@color/mail_box_titlebar_background" >
 
         <ImageView
             android:id="@+id/act_mailbox_iv_title_bar"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:scaleType="center"
-            android:layout_marginLeft="@dimen/act_mailbox_iv_titlebar_margin_left"
             android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/act_mailbox_iv_titlebar_margin_left"
+            android:scaleType="center"
             android:src="@drawable/icon_tick" />
-        
+
         <View
             android:id="@+id/act_mailbox_v_title_bar_divider"
             android:layout_width="@dimen/act_mailbox_v_titlebar_divider_width"
             android:layout_height="@dimen/act_mailbox_v_titlebar_divider_height"
-            android:layout_toRightOf="@id/act_mailbox_iv_title_bar"
-            android:layout_marginTop="@dimen/act_mailbox_v_titlebar_margin_top"
             android:layout_marginLeft="@dimen/act_mailbox_v_titlebar_margin_left_right"
             android:layout_marginRight="@dimen/act_mailbox_v_titlebar_margin_left_right"
-            android:background="@color/mail_box_titlebar_divider_background" 
-            android:gravity="center"/>
+            android:layout_marginTop="@dimen/act_mailbox_v_titlebar_margin_top"
+            android:layout_toRightOf="@id/act_mailbox_iv_title_bar"
+            android:background="@color/mail_box_titlebar_divider_background"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/act_mailbox_tv_title_bar"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
+            android:layout_toRightOf="@+id/act_mailbox_v_title_bar_divider"
+            android:gravity="center"
             android:text="@string/select_mails"
             android:textColor="@color/select_friend_tip_color"
-            android:textSize="@dimen/common_font_small_size" 
-            android:layout_toRightOf="@+id/act_mailbox_v_title_bar_divider"
-            android:gravity="center"/>
-        
+            android:textSize="@dimen/common_font_small_size" />
+
         <Button
             android:id="@+id/act_mailbox_bt_title_bar"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_alignParentRight="true"
-            android:text="@string/select_all"
             android:background="@color/mail_box_select_all_btn_background"
-            android:textColor="@color/white"
-            />
+            android:text="@string/select_all"
+            android:textColor="@color/white" />
     </RelativeLayout>
-    
+
     <RelativeLayout
         android:id="@+id/act_mailbox_rlyt_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/act_mailbox_rlyt_title_bar"
         android:layout_above="@+id/act_mailbox_iv_menu_background"
-        >
-    	<ListView
-        	android:id="@+id/act_mailbox_lv"
-        	android:layout_width="match_parent"
-        	android:layout_height="match_parent"
-        	android:layout_centerHorizontal="true"
-        	android:cacheColorHint="@android:color/transparent" />
-    	
-    	<TextView
+        android:layout_below="@+id/act_mailbox_rlyt_title_bar" >
+
+        <ListView
+            android:id="@+id/act_mailbox_lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:cacheColorHint="@android:color/transparent" />
+
+        <TextView
             android:id="@+id/act_mailbox_tv_errorMsg"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/act_mailbox_tv_errorMsg_height"
             android:layout_centerInParent="true"
             android:text="@string/mailbox_errorMsg"
             android:textSize="@dimen/act_mailbox_tv_errorMsg_text_size" />
-	</RelativeLayout>
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/act_mailbox_iv_menu_background"
