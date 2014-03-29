@@ -8,17 +8,31 @@
 
     <ImageView
         android:id="@+id/glb_advertisement_iv_image"
-        android:layout_width="100dip"
-        android:layout_height="100dip"
+        android:layout_width="128dip"
+        android:layout_height="96dip"
         android:layout_centerHorizontal="true"
+        android:background="@drawable/advertisement_image_border"
         android:src="@drawable/stamp_03" />
+
     <TextView
         android:id="@+id/glb_advertisement_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/glb_advertisement_iv_image"
+        android:layout_centerHorizontal="true"
         android:text="白帥帥香噴噴高級潮拖"
         android:textColor="@color/white"
         android:textSize="12sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/glb_advertisement_tv_title"
+        android:text="詳細介紹"
+        android:textSize="8sp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:layout_marginTop="1dip"
+        android:drawableLeft="@drawable/icon_ar_org" />
 
 </RelativeLayout>

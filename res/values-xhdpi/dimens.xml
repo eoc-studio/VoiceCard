@@ -62,6 +62,9 @@
     <dimen name="card_list_item_wrapper_width">250dip</dimen>
     <dimen name="card_list_item_wrapper_height">280dip</dimen>
 
+    <!-- Card Selector -->
+    <dimen name="card_selector_bubble_margin_top">15dip</dimen>
+
     <!-- Card Editor/Viewer -->
     <dimen name="card_open_shadow_width">485.5dip</dimen>
     <dimen name="card_open_shadow_height">290.5dip</dimen>

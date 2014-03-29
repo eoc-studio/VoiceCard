@@ -70,6 +70,8 @@
 		
 		<!-- Card Editor tip -->
 		<color name="card_editor_tip_background">#90FFFFFF</color>
+		
+		<color name="advertisement_image_border">#e2dc70</color>
 </resources>
 
 
