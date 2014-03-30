@@ -59,7 +59,7 @@
 						<LinearLayout
 								android:id="@+id/view_recommend_listview_item_llyt_right_top"
 								android:layout_width="match_parent"
-								android:layout_height="50dp"
+								android:layout_height="wrap_content"
 								android:orientation="vertical">
 								<TextView
 										android:id="@+id/view_recommend_listview_item_tv_title"

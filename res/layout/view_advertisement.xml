@@ -1,38 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
-    android:background="@drawable/index_recommend"
-    android:padding="10dip" >
+<RelativeLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+		android:background="@drawable/index_recommend"
+		android:padding="10dip">
+		<RelativeLayout
+				android:id="@+id/glb_advertisement_rlyt_image"
+				android:layout_width="98dp"
+				android:layout_height="98dp"
+				android:layout_centerHorizontal="true"
+				android:background="@color/advertisement_image_border">
+				<ImageView
+						android:id="@+id/glb_advertisement_iv_image"
+						android:layout_width="96dp"
+						android:layout_height="96dp"
+						android:layout_alignParentTop="true"
+						android:layout_centerHorizontal="true"
+						android:layout_marginLeft="1dp"
+						android:layout_marginTop="1dp"
+						android:scaleType="centerCrop"
+						android:src="@drawable/stamp_03" />
+		</RelativeLayout>
+		<TextView
+				android:id="@+id/glb_advertisement_tv_title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/glb_advertisement_rlyt_image"
+				android:layout_centerHorizontal="true"
+				android:text="白帥帥香噴噴高級潮拖"
+				android:textColor="@color/white"
+				android:textSize="12sp" />
 
-    <ImageView
-        android:id="@+id/glb_advertisement_iv_image"
-        android:layout_width="128dip"
-        android:layout_height="96dip"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/advertisement_image_border"
-        android:src="@drawable/stamp_03" />
-
-    <TextView
-        android:id="@+id/glb_advertisement_tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/glb_advertisement_iv_image"
-        android:layout_centerHorizontal="true"
-        android:text="白帥帥香噴噴高級潮拖"
-        android:textColor="@color/white"
-        android:textSize="12sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/glb_advertisement_tv_title"
-        android:text="詳細介紹"
-        android:textSize="8sp"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/white"
-        android:layout_marginTop="1dip"
-        android:drawableLeft="@drawable/icon_ar_org" />
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/glb_advertisement_tv_title"
+				android:text="詳細介紹"
+				android:textSize="8sp"
+				android:layout_centerHorizontal="true"
+				android:textColor="@color/white"
+				android:layout_marginTop="1dip"
+				android:drawableLeft="@drawable/icon_ar_org" />
 
 </RelativeLayout>
