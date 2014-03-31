@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/background"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/calendar_item_width"
+        android:layout_height="@dimen/calendar_item_height"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 

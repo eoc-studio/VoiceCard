@@ -38,12 +38,22 @@
             android:background="@drawable/icon_ar1_right" />
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/magazine_type_newspaper_image_view2"
+        android:src="@drawable/handwrite_07" />
+
     <RelativeLayout
         android:id="@+id/newspaperLayoutOfMagazine"
         android:layout_width="251.0dp"
         android:layout_height="343.0dp"
+        android:layout_below="@+id/imageView2"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="@dimen/magazine_type_newspaper_layout_of_magazine_marginTop"
         android:background="@drawable/mag_shadow" >
 
         <ImageView
@@ -60,7 +70,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="8.0dp"
             android:layout_marginTop="10.0dp"
-            android:background="@drawable/mag_header" />
+            android:background="@drawable/mag_header" >
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/relativeLayout10"
@@ -115,7 +126,8 @@
             android:layout_alignLeft="@+id/relativeLayout4"
             android:layout_alignTop="@+id/relativeLayout4"
             android:layout_marginLeft="1.0dp"
-            android:background="@drawable/mag_footer" />
+            android:background="@drawable/mag_footer" >
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/relativeLayout4"

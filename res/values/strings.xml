@@ -44,9 +44,12 @@
     <string name="delete_confirm_title">Delete Event?</string>
     <string name="delete_confirm_message">Are you sure delete </string>
     <string name="import_completion_message">Import completion</string>
-    
+
     <!-- MailBoxIconView -->
     <string name="mail">Inbox</string>
+
+    <!-- Main Loading -->
+    <string name="main_loading">Loading...</string>
 
     <!-- MemorialDayNotificationView -->
     <string name="a_normal_day">Nothing special</string>
@@ -90,7 +93,7 @@
     <string name="select_all">Select all</string>
     <string name="deselect_all">Cancel all</string>
     <string name="mailbox_errorMsg">No content</string>
-    
+
     <!-- About Facebook Manager -->
     <string name="app_id">584057725018260</string>
     <string name="error_is">錯誤是 %s </string>

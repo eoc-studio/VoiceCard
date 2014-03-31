@@ -63,6 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/frameLayout1"
             android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/news_main_activity_btnBack_main_menu_marginTop"
             android:background="@drawable/menu_index" />
     </RelativeLayout>
 

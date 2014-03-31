@@ -11,10 +11,10 @@ import android.graphics.Shader;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.view.View;  
+import android.view.View;
 
-public class ProgressWheel extends View {
-
+public class ProgressWheel extends View
+{
     //Sizes (with defaults)
     private int layout_height = 0;
     private int layout_width = 0;
@@ -58,17 +58,20 @@ public class ProgressWheel extends View {
     private int spinSpeed = 2;
     //The number of milliseconds to wait inbetween each draw
     private int delayMillis = 0;
-    private Handler spinHandler = new Handler() {
+    private Handler spinHandler = new Handler()
+    {
         /**
-         * This is the code that will increment the progress variable
-         * and so spin the wheel
+         * This is the code that will increment the progress variable and so spin the wheel
          */
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(Message msg)
+        {
             invalidate();
-            if (isSpinning) {
+            if (isSpinning)
+            {
                 progress += spinSpeed;
-                if (progress > 360) {
+                if (progress > 360)
+                {
                     progress = 0;
                 }
                 spinHandler.sendEmptyMessageDelayed(0, delayMillis);
@@ -81,19 +84,20 @@ public class ProgressWheel extends View {
 
     //Other
     private String text = "";
-    private String[] splitText = {};
+    private String[] splitText =
+    {};
 
     /**
      * The constructor for the ProgressWheel
-     *
+     * 
      * @param context
      * @param attrs
      */
-    public ProgressWheel(Context context, AttributeSet attrs) {
+    public ProgressWheel(Context context, AttributeSet attrs)
+    {
         super(context, attrs);
 
-        parseAttributes(context.obtainStyledAttributes(attrs,
-                R.styleable.ProgressWheel));
+        parseAttributes(context.obtainStyledAttributes(attrs, R.styleable.ProgressWheel));
     }
 
     //----------------------------------
@@ -101,12 +105,13 @@ public class ProgressWheel extends View {
     //----------------------------------
 
     /**
-     * Use onSizeChanged instead of onAttachedToWindow to get the dimensions of the view,
-     * because this method is called after measuring the dimensions of MATCH_PARENT & WRAP_CONTENT.
-     * Use this dimensions to setup the bounds and paints.
+     * Use onSizeChanged instead of onAttachedToWindow to get the dimensions of the view, because this method is called
+     * after measuring the dimensions of MATCH_PARENT & WRAP_CONTENT. Use this dimensions to setup the bounds and
+     * paints.
      */
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    protected void onSizeChanged(int w, int h, int oldw, int oldh)
+    {
         super.onSizeChanged(w, h, oldw, oldh);
 
         // Share the dimensions
@@ -119,10 +124,10 @@ public class ProgressWheel extends View {
     }
 
     /**
-     * Set the properties of the paints we're using to
-     * draw the progress wheel
+     * Set the properties of the paints we're using to draw the progress wheel
      */
-    private void setupPaints() {
+    private void setupPaints()
+    {
         barPaint.setColor(barColor);
         barPaint.setAntiAlias(true);
         barPaint.setStyle(Style.STROKE);
@@ -151,7 +156,8 @@ public class ProgressWheel extends View {
     /**
      * Set the bounds of the component
      */
-    private void setupBounds() {
+    private void setupBounds()
+    {
         // Width should equal to Height, find the min value to steup the circle
         int minValue = Math.min(layout_width, layout_height);
 
@@ -165,17 +171,17 @@ public class ProgressWheel extends View {
         paddingLeft = this.getPaddingLeft() + (xOffset / 2);
         paddingRight = this.getPaddingRight() + (xOffset / 2);
 
-        rectBounds = new RectF(paddingLeft,
-                paddingTop,
-                this.getLayoutParams().width - paddingRight,
+        rectBounds = new RectF(paddingLeft, paddingTop, this.getLayoutParams().width - paddingRight,
                 this.getLayoutParams().height - paddingBottom);
 
-        circleBounds = new RectF(paddingLeft + barWidth,
-                paddingTop + barWidth,
-                this.getLayoutParams().width - paddingRight - barWidth,
-                this.getLayoutParams().height - paddingBottom - barWidth);
-        circleInnerContour = new RectF(circleBounds.left + (rimWidth / 2.0f) + (contourSize / 2.0f), circleBounds.top + (rimWidth / 2.0f) + (contourSize / 2.0f), circleBounds.right - (rimWidth / 2.0f) - (contourSize / 2.0f), circleBounds.bottom - (rimWidth / 2.0f) - (contourSize / 2.0f));
-        circleOuterContour = new RectF(circleBounds.left - (rimWidth / 2.0f) - (contourSize / 2.0f), circleBounds.top - (rimWidth / 2.0f) - (contourSize / 2.0f), circleBounds.right + (rimWidth / 2.0f) + (contourSize / 2.0f), circleBounds.bottom + (rimWidth / 2.0f) + (contourSize / 2.0f));
+        circleBounds = new RectF(paddingLeft + barWidth, paddingTop + barWidth, this.getLayoutParams().width
+                - paddingRight - barWidth, this.getLayoutParams().height - paddingBottom - barWidth);
+        circleInnerContour = new RectF(circleBounds.left + (rimWidth / 2.0f) + (contourSize / 2.0f), circleBounds.top
+                + (rimWidth / 2.0f) + (contourSize / 2.0f), circleBounds.right - (rimWidth / 2.0f)
+                - (contourSize / 2.0f), circleBounds.bottom - (rimWidth / 2.0f) - (contourSize / 2.0f));
+        circleOuterContour = new RectF(circleBounds.left - (rimWidth / 2.0f) - (contourSize / 2.0f), circleBounds.top
+                - (rimWidth / 2.0f) - (contourSize / 2.0f), circleBounds.right + (rimWidth / 2.0f)
+                + (contourSize / 2.0f), circleBounds.bottom + (rimWidth / 2.0f) + (contourSize / 2.0f));
 
         fullRadius = (this.getLayoutParams().width - paddingRight - barWidth) / 2;
         circleRadius = (fullRadius - barWidth) + 1;
@@ -183,50 +189,44 @@ public class ProgressWheel extends View {
 
     /**
      * Parse the attributes passed to the view from the XML
-     *
-     * @param a the attributes to parse
+     * 
+     * @param a
+     *            the attributes to parse
      */
-    private void parseAttributes(TypedArray a) {
-        barWidth = (int) a.getDimension(R.styleable.ProgressWheel_barWidth,
-                barWidth);
+    private void parseAttributes(TypedArray a)
+    {
+        barWidth = (int) a.getDimension(R.styleable.ProgressWheel_barWidth, barWidth);
 
-        rimWidth = (int) a.getDimension(R.styleable.ProgressWheel_rimWidth,
-                rimWidth);
+        rimWidth = (int) a.getDimension(R.styleable.ProgressWheel_rimWidth, rimWidth);
 
-        spinSpeed = (int) a.getDimension(R.styleable.ProgressWheel_spinSpeed,
-                spinSpeed);
+        spinSpeed = (int) a.getDimension(R.styleable.ProgressWheel_spinSpeed, spinSpeed);
 
-        delayMillis = a.getInteger(R.styleable.ProgressWheel_delayMillis,
-                delayMillis);
-        if (delayMillis < 0) {
+        delayMillis = a.getInteger(R.styleable.ProgressWheel_delayMillis, delayMillis);
+        if (delayMillis < 0)
+        {
             delayMillis = 0;
         }
 
         barColor = a.getColor(R.styleable.ProgressWheel_barColor, barColor);
 
-        barLength = (int) a.getDimension(R.styleable.ProgressWheel_barLength,
-                barLength);
+        barLength = (int) a.getDimension(R.styleable.ProgressWheel_barLength, barLength);
 
-        textSize = (int) a.getDimension(R.styleable.ProgressWheel_textSize,
-                textSize);
+        textSize = (int) a.getDimension(R.styleable.ProgressWheel_textSize, textSize);
 
-        textColor = (int) a.getColor(R.styleable.ProgressWheel_textColor,
-                textColor);
+        textColor = (int) a.getColor(R.styleable.ProgressWheel_textColor, textColor);
 
         //if the text is empty , so ignore it
-        if (a.hasValue(R.styleable.ProgressWheel_text)) {
+        if (a.hasValue(R.styleable.ProgressWheel_text))
+        {
             setText(a.getString(R.styleable.ProgressWheel_text));
         }
 
-        rimColor = (int) a.getColor(R.styleable.ProgressWheel_rimColor,
-                rimColor);
+        rimColor = (int) a.getColor(R.styleable.ProgressWheel_rimColor, rimColor);
 
-        circleColor = (int) a.getColor(R.styleable.ProgressWheel_circleColor,
-                circleColor);
+        circleColor = (int) a.getColor(R.styleable.ProgressWheel_circleColor, circleColor);
 
         contourColor = a.getColor(R.styleable.ProgressWheel_contourColor, contourColor);
         contourSize = a.getDimension(R.styleable.ProgressWheel_contourSize, contourSize);
-
 
         // Recycle
         a.recycle();
@@ -236,24 +236,25 @@ public class ProgressWheel extends View {
     //Animation stuff
     //----------------------------------
 
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(Canvas canvas)
+    {
         super.onDraw(canvas);
         //Draw the rim
         canvas.drawArc(circleBounds, 360, 360, false, rimPaint);
         canvas.drawArc(circleOuterContour, 360, 360, false, contourPaint);
         canvas.drawArc(circleInnerContour, 360, 360, false, contourPaint);
         //Draw the bar
-        if (isSpinning) {
-            canvas.drawArc(circleBounds, progress - 90, barLength, false,
-                    barPaint);
-        } else {
+        if (isSpinning)
+        {
+            canvas.drawArc(circleBounds, progress - 90, barLength, false, barPaint);
+        }
+        else
+        {
             canvas.drawArc(circleBounds, -90, progress, false, barPaint);
         }
         //Draw the inner circle
-        canvas.drawCircle((circleBounds.width() / 2) + rimWidth + paddingLeft,
-                (circleBounds.height() / 2) + rimWidth + paddingTop,
-                circleRadius,
-                circlePaint);
+        canvas.drawCircle((circleBounds.width() / 2) + rimWidth + paddingLeft, (circleBounds.height() / 2) + rimWidth
+                + paddingTop, circleRadius, circlePaint);
         //Draw the text (attempts to center it horizontally and vertically)
         float textHeight = textPaint.descent() - textPaint.ascent();
         float verticalTextOffset = (textHeight / 2) - textPaint.descent();
@@ -263,31 +264,37 @@ public class ProgressWheel extends View {
             canvas.drawText(s, this.getWidth() / 2 - horizontalTextOffset,
                     this.getHeight() / 2 + verticalTextOffset, textPaint);
         }*/
-        
+
         //@Bruce: custom the text position
-        for (String s : splitText) {
+        for (String s : splitText)
+        {
             float horizontalTextOffset = textPaint.measureText(s) / 2;
-            canvas.drawText(s, this.getWidth() / 2 - horizontalTextOffset,
-                    (float)(this.getHeight() *0.8) + verticalTextOffset, textPaint);
+            canvas.drawText(s, this.getWidth() / 2 - horizontalTextOffset, (float) (this.getHeight() * 0.8)
+                    + verticalTextOffset, textPaint);
         }
     }
 
     /**
-    *   Check if the wheel is currently spinning
-    */
-    
-    public boolean isSpinning() {
-        if(isSpinning){
+     * Check if the wheel is currently spinning
+     */
+
+    public boolean isSpinning()
+    {
+        if (isSpinning)
+        {
             return true;
-        } else {
+        }
+        else
+        {
             return false;
         }
     }
-    
+
     /**
      * Reset the count (in increment mode)
      */
-    public void resetCount() {
+    public void resetCount()
+    {
         progress = 0;
         setText("0%");
         invalidate();
@@ -296,21 +303,24 @@ public class ProgressWheel extends View {
     /**
      * Turn off spin mode
      */
-    public void stopSpinning() {
+    public void stopSpinning()
+    {
         isSpinning = false;
         progress = 0;
         spinHandler.removeMessages(0);
     }
 
-    public void stopSpinningWithOutRestProgress() {
+    public void stopSpinningWithOutRestProgress()
+    {
         isSpinning = false;
         spinHandler.removeMessages(0);
     }
-    
+
     /**
      * Puts the view on spin mode
      */
-    public void spin() {
+    public void spin()
+    {
         isSpinning = true;
         spinHandler.sendEmptyMessage(0);
     }
@@ -318,26 +328,27 @@ public class ProgressWheel extends View {
     /**
      * Increment the progress by 1 (of 360)
      */
-    public void incrementProgress() {
+    public void incrementProgress()
+    {
         isSpinning = false;
         progress++;
 /*        if (progress > 360)
             progress = 0;*/
         if (progress > 360)
-        	progress = 360;
-        
-        setText(getResources().getString(R.string.main_loading)+Math.round(((float) progress / 360) * 100) + "%");
+            progress = 360;
+
+        setText(getResources().getString(R.string.main_loading) + Math.round(((float) progress / 360) * 100) + "%");
         spinHandler.sendEmptyMessage(0);
     }
-
 
     /**
      * Set the progress to a specific value
      */
-    public void setProgress(int i) {
+    public void setProgress(int i)
+    {
         isSpinning = false;
         progress = i;
-        setText(getResources().getString(R.string.main_loading)+Math.round(((float) progress / 360) * 100) + "%");
+        setText(getResources().getString(R.string.main_loading) + Math.round(((float) progress / 360) * 100) + "%");
         spinHandler.sendEmptyMessage(0);
     }
 
@@ -346,142 +357,174 @@ public class ProgressWheel extends View {
     //----------------------------------
 
     /**
-     * Set the text in the progress bar
-     * Doesn't invalidate the view
-     *
-     * @param text the text to show ('\n' constitutes a new line)
+     * Set the text in the progress bar Doesn't invalidate the view
+     * 
+     * @param text
+     *            the text to show ('\n' constitutes a new line)
      */
-    public void setText(String text) {
+    public void setText(String text)
+    {
         this.text = text;
         splitText = this.text.split("\n");
     }
 
-    public int getCircleRadius() {
+    public int getCircleRadius()
+    {
         return circleRadius;
     }
 
-    public void setCircleRadius(int circleRadius) {
+    public void setCircleRadius(int circleRadius)
+    {
         this.circleRadius = circleRadius;
     }
 
-    public int getBarLength() {
+    public int getBarLength()
+    {
         return barLength;
     }
 
-    public void setBarLength(int barLength) {
+    public void setBarLength(int barLength)
+    {
         this.barLength = barLength;
     }
 
-    public int getBarWidth() {
+    public int getBarWidth()
+    {
         return barWidth;
     }
 
-    public void setBarWidth(int barWidth) {
+    public void setBarWidth(int barWidth)
+    {
         this.barWidth = barWidth;
     }
 
-    public int getTextSize() {
+    public int getTextSize()
+    {
         return textSize;
     }
 
-    public void setTextSize(int textSize) {
+    public void setTextSize(int textSize)
+    {
         this.textSize = textSize;
     }
 
-    public int getPaddingTop() {
+    public int getPaddingTop()
+    {
         return paddingTop;
     }
 
-    public void setPaddingTop(int paddingTop) {
+    public void setPaddingTop(int paddingTop)
+    {
         this.paddingTop = paddingTop;
     }
 
-    public int getPaddingBottom() {
+    public int getPaddingBottom()
+    {
         return paddingBottom;
     }
 
-    public void setPaddingBottom(int paddingBottom) {
+    public void setPaddingBottom(int paddingBottom)
+    {
         this.paddingBottom = paddingBottom;
     }
 
-    public int getPaddingLeft() {
+    public int getPaddingLeft()
+    {
         return paddingLeft;
     }
 
-    public void setPaddingLeft(int paddingLeft) {
+    public void setPaddingLeft(int paddingLeft)
+    {
         this.paddingLeft = paddingLeft;
     }
 
-    public int getPaddingRight() {
+    public int getPaddingRight()
+    {
         return paddingRight;
     }
 
-    public void setPaddingRight(int paddingRight) {
+    public void setPaddingRight(int paddingRight)
+    {
         this.paddingRight = paddingRight;
     }
 
-    public int getBarColor() {
+    public int getBarColor()
+    {
         return barColor;
     }
 
-    public void setBarColor(int barColor) {
+    public void setBarColor(int barColor)
+    {
         this.barColor = barColor;
     }
 
-    public int getCircleColor() {
+    public int getCircleColor()
+    {
         return circleColor;
     }
 
-    public void setCircleColor(int circleColor) {
+    public void setCircleColor(int circleColor)
+    {
         this.circleColor = circleColor;
     }
 
-    public int getRimColor() {
+    public int getRimColor()
+    {
         return rimColor;
     }
 
-    public void setRimColor(int rimColor) {
+    public void setRimColor(int rimColor)
+    {
         this.rimColor = rimColor;
     }
 
-
-    public Shader getRimShader() {
+    public Shader getRimShader()
+    {
         return rimPaint.getShader();
     }
 
-    public void setRimShader(Shader shader) {
+    public void setRimShader(Shader shader)
+    {
         this.rimPaint.setShader(shader);
     }
 
-    public int getTextColor() {
+    public int getTextColor()
+    {
         return textColor;
     }
 
-    public void setTextColor(int textColor) {
+    public void setTextColor(int textColor)
+    {
         this.textColor = textColor;
     }
 
-    public int getSpinSpeed() {
+    public int getSpinSpeed()
+    {
         return spinSpeed;
     }
 
-    public void setSpinSpeed(int spinSpeed) {
+    public void setSpinSpeed(int spinSpeed)
+    {
         this.spinSpeed = spinSpeed;
     }
 
-    public int getRimWidth() {
+    public int getRimWidth()
+    {
         return rimWidth;
     }
 
-    public void setRimWidth(int rimWidth) {
+    public void setRimWidth(int rimWidth)
+    {
         this.rimWidth = rimWidth;
     }
 
-    public int getDelayMillis() {
+    public int getDelayMillis()
+    {
         return delayMillis;
     }
 
-    public void setDelayMillis(int delayMillis) {
+    public void setDelayMillis(int delayMillis)
+    {
         this.delayMillis = delayMillis;
     }
 }

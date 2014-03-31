@@ -112,4 +112,23 @@
             android:background="@drawable/btn_return_selector" />
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView2"
+        android:layout_marginLeft="11dp"
+        android:layout_toRightOf="@+id/imageView5"
+        android:src="@drawable/handwrite_09" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout10"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="27dp"
+        android:layout_toLeftOf="@+id/setLeftMainLayoutView"
+        android:src="@drawable/handwrite_08" />
+
 </RelativeLayout>

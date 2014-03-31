@@ -174,8 +174,11 @@
     <dimen name="news_main_activity_imageButton_marginTop">45dp</dimen>
     <dimen name="news_main_activity_relativeLayout1_height">67.5dp</dimen>
     <dimen name="news_main_activity_frameLayout1_height">37.5dp</dimen>
+    <dimen name="news_main_activity_btnBack_main_menu_marginTop">16dp</dimen>
 
     <!-- NewsMagazineType -->
+    <dimen name="magazine_type_newspaper_image_view2">15dp</dimen>
+    <dimen name="magazine_type_newspaper_layout_of_magazine_marginTop">10dp</dimen>
     <dimen name="magazine_type_setLeftBottomEditTextView_textSize">10sp</dimen>
     <dimen name="magazine_type_setLeftBottomEditTextView3_textSize">10sp</dimen>
     <dimen name="magazine_type_imageTitleViewOfMagazine_width">135dp</dimen>
@@ -197,15 +200,13 @@
     <dimen name="magazine_type_setLeftBottomEditPhotoView2_height">105dp</dimen>
     <dimen name="magazine_type_setLeftBottomEditPhotoView2_marginLeft">8.25dp</dimen>
     <dimen name="magazine_type_relativeLayout_width">91.5dp</dimen>
-    <dimen name="magazine_type_relativeLayout_height">11dp</dimen>
+    <dimen name="magazine_type_relativeLayout_height">17dp</dimen>
     <dimen name="magazine_type_relativeLayout_marginTop">7.5dp</dimen>
-    <dimen name="magazine_type_imageView5_marginLeft">-2.25dp</dimen>
     <dimen name="magazine_type_relativeLayout101_height">79.5dp</dimen>
     <dimen name="magazine_type_imageView8_marginBottom">21.75dp</dimen>
     <dimen name="magazine_type_setLeftBottomEditPhotoView3_height">174dp</dimen>
     <dimen name="magazine_type_setButtonConfirmView_marginTop">26.25dp</dimen>
     <dimen name="magazine_type_setButtonBackView_marginLeft">53.25dp</dimen>
-
 
     <!-- NewsNewspaperType -->
     <dimen name="newspaper_type_backBtnViewOfNewspaper_marginLeft">15dp</dimen>
@@ -214,7 +215,7 @@
     <dimen name="newspaper_type_imageView1_marginLeft">13dp</dimen>
     <dimen name="newspaper_type_titleTextViewOfNewspaper_marginTop">10dp</dimen>
     <dimen name="newspaper_type_imageTitleViewOfNewspaper_width">240dp</dimen>
-    <dimen name="newspaper_type_imageTitleViewOfNewspaper_marginLeft">35dp</dimen>
+    <dimen name="newspaper_type_imageTitleViewOfNewspaper_marginLeft">40dp</dimen>
     <dimen name="newspaper_type_imageTitleViewOfNewspaper_marginTop">23dp</dimen>
     <dimen name="newspaper_type_imageMainPhotoViewOfNewspaper_width">240dp</dimen>
     <dimen name="newspaper_type_imageMainPhotoViewOfNewspaper_height">120dp</dimen>
@@ -223,14 +224,14 @@
     <dimen name="newspaper_type_textView4_marginLeft">15dp</dimen>
     <dimen name="newspaper_type_imageSmailMainPhotoView_width">60dp</dimen>
     <dimen name="newspaper_type_imageSmailMainPhotoView_height">46dp</dimen>
-    <dimen name="newspaper_type_imageSmailMainPhotoView_marginLeft">8dp</dimen>
+    <dimen name="newspaper_type_imageSmailMainPhotoView_marginLeft">3dp</dimen>
     <dimen name="newspaper_type_imageSmailMainPhotoView_marginTop">2dp</dimen>
     <dimen name="newspaper_type_textView3_marginBottom">10dp</dimen>
     <dimen name="newspaper_type_textView3_marginRight">5.5dp</dimen>
     <dimen name="newspaper_type_imageBottomLeftView_width">35dp</dimen>
     <dimen name="newspaper_type_imageBottomLeftView_height">34dp</dimen>
-    <dimen name="newspaper_type_imageBottomLeftView_marginLeft">7dp</dimen>
-    <dimen name="newspaper_type_imageBottomLeftView_marginTop">5dp</dimen>
+    <dimen name="newspaper_type_imageBottomLeftView_marginLeft">2.5dp</dimen>
+    <dimen name="newspaper_type_imageBottomLeftView_marginTop">4.5dp</dimen>
     <dimen name="newspaper_type_setLeftBottomMainLayoutView_width">202.5dp</dimen>
     <dimen name="newspaper_type_setLeftBottomMainLayoutView_height">165dp</dimen>
     <dimen name="newspaper_type_setLeftBottomEditPhotoView1_width">91.5dp</dimen>
@@ -285,8 +286,11 @@
     <dimen name="calendar_calendar_header_marginTop">17.25dp</dimen>
     <dimen name="calendar_calendar_switcher_padding">15dp</dimen>
     <dimen name="calendar_current_month_textSize">14sp</dimen>
-    <dimen name="calendar_titleTextView_textSize">24sp</dimen>
-    <dimen name="calendar_relativeLayout4_height">225dp</dimen>
+    <dimen name="calendar_titleTextView_textSize">20sp</dimen>
+    <dimen name="calendar_relativeLayout4_height">274dp</dimen>
     <dimen name="calendar_hideView_height">33.75dp</dimen>
+    <dimen name="set_of_calendar_horizontal_scroll">10dp</dimen>
+    <dimen name="calendar_item_width">22dp</dimen>
+    <dimen name="calendar_item_height">22dp</dimen>
 
 </resources>

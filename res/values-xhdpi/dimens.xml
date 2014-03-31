@@ -176,8 +176,11 @@
     <dimen name="news_main_activity_imageButton_marginTop">60dp</dimen>
     <dimen name="news_main_activity_relativeLayout1_height">90dp</dimen>
     <dimen name="news_main_activity_frameLayout1_height">50dp</dimen>
+    <dimen name="news_main_activity_btnBack_main_menu_marginTop">0dp</dimen>
 
     <!-- NewsMagazineType -->
+    <dimen name="magazine_type_newspaper_image_view2">25dp</dimen>
+    <dimen name="magazine_type_newspaper_layout_of_magazine_marginTop">20dp</dimen>
     <dimen name="magazine_type_setLeftBottomEditTextView_textSize">18sp</dimen>
     <dimen name="magazine_type_setLeftBottomEditTextView3_textSize">20sp</dimen>
     <dimen name="magazine_type_imageTitleViewOfMagazine_width">180dp</dimen>
@@ -201,13 +204,11 @@
     <dimen name="magazine_type_relativeLayout_width">122dp</dimen>
     <dimen name="magazine_type_relativeLayout_height">22dp</dimen>
     <dimen name="magazine_type_relativeLayout_marginTop">10dp</dimen>
-    <dimen name="magazine_type_imageView5_marginLeft">-3dp</dimen>
     <dimen name="magazine_type_relativeLayout101_height">106dp</dimen>
     <dimen name="magazine_type_imageView8_marginBottom">29dp</dimen>
     <dimen name="magazine_type_setLeftBottomEditPhotoView3_height">200dp</dimen>
     <dimen name="magazine_type_setButtonConfirmView_marginTop">35dp</dimen>
     <dimen name="magazine_type_setButtonBackView_marginLeft">71dp</dimen>
-    <dimen name="magazine_type_imageView4_marginLeft">-5dp</dimen>
 
     <!-- NewsNewspaperType -->
     <dimen name="newspaper_type_backBtnViewOfNewspaper_marginLeft">15dp</dimen>
@@ -290,5 +291,8 @@
     <dimen name="calendar_titleTextView_textSize">34sp</dimen>
     <dimen name="calendar_relativeLayout4_height">300dp</dimen>
     <dimen name="calendar_hideView_height">45dp</dimen>
+    <dimen name="set_of_calendar_horizontal_scroll">25dp</dimen>
+    <dimen name="calendar_item_width">30dp</dimen>
+    <dimen name="calendar_item_height">30dp</dimen>
 
 </resources>
