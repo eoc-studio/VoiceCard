@@ -18,11 +18,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import eoc.studio.voicecard.R;
 
 public class DrawableProcess
 {
+	private final static String TAG = "DrawableProcess";
     protected static final String IMAGE_CACHE_PATH = Environment.getExternalStorageDirectory() + "/Screenshot.jpg";
 	
 	
@@ -187,6 +189,54 @@ public class DrawableProcess
         activity.startActivityForResult(intent, requestCode);
     }
 
+    //@bruce for fixed aspect ratio
+    protected static void getImageForSmallIcon(final Activity activity, final int requestCode, int width, int height)
+    {
+    	Log.d(TAG, "getImage width: "+ width+",height: "+height);
+        imageUri = null;
+        imageUri = Uri.fromFile(new File(IMAGE_CACHE_PATH));
+        if (imageUri == null)
+        {
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setType("image/*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("outputX", width*6);
+        intent.putExtra("outputY", height*6);
+        intent.putExtra("aspectX", width);
+        intent.putExtra("aspectY", height);
+        intent.putExtra("scale", true);
+        intent.putExtra("return-data", false);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("noFaceDetection", false);
+        activity.startActivityForResult(intent, requestCode);
+    }
+    
+    protected static void getImageForBigIcon(final Activity activity, final int requestCode, int width, int height)
+    {
+    	Log.d(TAG, "getImage width: "+ width+",height: "+height);
+        imageUri = null;
+        imageUri = Uri.fromFile(new File(IMAGE_CACHE_PATH));
+        if (imageUri == null)
+        {
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setType("image/*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("outputX", width);
+        intent.putExtra("outputY", height);
+        intent.putExtra("aspectX", width);
+        intent.putExtra("aspectY", height);
+        intent.putExtra("scale", true);
+        intent.putExtra("return-data", false);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("noFaceDetection", false);
+        activity.startActivityForResult(intent, requestCode);
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static void getImage(final Activity activity, final int requestCode, Uri uri, int width, int height) {
         Intent intent = new Intent(Intent.ACTION_PICK, null);

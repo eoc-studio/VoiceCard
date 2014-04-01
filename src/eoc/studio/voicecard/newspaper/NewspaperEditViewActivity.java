@@ -156,7 +156,8 @@ public class NewspaperEditViewActivity extends Activity implements OnClickListen
         {
             case R.id.setLeftPhotoView:
             {
-                DrawableProcess.getImage(this, DrawableProcess.PROCESS_TYPE_LEFT_PHOTO_VIEW);
+//                DrawableProcess.getImage(this, DrawableProcess.PROCESS_TYPE_LEFT_PHOTO_VIEW);
+            	DrawableProcess.getImageForSmallIcon(this, DrawableProcess.PROCESS_TYPE_LEFT_PHOTO_VIEW,mSetLeftPhotoView.getWidth(),mSetLeftPhotoView.getHeight());
             }
                 break;
             case R.id.setLeftEditTextView:
@@ -168,12 +169,14 @@ public class NewspaperEditViewActivity extends Activity implements OnClickListen
             ///
             case R.id.setLeftBottomEditPhotoView1:
             {
-                DrawableProcess.getImage(this, DrawableProcess.PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW1);
+//                DrawableProcess.getImage(this, DrawableProcess.PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW1);
+            	DrawableProcess.getImageForSmallIcon(this, DrawableProcess.PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW1,mSetLeftBottomEditPhotoIconView1.getWidth(),mSetLeftBottomEditPhotoIconView1.getHeight());
             }
                 break;
             case R.id.setLeftBottomEditPhotoView2:
             {
-                DrawableProcess.getImage(this, DrawableProcess.PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW2);
+//                DrawableProcess.getImage(this, DrawableProcess.PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW2);
+                DrawableProcess.getImageForSmallIcon(this, DrawableProcess.PROCESS_TYPE_LEFT_BOTTON_PHOTO_VIEW2,mSetLeftBottomEditPhotoIconView2.getWidth(),mSetLeftBottomEditPhotoIconView2.getHeight());
             }
                 break;
             case R.id.setLeftBottomEditTextView:

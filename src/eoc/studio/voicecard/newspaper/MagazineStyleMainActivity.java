@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 public class MagazineStyleMainActivity extends Activity implements OnClickListener
 {
+	private final static String TAG = "MagazineStyleMainActivity";
     private static RelativeLayout newspaperMainView;
     private static Button mBackBtn, mNextBtn;
     private static TextView mTitleTextView;
@@ -102,12 +104,14 @@ public class MagazineStyleMainActivity extends Activity implements OnClickListen
                 break;
             case R.id.imageMainPhotoViewOfMagazine:
             {
-                DrawableProcess.getImage(this, DrawableProcess.PROCESS_TYPE_MAIN_PHOTO);
+            	Log.d(TAG, "onClick() imageMainPhotoViewOfMagazine");
+            	DrawableProcess.getImageForBigIcon(this, DrawableProcess.PROCESS_TYPE_MAIN_PHOTO,mBtnMainPhotoView.getWidth(),mBtnMainPhotoView.getHeight());
             }
                 break;
             case R.id.magazineSetBackgroundView:
             {
-                DrawableProcess.getImage(this, DrawableProcess.PROCESS_TYPE_MAIN_PHOTO);
+            	Log.d(TAG, "onClick() magazineSetBackgroundView");
+                DrawableProcess.getImageForBigIcon(this, DrawableProcess.PROCESS_TYPE_MAIN_PHOTO,mBtnMainPhotoView.getWidth(),mBtnMainPhotoView.getHeight());
             }
                 break;
             case R.id.magazineSetLeftBottomPhotoView:

@@ -51,7 +51,7 @@ public class NewspaperStyleMainActivity extends Activity implements OnClickListe
         mBtnTitleView = (ImageView) findViewById(R.id.imageTitleViewOfNewspaper);
         mTitleTextView = (TextView) findViewById(R.id.titleTextViewOfNewspaper);
         mBtnMainPhotoView = (ImageView) findViewById(R.id.imageMainPhotoViewOfNewspaper);
-        //
+        
         mImageSmailMainPhotoView = (ImageView) findViewById(R.id.imageSmailMainPhotoView);
         mImageBottomLeftView = (ImageView) findViewById(R.id.imageBottomLeftView);
     }
@@ -102,7 +102,7 @@ public class NewspaperStyleMainActivity extends Activity implements OnClickListe
                 break;
             case R.id.imageMainPhotoViewOfNewspaper:
             {
-                DrawableProcess.getImage(this, DrawableProcess.PROCESS_TYPE_MAIN_PHOTO);
+                DrawableProcess.getImageForBigIcon(this, DrawableProcess.PROCESS_TYPE_MAIN_PHOTO,mBtnMainPhotoView.getWidth(),mBtnMainPhotoView.getHeight());
             }
                 break;
             case R.id.imageSmailMainPhotoView:
