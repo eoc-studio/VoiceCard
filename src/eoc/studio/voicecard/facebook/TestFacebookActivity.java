@@ -16,6 +16,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.facebook.FacebookException;
 import com.facebook.Response;
@@ -200,10 +201,27 @@ public class TestFacebookActivity extends BaseActivity
             {
                 if (facebookManager != null)
                 {	// only publish john for test 
-                    facebookManager.publishTimeline(TestFacebookActivity.this, new Publish(johnId,
-                    		getResources().getString(R.string.share_app_name), Publish.DEFAULT_PICTURE, getResources().getString(R.string.share_caption),
-                    		getResources().getString(R.string.share_caption), getResources().getString(
-									R.string.share_link)));
+//                    facebookManager.publishTimeline(TestFacebookActivity.this, new Publish(johnId,
+//                    		getResources().getString(R.string.share_app_name), Publish.DEFAULT_PICTURE, getResources().getString(R.string.share_caption),
+//                    		getResources().getString(R.string.share_caption), getResources().getString(
+//									R.string.share_link)));
+                	
+                	facebookManager.publishTimeline(TestFacebookActivity.this, johnId, facebookManager.new PublishListener()
+                    {
+                        @Override
+                        public void onComplete(Bundle values, FacebookException error) {
+                            if (error != null)
+                            {
+                                Toast.makeText(TestFacebookActivity.this, getResources().getString(R.string.news_send_fail),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(TestFacebookActivity.this, getResources().getString(R.string.news_send_ok),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
                 }
             }
         });

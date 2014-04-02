@@ -4,7 +4,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.json.JSONObject;
 
@@ -430,6 +429,31 @@ public class FacebookManager
         }
         this.publishListener = publishListener;
         publishNews(context, sendId, fileUri);
+    }
+    
+    public void publishTimeline(Context context, String sendId, PublishListener publishListener) {
+        Log.d(TAG, "publishTimeline  from send card");
+        if (!checkNetwork(context)) {
+            return;
+        }
+        this.publishListener = publishListener;
+        
+		publish = new Publish(sendId, context.getResources().getString(R.string.share_app_name),
+				null, context.getResources().getString(R.string.share_caption), context
+						.getResources().getString(R.string.share_description), context
+						.getResources().getString(R.string.share_link));
+        
+        managerState = ManagerState.PUBLISH;
+        actionType = ManagerState.PUBLISH;
+        
+        if (isLogin())
+        {
+        	publishTimeline(FacebookManager.this.context, publish);
+        } 
+        else 
+        {
+            login(context, new LoginListener());
+        }
     }
 		
 	public void publishTimeline(Context context, Publish publish)
