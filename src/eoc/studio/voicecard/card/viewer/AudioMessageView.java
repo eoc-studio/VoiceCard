@@ -1,5 +1,7 @@
 package eoc.studio.voicecard.card.viewer;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import android.content.Context;
@@ -8,6 +10,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,7 +21,7 @@ import eoc.studio.voicecard.R;
 
 public class AudioMessageView extends RelativeLayout
 {
-
+	private final static String TAG = "AudioMessageView";
 	private ImageView controllerIcon;
 	private TextView timeTextView;
 	private String durationText;
@@ -32,6 +35,9 @@ public class AudioMessageView extends RelativeLayout
 		{
 			if (event.getActionMasked() == MotionEvent.ACTION_DOWN)
 			{
+				
+				Log.d(TAG, "touchListener onTouch isPlayable: "+isPlayable);
+				Log.d(TAG, "touchListener onTouch isPrepared: "+isPrepared);
 				boolean isConsumed = false;
 				if (isPlayable && isPrepared)
 				{
@@ -129,11 +135,17 @@ public class AudioMessageView extends RelativeLayout
 			IllegalStateException, IOException
 	{
 		this.mediaPlayer = player;
-
+		Log.d(TAG, "setPlayerSourcceAndPrepare: "+source);
 		mediaPlayer = new MediaPlayer();
-		mediaPlayer.setDataSource(getContext(), source);
+		
+		//@bruce add for fix some devices will prepare error
+		File file = new File(source.getPath()); 
+		FileInputStream fis = new FileInputStream(file); 
+		mediaPlayer.setDataSource(fis.getFD()); 
+	
+//		mediaPlayer.setDataSource(getContext(), source);
 		mediaPlayer.prepare();
-
+		
 		mediaPlayer.setOnPreparedListener(new OnPreparedListener()
 		{
 			@Override
@@ -168,6 +180,8 @@ public class AudioMessageView extends RelativeLayout
 			@Override
 			public boolean onError(MediaPlayer mp, int what, int extra)
 			{
+				
+				Log.d(TAG,"mediaPlayer onError what: "+what);
 				return false;
 			}
 		});

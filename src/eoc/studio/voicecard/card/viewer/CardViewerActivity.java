@@ -407,22 +407,27 @@ public class CardViewerActivity extends BaseActivity
 			cardVoice.setVisibility(View.VISIBLE);
 			try
 			{
+				Log.d(TAG, "initCardView");
 				cardVoice.setPlayerSourcceAndPrepare(new MediaPlayer(), card.getSound(), false);
 			}
 			catch (IllegalArgumentException e)
 			{
 				e.printStackTrace();
+				Log.d(TAG, "initCardView IllegalArgumentException:"+e.toString());
 			}
 			catch (SecurityException e)
 			{
 				e.printStackTrace();
+				Log.d(TAG, "initCardView SecurityException:"+e.toString());
 			}
 			catch (IllegalStateException e)
 			{
+				Log.d(TAG, "initCardView IllegalStateException:"+e.toString());
 				e.printStackTrace();
 			}
 			catch (IOException e)
 			{
+				Log.d(TAG, "initCardView IOException:"+e.toString());
 				e.printStackTrace();
 			}
 		}
