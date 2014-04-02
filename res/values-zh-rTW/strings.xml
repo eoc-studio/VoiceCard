@@ -139,4 +139,7 @@
     <string name="add_favorite">增加</string>
 	<string name="add_favorite_success">到我的收藏成功</string>
 	<string name="no_favorite_exist">沒有收藏的卡片</string>
+	
+	<!-- Card Viewer -->
+	<string name="phone_list_empty">找不到聯絡人電話資訊</string>
 </resources>

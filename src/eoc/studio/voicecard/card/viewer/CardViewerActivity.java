@@ -764,7 +764,14 @@ public class CardViewerActivity extends BaseActivity
 							+ phoneString);
 				}
 
-				phoneList.add(phoneString);
+				if(!phoneString.equals("")){
+				
+					phoneList.add(phoneString);
+				}
+				else{
+					Log.d(TAG, "onContactSelectorResult phoneString == white space");
+				}
+				
 			}
 
 			if (!phoneList.isEmpty())
@@ -775,6 +782,7 @@ public class CardViewerActivity extends BaseActivity
 			else
 			{
 				Log.e(TAG, "onContactSelectorResult - phoneList empty");
+				Toast.makeText(this, getResources().getString(R.string.phone_list_empty), Toast.LENGTH_SHORT).show();
 			}
 		}
 
