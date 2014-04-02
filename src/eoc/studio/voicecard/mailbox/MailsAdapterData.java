@@ -364,7 +364,7 @@ public class MailsAdapterData
 	                    KEY_SEND_FROM, KEY_SEND_FROM_NAME, KEY_SEND_FROM_LINK, KEY_SEND_TO,
 	                    KEY_SUBJECT, KEY_BODY, KEY_FONT_SIZE, KEY_FONT_COLOR, KEY_IMG_LINK, KEY_IMG,
 	                    KEY_SPEECH, KEY_SIGN, KEY_SEND_TIME, KEY_NEW_STATE }, KEY_OWNER_ID + "=" + ownerId,
-	                    null, null, null, null, null);
+	                    null, null, null, KEY_SEND_TIME + ORDER_DESC, null);
 	            if (cursor != null)
 	            {
 	                return cursor;

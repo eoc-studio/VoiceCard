@@ -382,7 +382,7 @@ public class FacebookManager
 	}
 	
     private void checkPublishPermission() {
-        Log.d(TAG, "checkPublishPermission ");
+        Log.d(TAG, "checkPublishPermission actionType === " + actionType);
         if (hasPublishPermission())
         {
             switch (actionType) {
@@ -423,12 +423,42 @@ public class FacebookManager
         }
     }
     
+    public void publishNews(Context context, String sendId) {
+        if (!checkNetwork(context)) {
+            return;
+        }
+
+        this.context = context;
+		publish = new Publish(sendId, context.getResources().getString(R.string.share_app_name),
+				null, context.getResources().getString(R.string.share_caption),
+				context.getResources().getString(R.string.share_description), context
+				.getResources().getString(R.string.share_link));
+        managerState = ManagerState.PUBLISH_NEWS;
+        actionType = ManagerState.PUBLISH_NEWS;
+        if (isLogin())
+        {
+        	publishTimeline(context, publish);
+        } 
+        else 
+        {
+            login(context, new LoginListener());
+        }
+    }
+    
     public void publishNews(Context context, String sendId, Uri fileUri, PublishListener publishListener) {
         if (!checkNetwork(context)) {
             return;
         }
         this.publishListener = publishListener;
         publishNews(context, sendId, fileUri);
+    }
+    
+    public void publishNews(Context context, String sendId, PublishListener publishListener) {
+        if (!checkNetwork(context)) {
+            return;
+        }
+        this.publishListener = publishListener;
+        publishNews(context, sendId);
     }
     
     public void publishTimeline(Context context, String sendId, PublishListener publishListener) {
@@ -478,9 +508,14 @@ public class FacebookManager
 	}
 	
 	private void openPublishDialog() {
+		Log.d(TAG, "openPublishDialog() img link is " + publish.getImgLink());
+		
         Bundle params = new Bundle();
         params.putString(BundleTag.NAME, publish.getName());
-        params.putString(BundleTag.PICTURE, publish.getImgLink());
+        if (publish.getImgLink() != null)
+        {
+        	params.putString(BundleTag.PICTURE, publish.getImgLink());
+        }
         params.putString(BundleTag.TO, publish.getId());
         params.putString(BundleTag.CAPTION, publish.getCaption());
         params.putString(BundleTag.DESCRIPTION, publish.getDescription());
