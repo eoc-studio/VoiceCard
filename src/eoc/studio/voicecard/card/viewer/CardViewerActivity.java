@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.FacebookException;
+import com.facebook.Session;
 
 import eoc.studio.voicecard.BaseActivity;
 import eoc.studio.voicecard.R;
@@ -40,6 +42,11 @@ import eoc.studio.voicecard.card.Constant;
 import eoc.studio.voicecard.card.editor.CardCategorySelectorActivity;
 import eoc.studio.voicecard.card.editor.CardEditorActivity;
 import eoc.studio.voicecard.facebook.FacebookManager;
+import eoc.studio.voicecard.facebook.TestFacebookActivity;
+import eoc.studio.voicecard.facebook.FacebookManager.PublishListener;
+import eoc.studio.voicecard.facebook.enetities.FriendInfo;
+import eoc.studio.voicecard.facebook.friends.SelectFriendActivity;
+import eoc.studio.voicecard.facebook.utils.BundleTag;
 import eoc.studio.voicecard.mailbox.Mail;
 import eoc.studio.voicecard.mainmenu.MainMenuActivity;
 import eoc.studio.voicecard.utils.FileUtility;
@@ -84,6 +91,8 @@ public class CardViewerActivity extends BaseActivity
 
 	private View back;
 
+	private ImageView sendFacebookToSingle;
+	
 	private ImageView sendFacebook;
 
 	private ImageView sendContact;
@@ -122,12 +131,15 @@ public class CardViewerActivity extends BaseActivity
 
 	private ProgressDialog progressDialog;
 
+	private Context context;
+	
+	private static String singleFriendID = "";
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 
 		facebookManager = FacebookManager.getInstance(this);
-
+		context = getApplicationContext();
 		if (isSenderMode())
 		{
 			initSendBackId();
@@ -184,8 +196,9 @@ public class CardViewerActivity extends BaseActivity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-
+		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
+		
 		if (resultCode == RESULT_OK)
 		{
 			switch (requestCode)
@@ -193,6 +206,87 @@ public class CardViewerActivity extends BaseActivity
 			case eoc.studio.voicecard.contact.DataProcess.PROCESS_SELECTION_FRIEND:
 				onContactSelectorResult(data);
 				break;
+				
+			case eoc.studio.voicecard.facebook.enetities.FriendInfo.GET_FRIEND_REQUEST_CODE:
+				Log.d(TAG, "GET_FRIEND_REQUEST_CODE");
+				if (data != null)
+				{
+					Bundle bundle = data.getExtras();
+					if (bundle != null)
+					{
+						ArrayList<FriendInfo> friendList = bundle
+								.getParcelableArrayList(FriendInfo.GET_FRIEND);
+						if (friendList != null)
+						{
+							for (int i = 0; i < friendList.size(); i++)
+							{
+								Log.d(TAG, "ID is " + friendList.get(i).getFriendId());
+								Log.d(TAG, "Name is " + friendList.get(i).getFriendName());
+								Log.d(TAG, "Birthday is " + friendList.get(i).getFriendBirthday());
+								Log.d(TAG, "ImgLink is " + friendList.get(i).getFriendImgLink());
+								
+								if(i == 0){
+									singleFriendID = friendList.get(i).getFriendName();
+					                FacebookManager.getInstance(context).publishNews(this,  singleFriendID,
+					                        Uri.parse("file//test"),
+					                        FacebookManager.getInstance(context).new PublishListener()
+					                        {
+					                            @Override
+					                            public void onComplete(Bundle values, FacebookException error)
+					                            {
+					                                if (error != null)
+					                                {
+					                                	Log.d(TAG, "publishTimeline onComplete Error: "+error );
+					                                    Toast.makeText(context, getResources().getString(R.string.news_send_fail),
+					                                            Toast.LENGTH_LONG).show();
+					                                }
+					                                else
+					                                {
+					                                	Log.d(TAG, "publishTimeline onComplete ok ");
+					                                    Toast.makeText(context, getResources().getString(R.string.news_send_ok),
+					                                            Toast.LENGTH_LONG).show();
+					                                    					                                    
+					                                    ArrayList<String> friendList = new ArrayList<String>();
+					                                    friendList.add(singleFriendID);
+					                        			sendCardToServer(friendList);
+					                        			goBackToMainMenuAndFinish();
+					                        			
+					                        			singleFriendID = "";
+					                                }
+					                            }
+					                        });	
+					                
+//								FacebookManager.getInstance(context).publishTimeline(context, friendList.get(i).getFriendId(), facebookManager.new PublishListener()
+//			                    {
+//			                        @Override
+//			                        public void onComplete(Bundle values, FacebookException error) {
+//			                            if (error != null)
+//			                            {
+//			                            	
+//			                            	Log.d(TAG, "publishTimeline onComplete Error: "+error );
+//			                                Toast.makeText(CardViewerActivity.this, getResources().getString(R.string.news_send_fail),
+//			                                        Toast.LENGTH_LONG).show();
+//			                            }
+//			                            else
+//			                            {
+//			                            	
+//			                            	Log.d(TAG, "publishTimeline onComplete ok ");
+//			                                Toast.makeText(CardViewerActivity.this, getResources().getString(R.string.news_send_ok),
+//			                                        Toast.LENGTH_LONG).show();
+//			                            }
+//			                            
+////			        					goBackToMainMenuAndFinish();
+//			                        }
+//			                    });
+//			                	
+								}
+							}
+							
+							
+						}
+					}
+				}
+				break;	
 			}
 		}
 	}
@@ -316,6 +410,7 @@ public class CardViewerActivity extends BaseActivity
 //				Log.d(TAG, "hide Send Contact button");
 //				sendContact.setVisibility(View.GONE);
 //			}
+			sendFacebookToSingle.setVisibility(View.GONE);
 			sendFacebook.setVisibility(View.GONE);
 			sendContact.setImageResource(R.drawable.btn_send_card_back_selector);
 		}
@@ -357,6 +452,8 @@ public class CardViewerActivity extends BaseActivity
 	{
 
 		back = findViewById(R.id.act_card_viewer_iv_back);
+		
+		sendFacebookToSingle= (ImageView) findViewById(R.id.act_card_viewer_iv_send_fb_single);
 		sendFacebook = (ImageView) findViewById(R.id.act_card_viewer_iv_send_fb);
 		sendContact = (ImageView) findViewById(R.id.act_card_viewer_iv_send_contact);
 
@@ -623,6 +720,7 @@ public class CardViewerActivity extends BaseActivity
 				}
 				else
 				{
+					Log.d(TAG, "sendFacebook onClick sendBackId != null,sendBack()");
 					sendBack();
 					goBackToMainMenuAndFinish();
 				}
@@ -630,6 +728,27 @@ public class CardViewerActivity extends BaseActivity
 
 		});
 
+		sendFacebookToSingle.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+
+				if (sendBackId == null)
+				{
+					startSelectFriend();
+				}
+				else
+				{
+//					sendBack();
+//					goBackToMainMenuAndFinish();
+				}
+			}
+
+		});
+		
+		
 		sendContact.setOnClickListener(new OnClickListener()
 		{
 
@@ -678,6 +797,14 @@ public class CardViewerActivity extends BaseActivity
 		});
 	}
 
+	private void startSelectFriend(){
+        Intent intent = new Intent(this, SelectFriendActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(BundleTag.SELECTED_OPTION, true);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, FriendInfo.GET_FRIEND_REQUEST_CODE);
+	}
+	
 	private void startFacebookInviter()
 	{
 
