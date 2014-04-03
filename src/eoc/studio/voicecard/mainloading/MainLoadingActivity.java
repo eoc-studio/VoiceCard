@@ -597,6 +597,16 @@ public class MainLoadingActivity extends Activity
 		Log.d(TAG, "getMobile" + tm.getLine1Number());
 		String phone = tm.getLine1Number();
 
+		if (phone == null || phone.equals(""))
+		{
+			String PREFS_FILENAME = "MAIN_MENU_SETTING";
+			SharedPreferences configPreferences = getSharedPreferences(PREFS_FILENAME, 0);
+
+			phone = configPreferences.getString(MainMenuActivity.PREFS_KEY_PHONE_NUMBER, "");
+  
+			Log.d(TAG, "getMobile() from PREFS_KEY_PHONE_NUMBER: " + phone);
+		}
+
 		return phone;
 	}
 

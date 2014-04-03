@@ -83,7 +83,11 @@
     <dimen name="card_single_page_margin_left">4.5dip</dimen>
     <dimen name="card_animation_right_block_width">25dip</dimen>
     <dimen name="card_viewer_card_wrapper_height">370dip</dimen>
-
+    <dimen name="act_card_viewer_iv_send_fb_single_width">109dip</dimen>
+    <dimen name="act_card_viewer_iv_send_fb_single_height">44dip</dimen>   
+    <dimen name="act_card_viewer_iv_send_contact_width">109dip</dimen>
+    <dimen name="act_card_viewer_iv_send_contact_height">44dip</dimen>
+ 	<dimen name="glb_card_tv_editable_voice_tip_textsize">14sp</dimen>
     <!-- Card Editable Frames -->
     <dimen name="card_editable_frames_image_width">175dip</dimen>
     <dimen name="card_editable_frames_image_height">175dip</dimen>

@@ -142,4 +142,9 @@
 	
 	<!-- Card Viewer -->
 	<string name="phone_list_empty">找不到聯絡人電話資訊</string>
+	
+	<!--  Input Phone Number Dialog -->
+	<string name="input_dialog_title">請輸入手機號碼</string>
+	<string name="input_dialog_message">這樣才收的朋友透過手機號碼寄給您的留聲卡片唷~\n格式：國碼+手機號碼   \nEX：台灣國碼(886) + 0912345678(去0) \n請輸入: 886912345678</string>
+	<string name="input_dialog_re_show">輸入的電話格式錯誤,請重新輸入</string>
 </resources>

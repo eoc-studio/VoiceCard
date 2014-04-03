@@ -11,6 +11,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -76,6 +77,7 @@ public class AudioMessageView extends RelativeLayout
 		inflater.inflate(R.layout.view_audio_message, this);
 
 		timeTextView = (TextView) findViewById(R.id.glb_audio_message_tv_time);
+//		timeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.glb_card_tv_editable_voice_tip_textsize));
 		controllerIcon = (ImageView) findViewById(R.id.glb_audio_message_iv_control_icon);
 	}
 
@@ -83,6 +85,7 @@ public class AudioMessageView extends RelativeLayout
 	{
 		this.durationText = durationText;
 		timeTextView.setText(durationText);
+		
 	}
 
 	public void setDuration(int milliseconds)

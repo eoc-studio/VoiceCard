@@ -16,6 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/play_voice_message"
+        android:textSize="@dimen/glb_card_tv_editable_voice_tip_textsize"
         android:textColor="@color/white" />
     
     <TextView
@@ -24,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="3dip"
         android:layout_marginRight="10dip"
+        android:textSize="@dimen/glb_card_tv_editable_voice_tip_textsize"
         android:textColor="@color/white" />
 
 </LinearLayout>

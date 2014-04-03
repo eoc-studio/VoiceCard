@@ -6,16 +6,23 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
+import android.text.method.DigitsKeyListener;
+import android.text.method.NumberKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -73,7 +80,9 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 
 	private String recommendName;
 
-	private String PREFS_FILENAME = "MAIN_MENU_SETTING";
+	public String PREFS_FILENAME = "MAIN_MENU_SETTING";
+	
+	public static final String PREFS_KEY_PHONE_NUMBER = "phoneNumber";
 
 	private SharedPreferences configPreferences;
 
@@ -85,6 +94,9 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 
 	private static boolean exitApp = false;
 
+	private EditText inputPhoneNumberEditText;
+	
+	private AlertDialog.Builder inputPhoneNumberAlertDialog ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -198,7 +210,84 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 
 		PollingUtils.startPollingService(this, 20, PollingService.class, PollingService.ACTION);
 		Log.d(TAG, "PollingUtils.startPollingService()");
+		
+		boolean firstRun = configPreferences.getBoolean("firstRun", true);
+		if (firstRun)
+		{
+			Toast.makeText(this, "This is first run", Toast.LENGTH_SHORT).show();
+			
+			configPreferences.edit().putBoolean("firstRun", false).commit();
+			showInputPhoneDialog();
+		}
+		
+		
 		super.onResume();
+	}
+
+	public void showInputPhoneDialog()
+	{
+
+		
+		inputPhoneNumberAlertDialog = new AlertDialog.Builder(this);
+		inputPhoneNumberAlertDialog.setTitle(getResources().getString(R.string.input_dialog_title));
+		inputPhoneNumberAlertDialog.setMessage(getResources().getString(R.string.input_dialog_message));
+
+		// Set an EditText view to get user input 
+		inputPhoneNumberEditText = new EditText(this);
+		inputPhoneNumberEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
+		inputPhoneNumberEditText.setInputType(InputType.TYPE_CLASS_PHONE);           
+		inputPhoneNumberEditText.setKeyListener(new NumberKeyListener()
+		{
+			protected char[] getAcceptedChars()
+			{
+
+				char[] numberChars = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
+				return numberChars;
+			}
+
+			@Override
+			public int getInputType()
+			{
+
+				return android.text.InputType.TYPE_CLASS_PHONE;
+			}
+		});
+		
+		inputPhoneNumberAlertDialog.setView(inputPhoneNumberEditText);
+
+		inputPhoneNumberAlertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int whichButton)
+			{
+
+				String phoneNumberFromUserInput = inputPhoneNumberEditText.getText().toString();
+				Log.d(TAG, "phoneNumberFromUserInput is " + phoneNumberFromUserInput);
+
+				if (phoneNumberFromUserInput.startsWith("0") || phoneNumberFromUserInput.length()<8)
+				{
+					
+					Toast.makeText(context, getResources().getString(R.string.input_dialog_re_show), Toast.LENGTH_SHORT).show();
+					showInputPhoneDialog();
+				}
+				else
+				{
+					phoneNumberFromUserInput = "+" + phoneNumberFromUserInput;
+					Log.d(TAG, "After add plus char to phoneNumberFromUserInput is "
+							+ phoneNumberFromUserInput);
+
+					configPreferences.edit().putString(PREFS_KEY_PHONE_NUMBER, phoneNumberFromUserInput).commit();
+				}
+
+			}
+		});
+
+		inputPhoneNumberAlertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		  public void onClick(DialogInterface dialog, int whichButton) {
+		    // Canceled.
+		  }
+		});
+		inputPhoneNumberAlertDialog.show();
+		
 	}
 
 	private void setMemorialDayNotification()
