@@ -226,9 +226,9 @@ public class CardViewerActivity extends BaseActivity
 								Log.d(TAG, "ImgLink is " + friendList.get(i).getFriendImgLink());
 								
 								if(i == 0){
-									singleFriendID = friendList.get(i).getFriendName();
+									singleFriendID = friendList.get(i).getFriendId();
 					                FacebookManager.getInstance(context).publishNews(this,  singleFriendID,
-					                        Uri.parse("file//test"),
+					                        
 					                        FacebookManager.getInstance(context).new PublishListener()
 					                        {
 					                            @Override
@@ -237,14 +237,14 @@ public class CardViewerActivity extends BaseActivity
 					                                if (error != null)
 					                                {
 					                                	Log.d(TAG, "publishTimeline onComplete Error: "+error );
-					                                    Toast.makeText(context, getResources().getString(R.string.news_send_fail),
-					                                            Toast.LENGTH_LONG).show();
+/*					                                    Toast.makeText(context, getResources().getString(R.string.news_send_fail),
+					                                            Toast.LENGTH_LONG).show();*/
 					                                }
 					                                else
 					                                {
 					                                	Log.d(TAG, "publishTimeline onComplete ok ");
-					                                    Toast.makeText(context, getResources().getString(R.string.news_send_ok),
-					                                            Toast.LENGTH_LONG).show();
+/*					                                    Toast.makeText(context, getResources().getString(R.string.news_send_ok),
+					                                            Toast.LENGTH_LONG).show();*/
 					                                    					                                    
 					                                    ArrayList<String> friendList = new ArrayList<String>();
 					                                    friendList.add(singleFriendID);

@@ -88,7 +88,7 @@
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginRight="10dip"
-						android:src="@drawable/btn_send_fb_selector" />
+						android:src="@drawable/btn_send_fb_single_selector" />
 				
 				<ImageView
 						android:id="@+id/act_card_viewer_iv_send_fb"
