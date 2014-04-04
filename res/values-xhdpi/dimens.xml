@@ -273,7 +273,7 @@
     <dimen name="newspaper_relativeLayout21_marginLeft">71dp</dimen>
     <dimen name="newspaper_relativeLayout101_height">106dp</dimen>
     <dimen name="newspaper_imageView8_height">29dp</dimen>
-    <dimen name="newspaper_type_imageTitleViewOfNewspaper_height">46dp</dimen>
+    <dimen name="newspaper_type_imageTitleViewOfNewspaper_height">38dp</dimen>
 
     <!-- SendNews -->
     <dimen name="send_news_button_width">120dp</dimen>
