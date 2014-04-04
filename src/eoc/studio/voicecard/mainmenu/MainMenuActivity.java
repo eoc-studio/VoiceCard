@@ -83,6 +83,8 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 	public String PREFS_FILENAME = "MAIN_MENU_SETTING";
 	
 	public static final String PREFS_KEY_PHONE_NUMBER = "phoneNumber";
+	
+	public static final String PREFS_KEY_FIRST_RUN_APP = "firstRun";
 
 	private SharedPreferences configPreferences;
 
@@ -211,12 +213,10 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		PollingUtils.startPollingService(this, 20, PollingService.class, PollingService.ACTION);
 		Log.d(TAG, "PollingUtils.startPollingService()");
 		
-		boolean firstRun = configPreferences.getBoolean("firstRun", true);
-		if (firstRun)
-		{
-			Toast.makeText(this, "This is first run", Toast.LENGTH_SHORT).show();
-			
-			configPreferences.edit().putBoolean("firstRun", false).commit();
+		boolean isFirstRunApp = configPreferences.getBoolean(PREFS_KEY_FIRST_RUN_APP, true);
+		if (isFirstRunApp)
+		{ 			
+			configPreferences.edit().putBoolean(PREFS_KEY_FIRST_RUN_APP, false).commit();
 			showInputPhoneDialog();
 		}
 		
@@ -254,7 +254,7 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		});
 		
 		inputPhoneNumberAlertDialog.setView(inputPhoneNumberEditText);
-
+//		inputPhoneNumberAlertDialog.setCancelable(false);  // disable back button
 		inputPhoneNumberAlertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
 		{
 			public void onClick(DialogInterface dialog, int whichButton)

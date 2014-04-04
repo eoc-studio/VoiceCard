@@ -413,7 +413,7 @@ public class AudioRecorderActivity extends BaseActivity
 		}
 		else
 		{
-			Toast.makeText(this, "Found no audio file", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this,  getResources().getString(R.string.not_found_audio_file), Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -428,7 +428,7 @@ public class AudioRecorderActivity extends BaseActivity
 			deleteLastSavedFile();
 			if (FileUtility.copyFile(fileToSave, lastSavedFile))
 			{
-				Toast.makeText(this, "File is saved", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
 			}
 			else
 			{

@@ -8,12 +8,14 @@
     <!-- About Test Facebook -->
     <string name="get_user_profile">Get User Profile</string>
     <string name="get_friend_list">Get Friends</string>
-    <string name="get_picture">Get Picture</string>
-    <string name="user_info">User Info</string>
     <string name="invite_friend">Invite Friend</string>
     <string name="publish_me">Publish to timeline</string>
     <string name="publish_friend">Publish to friend</string>
-
+    <string name="fb_logout">Logout</string>
+    <string name="upload">Upload</string>
+    <string name="publish_user_feed">Publish no dialog</string>
+    <string name="publish_news">Publish news</string>
+    
     <!-- About Contact -->
     <string name="file_process_loading">讀取中...</string>
     <string name="noData">沒有資料</string>
@@ -53,6 +55,8 @@
     <string name="search_friend">搜尋朋友</string>
     <string name="user_not_install_message">若聯絡人尚未安裝則發送訊息通知</string>
     <string name="user_no_result">沒有朋友或是沒有搜尋之項目</string>
+    <string name="please_select_friends">請選擇好友</string>
+    <string name="please_select_one_friend">請選擇一位好友</string>
 
     <!-- About Friend Info -->
     <string name="not_install">未安裝</string>
@@ -70,26 +74,44 @@
     <string name="insert_voice">語音留言</string>
     <string name="insert_text">編輯文字</string>
     <string name="insert_signature">手寫簽名</string>
-    <string name="play_voice_message">播放留言</string>
+    <string name="play_voice_message">播放留言 </string>
     <string name="processing">處理中</string>
     <string name="please_wait">請稍待</string>
     <string name="data_incomplete">請將四樣卡片資料填滿</string>
 
+    <!-- TextEditor -->
+    <string name="text_limit">/%s字</string>
+
     <!-- view_recommend_listview_item -->
     <string name="detail_info">詳細介紹</string>
 
+    <!-- About Mailbox -->
+    <string name="select_mails">已選取 %s 封郵件</string>
+    <string name="select_all">選取全部</string>
+    <string name="deselect_all">取消全部</string>
+    <string name="mailbox_errorMsg">沒有項目</string>
+
     <!-- Main Loading -->
     <string name="main_loading">讀取中...</string>
-    
+
     <!-- About Facebook Manager -->
     <string name="app_id">584057725018260</string>
     <string name="error_is">錯誤是 %s </string>
     <string name="cancel_publish">取消發佈</string>
     <string name="publish_success">發佈成功</string>
     <string name="publish_fail">發佈失敗</string>
-    <string name="invite_message">我想邀請你一起來使用Voice Card!</string>
+    <string name="share_app_name">Voice Card留聲卡卡</string>
+    <string name="share_caption">送祝福給所有我的好友們</string>
+    <string name="share_description">送個暖暖的問候，愛要記得大聲說出來</string>
+    <string name="share_link">http://www.charliefind.com/app</string>
+    <string name="news_caption">看你幹了甚麼好事</string>
+    <string name="news_description">%s 正在為你造謠生事 …</string>
+    <string name="invite_message">%s 送了個祝福給你，他正對你說了 …</string>
+    
 
     <!-- Audio Recorder -->
+    <string name="time_separator">/</string>
+    <string name="rec_sign" translate="false">REC</string>
     <string name="start_recording">開始錄音</string>
     <string name="open_file">開啟存檔</string>
     <string name="pause">暫停</string>
@@ -97,5 +119,65 @@
     <string name="play">試聽</string>
     <string name="save">儲存錄音</string>
     <string name="delete">刪除</string>
+ 	<string name="not_found_audio_file">找不到儲存的錄音檔</string>
     
+    
+    <!-- Draft -->
+    <string name="save_draft_success">儲存草稿成功</string>
+    <string name="save_draft_fail">儲存草稿失敗</string>
+    <string name="open_draft_success">開啟草稿成功</string>
+    <string name="open_draft_fail">開啟草稿失敗</string>
+
+    <!-- About Network Receiver -->
+    <string name="network_connect_success">網路連接成功！</string>
+    <string name="network_connect_fail">手機沒有任何網路</string>
+    
+    <!-- Sign and stamp -->
+    
+    <string name="handwriting_font_size_one">字體小</string>
+    <string name="handwriting_font_size_two">字體中</string>
+    <string name="handwriting_font_size_three">字體中</string>
+    
+    <!-- exit app -->
+    <string name="exit_app_to_home">再按一次返回鍵，即將離開留聲卡卡。</string>
+    
+    <!-- add favorite -->
+    <string name="add_favorite">增加</string>
+	<string name="add_favorite_success">到我的收藏成功</string>
+	<string name="no_favorite_exist">沒有收藏的卡片</string>
+	
+	<!-- Card Viewer -->
+	<string name="phone_list_empty">找不到聯絡人電話資訊</string>
+	
+	<!--  Input Phone Number Dialog -->
+	<string name="input_dialog_title">請輸入手機號碼</string>
+	<string name="input_dialog_message">這樣才收的朋友透過手機號碼寄給您的留聲卡片唷~\n格式：國碼+手機號碼   \nEX：台灣國碼(886) + 0912345678(去0) \n請輸入: 886912345678</string>
+	<string name="input_dialog_re_show">輸入的電話格式錯誤,請重新輸入</string>
+	
+    <!-- Facebook SDK -->
+    <string name="com_facebook_dialogloginactivity_ok_button">確定</string>
+    <string name="com_facebook_loginview_log_out_button">登出</string>
+    <string name="com_facebook_loginview_log_in_button">登入臉書</string>
+    <string name="com_facebook_loginview_logged_in_as">登入為: %1$s</string>
+    <string name="com_facebook_loginview_logged_in_using_facebook">使用facebook登入</string>
+    <string name="com_facebook_loginview_log_out_action">登出</string>
+    <string name="com_facebook_loginview_cancel_action">取消</string>
+    <string name="com_facebook_logo_content_description">臉書圖示</string>
+    <string name="com_facebook_usersettingsfragment_log_in_button">登入&#8230;</string>
+    <string name="com_facebook_usersettingsfragment_logged_in">登入</string>
+    <string name="com_facebook_usersettingsfragment_not_logged_in">尚未登入</string>
+    <string name="com_facebook_placepicker_subtitle_format">%1$s • %2$,d 在這</string>
+    <string name="com_facebook_placepicker_subtitle_catetory_only_format">%1$s</string>
+    <string name="com_facebook_placepicker_subtitle_were_here_only_format">%1$,d were here</string>
+    <string name="com_facebook_picker_done_button_text">完成</string>
+    <string name="com_facebook_choose_friends">選擇朋友</string>
+    <string name="com_facebook_nearby">靠近</string>
+    <string name="com_facebook_loading">讀取中...</string>
+    <string name="com_facebook_internet_permission_error_title">AndroidManifest 錯誤</string>
+    <string name="com_facebook_internet_permission_error_message">WebView 登入需要 INTERNET permission</string>
+    <string name="com_facebook_requesterror_web_login">你的臉書帳號已經登入. Please log into www.facebook.com to continue.</string>
+    <string name="com_facebook_requesterror_relogin">請重新登入</string>
+    <string name="com_facebook_requesterror_password_changed">你的臉書密碼已經改變</string>
+    <string name="com_facebook_requesterror_reconnect">請重新登入</string>
+    <string name="com_facebook_requesterror_permissions">沒有權限</string>	
 </resources>

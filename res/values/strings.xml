@@ -1,116 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">VoiceCard</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+		<string name="app_name">VoiceCard</string>
+		<string name="action_settings">Settings</string>
+		<string name="hello_world">Hello world!</string>
 
-    <!-- About Test Facebook -->
-    <string name="get_user_profile">Get User Profile</string>
-    <string name="get_friend_list">Get Friends</string>
-    <string name="invite_friend">Invite Friend</string>
-    <string name="publish_me">Publish to timeline</string>
-    <string name="publish_friend">Publish to friend</string>
-    <string name="fb_logout">Logout</string>
-    <string name="upload">Upload</string>
-    <string name="publish_user_feed">Publish no dialog</string>
-    <string name="publish_news">Publish news</string>
+		<!-- About Test Facebook -->
+		<string name="get_user_profile">Get User Profile</string>
+		<string name="get_friend_list">Get Friends</string>
+		<string name="invite_friend">Invite Friend</string>
+		<string name="publish_me">Publish to timeline</string>
+		<string name="publish_friend">Publish to friend</string>
+		<string name="fb_logout">Logout</string>
+		<string name="upload">Upload</string>
+		<string name="publish_user_feed">Publish no dialog</string>
+		<string name="publish_news">Publish news</string>
 
-    <!-- About Contact -->
-    <string name="file_process_loading">Loading</string>
-    <string name="noData">NoData</string>
+		<!-- About Contact -->
+		<string name="file_process_loading">Loading</string>
+		<string name="noData">NoData</string>
 
-    <!-- About Newspaper -->
-    <string name="magazine_edit_background_string">封面底圖</string>
-    <string name="newspaper_edit_title_string">選擇標題</string>
-    <string name="newspaper_edit_main_photo_string">圖片</string>
-    <string name="newspaper_edit_photo_and_text_string">圖文</string>
-    <string name="set_dilog_ok">確定</string>
-    <string name="set_dilog_cancel">取消</string>
-    <string name="save_image">另存圖檔</string>
-    <string name="select_friend">選擇收件人</string>
-    <string name="send_news">送出新聞</string>
-    <string name="news_save_ok">儲存成功</string>
-    <string name="news_save_fail">儲存失敗</string>
-    <string name="news_send_fail">傳送失敗</string>
-    <string name="news_send_ok">傳送完成</string>
-    <string name="news_no_selection_friend">請選擇聯絡人</string>
-    <string name="news_no_setted">請設置各個區塊</string>
+		<!-- About Newspaper -->
+		<string name="magazine_edit_background_string">封面底圖</string>
+		<string name="newspaper_edit_title_string">選擇標題</string>
+		<string name="newspaper_edit_main_photo_string">圖片</string>
+		<string name="newspaper_edit_photo_and_text_string">圖文</string>
+		<string name="set_dilog_ok">確定</string>
+		<string name="set_dilog_cancel">取消</string>
+		<string name="save_image">另存圖檔</string>
+		<string name="select_friend">選擇收件人</string>
+		<string name="send_news">送出新聞</string>
+		<string name="news_save_ok">儲存成功</string>
+		<string name="news_save_fail">儲存失敗</string>
+		<string name="news_send_fail">傳送失敗</string>
+		<string name="news_send_ok">傳送完成</string>
+		<string name="news_no_selection_friend">請選擇聯絡人</string>
+		<string name="news_no_setted">請設置各個區塊</string>
 
-    <!-- About MemorialDay -->
-    <string name="current_month_placeholder">1970-January</string>
-    <string name="cancelBtn">Cancel</string>
-    <string name="yesBtn">Yes</string>
-    <string name="delete_confirm_title">Delete Event?</string>
-    <string name="delete_confirm_message">Are you sure delete </string>
-    <string name="import_completion_message">Import completion</string>
+		<!-- About MemorialDay -->
+		<string name="current_month_placeholder">1970-January</string>
+		<string name="cancelBtn">Cancel</string>
+		<string name="yesBtn">Yes</string>
+		<string name="delete_confirm_title">Delete Event?</string>
+		<string name="delete_confirm_message">Are you sure delete </string>
+		<string name="import_completion_message">Import completion</string>
 
-    <!-- MailBoxIconView -->
-    <string name="mail">Inbox</string>
+		<!-- MailBoxIconView -->
+		<string name="mail">Inbox</string>
 
-    <!-- Main Loading -->
-    <string name="main_loading">Loading...</string>
+		<!-- Main Loading -->
+		<string name="main_loading">Loading...</string>
 
-    <!-- MemorialDayNotificationView -->
-    <string name="a_normal_day">Nothing special</string>
+		<!-- MemorialDayNotificationView -->
+		<string name="a_normal_day">Nothing special</string>
 
-    <!-- About Select Friend -->
-    <string name="search_friend">Search Friend</string>
-    <string name="user_not_install_message">If user not install this app then send message to
-				him/her.</string>
-    <string name="please_select_friends">Please select friends</string>
-    <string name="please_select_one_friend">Please select one friend</string>
+		<!-- About Select Friend -->
+		<string name="user_no_result">沒有朋友或是沒有搜尋之項目</string>
+		<string name="search_friend">Search Friend</string>
+		<string name="user_not_install_message">If user not install this app then send message to
+				him/her.
+		</string>
+		<string name="please_select_friends">Please select friends</string>
+		<string name="please_select_one_friend">Please select one friend</string>
 
-    <!-- About Friend Info -->
-    <string name="not_install">not install</string>
+		<!-- About Friend Info -->
+		<string name="not_install">not install</string>
 
-    <!-- Card Category -->
-    <string name="mothers_day">Mother\'s Day</string>
-    <string name="birthday">Birthday</string>
-    <string name="valentines_day">Valentine\'s Day</string>
-    <string name="xmas">Xmas</string>
-    <string name="halloween">Halloween</string>
-    <string name="thanks_note">Thanks Note</string>
+		<!-- Card Category -->
+		<string name="mothers_day">Mother\'s Day</string>
+		<string name="birthday">Birthday</string>
+		<string name="valentines_day">Valentine\'s Day</string>
+		<string name="xmas">Xmas</string>
+		<string name="halloween">Halloween</string>
+		<string name="thanks_note">Thanks Note</string>
 
-    <!-- Card Editor -->
-    <string name="insert_image">Insert image</string>
-    <string name="insert_voice">Record voice</string>
-    <string name="insert_text">Insert text</string>
-    <string name="insert_signature">Insert signature</string>
-    <string name="play_voice_message">Play message </string>
-    <string name="processing">Processing</string>
-    <string name="please_wait">Please wait</string>
-    <string name="data_incomplete">Please insert all</string>
+		<!-- Card Editor -->
+		<string name="insert_image">Insert image</string>
+		<string name="insert_voice">Record voice</string>
+		<string name="insert_text">Insert text</string>
+		<string name="insert_signature">Insert signature</string>
+		<string name="play_voice_message">Play message </string>
+		<string name="processing">Processing</string>
+		<string name="please_wait">Please wait</string>
+		<string name="data_incomplete">Please insert all</string>
 
-    <!-- view_recommend_listview_item -->
-    <string name="detail_info">Detail information</string>
+		<!-- view_recommend_listview_item -->
+		<string name="detail_info">Detail information</string>
 
-    <!-- TextEditor -->
-    <string name="text_limit">/%s words</string>
+		<!-- TextEditor -->
+		<string name="text_limit">/%s words</string>
 
-    <!-- About Mailbox -->
-    <string name="select_mails">Already select %s mails</string>
-    <string name="select_all">Select all</string>
-    <string name="deselect_all">Cancel all</string>
-    <string name="mailbox_errorMsg">No content</string>
+		<!-- About Mailbox -->
+		<string name="select_mails">Already select %s mails</string>
+		<string name="select_all">Select all</string>
+		<string name="deselect_all">Cancel all</string>
+		<string name="mailbox_errorMsg">No content</string>
 
-    <!-- About Facebook Manager -->
-    <string name="app_id">584057725018260</string>
-    <string name="error_is">錯誤是 %s </string>
-    <string name="cancel_publish">取消發佈</string>
-    <string name="publish_success">發佈成功</string>
-    <string name="publish_fail">發佈失敗</string>
-    <string name="invite_message">I want invite you to use Voice Card</string>
+		<!-- About Facebook Manager -->
+		<string name="app_id">584057725018260</string>
+		<string name="error_is">錯誤是 %s </string>
+		<string name="cancel_publish">取消發佈</string>
+		<string name="publish_success">發佈成功</string>
+		<string name="publish_fail">發佈失敗</string>
+		<string name="share_app_name">Voice Card留聲卡卡</string>
+		<string name="share_caption">送祝福給所有我的好友們</string>
+		<string name="share_description">送個暖暖的問候，愛要記得大聲說出來</string>
+		<string name="share_link">http://www.charliefind.com/app</string>
+		<string name="news_caption">看你幹了甚麼好事</string>
+		<string name="news_description">%s 正在為你造謠生事 …</string>
+		<string name="invite_message">%s 送了個祝福給你，他正對你說了 …</string>
 
-    <!-- Audio Recorder -->
-    <string name="time_separator">/</string>
-    <string name="rec_sign" translate="false">REC</string>
-    <string name="start_recording">Record</string>
-    <string name="open_file">Open file</string>
-    <string name="pause">Pause</string>
-    <string name="stop_recording">Stop</string>
-    <string name="play">Play</string>
-    <string name="save">Save</string>
-    <string name="delete">Delete</string>
+		<!-- Audio Recorder -->
+		<string name="time_separator">/</string>
+		<string
+				name="rec_sign"
+				translate="false">REC</string>
+		<string name="start_recording">Record</string>
+		<string name="open_file">Open file</string>
+		<string name="pause">Pause</string>
+		<string name="stop_recording">Stop</string>
+		<string name="play">Play</string>
+		<string name="save">Save</string>
+		<string name="delete">Delete</string>
+		<string name="not_found_audio_file">there is not audio file</string>
 
+		<!-- Draft -->
+		<string name="save_draft_success">儲存草稿成功</string>
+		<string name="save_draft_fail">儲存草稿失敗</string>
+		<string name="open_draft_success">開啟草稿成功</string>
+		<string name="open_draft_fail">開啟草稿失敗</string>
+
+		<!-- About Network Receiver -->
+		<string name="network_connect_success">網路連接成功！</string>
+		<string name="network_connect_fail">手機沒有任何網路</string>
+
+		<!-- Sign and stamp -->
+
+		<string name="handwriting_font_size_one">字體小</string>
+		<string name="handwriting_font_size_two">字體中</string>
+		<string name="handwriting_font_size_three">字體中</string>
+		<!-- exit app -->
+		<string name="exit_app_to_home">再按一次返回鍵，即將離開留聲卡卡。</string>
+		<!-- add favorite -->
+		<string name="add_favorite">增加</string>
+		<string name="add_favorite_success">到我的收藏成功</string>
+		<string name="no_favorite_exist">沒有收藏的卡片</string>
+
+		<!-- Card Viewer -->
+		<string name="phone_list_empty">找不到聯絡人電話資訊</string>
+
+		<!-- Input Phone Number Dialog -->
+		<string name="input_dialog_title">請輸入手機號碼</string>
+		<string name="input_dialog_message">這樣才收的朋友透過手機號碼寄給您的留聲卡片唷~\n格式：國碼+手機號碼 \nEX：台灣國碼(886)
+				+ 0912345678(去0) \n請輸入: 886912345678</string>
+		<string name="input_dialog_re_show">輸入的電話格式錯誤,請重新輸入</string>
 </resources>
