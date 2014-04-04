@@ -84,10 +84,10 @@
     <dimen name="card_animation_right_block_width">25dip</dimen>
     <dimen name="card_viewer_card_wrapper_height">370dip</dimen>
     <dimen name="act_card_viewer_iv_send_fb_single_width">109dip</dimen>
-    <dimen name="act_card_viewer_iv_send_fb_single_height">44dip</dimen>   
+    <dimen name="act_card_viewer_iv_send_fb_single_height">44dip</dimen>
     <dimen name="act_card_viewer_iv_send_contact_width">109dip</dimen>
     <dimen name="act_card_viewer_iv_send_contact_height">44dip</dimen>
- 	<dimen name="glb_card_tv_editable_voice_tip_textsize">14sp</dimen>
+    <dimen name="glb_card_tv_editable_voice_tip_textsize">14sp</dimen>
     <!-- Card Editable Frames -->
     <dimen name="card_editable_frames_image_width">175dip</dimen>
     <dimen name="card_editable_frames_image_height">175dip</dimen>
@@ -228,8 +228,8 @@
     <dimen name="newspaper_type_imageMainPhotoViewOfNewspaper_marginTop">4dp</dimen>
     <dimen name="newspaper_type_textView4_marginBottom">15dp</dimen>
     <dimen name="newspaper_type_textView4_marginLeft">15dp</dimen>
-    <dimen name="newspaper_type_imageSmailMainPhotoView_width">65dp</dimen>
-    <dimen name="newspaper_type_imageSmailMainPhotoView_height">48dp</dimen>
+    <dimen name="newspaper_type_imageSmailMainPhotoView_width">73dp</dimen>
+    <dimen name="newspaper_type_imageSmailMainPhotoView_height">56dp</dimen>
     <dimen name="newspaper_type_imageSmailMainPhotoView_marginLeft">4dp</dimen>
     <dimen name="newspaper_type_imageSmailMainPhotoView_marginTop">4dp</dimen>
     <dimen name="newspaper_type_textView3_marginBottom">10dp</dimen>
@@ -273,6 +273,7 @@
     <dimen name="newspaper_relativeLayout21_marginLeft">71dp</dimen>
     <dimen name="newspaper_relativeLayout101_height">106dp</dimen>
     <dimen name="newspaper_imageView8_height">29dp</dimen>
+    <dimen name="newspaper_type_imageTitleViewOfNewspaper_height">46dp</dimen>
 
     <!-- SendNews -->
     <dimen name="send_news_button_width">120dp</dimen>

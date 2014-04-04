@@ -120,13 +120,12 @@
     <dimen name="card_single_page_margin_top">3.375dip</dimen>
     <dimen name="card_single_page_margin_left">3.375dip</dimen>
     <dimen name="card_animation_right_block_width">18.75dip</dimen>
-    <dimen name="card_viewer_card_wrapper_height">277.5dip</dimen> 
+    <dimen name="card_viewer_card_wrapper_height">277.5dip</dimen>
     <dimen name="act_card_viewer_iv_send_fb_single_width">100dip</dimen>
-    <dimen name="act_card_viewer_iv_send_fb_single_height">44dip</dimen>   
+    <dimen name="act_card_viewer_iv_send_fb_single_height">44dip</dimen>
     <dimen name="act_card_viewer_iv_send_contact_width">119dip</dimen>
     <dimen name="act_card_viewer_iv_send_contact_height">44dip</dimen>
-    
- 	<dimen name="glb_card_tv_editable_voice_tip_textsize">11sp</dimen>
+    <dimen name="glb_card_tv_editable_voice_tip_textsize">11sp</dimen>
     <!-- Card Editable Frames -->
     <dimen name="card_editable_frames_image_width">131.25dip</dimen>
     <dimen name="card_editable_frames_image_height">131.25dip</dimen>
@@ -227,8 +226,8 @@
     <dimen name="newspaper_type_imageMainPhotoViewOfNewspaper_marginTop">3dp</dimen>
     <dimen name="newspaper_type_textView4_marginBottom">15dp</dimen>
     <dimen name="newspaper_type_textView4_marginLeft">15dp</dimen>
-    <dimen name="newspaper_type_imageSmailMainPhotoView_width">60dp</dimen>
-    <dimen name="newspaper_type_imageSmailMainPhotoView_height">46dp</dimen>
+    <dimen name="newspaper_type_imageSmailMainPhotoView_width">66dp</dimen>
+    <dimen name="newspaper_type_imageSmailMainPhotoView_height">50dp</dimen>
     <dimen name="newspaper_type_imageSmailMainPhotoView_marginLeft">3dp</dimen>
     <dimen name="newspaper_type_imageSmailMainPhotoView_marginTop">2dp</dimen>
     <dimen name="newspaper_type_textView3_marginBottom">10dp</dimen>
@@ -272,6 +271,7 @@
     <dimen name="newspaper_relativeLayout21_marginLeft">53.25dp</dimen>
     <dimen name="newspaper_relativeLayout101_height">79.5dp</dimen>
     <dimen name="newspaper_imageView8_height">21.75dp</dimen>
+    <dimen name="newspaper_type_imageTitleViewOfNewspaper_height">37dp</dimen>
 
     <!-- SendNews -->
     <dimen name="send_news_button_width">110dp</dimen>

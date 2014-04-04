@@ -72,7 +72,7 @@
         <ImageView
             android:id="@+id/imageTitleViewOfNewspaper"
             android:layout_width="@dimen/newspaper_type_imageTitleViewOfNewspaper_width"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/newspaper_type_imageTitleViewOfNewspaper_height"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="@dimen/newspaper_type_imageTitleViewOfNewspaper_marginLeft"
@@ -104,8 +104,6 @@
             android:layout_height="@dimen/newspaper_type_imageSmailMainPhotoView_height"
             android:layout_alignLeft="@+id/imageMainPhotoViewOfNewspaper"
             android:layout_alignTop="@+id/imageMainPhotoViewOfNewspaper"
-            android:layout_marginLeft="@dimen/newspaper_type_imageSmailMainPhotoView_marginLeft"
-            android:layout_marginTop="@dimen/newspaper_type_imageSmailMainPhotoView_marginTop"
             android:background="@drawable/news_frame3" />
 
         <TextView
