@@ -210,7 +210,7 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		updateNewMailBoxCount();
 		setMemorialDayNotification();
 
-		PollingUtils.startPollingService(this, 20, PollingService.class, PollingService.ACTION);
+		PollingUtils.startPollingService(this, 1800, PollingService.class, PollingService.ACTION);
 		Log.d(TAG, "PollingUtils.startPollingService()");
 		
 		boolean isFirstRunApp = configPreferences.getBoolean(PREFS_KEY_FIRST_RUN_APP, true);
@@ -254,7 +254,7 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		});
 		
 		inputPhoneNumberAlertDialog.setView(inputPhoneNumberEditText);
-//		inputPhoneNumberAlertDialog.setCancelable(false);  // disable back button
+		inputPhoneNumberAlertDialog.setCancelable(false);  // disable back button
 		inputPhoneNumberAlertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
 		{
 			public void onClick(DialogInterface dialog, int whichButton)
@@ -281,11 +281,11 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 			}
 		});
 
-		inputPhoneNumberAlertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int whichButton) {
-		    // Canceled.
-		  }
-		});
+//		inputPhoneNumberAlertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//		  public void onClick(DialogInterface dialog, int whichButton) {
+//		    // Canceled.
+//		  }
+//		});
 		inputPhoneNumberAlertDialog.show();
 		
 	}
