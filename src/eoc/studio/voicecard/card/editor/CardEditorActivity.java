@@ -1159,9 +1159,11 @@ public class CardEditorActivity extends BaseActivity
 
 	private boolean isCardUserDataCompleted()
 	{
-		// card.setSignDraftImage(card.getImage());
-		return card.getImage() != null && card.getMessage() != null && card.getSound() != null
-				&& card.getSignDraftImage() != null;
+		// return card.getImage() != null && card.getMessage() != null &&
+		// card.getSound() != null
+		// && card.getSignDraftImage() != null;
+		return card.getImage() != null || card.getMessage() != null || card.getSound() != null
+				|| card.getSignDraftImage() != null;
 	}
 
 	private Bitmap getBitmapFromUri(Uri uri)

@@ -82,7 +82,7 @@
 		<string name="play_voice_message">Play message </string>
 		<string name="processing">Processing</string>
 		<string name="please_wait">Please wait</string>
-		<string name="data_incomplete">Please insert all</string>
+		<string name="data_incomplete">Please insert at least one</string>
 
 		<!-- view_recommend_listview_item -->
 		<string name="detail_info">Detail information</string>
