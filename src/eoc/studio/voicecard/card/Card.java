@@ -17,17 +17,23 @@ import eoc.studio.voicecard.utils.FileUtility;
 public class Card implements Parcelable
 {
 	public static final int TEXT_SIZE_TYPE_SMALL = 0;
+
 	public static final int TEXT_SIZE_TYPE_NORMAL = 1;
+
 	public static final int TEXT_SIZE_TYPE_LARGE = 2;
 
 	public static final int DEFAULT_TEXT_SIZE_TYPE = TEXT_SIZE_TYPE_NORMAL;
+
 	public static final int DEFAULT_TEXT_COLOR = Color.BLACK;
 
 	// original
 	private int id;
+
 	// private CardCategory category;
 	private CategoryAssistant category;
+
 	private String name;
+
 	// private int image3dCoverResId;
 	// private int image3dOpenResId;
 	// private int imageCoverResId;
@@ -35,27 +41,39 @@ public class Card implements Parcelable
 	// private int imageInnerRightResId;
 
 	private String image3dCoverPath;
+
 	private String image3dOpenPath;
+
 	private String imageCoverPath;
+
 	private String imageInnerLeftPath;
+
 	private String imageInnerRightPath;
 
 	private int textColor;
 
 	// user input
 	private Uri sound;
+
 	private Uri image;
+
 	private String message;
+
 	private int messageTextColor = DEFAULT_TEXT_COLOR;
+
 	private int messageTextSizeType = DEFAULT_TEXT_SIZE_TYPE;
+
 	private Uri signDraftImage;
+
 	private Uri signHandwriting;
+
 	private Uri signPositionInfo;
 
 	public Card(int id, CategoryAssistant category, String name, String image3dCoverPath,
 			String image3dOpenPath, String imageCoverPath, String imageInnerLeftPath,
 			String imageInnerRightPath, int textColor)
 	{
+
 		this.id = id;
 		this.category = category;
 		this.name = name;
@@ -69,6 +87,7 @@ public class Card implements Parcelable
 
 	public Card(Card card)
 	{
+
 		this.id = card.id;
 		this.category = card.category;
 		this.name = card.name;
@@ -91,31 +110,37 @@ public class Card implements Parcelable
 
 	public int getId()
 	{
+
 		return id;
 	}
 
 	public void setId(int id)
 	{
+
 		this.id = id;
 	}
 
 	public CategoryAssistant getCategory()
 	{
+
 		return category;
 	}
 
 	public void setCategory(CategoryAssistant category)
 	{
+
 		this.category = category;
 	}
 
 	public String getName()
 	{
+
 		return name;
 	}
 
 	public void setName(String name)
 	{
+
 		this.name = name;
 	}
 
@@ -171,41 +196,49 @@ public class Card implements Parcelable
 
 	public Uri getSound()
 	{
+
 		return sound;
 	}
 
 	public void setSound(Uri sound)
 	{
+
 		this.sound = sound;
 	}
 
 	public Uri getImage()
 	{
+
 		return image;
 	}
 
 	public void setImage(Uri image)
 	{
+
 		this.image = image;
 	}
 
 	public String getMessage()
 	{
+
 		return message;
 	}
 
 	public int getMessageTextSizeType()
 	{
+
 		return messageTextSizeType;
 	}
 
 	public int getMessageTextColor()
 	{
+
 		return messageTextColor;
 	}
 
 	public void setMessage(String message, int textSizeType, int color)
 	{
+
 		this.message = message;
 		this.messageTextSizeType = textSizeType;
 		this.messageTextColor = color;
@@ -213,21 +246,25 @@ public class Card implements Parcelable
 
 	public Uri getSignDraftImage()
 	{
+
 		return signDraftImage;
 	}
 
 	public void setSignDraftImage(Uri signature)
 	{
+
 		this.signDraftImage = signature;
 	}
 
 	public int getTextColor()
 	{
+
 		return textColor;
 	}
 
 	public void setTextColor(int color)
 	{
+
 		this.textColor = color;
 	}
 
@@ -284,11 +321,13 @@ public class Card implements Parcelable
 
 	public int describeContents()
 	{
+
 		return 0;
 	}
 
 	public void writeToParcel(Parcel out, int flags)
 	{
+
 		out.writeInt(id);
 		out.writeParcelable(category, flags);
 		out.writeString(name);
@@ -320,17 +359,20 @@ public class Card implements Parcelable
 	{
 		public Card createFromParcel(Parcel in)
 		{
+
 			return new Card(in);
 		}
 
 		public Card[] newArray(int size)
 		{
+
 			return new Card[size];
 		}
 	};
 
 	private Card(Parcel in)
 	{
+
 		id = in.readInt();
 		ClassLoader categoryAssistantClazzLoader = CategoryAssistant.class.getClassLoader();
 		category = in.readParcelable(categoryAssistantClazzLoader);
@@ -453,6 +495,7 @@ public class Card implements Parcelable
 	 */
 	public static Card getCardFromMail(Context context, Mail mail)
 	{
+
 		int id = Integer.parseInt(mail.getCardId());
 		CardDatabaseHelper cardDatabaseHelper = new CardDatabaseHelper(context);
 		cardDatabaseHelper.open();
@@ -482,7 +525,7 @@ public class Card implements Parcelable
 			Log.d("Card", "image is already at local " + imgFile.getAbsolutePath());
 			card.setImage(Uri.fromFile(imgFile));
 		}
-		else if (mailImageLink != null)
+		else if (mailImageLink != null && !mailImageLink.equals(""))
 		{
 			Uri img = Uri.parse(mailImageLink);
 			img = FileUtility.downloadToLocal(img, imgFile);
@@ -494,7 +537,7 @@ public class Card implements Parcelable
 			Log.d("Card", "sound is already at local " + soundFile.getAbsolutePath());
 			card.setSound(Uri.fromFile(soundFile));
 		}
-		else if (mailSoundLink != null)
+		else if (mailSoundLink != null && !mailSoundLink.equals(""))
 		{
 			Uri sound = Uri.parse(mailSoundLink);
 			sound = FileUtility.downloadToLocal(sound, soundFile);
@@ -506,7 +549,7 @@ public class Card implements Parcelable
 			Log.d("Card", "sign is already at local " + signFile.getAbsolutePath());
 			card.setSignDraftImage(Uri.fromFile(signFile));
 		}
-		else if (mailSignLink != null)
+		else if (mailSignLink != null && !mailSignLink.equals(""))
 		{
 			Uri sign = Uri.parse(mail.getSign());
 			sign = FileUtility.downloadToLocal(sign, signFile);

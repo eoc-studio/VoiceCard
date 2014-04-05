@@ -478,70 +478,85 @@ public class HttpManager
 			String fontColor, String cardID, final PostMailListener postMailListener)
 			throws Exception
 	{
-
+		
+		
+		Log.e(TAG, "postMailByList editTextMessage:"+editTextMessage);
+		Log.e(TAG, "postMailByList fontSize:"+fontSize);
+		Log.e(TAG, "postMailByList fontColor:"+fontColor);
 		isPostListImageOk = false;
 		isPostListSpeechOk = false;
 		isPostListSignatureOk = false;
 		isPostListMailErrored = false;
-		File imageFile = new File(imageUri.getPath());
+		
+		File imageFile =null;
+		File speechFile =null;
+		File signatureFile =null;
+		if(imageUri!=null){
+			imageFile = new File(imageUri.getPath());
 
-		Log.e(TAG, "postMailByList imageUri.getPath():" + imageUri.getPath());
-		Log.e(TAG, "postMailByList imageFile.getName():" + imageFile.getName());
-		String uriUploadImagefile = String.format(
-				"http://www.charliefind.com/api.php?op=upload&auth=%1$s&id=%2$s", hash_auth,
-				facebookID);
+			Log.e(TAG, "postMailByList imageUri.getPath():" + imageUri.getPath());
+			Log.e(TAG, "postMailByList imageFile.getName():" + imageFile.getName());
+			String uriUploadImagefile = String.format(
+					"http://www.charliefind.com/api.php?op=upload&auth=%1$s&id=%2$s", hash_auth,
+					facebookID);
 
-		Log.e(TAG, "postMailByList uriUploadImagefile:" + uriUploadImagefile);
+			Log.e(TAG, "postMailByList uriUploadImagefile:" + uriUploadImagefile);
 
-		MultipartRequest imageFileResuest = new MultipartRequest(uriUploadImagefile,
-				new Response.Listener<String>()
-				{
-					@Override
-					public void onResponse(String response)
+			MultipartRequest imageFileResuest = new MultipartRequest(uriUploadImagefile,
+					new Response.Listener<String>()
 					{
-
-						Log.e(TAG, "postMailByList image fileResuest Response:" + response);
-						isPostListImageOk = true;
-
-						if (postMailListener != null && isPostListImageOk && isPostListSpeechOk
-								&& isPostListSignatureOk)
+						@Override
+						public void onResponse(String response)
 						{
-							boolean isAllMailDone = true;
-							for (int index = 0; index < isPostMailOkList.size(); index++)
-							{
 
-								if (!isPostMailOkList.get(index))
+							Log.e(TAG, "postMailByList image fileResuest Response:" + response);
+							isPostListImageOk = true;
+
+							if (postMailListener != null && isPostListImageOk && isPostListSpeechOk
+									&& isPostListSignatureOk)
+							{
+								boolean isAllMailDone = true;
+								for (int index = 0; index < isPostMailOkList.size(); index++)
 								{
-									isAllMailDone = false;
-									break;
+
+									if (!isPostMailOkList.get(index))
+									{
+										isAllMailDone = false;
+										break;
+									}
+								}
+
+								if (isAllMailDone)
+								{
+									postMailListener.onResult(true, response.toString());
 								}
 							}
+						}
+					}, new Response.ErrorListener()
+					{
+						@Override
+						public void onErrorResponse(VolleyError error)
+						{
 
-							if (isAllMailDone)
+							Log.e(TAG, "postMailByList image fileResuest Error: " + error.getMessage());
+
+							if (!isPostListMailErrored)
 							{
-								postMailListener.onResult(true, response.toString());
+								postMailListener.onResult(false, error.getMessage());
+								isPostListMailErrored = true;
 							}
 						}
-					}
-				}, new Response.ErrorListener()
-				{
-					@Override
-					public void onErrorResponse(VolleyError error)
-					{
+					}, imageFile);
+			imageFileResuest.setTag("postMailByList");
+			VolleySingleton.getInstance(context).getRequestQueue().add(imageFileResuest);
+		}
+		else{
+			isPostListImageOk = true;
+		}
+		
 
-						Log.e(TAG, "postMailByList image fileResuest Error: " + error.getMessage());
-
-						if (!isPostListMailErrored)
-						{
-							postMailListener.onResult(false, error.getMessage());
-							isPostListMailErrored = true;
-						}
-					}
-				}, imageFile);
-		imageFileResuest.setTag("postMailByList");
-		VolleySingleton.getInstance(context).getRequestQueue().add(imageFileResuest);
-
-		File speechFile = new File(speechUri.getPath());
+		if(speechUri!=null){
+		speechFile = new File(speechUri.getPath());
 
 		Log.e(TAG, "postMailByList speechUri.getPath():" + speechUri.getPath());
 		Log.e(TAG, "postMailByList speechFile.getName():" + speechFile.getName());
@@ -597,68 +612,78 @@ public class HttpManager
 				}, speechFile);
 		speechFileResuest.setTag("postMailByList");
 		VolleySingleton.getInstance(context).getRequestQueue().add(speechFileResuest);
+		}
+		else{
+			isPostListSpeechOk = true;
+		}
+		
+		if(signatureUri!=null){
+			signatureFile = new File(signatureUri.getPath());
 
-		File signatureFile = new File(signatureUri.getPath());
+			Log.e(TAG, "postMailByList signatureUri.getPath():" + signatureUri.getPath());
+			Log.e(TAG, "postMailByList signatureFile.getName():" + signatureFile.getName());
+			String uriUploadSignaturefile = String.format(
+					"http://www.charliefind.com/api.php?op=upload&auth=%1$s&id=%2$s", hash_auth,
+					facebookID);
 
-		Log.e(TAG, "postMailByList signatureUri.getPath():" + signatureUri.getPath());
-		Log.e(TAG, "postMailByList signatureFile.getName():" + signatureFile.getName());
-		String uriUploadSignaturefile = String.format(
-				"http://www.charliefind.com/api.php?op=upload&auth=%1$s&id=%2$s", hash_auth,
-				facebookID);
+			Log.e(TAG, "postMailByList uriUploadSignaturefile:" + uriUploadSignaturefile);
 
-		Log.e(TAG, "postMailByList uriUploadSignaturefile:" + uriUploadSignaturefile);
-
-		MultipartRequest signatureFileResuest = new MultipartRequest(uriUploadSignaturefile,
-				new Response.Listener<String>()
-				{
-					@Override
-					public void onResponse(String response)
+			MultipartRequest signatureFileResuest = new MultipartRequest(uriUploadSignaturefile,
+					new Response.Listener<String>()
 					{
-
-						isPostListSignatureOk = true;
-						Log.e(TAG, "postMailByList signature fileResuest Response:" + response);
-						if (postMailListener != null && isPostListImageOk && isPostListSpeechOk
-								&& isPostListSignatureOk)
+						@Override
+						public void onResponse(String response)
 						{
 
-							boolean isAllMailDone = true;
-							for (int index = 0; index < isPostMailOkList.size(); index++)
+							isPostListSignatureOk = true;
+							Log.e(TAG, "postMailByList signature fileResuest Response:" + response);
+							if (postMailListener != null && isPostListImageOk && isPostListSpeechOk
+									&& isPostListSignatureOk)
 							{
-								Log.e(TAG,
-										"postMailByList signature fileResuest Response:isPostMailOkList.size()"
-												+ isPostMailOkList.size());
-								if (!isPostMailOkList.get(index))
+
+								boolean isAllMailDone = true;
+								for (int index = 0; index < isPostMailOkList.size(); index++)
 								{
-									isAllMailDone = false;
-									break;
+									Log.e(TAG,
+											"postMailByList signature fileResuest Response:isPostMailOkList.size()"
+													+ isPostMailOkList.size());
+									if (!isPostMailOkList.get(index))
+									{
+										isAllMailDone = false;
+										break;
+									}
 								}
-							}
 
-							if (isAllMailDone)
-							{
-								postMailListener.onResult(true, response.toString());
-							}
+								if (isAllMailDone)
+								{
+									postMailListener.onResult(true, response.toString());
+								}
 
+							}
 						}
-					}
-				}, new Response.ErrorListener()
-				{
-					@Override
-					public void onErrorResponse(VolleyError error)
+					}, new Response.ErrorListener()
 					{
-
-						Log.e(TAG,
-								"postMailByList signature fileResuest Error: " + error.getMessage());
-
-						if (!isPostListMailErrored)
+						@Override
+						public void onErrorResponse(VolleyError error)
 						{
-							postMailListener.onResult(false, error.getMessage());
-							isPostListMailErrored = true;
+
+							Log.e(TAG,
+									"postMailByList signature fileResuest Error: " + error.getMessage());
+
+							if (!isPostListMailErrored)
+							{
+								postMailListener.onResult(false, error.getMessage());
+								isPostListMailErrored = true;
+							}
 						}
-					}
-				}, signatureFile);
-		signatureFileResuest.setTag("postMailByList");
-		VolleySingleton.getInstance(context).getRequestQueue().add(signatureFileResuest);
+					}, signatureFile);
+			signatureFileResuest.setTag("postMailByList");
+			VolleySingleton.getInstance(context).getRequestQueue().add(signatureFileResuest);
+		}
+		else{
+			isPostListSignatureOk = true;
+		}
+
 
 		String editTextBody = editTextMessage;
 
@@ -682,9 +707,9 @@ public class HttpManager
 			paramsFacebookMailPost.put("font_size", fontSize);
 			paramsFacebookMailPost.put("font_color", fontColor);
 			paramsFacebookMailPost.put("body", editTextBody);
-			paramsFacebookMailPost.put("img", imageFile.getName());
-			paramsFacebookMailPost.put("speech", speechFile.getName());
-			paramsFacebookMailPost.put("sign", signatureFile.getName());
+			if (imageFile != null) paramsFacebookMailPost.put("img", imageFile.getName());
+			if (speechFile != null) paramsFacebookMailPost.put("speech", speechFile.getName());
+			if (signatureFile != null) paramsFacebookMailPost.put("sign", signatureFile.getName());
 			paramsFacebookMailPost.put("auth", hash_auth);
 
 			Log.e(TAG, "uriMailPost:" + uriMailPost);
