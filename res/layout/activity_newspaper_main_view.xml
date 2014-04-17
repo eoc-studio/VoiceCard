@@ -4,30 +4,25 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/relativeLayout3"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
         <ImageButton
             android:id="@+id/newspaperImageButton"
-            android:layout_width="@dimen/news_main_activity_imageButton_width"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/news_main_activity_imageButton_marginBottom"
-            android:layout_marginLeft="@dimen/news_main_activity_imageButton_marginLeft"
-            android:layout_marginTop="@dimen/news_main_activity_imageButton_marginTop"
+            android:layout_weight="1"
             android:src="@drawable/type_newspaper" />
 
         <ImageButton
             android:id="@+id/magazineImageButton"
-            android:layout_width="@dimen/news_main_activity_imageButton_width"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/news_main_activity_imageButton_marginBottom"
-            android:layout_marginRight="@dimen/news_main_activity_imageButton_marginLeft"
-            android:layout_marginTop="@dimen/news_main_activity_imageButton_marginTop"
+            android:layout_weight="1"
             android:src="@drawable/type_magazine" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"

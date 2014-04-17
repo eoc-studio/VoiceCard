@@ -95,7 +95,8 @@
     <string name="main_loading">讀取中...</string>
 
     <!-- About Facebook Manager -->
-    <string name="app_id">584057725018260</string>
+	<!-- <string name="app_id">584057725018260</string> -->
+	<string name="app_id">752311764798994</string>
     <string name="error_is">錯誤是 %s </string>
     <string name="cancel_publish">取消發佈</string>
     <string name="publish_success">發佈成功</string>

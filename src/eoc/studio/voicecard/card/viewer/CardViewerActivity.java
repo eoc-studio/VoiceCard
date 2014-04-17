@@ -10,11 +10,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,7 +24,6 @@ import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +39,6 @@ import eoc.studio.voicecard.card.Constant;
 import eoc.studio.voicecard.card.editor.CardCategorySelectorActivity;
 import eoc.studio.voicecard.card.editor.CardEditorActivity;
 import eoc.studio.voicecard.facebook.FacebookManager;
-import eoc.studio.voicecard.facebook.TestFacebookActivity;
-import eoc.studio.voicecard.facebook.FacebookManager.PublishListener;
 import eoc.studio.voicecard.facebook.enetities.FriendInfo;
 import eoc.studio.voicecard.facebook.friends.SelectFriendActivity;
 import eoc.studio.voicecard.facebook.utils.BundleTag;
@@ -196,7 +191,12 @@ public class CardViewerActivity extends BaseActivity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+		Session session = Session.getActiveSession();
+		if (session != null)
+		{
+			session.onActivityResult(this, requestCode, resultCode, data);
+		}
+		
 		super.onActivityResult(requestCode, resultCode, data);
 		
 		if (resultCode == RESULT_OK)

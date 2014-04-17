@@ -158,7 +158,7 @@
 
     <!-- About Friend Info -->
     <dimen name="user_info_header_edge">37.5dp</dimen>
-    <dimen name="user_info_name_width">75dp</dimen>
+    <dimen name="user_info_name_width">150dp</dimen>
     <dimen name="user_info_name_height">60dp</dimen>
     <dimen name="user_info_name_margin_left">15dp</dimen>
 

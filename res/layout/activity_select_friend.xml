@@ -26,7 +26,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/common_txt_width"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/act_select_friend_margin_top" >
 
@@ -46,7 +46,7 @@
             android:src="@drawable/icon_magnifier"
             android:layout_alignParentRight="true"
             android:layout_marginTop="@dimen/act_select_friend_iv_search_button_margin_top"
-            android:layout_marginRight="@dimen/act_select_friend_iv_search_button_margin_right"
+            
             />
     </RelativeLayout>
 

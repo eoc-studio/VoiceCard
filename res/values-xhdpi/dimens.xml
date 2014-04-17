@@ -24,7 +24,7 @@
 
     <!-- About Friend Info -->
     <dimen name="user_info_header_edge">50dp</dimen>
-    <dimen name="user_info_name_width">100dp</dimen>
+    <dimen name="user_info_name_width">200dp</dimen>
     <dimen name="user_info_name_height">80dp</dimen>
     <dimen name="user_info_name_margin_left">20dp</dimen>
 
