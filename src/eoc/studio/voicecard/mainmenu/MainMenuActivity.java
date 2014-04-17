@@ -254,7 +254,7 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 		});
 		
 		inputPhoneNumberAlertDialog.setView(inputPhoneNumberEditText);
-		inputPhoneNumberAlertDialog.setCancelable(false);  // disable back button
+//		inputPhoneNumberAlertDialog.setCancelable(false);  // disable back button
 		inputPhoneNumberAlertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
 		{
 			public void onClick(DialogInterface dialog, int whichButton)
@@ -281,11 +281,11 @@ public class MainMenuActivity extends BaseActivity implements OnClickListener
 			}
 		});
 
-//		inputPhoneNumberAlertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//		  public void onClick(DialogInterface dialog, int whichButton) {
-//		    // Canceled.
-//		  }
-//		});
+		inputPhoneNumberAlertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		  public void onClick(DialogInterface dialog, int whichButton) {
+		    // Canceled.
+		  }
+		});
 		inputPhoneNumberAlertDialog.show();
 		
 	}
